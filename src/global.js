@@ -2,15 +2,19 @@
 
 import { getGlobal } from './util';
 
-export function getGlobalNameSpace<T : Object>({ name, version, def } : { name : string, version : string, def? : T }) : T {
+export function getGlobalNameSpace<T : Object>({ name, version } : { name : string, version : string }) : { get : (string, ?T) => ?T } {
 
-    let glob = getGlobal();
-    let key  = `__${ name }__${ version }_global__`;
+    let global = getGlobal();
+    let globalKey = `__${ name }__${ version }_global__`;
 
-    if (glob[key]) {
-        return glob[key];
-    }
+    let namespace = global[globalKey] = global[globalKey] || {};
 
-    glob[key] = def || {};
-    return glob[key];
+    return {
+        get: (key : string, defValue? : ?T) : ?T => {
+            // $FlowFixMe
+            defValue = defValue || {};
+            let item = namespace[key] = namespace[key] || defValue;
+            return item;
+        }
+    };
 }
