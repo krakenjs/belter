@@ -7,7 +7,8 @@ var _util = require('./util');
 
 function getGlobalNameSpace(_ref) {
     var name = _ref.name,
-        version = _ref.version;
+        _ref$version = _ref.version,
+        version = _ref$version === undefined ? 'latest' : _ref$version;
 
 
     var global = (0, _util.getGlobal)();

@@ -1022,11 +1022,84 @@
                 return Boolean(window.performance && performance.now && performance.timing && performance.timing.connectEnd && performance.timing.navigationStart && Math.abs(performance.now() - Date.now()) > 1e3 && performance.now() - (performance.timing.connectEnd - performance.timing.navigationStart) > 0);
             });
         },
+        "./src/experiment.js": function(module, exports, __webpack_require__) {
+            "use strict";
+            exports.__esModule = !0;
+            exports.experiment = function(_ref) {
+                var group, name = _ref.name, _ref$sample = _ref.sample, sample = void 0 === _ref$sample ? 50 : _ref$sample, _ref$logTreatment = _ref.logTreatment, logTreatment = void 0 === _ref$logTreatment ? _util.noop : _ref$logTreatment, _ref$logCheckpoint = _ref.logCheckpoint, logCheckpoint = void 0 === _ref$logCheckpoint ? _util.noop : _ref$logCheckpoint, throttle = function(name) {
+                    return storage.getState(function(state) {
+                        state.throttlePercentiles = state.throttlePercentiles || {};
+                        state.throttlePercentiles[name] = state.throttlePercentiles[name] || Math.floor(100 * Math.random());
+                        return state.throttlePercentiles[name];
+                    });
+                }(name);
+                group = throttle < sample ? THROTTLE_GROUP.TEST : sample >= 50 || sample <= throttle && throttle < 2 * sample ? THROTTLE_GROUP.CONTROL : THROTTLE_GROUP.THROTTLE;
+                var treatment = name + "_" + group, started = !1, forced = !1;
+                try {
+                    window.localStorage && window.localStorage.getItem(name) && (forced = !0);
+                } catch (err) {}
+                return {
+                    isEnabled: function() {
+                        return group === THROTTLE_GROUP.TEST || forced;
+                    },
+                    isDisabled: function() {
+                        return group !== THROTTLE_GROUP.TEST && !forced;
+                    },
+                    getTreatment: function() {
+                        return treatment;
+                    },
+                    log: function(checkpoint) {
+                        var payload = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {};
+                        if (!started) return this;
+                        isEventUnique(name + "_" + treatment) && logTreatment({
+                            name: name,
+                            treatment: treatment
+                        });
+                        isEventUnique(name + "_" + treatment + "_" + checkpoint) && logCheckpoint({
+                            name: name,
+                            treatment: treatment,
+                            checkpoint: checkpoint,
+                            payload: payload
+                        });
+                        return this;
+                    },
+                    logStart: function() {
+                        var payload = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : {};
+                        started = !0;
+                        return this.log("start", payload);
+                    },
+                    logComplete: function() {
+                        var payload = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : {};
+                        return this.log("complete", payload);
+                    }
+                };
+            };
+            var _storage = __webpack_require__("./src/storage.js"), _util = __webpack_require__("./src/util.js"), storage = (0, 
+            _storage.getStorage)({
+                name: "belter_experiment"
+            });
+            function isEventUnique(name) {
+                return storage.getSessionState(function(state) {
+                    state.loggedBeacons = state.loggedBeacons || [];
+                    if (-1 === state.loggedBeacons.indexOf(name)) {
+                        state.loggedBeacons.push(name);
+                        return !0;
+                    }
+                    return !1;
+                });
+            }
+            var THROTTLE_GROUP = {
+                TEST: "test",
+                CONTROL: "control",
+                THROTTLE: "throttle"
+            };
+        },
         "./src/global.js": function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = !0;
             exports.getGlobalNameSpace = function(_ref) {
-                var name = _ref.name, version = _ref.version, global = (0, _util.getGlobal)(), globalKey = "__" + name + "__" + version + "_global__", namespace = global[globalKey] = global[globalKey] || {};
+                var name = _ref.name, _ref$version = _ref.version, version = void 0 === _ref$version ? "latest" : _ref$version, global = (0, 
+                _util.getGlobal)(), globalKey = "__" + name + "__" + version + "_global__", namespace = global[globalKey] = global[globalKey] || {};
                 return {
                     get: function(key, defValue) {
                         defValue = defValue || {};
@@ -1054,6 +1127,15 @@
                     enumerable: !0,
                     get: function() {
                         return _dom[key];
+                    }
+                });
+            });
+            var _experiment = __webpack_require__("./src/experiment.js");
+            Object.keys(_experiment).forEach(function(key) {
+                "default" !== key && "__esModule" !== key && Object.defineProperty(exports, key, {
+                    enumerable: !0,
+                    get: function() {
+                        return _experiment[key];
                     }
                 });
             });
@@ -1189,7 +1271,7 @@
             "use strict";
             exports.__esModule = !0;
             exports.getStorage = function(_ref) {
-                var name = _ref.name, version = _ref.version, _ref$lifetime = _ref.lifetime, lifetime = void 0 === _ref$lifetime ? 3e5 : _ref$lifetime, STORAGE_KEY = "__" + name + "_" + version + "_storage__";
+                var name = _ref.name, _ref$version = _ref.version, version = void 0 === _ref$version ? "latest" : _ref$version, _ref$lifetime = _ref.lifetime, lifetime = void 0 === _ref$lifetime ? 3e5 : _ref$lifetime, STORAGE_KEY = "__" + name + "_" + version + "_storage__";
                 if (storeCache[STORAGE_KEY]) return storeCache[STORAGE_KEY];
                 var accessedStorage = void 0;
                 function getState(handler) {

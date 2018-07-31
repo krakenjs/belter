@@ -26,6 +26,18 @@ Object.keys(_dom).forEach(function (key) {
   });
 });
 
+var _experiment = require('./experiment');
+
+Object.keys(_experiment).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _experiment[key];
+    }
+  });
+});
+
 var _global = require('./global');
 
 Object.keys(_global).forEach(function (key) {

@@ -9,7 +9,8 @@ var storeCache = {};
 
 function getStorage(_ref) {
     var name = _ref.name,
-        version = _ref.version,
+        _ref$version = _ref.version,
+        version = _ref$version === undefined ? 'latest' : _ref$version,
         _ref$lifetime = _ref.lifetime,
         lifetime = _ref$lifetime === undefined ? 5 * 60 * 1000 : _ref$lifetime;
 
