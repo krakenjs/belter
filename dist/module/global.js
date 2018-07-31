@@ -7,17 +7,20 @@ var _util = require('./util');
 
 function getGlobalNameSpace(_ref) {
     var name = _ref.name,
-        version = _ref.version,
-        def = _ref.def;
+        version = _ref.version;
 
 
-    var glob = (0, _util.getGlobal)();
-    var key = '__' + name + '__' + version + '_global__';
+    var global = (0, _util.getGlobal)();
+    var globalKey = '__' + name + '__' + version + '_global__';
 
-    if (glob[key]) {
-        return glob[key];
-    }
+    var namespace = global[globalKey] = global[globalKey] || {};
 
-    glob[key] = def || {};
-    return glob[key];
+    return {
+        get: function get(key, defValue) {
+            // $FlowFixMe
+            defValue = defValue || {};
+            var item = namespace[key] = namespace[key] || defValue;
+            return item;
+        }
+    };
 }

@@ -1026,10 +1026,13 @@
             "use strict";
             exports.__esModule = !0;
             exports.getGlobalNameSpace = function(_ref) {
-                var name = _ref.name, version = _ref.version, def = _ref.def, glob = (0, _util.getGlobal)(), key = "__" + name + "__" + version + "_global__";
-                if (glob[key]) return glob[key];
-                glob[key] = def || {};
-                return glob[key];
+                var name = _ref.name, version = _ref.version, global = (0, _util.getGlobal)(), globalKey = "__" + name + "__" + version + "_global__", namespace = global[globalKey] = global[globalKey] || {};
+                return {
+                    get: function(key, defValue) {
+                        defValue = defValue || {};
+                        return namespace[key] = namespace[key] || defValue;
+                    }
+                };
             };
             var _util = __webpack_require__("./src/util.js");
         },
