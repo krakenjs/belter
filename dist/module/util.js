@@ -23,10 +23,14 @@ exports.perc = perc;
 exports.min = min;
 exports.max = max;
 exports.regexMap = regexMap;
+exports.svgToBase64 = svgToBase64;
+exports.objFilter = objFilter;
 
 var _hiBase = require('hi-base32');
 
 var _hiBase2 = _interopRequireDefault(_hiBase);
+
+var _Base = require('Base64');
 
 var _src = require('zalgo-promise/src');
 
@@ -43,6 +47,8 @@ function getGlobal() {
 }
 
 // eslint-disable-next-line flowtype/no-weak-types
+
+
 function memoize(method) {
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
@@ -388,4 +394,24 @@ function regexMap(str, regex, handler) {
     });
 
     return results;
+}
+
+function svgToBase64(svg) {
+    return 'data:image/svg+xml;base64,' + (0, _Base.btoa)(svg);
+}
+
+function objFilter(obj) {
+    var filter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : Boolean;
+
+    var result = {};
+
+    for (var _key4 in obj) {
+        if (!obj.hasOwnProperty(_key4) || !filter(obj[_key4], _key4)) {
+            continue;
+        }
+
+        result[_key4] = obj[_key4];
+    }
+
+    return result;
 }

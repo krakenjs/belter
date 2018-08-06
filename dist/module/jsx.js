@@ -2,10 +2,17 @@
 
 exports.__esModule = true;
 exports.JsxHTMLNodeContainer = exports.JsxHTMLNode = undefined;
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 exports.jsxToHTML = jsxToHTML;
 exports.jsxRender = jsxRender;
+exports.Fragment = Fragment;
+exports.SVG = SVG;
 
 var _util = require('./util');
+
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
@@ -44,11 +51,19 @@ var JsxHTMLNode = exports.JsxHTMLNode = function () {
         return Object.keys(props).filter(function (key) {
             return key !== 'innerHTML' && props && props[key] !== false;
         }).map(function (key) {
-            if (props && props[key] === true) {
-                return '' + htmlEncode(key);
+            if (props) {
+                var val = props[key];
+
+                if (val === true) {
+                    return '' + htmlEncode(key);
+                }
+
+                if (typeof val === 'string') {
+                    return htmlEncode(key) + '="' + htmlEncode(val) + '"';
+                }
             }
-            return props ? htmlEncode(key) + '="' + htmlEncode(props[key]) + '"' : '';
-        }).join(' ');
+            return '';
+        }).filter(Boolean).join(' ');
     };
 
     JsxHTMLNode.prototype.childrenToString = function childrenToString() {
@@ -117,12 +132,22 @@ var JsxHTMLNodeContainer = exports.JsxHTMLNodeContainer = function (_JsxHTMLNode
     return JsxHTMLNodeContainer;
 }(JsxHTMLNode);
 
-function jsxToHTML(name, props) {
+function jsxToHTML(element) {
+    var props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
     for (var _len = arguments.length, children = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
         children[_key - 2] = arguments[_key];
     }
 
-    return new JsxHTMLNode(name, props, children);
+    if (typeof element === 'string') {
+        return new JsxHTMLNode(element, props, children);
+    }
+
+    if (typeof element === 'function') {
+        return element(props, children);
+    }
+
+    throw new TypeError('Expected jsx Element to be a string or a function');
 }
 
 function jsxRender(template, renderers) {
@@ -152,4 +177,19 @@ function jsxRender(template, renderers) {
     });
 
     return new JsxHTMLNodeContainer(nodes);
+}
+
+function Fragment(props, children) {
+    return new JsxHTMLNodeContainer(children);
+}
+
+function SVG(props) {
+    var svg = props.svg,
+        otherProps = _objectWithoutProperties(props, ['svg']);
+
+    if (!svg || typeof svg !== 'string') {
+        throw new TypeError('Expected svg prop to be a string');
+    }
+
+    return jsxToHTML('img', _extends({ src: (0, _util.svgToBase64)(svg) }, otherProps));
 }

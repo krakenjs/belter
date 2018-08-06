@@ -38,6 +38,32 @@
         __webpack_require__.p = "";
         return __webpack_require__(__webpack_require__.s = "./src/index.js");
     }({
+        "./node_modules/Base64/base64.js": function(module, exports, __webpack_require__) {
+            "use strict";
+            !function() {
+                var object = exports, chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+                function InvalidCharacterError(message) {
+                    this.message = message;
+                }
+                InvalidCharacterError.prototype = new Error();
+                InvalidCharacterError.prototype.name = "InvalidCharacterError";
+                object.btoa || (object.btoa = function(input) {
+                    for (var block, charCode, str = String(input), idx = 0, map = chars, output = ""; str.charAt(0 | idx) || (map = "=", 
+                    idx % 1); output += map.charAt(63 & block >> 8 - idx % 1 * 8)) {
+                        if ((charCode = str.charCodeAt(idx += .75)) > 255) throw new InvalidCharacterError("'btoa' failed: The string to be encoded contains characters outside of the Latin1 range.");
+                        block = block << 8 | charCode;
+                    }
+                    return output;
+                });
+                object.atob || (object.atob = function(input) {
+                    var str = String(input).replace(/[=]+$/, "");
+                    if (str.length % 4 == 1) throw new InvalidCharacterError("'atob' failed: The string to be decoded is not correctly encoded.");
+                    for (var bs, buffer, bc = 0, idx = 0, output = ""; buffer = str.charAt(idx++); ~buffer && (bs = bc % 4 ? 64 * bs + buffer : buffer, 
+                    bc++ % 4) ? output += String.fromCharCode(255 & bs >> (-2 * bc & 6)) : 0) buffer = chars.indexOf(buffer);
+                    return output;
+                });
+            }();
+        },
         "./node_modules/hi-base32/src/base32.js": function(module, exports, __webpack_require__) {
             "use strict";
             (function(process, global, module) {
@@ -1148,7 +1174,7 @@
                     }
                 });
             });
-            var _jsx = __webpack_require__("./src/jsx.js");
+            var _jsx = __webpack_require__("./src/jsx.jsx");
             Object.keys(_jsx).forEach(function(key) {
                 "default" !== key && "__esModule" !== key && Object.defineProperty(exports, key, {
                     enumerable: !0,
@@ -1176,14 +1202,18 @@
                 });
             });
         },
-        "./src/jsx.js": function(module, exports, __webpack_require__) {
+        "./src/jsx.jsx": function(module, exports, __webpack_require__) {
             "use strict";
             exports.__esModule = !0;
             exports.JsxHTMLNodeContainer = exports.JsxHTMLNode = void 0;
-            exports.jsxToHTML = function(name, props) {
-                for (var _len = arguments.length, children = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) children[_key - 2] = arguments[_key];
-                return new JsxHTMLNode(name, props, children);
+            var _extends = Object.assign || function(target) {
+                for (var i = 1; i < arguments.length; i++) {
+                    var source = arguments[i];
+                    for (var key in source) Object.prototype.hasOwnProperty.call(source, key) && (target[key] = source[key]);
+                }
+                return target;
             };
+            exports.jsxToHTML = jsxToHTML;
             exports.jsxRender = function(template, renderers) {
                 var nodes = (0, _util.regexMap)(template, /\{\s*([a-z]+)(?::\s*([^} ]+))?\s*\}|([^${}]+)/g, function(match, type, value, text) {
                     if (type) {
@@ -1193,6 +1223,20 @@
                     return text && text.trim() && renderers.text ? /<br>/.test(text) ? renderers.break(text) : renderers.text(text) : text;
                 });
                 return new JsxHTMLNodeContainer(nodes);
+            };
+            exports.Fragment = function(props, children) {
+                return new JsxHTMLNodeContainer(children);
+            };
+            exports.SVG = function(props) {
+                var svg = props.svg, otherProps = function(obj, keys) {
+                    var target = {};
+                    for (var i in obj) keys.indexOf(i) >= 0 || Object.prototype.hasOwnProperty.call(obj, i) && (target[i] = obj[i]);
+                    return target;
+                }(props, [ "svg" ]);
+                if (!svg || "string" != typeof svg) throw new TypeError("Expected svg prop to be a string");
+                return jsxToHTML("img", _extends({
+                    src: (0, _util.svgToBase64)(svg)
+                }, otherProps));
             };
             var _util = __webpack_require__("./src/util.js");
             function _classCallCheck(instance, Constructor) {
@@ -1216,8 +1260,13 @@
                     return props ? Object.keys(props).filter(function(key) {
                         return "innerHTML" !== key && props && !1 !== props[key];
                     }).map(function(key) {
-                        return props && !0 === props[key] ? "" + htmlEncode(key) : props ? htmlEncode(key) + '="' + htmlEncode(props[key]) + '"' : "";
-                    }).join(" ") : "";
+                        if (props) {
+                            var val = props[key];
+                            if (!0 === val) return "" + htmlEncode(key);
+                            if ("string" == typeof val) return htmlEncode(key) + '="' + htmlEncode(val) + '"';
+                        }
+                        return "";
+                    }).filter(Boolean).join(" ") : "";
                 };
                 JsxHTMLNode.prototype.childrenToString = function() {
                     if (this.props && this.props.innerHTML) return this.props.innerHTML;
@@ -1266,6 +1315,12 @@
                 };
                 return JsxHTMLNodeContainer;
             }(JsxHTMLNode);
+            function jsxToHTML(element) {
+                for (var props = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {}, _len = arguments.length, children = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) children[_key - 2] = arguments[_key];
+                if ("string" == typeof element) return new JsxHTMLNode(element, props, children);
+                if ("function" == typeof element) return element(props, children);
+                throw new TypeError("Expected jsx Element to be a string or a function");
+            }
         },
         "./src/storage.js": function(module, exports, __webpack_require__) {
             "use strict";
@@ -1483,9 +1538,17 @@
                     });
                     return results;
                 };
+                exports.svgToBase64 = function(svg) {
+                    return "data:image/svg+xml;base64," + (0, _Base.btoa)(svg);
+                };
+                exports.objFilter = function(obj) {
+                    var filter = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : Boolean, result = {};
+                    for (var _key4 in obj) obj.hasOwnProperty(_key4) && filter(obj[_key4], _key4) && (result[_key4] = obj[_key4]);
+                    return result;
+                };
                 var obj, _hiBase2 = (obj = __webpack_require__("./node_modules/hi-base32/src/base32.js")) && obj.__esModule ? obj : {
                     default: obj
-                }, _src = __webpack_require__("./node_modules/zalgo-promise/src/index.js");
+                }, _Base = __webpack_require__("./node_modules/Base64/base64.js"), _src = __webpack_require__("./node_modules/zalgo-promise/src/index.js");
                 function getGlobal() {
                     if ("undefined" != typeof window) return window;
                     if (void 0 !== global) return global;
