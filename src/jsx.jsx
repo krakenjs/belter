@@ -1,12 +1,18 @@
 /* @flow */
 /* @jsx jsxToHTML */
 
-import { regexMap } from './util';
+import { regexMap, svgToBase64 } from './util';
 
 // eslint-disable-next-line no-use-before-define
 type ChildType = $ReadOnlyArray<ChildType> | JsxHTMLNode | string | void | null;
 type ChildrenType = $ReadOnlyArray<ChildType>;
-type PropsType = ?{ class? : string, id? : string, innerHTML? : string };
+
+type PropsType = {
+    class? : string,
+    id? : string,
+    innerHTML? : string,
+    [string] : mixed
+};
 
 function htmlEncode(html : string = '') : string {
     return html.toString()
@@ -20,10 +26,10 @@ function htmlEncode(html : string = '') : string {
 
 export class JsxHTMLNode {
     name : string
-    props : PropsType
+    props : ?PropsType
     children : ChildrenType
 
-    constructor(name : string, props : PropsType, children : ChildrenType) {
+    constructor(name : string, props : ?PropsType, children : ChildrenType) {
         this.name = name;
         this.props = props;
         this.children = children;
@@ -43,11 +49,19 @@ export class JsxHTMLNode {
         return Object.keys(props).filter(key => {
             return key !== 'innerHTML' && props && props[key] !== false;
         }).map(key => {
-            if (props && props[key] === true) {
-                return `${ htmlEncode(key) }`;
+            if (props) {
+                let val = props[key];
+
+                if (val === true) {
+                    return `${ htmlEncode(key) }`;
+                }
+
+                if (typeof val === 'string') {
+                    return `${ htmlEncode(key) }="${ htmlEncode(val) }"`;
+                }
             }
-            return props ? `${ htmlEncode(key) }="${ htmlEncode(props[key]) }"` : '';
-        }).join(' ');
+            return '';
+        }).filter(Boolean).join(' ');
     }
 
     childrenToString() : string {
@@ -97,8 +111,16 @@ export class JsxHTMLNodeContainer extends JsxHTMLNode {
     }
 }
 
-export function jsxToHTML(name : string, props : PropsType, ...children : ChildrenType) : JsxHTMLNode {
-    return new JsxHTMLNode(name, props, children);
+export function jsxToHTML(element : mixed, props : ?PropsType = {}, ...children : ChildrenType) : JsxHTMLNode {
+    if (typeof element === 'string') {
+        return new JsxHTMLNode(element, props, children);
+    }
+
+    if (typeof element === 'function') {
+        return element(props, children);
+    }
+    
+    throw new TypeError(`Expected jsx Element to be a string or a function`);
 }
 
 export function jsxRender(template : string, renderers : { [string] : (string) =>?(JsxHTMLNode | Array<JsxHTMLNode>) }) : JsxHTMLNode {
@@ -128,4 +150,20 @@ export function jsxRender(template : string, renderers : { [string] : (string) =
     });
 
     return new JsxHTMLNodeContainer(nodes);
+}
+
+export function Fragment(props : PropsType, children : ChildrenType) : JsxHTMLNode {
+    return new JsxHTMLNodeContainer(children);
+}
+
+export function SVG(props : PropsType) : JsxHTMLNode {
+    let { svg, ...otherProps } = props;
+
+    if (!svg || typeof svg !== 'string') {
+        throw new TypeError(`Expected svg prop to be a string`);
+    }
+
+    return (
+        <img src={ svgToBase64(svg) } { ...otherProps } />
+    );
 }

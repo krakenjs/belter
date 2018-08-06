@@ -1,6 +1,7 @@
 /* @flow */
 
 import base32 from 'hi-base32';
+import { btoa } from 'Base64';
 import { ZalgoPromise } from 'zalgo-promise/src';
 
 export function getGlobal() : Object {
@@ -348,4 +349,22 @@ export function regexMap<T>(str : string, regex : RegExp, handler : () => T) : A
     });
 
     return results;
+}
+
+export function svgToBase64(svg : string) : string {
+    return `data:image/svg+xml;base64,${ btoa(svg) }`;
+}
+
+export function objFilter<T, R>(obj : { [string] : T }, filter? : (T, ?string) => mixed = Boolean) : { [string] : R } {
+    let result = {};
+
+    for (let key in obj) {
+        if (!obj.hasOwnProperty(key) || !filter(obj[key], key)) {
+            continue;
+        }
+
+        result[key] = obj[key];
+    }
+
+    return result;
 }
