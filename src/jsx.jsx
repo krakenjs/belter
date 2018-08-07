@@ -159,11 +159,15 @@ export function Fragment(props : PropsType, children : ChildrenType) : JsxHTMLNo
 export function SVG(props : PropsType) : JsxHTMLNode {
     let { svg, ...otherProps } = props;
 
-    if (!svg || typeof svg !== 'string') {
-        throw new TypeError(`Expected svg prop to be a string`);
+    if (!svg) {
+        throw new TypeError(`Expected svg prop`);
+    }
+
+    if (typeof svg !== 'string' && !(svg instanceof JsxHTMLNode)) {
+        throw new TypeError(`Expected svg prop to be a string or jsx html node`);
     }
 
     return (
-        <img src={ svgToBase64(svg) } { ...otherProps } />
+        <img src={ svgToBase64(svg.toString()) } { ...otherProps } />
     );
 }
