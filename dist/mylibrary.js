@@ -1926,9 +1926,10 @@
                     for (var i in obj) keys.indexOf(i) >= 0 || Object.prototype.hasOwnProperty.call(obj, i) && (target[i] = obj[i]);
                     return target;
                 }(props, [ "svg" ]);
-                if (!svg || "string" != typeof svg) throw new TypeError("Expected svg prop to be a string");
+                if (!svg) throw new TypeError("Expected svg prop");
+                if ("string" != typeof svg && !(svg instanceof JsxHTMLNode)) throw new TypeError("Expected svg prop to be a string or jsx html node");
                 return jsxToHTML("img", _extends({
-                    src: (0, _util.svgToBase64)(svg)
+                    src: (0, _util.svgToBase64)(svg.toString())
                 }, otherProps));
             };
             var _util = __webpack_require__("./src/util.js");

@@ -187,9 +187,13 @@ function SVG(props) {
     var svg = props.svg,
         otherProps = _objectWithoutProperties(props, ['svg']);
 
-    if (!svg || typeof svg !== 'string') {
-        throw new TypeError('Expected svg prop to be a string');
+    if (!svg) {
+        throw new TypeError('Expected svg prop');
     }
 
-    return jsxToHTML('img', _extends({ src: (0, _util.svgToBase64)(svg) }, otherProps));
+    if (typeof svg !== 'string' && !(svg instanceof JsxHTMLNode)) {
+        throw new TypeError('Expected svg prop to be a string or jsx html node');
+    }
+
+    return jsxToHTML('img', _extends({ src: (0, _util.svgToBase64)(svg.toString()) }, otherProps));
 }
