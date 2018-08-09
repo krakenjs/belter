@@ -1562,14 +1562,14 @@
                         var rawStorage = window.localStorage.getItem(STORAGE_KEY);
                         rawStorage && (storage = JSON.parse(rawStorage));
                     }
-                    storage || (storage = window[STORAGE_KEY]);
+                    storage || (storage = Object(__WEBPACK_IMPORTED_MODULE_0__util__.e)()[STORAGE_KEY]);
                     storage || (storage = {
                         id: Object(__WEBPACK_IMPORTED_MODULE_0__util__.x)()
                     });
                     storage.id || (storage.id = Object(__WEBPACK_IMPORTED_MODULE_0__util__.x)());
                     accessedStorage = storage;
                     var result = handler(storage);
-                    localStorageEnabled ? window.localStorage.setItem(STORAGE_KEY, JSON.stringify(storage)) : window[STORAGE_KEY] = storage;
+                    localStorageEnabled ? window.localStorage.setItem(STORAGE_KEY, JSON.stringify(storage)) : Object(__WEBPACK_IMPORTED_MODULE_0__util__.e)()[STORAGE_KEY] = storage;
                     accessedStorage = null;
                     return result;
                 }

@@ -1,4 +1,4 @@
-import { uniqueID, isLocalStorageEnabled } from './util';
+import { uniqueID, isLocalStorageEnabled, getGlobal } from './util';
 
 var storeCache = {};
 
@@ -36,7 +36,7 @@ export function getStorage(_ref) {
         }
 
         if (!storage) {
-            storage = window[STORAGE_KEY];
+            storage = getGlobal()[STORAGE_KEY];
         }
 
         if (!storage) {
@@ -56,7 +56,7 @@ export function getStorage(_ref) {
         if (localStorageEnabled) {
             window.localStorage.setItem(STORAGE_KEY, JSON.stringify(storage));
         } else {
-            window[STORAGE_KEY] = storage;
+            getGlobal()[STORAGE_KEY] = storage;
         }
 
         accessedStorage = null;
