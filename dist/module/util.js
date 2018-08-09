@@ -1,42 +1,8 @@
-'use strict';
+import base32 from 'hi-base32';
+import { btoa } from 'Base64';
+import { ZalgoPromise } from 'zalgo-promise/src';
 
-exports.__esModule = true;
-exports.isLocalStorageEnabled = undefined;
-exports.getGlobal = getGlobal;
-exports.memoize = memoize;
-exports.noop = noop;
-exports.once = once;
-exports.uniqueID = uniqueID;
-exports.hashStr = hashStr;
-exports.strHashStr = strHashStr;
-exports.match = match;
-exports.eventEmitter = eventEmitter;
-exports.awaitKey = awaitKey;
-exports.stringifyError = stringifyError;
-exports.stringifyErrorMessage = stringifyErrorMessage;
-exports.stringify = stringify;
-exports.domainMatches = domainMatches;
-exports.patchMethod = patchMethod;
-exports.extend = extend;
-exports.values = values;
-exports.perc = perc;
-exports.min = min;
-exports.max = max;
-exports.regexMap = regexMap;
-exports.svgToBase64 = svgToBase64;
-exports.objFilter = objFilter;
-
-var _hiBase = require('hi-base32');
-
-var _hiBase2 = _interopRequireDefault(_hiBase);
-
-var _Base = require('Base64');
-
-var _src = require('zalgo-promise/src');
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
-
-function getGlobal() {
+export function getGlobal() {
     if (typeof window !== 'undefined') {
         return window;
     }
@@ -47,9 +13,7 @@ function getGlobal() {
 }
 
 // eslint-disable-next-line flowtype/no-weak-types
-
-
-function memoize(method) {
+export function memoize(method) {
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
 
@@ -95,11 +59,11 @@ function memoize(method) {
 }
 
 // eslint-disable-next-line no-unused-vars
-function noop() {
+export function noop() {
     // pass
 }
 
-function once(method) {
+export function once(method) {
     var called = false;
 
     return function onceFunction() {
@@ -110,7 +74,7 @@ function once(method) {
     };
 }
 
-function uniqueID() {
+export function uniqueID() {
 
     var chars = '0123456789abcdef';
 
@@ -118,12 +82,12 @@ function uniqueID() {
         return chars.charAt(Math.floor(Math.random() * chars.length));
     });
 
-    var timeID = _hiBase2['default'].encode(new Date().toISOString().slice(11, 19).replace('T', '.')).replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+    var timeID = base32.encode(new Date().toISOString().slice(11, 19).replace('T', '.')).replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
 
     return randomID + '_' + timeID;
 }
 
-function hashStr(str) {
+export function hashStr(str) {
     var hash = 0;
     for (var i = 0; i < str.length; i++) {
         hash += str[i].charCodeAt(0) * Math.pow(i % 10 + 1, 5);
@@ -131,7 +95,7 @@ function hashStr(str) {
     return Math.floor(Math.pow(Math.sqrt(hash), 5));
 }
 
-function strHashStr(str) {
+export function strHashStr(str) {
     var hash = '';
 
     for (var i = 0; i < str.length; i++) {
@@ -147,14 +111,14 @@ function strHashStr(str) {
     return hash;
 }
 
-function match(str, pattern) {
+export function match(str, pattern) {
     var regmatch = str.match(pattern);
     if (regmatch) {
         return regmatch[1];
     }
 }
 
-function eventEmitter() {
+export function eventEmitter() {
 
     var listeners = [];
 
@@ -175,28 +139,16 @@ function eventEmitter() {
             });
         },
         trigger: function trigger() {
-            for (var _iterator = listeners, _isArray = Array.isArray(_iterator), _i = 0, _iterator = _isArray ? _iterator : _iterator[Symbol.iterator]();;) {
-                var _ref;
-
-                if (_isArray) {
-                    if (_i >= _iterator.length) break;
-                    _ref = _iterator[_i++];
-                } else {
-                    _i = _iterator.next();
-                    if (_i.done) break;
-                    _ref = _i.value;
-                }
-
-                var listener = _ref;
-
+            for (var _i2 = 0, _length2 = listeners == null ? 0 : listeners.length; _i2 < _length2; _i2++) {
+                var listener = listeners[_i2];
                 listener.apply(undefined, arguments);
             }
         }
     };
 }
 
-function awaitKey(obj, key) {
-    return new _src.ZalgoPromise(function (resolve) {
+export function awaitKey(obj, key) {
+    return new ZalgoPromise(function (resolve) {
 
         var value = obj[key];
 
@@ -224,7 +176,7 @@ function awaitKey(obj, key) {
     });
 }
 
-function stringifyError(err) {
+export function stringifyError(err) {
     var level = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
 
 
@@ -269,7 +221,7 @@ function stringifyError(err) {
     }
 }
 
-function stringifyErrorMessage(err) {
+export function stringifyErrorMessage(err) {
 
     var defaultMessage = '<unknown error: ' + Object.prototype.toString.call(err) + '>';
 
@@ -288,7 +240,7 @@ function stringifyErrorMessage(err) {
     return defaultMessage;
 }
 
-function stringify(item) {
+export function stringify(item) {
     if (typeof item === 'string') {
         return item;
     }
@@ -300,7 +252,7 @@ function stringify(item) {
     return Object.prototype.toString.call(item);
 }
 
-var isLocalStorageEnabled = exports.isLocalStorageEnabled = memoize(function () {
+export var isLocalStorageEnabled = memoize(function () {
     try {
         if (typeof window === 'undefined') {
             return false;
@@ -321,13 +273,13 @@ var isLocalStorageEnabled = exports.isLocalStorageEnabled = memoize(function () 
     return false;
 });
 
-function domainMatches(hostname, domain) {
+export function domainMatches(hostname, domain) {
     hostname = hostname.split('://')[1];
     var index = hostname.indexOf(domain);
     return index !== -1 && hostname.slice(index) === domain;
 }
 
-function patchMethod(obj, name, handler) {
+export function patchMethod(obj, name, handler) {
     var original = obj[name];
 
     obj[name] = function patchedMethod() {
@@ -345,7 +297,7 @@ function patchMethod(obj, name, handler) {
     };
 }
 
-function extend(obj, source) {
+export function extend(obj, source) {
     if (!source) {
         return obj;
     }
@@ -363,7 +315,7 @@ function extend(obj, source) {
     return obj;
 }
 
-function values(obj) {
+export function values(obj) {
     var result = [];
     for (var _key3 in obj) {
         if (obj.hasOwnProperty(_key3)) {
@@ -373,19 +325,19 @@ function values(obj) {
     return result;
 }
 
-function perc(pixels, percentage) {
+export function perc(pixels, percentage) {
     return Math.round(pixels * percentage / 100);
 }
 
-function min() {
+export function min() {
     return Math.min.apply(Math, arguments);
 }
 
-function max() {
+export function max() {
     return Math.max.apply(Math, arguments);
 }
 
-function regexMap(str, regex, handler) {
+export function regexMap(str, regex, handler) {
     var results = [];
 
     // $FlowFixMe
@@ -396,11 +348,11 @@ function regexMap(str, regex, handler) {
     return results;
 }
 
-function svgToBase64(svg) {
-    return 'data:image/svg+xml;base64,' + (0, _Base.btoa)(svg);
+export function svgToBase64(svg) {
+    return 'data:image/svg+xml;base64,' + btoa(svg);
 }
 
-function objFilter(obj) {
+export function objFilter(obj) {
     var filter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : Boolean;
 
     var result = {};
@@ -414,4 +366,8 @@ function objFilter(obj) {
     }
 
     return result;
+}
+
+export function identity(item) {
+    return item;
 }

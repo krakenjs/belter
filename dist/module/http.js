@@ -1,16 +1,9 @@
-'use strict';
-
-exports.__esModule = true;
-
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-exports.request = request;
-
-var _src = require('zalgo-promise/src');
-
-require('cross-domain-utils/src');
+import { ZalgoPromise } from 'zalgo-promise/src';
+import 'cross-domain-utils/src';
 
 var HEADERS = {
     CONTENT_TYPE: 'content-type',
@@ -23,44 +16,34 @@ function parseHeaders() {
     var rawHeaders = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
 
     var result = {};
-    for (var _iterator = rawHeaders.trim().split('\n'), _isArray = Array.isArray(_iterator), _i = 0, _iterator = _isArray ? _iterator : _iterator[Symbol.iterator]();;) {
-        var _ref;
 
-        if (_isArray) {
-            if (_i >= _iterator.length) break;
-            _ref = _iterator[_i++];
-        } else {
-            _i = _iterator.next();
-            if (_i.done) break;
-            _ref = _i.value;
-        }
-
-        var line = _ref;
-
+    for (var _i2 = 0, _rawHeaders$trim$spli2 = rawHeaders.trim().split('\n'), _length2 = _rawHeaders$trim$spli2 == null ? 0 : _rawHeaders$trim$spli2.length; _i2 < _length2; _i2++) {
+        var line = _rawHeaders$trim$spli2[_i2];
         var _line$split = line.split(':'),
             _key = _line$split[0],
             values = _line$split.slice(1);
 
         result[_key.toLowerCase()] = values.join(':').trim();
     }
+
     return result;
 }
 
-function request(_ref2) {
-    var url = _ref2.url,
-        _ref2$method = _ref2.method,
-        method = _ref2$method === undefined ? 'get' : _ref2$method,
-        _ref2$headers = _ref2.headers,
-        headers = _ref2$headers === undefined ? {} : _ref2$headers,
-        json = _ref2.json,
-        data = _ref2.data,
-        body = _ref2.body,
-        _ref2$win = _ref2.win,
-        win = _ref2$win === undefined ? window : _ref2$win,
-        _ref2$timeout = _ref2.timeout,
-        timeout = _ref2$timeout === undefined ? 0 : _ref2$timeout;
+export function request(_ref) {
+    var url = _ref.url,
+        _ref$method = _ref.method,
+        method = _ref$method === undefined ? 'get' : _ref$method,
+        _ref$headers = _ref.headers,
+        headers = _ref$headers === undefined ? {} : _ref$headers,
+        json = _ref.json,
+        data = _ref.data,
+        body = _ref.body,
+        _ref$win = _ref.win,
+        win = _ref$win === undefined ? window : _ref$win,
+        _ref$timeout = _ref.timeout,
+        timeout = _ref$timeout === undefined ? 0 : _ref$timeout;
 
-    return new _src.ZalgoPromise(function (resolve, reject) {
+    return new ZalgoPromise(function (resolve, reject) {
 
         if (json && data || json && body || data && json) {
             throw new Error('Only options.json or options.data or options.body should be passed');
@@ -68,21 +51,9 @@ function request(_ref2) {
 
         var normalizedHeaders = {};
 
-        for (var _iterator2 = Object.keys(headers), _isArray2 = Array.isArray(_iterator2), _i2 = 0, _iterator2 = _isArray2 ? _iterator2 : _iterator2[Symbol.iterator]();;) {
-            var _ref3;
-
-            if (_isArray2) {
-                if (_i2 >= _iterator2.length) break;
-                _ref3 = _iterator2[_i2++];
-            } else {
-                _i2 = _iterator2.next();
-                if (_i2.done) break;
-                _ref3 = _i2.value;
-            }
-
-            var _key3 = _ref3;
-
-            normalizedHeaders[_key3.toLowerCase()] = headers[_key3];
+        for (var _i4 = 0, _Object$keys2 = Object.keys(headers), _length4 = _Object$keys2 == null ? 0 : _Object$keys2.length; _i4 < _length4; _i4++) {
+            var _key2 = _Object$keys2[_i4];
+            normalizedHeaders[_key2.toLowerCase()] = headers[_key2];
         }
 
         if (json) {
@@ -93,37 +64,13 @@ function request(_ref2) {
 
         normalizedHeaders[HEADERS.ACCEPT] = normalizedHeaders[HEADERS.ACCEPT] || 'application/json';
 
-        for (var _iterator3 = headerBuilders, _isArray3 = Array.isArray(_iterator3), _i3 = 0, _iterator3 = _isArray3 ? _iterator3 : _iterator3[Symbol.iterator]();;) {
-            var _ref4;
-
-            if (_isArray3) {
-                if (_i3 >= _iterator3.length) break;
-                _ref4 = _iterator3[_i3++];
-            } else {
-                _i3 = _iterator3.next();
-                if (_i3.done) break;
-                _ref4 = _i3.value;
-            }
-
-            var headerBuilder = _ref4;
-
+        for (var _i6 = 0, _length6 = headerBuilders == null ? 0 : headerBuilders.length; _i6 < _length6; _i6++) {
+            var headerBuilder = headerBuilders[_i6];
             var builtHeaders = headerBuilder();
 
-            for (var _iterator4 = Object.keys(builtHeaders), _isArray4 = Array.isArray(_iterator4), _i4 = 0, _iterator4 = _isArray4 ? _iterator4 : _iterator4[Symbol.iterator]();;) {
-                var _ref5;
-
-                if (_isArray4) {
-                    if (_i4 >= _iterator4.length) break;
-                    _ref5 = _iterator4[_i4++];
-                } else {
-                    _i4 = _iterator4.next();
-                    if (_i4.done) break;
-                    _ref5 = _i4.value;
-                }
-
-                var _key4 = _ref5;
-
-                normalizedHeaders[_key4.toLowerCase()] = builtHeaders[_key4];
+            for (var _i8 = 0, _Object$keys4 = Object.keys(builtHeaders), _length8 = _Object$keys4 == null ? 0 : _Object$keys4.length; _i8 < _length8; _i8++) {
+                var _key3 = _Object$keys4[_i8];
+                normalizedHeaders[_key3.toLowerCase()] = builtHeaders[_key3];
             }
         }
 
@@ -172,9 +119,9 @@ function request(_ref2) {
 
         xhr.open(method, url, true);
 
-        for (var _key2 in normalizedHeaders) {
-            if (normalizedHeaders.hasOwnProperty(_key2)) {
-                xhr.setRequestHeader(_key2, normalizedHeaders[_key2]);
+        for (var _key4 in normalizedHeaders) {
+            if (normalizedHeaders.hasOwnProperty(_key4)) {
+                xhr.setRequestHeader(_key4, normalizedHeaders[_key4]);
             }
         }
 

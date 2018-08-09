@@ -1,13 +1,8 @@
-'use strict';
-
-exports.__esModule = true;
-exports.getStorage = getStorage;
-
-var _util = require('./util');
+import { uniqueID, isLocalStorageEnabled } from './util';
 
 var storeCache = {};
 
-function getStorage(_ref) {
+export function getStorage(_ref) {
     var name = _ref.name,
         _ref$version = _ref.version,
         version = _ref$version === undefined ? 'latest' : _ref$version,
@@ -25,7 +20,7 @@ function getStorage(_ref) {
 
     function getState(handler) {
 
-        var localStorageEnabled = (0, _util.isLocalStorageEnabled)();
+        var localStorageEnabled = isLocalStorageEnabled();
         var storage = void 0;
 
         if (accessedStorage) {
@@ -46,12 +41,12 @@ function getStorage(_ref) {
 
         if (!storage) {
             storage = {
-                id: (0, _util.uniqueID)()
+                id: uniqueID()
             };
         }
 
         if (!storage.id) {
-            storage.id = (0, _util.uniqueID)();
+            storage.id = uniqueID();
         }
 
         accessedStorage = storage;
@@ -87,7 +82,7 @@ function getStorage(_ref) {
 
             if (!session) {
                 session = {
-                    guid: (0, _util.uniqueID)(),
+                    guid: uniqueID(),
                     created: now
                 };
             }

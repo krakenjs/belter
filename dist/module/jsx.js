@@ -1,16 +1,4 @@
-'use strict';
-
-exports.__esModule = true;
-exports.JsxHTMLNodeContainer = exports.JsxHTMLNode = undefined;
-
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-exports.jsxToHTML = jsxToHTML;
-exports.jsxRender = jsxRender;
-exports.Fragment = Fragment;
-exports.SVG = SVG;
-
-var _util = require('./util');
 
 function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
@@ -19,16 +7,21 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
 /* @jsx jsxToHTML */
 
+import { regexMap, svgToBase64 } from './util';
+
 // eslint-disable-next-line no-use-before-define
+
+
 function htmlEncode() {
     var html = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
 
     return html.toString().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/\//g, '&#x2F;');
 }
 
-var JsxHTMLNode = exports.JsxHTMLNode = function () {
+export var JsxHTMLNode = function () {
     function JsxHTMLNode(name, props, children) {
         _classCallCheck(this, JsxHTMLNode);
 
@@ -79,20 +72,8 @@ var JsxHTMLNode = exports.JsxHTMLNode = function () {
         var result = '';
 
         function iterate(children) {
-            for (var _iterator = children, _isArray = Array.isArray(_iterator), _i = 0, _iterator = _isArray ? _iterator : _iterator[Symbol.iterator]();;) {
-                var _ref;
-
-                if (_isArray) {
-                    if (_i >= _iterator.length) break;
-                    _ref = _iterator[_i++];
-                } else {
-                    _i = _iterator.next();
-                    if (_i.done) break;
-                    _ref = _i.value;
-                }
-
-                var child = _ref;
-
+            for (var _i2 = 0, _length2 = children == null ? 0 : children.length; _i2 < _length2; _i2++) {
+                var child = children[_i2];
 
                 if (child === null || child === undefined) {
                     continue;
@@ -116,7 +97,7 @@ var JsxHTMLNode = exports.JsxHTMLNode = function () {
     return JsxHTMLNode;
 }();
 
-var JsxHTMLNodeContainer = exports.JsxHTMLNodeContainer = function (_JsxHTMLNode) {
+export var JsxHTMLNodeContainer = function (_JsxHTMLNode) {
     _inherits(JsxHTMLNodeContainer, _JsxHTMLNode);
 
     function JsxHTMLNodeContainer(children) {
@@ -132,7 +113,7 @@ var JsxHTMLNodeContainer = exports.JsxHTMLNodeContainer = function (_JsxHTMLNode
     return JsxHTMLNodeContainer;
 }(JsxHTMLNode);
 
-function jsxToHTML(element) {
+export function jsxToHTML(element) {
     var props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
     for (var _len = arguments.length, children = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
@@ -150,10 +131,10 @@ function jsxToHTML(element) {
     throw new TypeError('Expected jsx Element to be a string or a function');
 }
 
-function jsxRender(template, renderers) {
+export function jsxRender(template, renderers) {
 
     // eslint-disable-next-line security/detect-unsafe-regex
-    var nodes = (0, _util.regexMap)(template, /\{\s*([a-z]+)(?::\s*([^} ]+))?\s*\}|([^${}]+)/g, function (match, type, value, text) {
+    var nodes = regexMap(template, /\{\s*([a-z]+)(?::\s*([^} ]+))?\s*\}|([^${}]+)/g, function (match, type, value, text) {
         if (type) {
             if (!renderers[type]) {
                 throw new Error('Can not render type: ' + type);
@@ -179,11 +160,11 @@ function jsxRender(template, renderers) {
     return new JsxHTMLNodeContainer(nodes);
 }
 
-function Fragment(props, children) {
+export function Fragment(props, children) {
     return new JsxHTMLNodeContainer(children);
 }
 
-function SVG(props) {
+export function SVG(props) {
     var svg = props.svg,
         otherProps = _objectWithoutProperties(props, ['svg']);
 
@@ -195,5 +176,5 @@ function SVG(props) {
         throw new TypeError('Expected svg prop to be a string or jsx html node');
     }
 
-    return jsxToHTML('img', _extends({ src: (0, _util.svgToBase64)(svg.toString()) }, otherProps));
+    return jsxToHTML('img', _extends({ src: svgToBase64(svg.toString()) }, otherProps));
 }
