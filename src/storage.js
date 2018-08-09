@@ -4,10 +4,12 @@ import { uniqueID, isLocalStorageEnabled } from './util';
 
 let storeCache = {};
 
+type Getter<T> = <T>(handler : (Object) => T) => T;
+
 type Storage = {
-    getState : <T>(handler : (Object) => T) => T,
+    getState : Getter<*>,
     getID : () => string,
-    getSessionState : <T>(handler : (Object) => T) => T,
+    getSessionState : Getter<*>,
     getSessionID : () => string
 };
 
