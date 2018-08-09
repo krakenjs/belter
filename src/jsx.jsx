@@ -5,9 +5,9 @@ import { regexMap, svgToBase64 } from './util';
 
 // eslint-disable-next-line no-use-before-define
 type ChildType = $ReadOnlyArray<ChildType> | JsxHTMLNode | string | void | null;
-type ChildrenType = $ReadOnlyArray<ChildType>;
+export type ChildrenType = $ReadOnlyArray<ChildType>;
 
-type PropsType = {
+export type PropsType = {
     class? : string,
     id? : string,
     innerHTML? : string,
