@@ -368,3 +368,7 @@ export function objFilter<T, R>(obj : { [string] : T }, filter? : (T, ?string) =
 
     return result;
 }
+
+export function identity <T>(item : T) : T {
+    return item;
+}
