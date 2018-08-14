@@ -1,12 +1,17 @@
-import { getGlobal } from './util';
+'use strict';
 
-export function getGlobalNameSpace(_ref) {
+exports.__esModule = true;
+exports.getGlobalNameSpace = getGlobalNameSpace;
+
+var _util = require('./util');
+
+function getGlobalNameSpace(_ref) {
     var name = _ref.name,
         _ref$version = _ref.version,
         version = _ref$version === undefined ? 'latest' : _ref$version;
 
 
-    var global = getGlobal();
+    var global = (0, _util.getGlobal)();
     var globalKey = '__' + name + '__' + version + '_global__';
 
     var namespace = global[globalKey] = global[globalKey] || {};

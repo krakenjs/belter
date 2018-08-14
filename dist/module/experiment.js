@@ -1,7 +1,13 @@
-import { getStorage } from './storage';
-import { noop } from './util';
+'use strict';
 
-var storage = getStorage({ name: 'belter_experiment' });
+exports.__esModule = true;
+exports.experiment = experiment;
+
+var _storage = require('./storage');
+
+var _util = require('./util');
+
+var storage = (0, _storage.getStorage)({ name: 'belter_experiment' });
 
 function isEventUnique(name) {
     return storage.getSessionState(function (state) {
@@ -30,14 +36,14 @@ var THROTTLE_GROUP = {
     THROTTLE: 'throttle'
 };
 
-export function experiment(_ref) {
+function experiment(_ref) {
     var name = _ref.name,
         _ref$sample = _ref.sample,
         sample = _ref$sample === undefined ? 50 : _ref$sample,
         _ref$logTreatment = _ref.logTreatment,
-        logTreatment = _ref$logTreatment === undefined ? noop : _ref$logTreatment,
+        logTreatment = _ref$logTreatment === undefined ? _util.noop : _ref$logTreatment,
         _ref$logCheckpoint = _ref.logCheckpoint,
-        logCheckpoint = _ref$logCheckpoint === undefined ? noop : _ref$logCheckpoint;
+        logCheckpoint = _ref$logCheckpoint === undefined ? _util.noop : _ref$logCheckpoint;
 
 
     var throttle = getThrottlePercentile(name);

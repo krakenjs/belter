@@ -1,8 +1,31 @@
-export function getUserAgent() {
+'use strict';
+
+exports.__esModule = true;
+exports.getUserAgent = getUserAgent;
+exports.isDevice = isDevice;
+exports.isWebView = isWebView;
+exports.isStandAlone = isStandAlone;
+exports.isFacebookWebView = isFacebookWebView;
+exports.isFirefoxIOS = isFirefoxIOS;
+exports.isEdgeIOS = isEdgeIOS;
+exports.isOperaMini = isOperaMini;
+exports.isAndroid = isAndroid;
+exports.isIos = isIos;
+exports.isGoogleSearchApp = isGoogleSearchApp;
+exports.isQQBrowser = isQQBrowser;
+exports.isIosWebview = isIosWebview;
+exports.isAndroidWebview = isAndroidWebview;
+exports.isIE = isIE;
+exports.isIECompHeader = isIECompHeader;
+exports.isElectron = isElectron;
+exports.isIEIntranet = isIEIntranet;
+exports.isMacOsCna = isMacOsCna;
+exports.supportsPopups = supportsPopups;
+function getUserAgent() {
     return window.navigator.mockUserAgent || window.navigator.userAgent;
 }
 
-export function isDevice() {
+function isDevice() {
     var userAgent = getUserAgent();
     if (userAgent.match(/Android|webOS|iPhone|iPad|iPod|bada|Symbian|Palm|CriOS|BlackBerry|IEMobile|WindowsMobile|Opera Mini/i)) {
         return true;
@@ -11,71 +34,71 @@ export function isDevice() {
     return false;
 }
 
-export function isWebView() {
+function isWebView() {
     var userAgent = getUserAgent();
     return (/(iPhone|iPod|iPad|Macintosh).*AppleWebKit(?!.*Safari)/i.test(userAgent) || /\bwv\b/.test(userAgent) || /Android.*Version\/(\d)\.(\d)/i.test(userAgent)
     );
 }
 
-export function isStandAlone() {
+function isStandAlone() {
     return window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
 }
 
-export function isFacebookWebView() {
+function isFacebookWebView() {
     var ua = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : getUserAgent();
 
     return ua.indexOf('FBAN') !== -1 || ua.indexOf('FBAV') !== -1;
 }
 
-export function isFirefoxIOS() {
+function isFirefoxIOS() {
     var ua = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : getUserAgent();
 
     return (/FxiOS/i.test(ua)
     );
 }
 
-export function isEdgeIOS() {
+function isEdgeIOS() {
     var ua = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : getUserAgent();
 
     return (/EdgiOS/i.test(ua)
     );
 }
 
-export function isOperaMini() {
+function isOperaMini() {
     var ua = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : getUserAgent();
 
     return ua.indexOf('Opera Mini') > -1;
 }
 
-export function isAndroid() {
+function isAndroid() {
     var ua = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : getUserAgent();
 
     return (/Android/.test(ua)
     );
 }
 
-export function isIos() {
+function isIos() {
     var ua = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : getUserAgent();
 
     return (/iPhone|iPod|iPad/.test(ua)
     );
 }
 
-export function isGoogleSearchApp() {
+function isGoogleSearchApp() {
     var ua = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : getUserAgent();
 
     return (/\bGSA\b/.test(ua)
     );
 }
 
-export function isQQBrowser() {
+function isQQBrowser() {
     var ua = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : getUserAgent();
 
     return (/QQBrowser/.test(ua)
     );
 }
 
-export function isIosWebview() {
+function isIosWebview() {
     var ua = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : getUserAgent();
 
     if (isIos(ua)) {
@@ -88,7 +111,7 @@ export function isIosWebview() {
     return false;
 }
 
-export function isAndroidWebview() {
+function isAndroidWebview() {
     var ua = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : getUserAgent();
 
     if (isAndroid(ua)) {
@@ -98,7 +121,7 @@ export function isAndroidWebview() {
     return false;
 }
 
-export function isIE() {
+function isIE() {
 
     if (window.document.documentMode) {
         return true;
@@ -107,7 +130,7 @@ export function isIE() {
     return Boolean(window.navigator && window.navigator.userAgent && /Edge|MSIE/i.test(window.navigator.userAgent));
 }
 
-export function isIECompHeader() {
+function isIECompHeader() {
     var mHttp = window.document.querySelector('meta[http-equiv="X-UA-Compatible"]');
     var mContent = window.document.querySelector('meta[content="IE=edge"]');
     if (mHttp && mContent) {
@@ -116,14 +139,14 @@ export function isIECompHeader() {
     return false;
 }
 
-export function isElectron() {
+function isElectron() {
     if (typeof process !== 'undefined' && process.versions && process.versions.electron) {
         return true;
     }
     return false;
 }
 
-export function isIEIntranet() {
+function isIEIntranet() {
 
     // This status check only works for older versions of IE with document.documentMode set
 
@@ -149,13 +172,13 @@ export function isIEIntranet() {
     return false;
 }
 
-export function isMacOsCna() {
+function isMacOsCna() {
     var userAgent = getUserAgent();
     return (/Macintosh.*AppleWebKit(?!.*Safari)/i.test(userAgent)
     );
 }
 
-export function supportsPopups() {
+function supportsPopups() {
     var ua = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : getUserAgent();
 
     return !(isIosWebview(ua) || isAndroidWebview(ua) || isOperaMini(ua) || isFirefoxIOS(ua) || isEdgeIOS(ua) || isFacebookWebView(ua) || isQQBrowser(ua) || isElectron() || isMacOsCna() || isStandAlone());

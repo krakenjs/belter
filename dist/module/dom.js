@@ -1,15 +1,30 @@
-import { ZalgoPromise } from 'zalgo-promise/src';
+'use strict';
 
+exports.__esModule = true;
+exports.enablePerformance = exports.parseQuery = exports.waitForDocumentReady = undefined;
+exports.isDocumentReady = isDocumentReady;
+exports.waitForDocumentBody = waitForDocumentBody;
+exports.getQueryParam = getQueryParam;
+exports.urlWillRedirectPage = urlWillRedirectPage;
+exports.extendUrl = extendUrl;
+exports.redirect = redirect;
+exports.hasMetaViewPort = hasMetaViewPort;
+exports.isElementVisible = isElementVisible;
+exports.getPageRenderTime = getPageRenderTime;
+exports.htmlEncode = htmlEncode;
 
-import { memoize } from './util';
-import { isDevice } from './device';
+var _src = require('zalgo-promise/src');
 
-export function isDocumentReady() {
+var _util = require('./util');
+
+var _device = require('./device');
+
+function isDocumentReady() {
     return Boolean(document.body) && document.readyState === 'complete';
 }
 
-export var waitForDocumentReady = memoize(function () {
-    return new ZalgoPromise(function (resolve) {
+var waitForDocumentReady = exports.waitForDocumentReady = (0, _util.memoize)(function () {
+    return new _src.ZalgoPromise(function (resolve) {
 
         if (isDocumentReady()) {
             return resolve();
@@ -24,7 +39,7 @@ export var waitForDocumentReady = memoize(function () {
     });
 });
 
-export function waitForDocumentBody() {
+function waitForDocumentBody() {
     return waitForDocumentReady.then(function () {
         if (document.body) {
             return document.body;
@@ -34,7 +49,7 @@ export function waitForDocumentBody() {
     });
 }
 
-export var parseQuery = memoize(function (queryString) {
+var parseQuery = exports.parseQuery = (0, _util.memoize)(function (queryString) {
 
     var params = {};
 
@@ -58,11 +73,11 @@ export var parseQuery = memoize(function (queryString) {
     return params;
 });
 
-export function getQueryParam(name) {
+function getQueryParam(name) {
     return parseQuery(window.location.search.slice(1))[name];
 }
 
-export function urlWillRedirectPage(url) {
+function urlWillRedirectPage(url) {
 
     if (url.indexOf('#') === -1) {
         return true;
@@ -79,7 +94,7 @@ export function urlWillRedirectPage(url) {
     return true;
 }
 
-export function extendUrl(url) {
+function extendUrl(url) {
     var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
 
@@ -128,10 +143,10 @@ export function extendUrl(url) {
     return newUrl;
 }
 
-export function redirect(url) {
+function redirect(url) {
     var win = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : window;
 
-    return new ZalgoPromise(function (resolve) {
+    return new _src.ZalgoPromise(function (resolve) {
         setTimeout(function () {
             win.location = url;
             if (!urlWillRedirectPage(url)) {
@@ -141,27 +156,27 @@ export function redirect(url) {
     });
 }
 
-export function hasMetaViewPort() {
+function hasMetaViewPort() {
     var meta = document.querySelector('meta[name=viewport]');
 
-    if (isDevice() && window.screen.width < 660 && !meta) {
+    if ((0, _device.isDevice)() && window.screen.width < 660 && !meta) {
         return false;
     }
 
     return true;
 }
 
-export function isElementVisible(el) {
+function isElementVisible(el) {
     return Boolean(el.offsetWidth || el.offsetHeight || el.getClientRects().length);
 }
 
-export var enablePerformance = memoize(function () {
+var enablePerformance = exports.enablePerformance = (0, _util.memoize)(function () {
     /* eslint-disable compat/compat */
     return Boolean(window.performance && performance.now && performance.timing && performance.timing.connectEnd && performance.timing.navigationStart && Math.abs(performance.now() - Date.now()) > 1000 && performance.now() - (performance.timing.connectEnd - performance.timing.navigationStart) > 0);
     /* eslint-enable compat/compat */
 });
 
-export function getPageRenderTime() {
+function getPageRenderTime() {
     return waitForDocumentReady().then(function () {
 
         if (!enablePerformance()) {
@@ -176,7 +191,7 @@ export function getPageRenderTime() {
     });
 }
 
-export function htmlEncode() {
+function htmlEncode() {
     var html = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
 
     return html.toString().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/\//g, '&#x2F;');
