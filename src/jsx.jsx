@@ -1,7 +1,7 @@
 /* @flow */
 /* @jsx jsxToHTML */
 
-import { regexMap, svgToBase64 } from './util';
+import { regexMap, svgToBase64, regexTokenize } from './util';
 
 // eslint-disable-next-line no-use-before-define
 type ChildType = $ReadOnlyArray<ChildType> | JsxHTMLNode | string | void | null;
@@ -170,4 +170,18 @@ export function SVG(props : PropsType) : JsxHTMLNode {
     return (
         <img src={ svgToBase64(svg.toString()) } { ...otherProps } />
     );
+}
+
+export function placeholderToJSX(text : string, placeholders : { [string] : (?string) => JsxHTMLNode | string }) : Array<string | JsxHTMLNode> {
+    return regexTokenize(text, /(\{[a-z]+\})|([^{}]+)/g)
+        .map(token => {
+            let match = token.match(/^{([a-z]+)}$/);
+            if (match) {
+                return placeholders[match[1]]();
+            } else if (placeholders.text) {
+                return placeholders.text(token);
+            } else {
+                return token;
+            }
+        });
 }

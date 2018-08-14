@@ -372,3 +372,12 @@ export function objFilter<T, R>(obj : { [string] : T }, filter? : (T, ?string) =
 export function identity <T>(item : T) : T {
     return item;
 }
+
+export function regexTokenize(text : string, regex : RegExp) : Array<string> {
+    let result = [];
+    text.replace(regex, token => {
+        result.push(token);
+        return '';
+    });
+    return result;
+}
