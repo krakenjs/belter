@@ -1,16 +1,9 @@
-'use strict';
-
-exports.__esModule = true;
-
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-exports.request = request;
-
-var _src = require('zalgo-promise/src');
-
-require('cross-domain-utils/src');
+import { ZalgoPromise } from 'zalgo-promise/src';
+import 'cross-domain-utils/src';
 
 var HEADERS = {
     CONTENT_TYPE: 'content-type',
@@ -36,7 +29,7 @@ function parseHeaders() {
     return result;
 }
 
-function request(_ref) {
+export function request(_ref) {
     var url = _ref.url,
         _ref$method = _ref.method,
         method = _ref$method === undefined ? 'get' : _ref$method,
@@ -50,7 +43,7 @@ function request(_ref) {
         _ref$timeout = _ref.timeout,
         timeout = _ref$timeout === undefined ? 0 : _ref$timeout;
 
-    return new _src.ZalgoPromise(function (resolve, reject) {
+    return new ZalgoPromise(function (resolve, reject) {
 
         if (json && data || json && body || data && json) {
             throw new Error('Only options.json or options.data or options.body should be passed');

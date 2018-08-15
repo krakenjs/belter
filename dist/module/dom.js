@@ -1,30 +1,27 @@
-'use strict';
+import { ZalgoPromise } from 'zalgo-promise/src';
 
-exports.__esModule = true;
-exports.enablePerformance = exports.parseQuery = exports.waitForDocumentReady = undefined;
-exports.isDocumentReady = isDocumentReady;
-exports.waitForDocumentBody = waitForDocumentBody;
-exports.getQueryParam = getQueryParam;
-exports.urlWillRedirectPage = urlWillRedirectPage;
-exports.extendUrl = extendUrl;
-exports.redirect = redirect;
-exports.hasMetaViewPort = hasMetaViewPort;
-exports.isElementVisible = isElementVisible;
-exports.getPageRenderTime = getPageRenderTime;
-exports.htmlEncode = htmlEncode;
 
-var _src = require('zalgo-promise/src');
+import { memoize } from './util';
+import { isDevice } from './device';
 
-var _util = require('./util');
-
-var _device = require('./device');
-
-function isDocumentReady() {
+export function isDocumentReady() {
     return Boolean(document.body) && document.readyState === 'complete';
 }
 
-var waitForDocumentReady = exports.waitForDocumentReady = (0, _util.memoize)(function () {
-    return new _src.ZalgoPromise(function (resolve) {
+export var waitForWindowReady = memoize(function () {
+    return new ZalgoPromise(function (resolve) {
+        if (isDocumentReady()) {
+            resolve();
+        }
+
+        window.addEventListener('load', function () {
+            return resolve();
+        });
+    });
+});
+
+export var waitForDocumentReady = memoize(function () {
+    return new ZalgoPromise(function (resolve) {
 
         if (isDocumentReady()) {
             return resolve();
@@ -39,7 +36,7 @@ var waitForDocumentReady = exports.waitForDocumentReady = (0, _util.memoize)(fun
     });
 });
 
-function waitForDocumentBody() {
+export function waitForDocumentBody() {
     return waitForDocumentReady.then(function () {
         if (document.body) {
             return document.body;
@@ -49,7 +46,7 @@ function waitForDocumentBody() {
     });
 }
 
-var parseQuery = exports.parseQuery = (0, _util.memoize)(function (queryString) {
+export var parseQuery = memoize(function (queryString) {
 
     var params = {};
 
@@ -73,11 +70,11 @@ var parseQuery = exports.parseQuery = (0, _util.memoize)(function (queryString) 
     return params;
 });
 
-function getQueryParam(name) {
+export function getQueryParam(name) {
     return parseQuery(window.location.search.slice(1))[name];
 }
 
-function urlWillRedirectPage(url) {
+export function urlWillRedirectPage(url) {
 
     if (url.indexOf('#') === -1) {
         return true;
@@ -94,7 +91,7 @@ function urlWillRedirectPage(url) {
     return true;
 }
 
-function extendUrl(url) {
+export function extendUrl(url) {
     var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
 
@@ -143,10 +140,10 @@ function extendUrl(url) {
     return newUrl;
 }
 
-function redirect(url) {
+export function redirect(url) {
     var win = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : window;
 
-    return new _src.ZalgoPromise(function (resolve) {
+    return new ZalgoPromise(function (resolve) {
         setTimeout(function () {
             win.location = url;
             if (!urlWillRedirectPage(url)) {
@@ -156,27 +153,27 @@ function redirect(url) {
     });
 }
 
-function hasMetaViewPort() {
+export function hasMetaViewPort() {
     var meta = document.querySelector('meta[name=viewport]');
 
-    if ((0, _device.isDevice)() && window.screen.width < 660 && !meta) {
+    if (isDevice() && window.screen.width < 660 && !meta) {
         return false;
     }
 
     return true;
 }
 
-function isElementVisible(el) {
+export function isElementVisible(el) {
     return Boolean(el.offsetWidth || el.offsetHeight || el.getClientRects().length);
 }
 
-var enablePerformance = exports.enablePerformance = (0, _util.memoize)(function () {
+export var enablePerformance = memoize(function () {
     /* eslint-disable compat/compat */
     return Boolean(window.performance && performance.now && performance.timing && performance.timing.connectEnd && performance.timing.navigationStart && Math.abs(performance.now() - Date.now()) > 1000 && performance.now() - (performance.timing.connectEnd - performance.timing.navigationStart) > 0);
     /* eslint-enable compat/compat */
 });
 
-function getPageRenderTime() {
+export function getPageRenderTime() {
     return waitForDocumentReady().then(function () {
 
         if (!enablePerformance()) {
@@ -191,8 +188,12 @@ function getPageRenderTime() {
     });
 }
 
-function htmlEncode() {
+export function htmlEncode() {
     var html = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
 
     return html.toString().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/\//g, '&#x2F;');
+}
+
+export function isBrowser() {
+    return typeof window !== 'undefined';
 }
