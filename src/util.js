@@ -1,7 +1,5 @@
 /* @flow */
 
-import base32 from 'hi-base32';
-import { btoa } from 'Base64';
 import { ZalgoPromise } from 'zalgo-promise/src';
 
 export function getGlobal() : Object {
@@ -17,10 +15,18 @@ export function getGlobal() : Object {
 // eslint-disable-next-line flowtype/no-weak-types
 export function memoize<R>(method : (...args : Array<any>) => R, options : { time? : number } = {}) : ((...args : Array<any>) => R) {
 
+    if (method.__memoized__) {
+        return method.__memoized__;
+    }
+
     let cache : { [key : string] : { time : number, value : R } } = {};
 
     // eslint-disable-next-line no-unused-vars, flowtype/no-weak-types
-    return function memoizedFunction(...args : Array<any>) : R {
+    method.__memoized__ = function memoizedFunction(...args : Array<any>) : R {
+
+        if (method.__memoized__ && method.__memoized__.__calling__) {
+            throw new Error(`Can not call memoized method recursively`);
+        }
 
         let key : string;
 
@@ -30,9 +36,8 @@ export function memoize<R>(method : (...args : Array<any>) => R, options : { tim
             throw new Error(`Arguments not serializable -- can not be used to memoize`);
         }
 
-        let time = options.time;
-
-        if (cache[key] && time && (Date.now() - cache[key].time) < time) {
+        let cacheTime = options.time;
+        if (cache[key] && cacheTime && (Date.now() - cache[key].time) < cacheTime) {
             delete cache[key];
         }
 
@@ -46,13 +51,30 @@ export function memoize<R>(method : (...args : Array<any>) => R, options : { tim
             return cache[key].value;
         }
 
-        cache[key] = {
-            time:  Date.now(),
-            value: method.apply(this, arguments)
-        };
+        method.__memoized__.__calling__ = true;
+
+        let time  = Date.now();
+        let value = method.apply(this, arguments);
+
+        method.__memoized__.__calling__ = false;
+
+        cache[key] = { time, value };
 
         return cache[key].value;
     };
+
+    return method.__memoized__;
+}
+
+// eslint-disable-next-line flowtype/no-weak-types
+export function inlineMemoize<R>(method : (...args : Array<any>) => R, logic : (...args : Array<any>) => R, args : Array<any> = []) : R {
+    if (!method.__memoized__) {
+        // $FlowFixMe
+        method.__memoized__ = memoize(logic);
+    }
+
+    // $FlowFixMe
+    return method.__memoized__(...args);
 }
 
 // eslint-disable-next-line no-unused-vars
@@ -71,6 +93,20 @@ export function once(method : Function) : Function {
     };
 }
 
+export function base64encode(str : string) : string {
+    if (typeof __WEB__ === 'undefined') {
+        return require('Base64').btoa(str);
+    }
+    return window.btoa(str);
+}
+
+export function base64decode(str : string) : string {
+    if (typeof __WEB__ === 'undefined') {
+        return require('Base64').atob(str);
+    }
+    return window.atob(str);
+}
+
 export function uniqueID() : string {
 
     let chars = '0123456789abcdef';
@@ -79,7 +115,7 @@ export function uniqueID() : string {
         return chars.charAt(Math.floor(Math.random() * chars.length));
     });
 
-    let timeID = base32.encode(
+    let timeID = base64encode(
         new Date().toISOString().slice(11, 19).replace('T', '.')
     ).replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
     
@@ -260,26 +296,28 @@ export function stringify(item : mixed) : string {
 }
 
 
-export let isLocalStorageEnabled = memoize(() : boolean => {
-    try {
-        if (typeof window === 'undefined') {
-            return false;
-        }
-
-        if (window.localStorage) {
-            let value = Math.random().toString();
-            window.localStorage.setItem('__test__localStorage__', value);
-            let result = window.localStorage.getItem('__test__localStorage__');
-            window.localStorage.removeItem('__test__localStorage__');
-            if (value === result) {
-                return true;
+export function isLocalStorageEnabled() : boolean {
+    return inlineMemoize(isLocalStorageEnabled, () => {
+        try {
+            if (typeof window === 'undefined') {
+                return false;
             }
+
+            if (window.localStorage) {
+                let value = Math.random().toString();
+                window.localStorage.setItem('__test__localStorage__', value);
+                let result = window.localStorage.getItem('__test__localStorage__');
+                window.localStorage.removeItem('__test__localStorage__');
+                if (value === result) {
+                    return true;
+                }
+            }
+        } catch (err) {
+            // pass
         }
-    } catch (err) {
-        // pass
-    }
-    return false;
-});
+        return false;
+    });
+}
 
 export function domainMatches(hostname : string, domain : string) : boolean {
     hostname = hostname.split('://')[1];
@@ -352,7 +390,7 @@ export function regexMap<T>(str : string, regex : RegExp, handler : () => T) : A
 }
 
 export function svgToBase64(svg : string) : string {
-    return `data:image/svg+xml;base64,${ btoa(svg) }`;
+    return `data:image/svg+xml;base64,${ base64encode(svg) }`;
 }
 
 export function objFilter<T, R>(obj : { [string] : T }, filter? : (T, ?string) => mixed = Boolean) : { [string] : R } {

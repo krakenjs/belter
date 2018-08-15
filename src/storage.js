@@ -2,8 +2,6 @@
 
 import { uniqueID, isLocalStorageEnabled, getGlobal } from './util';
 
-let storeCache = {};
-
 type Getter<T> = <T>(handler : (Object) => T) => T;
 
 type Storage = {
@@ -16,10 +14,6 @@ type Storage = {
 export function getStorage({ name, version = 'latest', lifetime = (5 * 60 * 1000) } : { name : string, version? : string, lifetime? : number }) : Storage {
 
     const STORAGE_KEY = `__${ name }_${ version }_storage__`;
-
-    if (storeCache[STORAGE_KEY]) {
-        return storeCache[STORAGE_KEY];
-    }
 
     let accessedStorage;
 

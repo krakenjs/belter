@@ -3,38 +3,42 @@
 import { ZalgoPromise } from 'zalgo-promise/src';
 import type { CrossDomainWindowType } from 'cross-domain-utils/src';
 
-import { memoize } from './util';
+import { inlineMemoize } from './util';
 import { isDevice } from './device';
 
 export function isDocumentReady() : boolean {
     return Boolean(document.body) && document.readyState === 'complete';
 }
 
-export let waitForWindowReady = memoize(() : ZalgoPromise<void> => {
-    return new ZalgoPromise(resolve => {
-        if (isDocumentReady()) {
-            resolve();
-        }
-
-        window.addEventListener('load', () => resolve());
-    });
-});
-
-export let waitForDocumentReady = memoize(() : ZalgoPromise<void> => {
-    return new ZalgoPromise(resolve => {
-
-        if (isDocumentReady()) {
-            return resolve();
-        }
-
-        let interval = setInterval(() => {
+export function waitForWindowReady() : ZalgoPromise<void> {
+    return inlineMemoize(waitForWindowReady, () : ZalgoPromise<void> => {
+        return new ZalgoPromise(resolve => {
             if (isDocumentReady()) {
-                clearInterval(interval);
+                resolve();
+            }
+
+            window.addEventListener('load', () => resolve());
+        });
+    });
+}
+
+export function waitForDocumentReady() : ZalgoPromise<void> {
+    return inlineMemoize(waitForDocumentReady, () : ZalgoPromise<void> => {
+        return new ZalgoPromise(resolve => {
+
+            if (isDocumentReady()) {
                 return resolve();
             }
-        }, 10);
+
+            let interval = setInterval(() => {
+                if (isDocumentReady()) {
+                    clearInterval(interval);
+                    return resolve();
+                }
+            }, 10);
+        });
     });
-});
+}
 
 export function waitForDocumentBody() : ZalgoPromise<HTMLBodyElement> {
     return waitForDocumentReady.then(() => {
@@ -46,28 +50,29 @@ export function waitForDocumentBody() : ZalgoPromise<HTMLBodyElement> {
     });
 }
 
-export let parseQuery = memoize((queryString : string) : Object => {
+export function parseQuery(queryString : string) : Object {
+    return inlineMemoize(parseQuery, () : Object => {
+        let params = {};
 
-    let params = {};
-
-    if (!queryString) {
-        return params;
-    }
-
-    if (queryString.indexOf('=') === -1) {
-        return params;
-    }
-
-    for (let pair of queryString.split('&')) {
-        pair = pair.split('=');
-
-        if (pair[0] && pair[1]) {
-            params[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1]);
+        if (!queryString) {
+            return params;
         }
-    }
 
-    return params;
-});
+        if (queryString.indexOf('=') === -1) {
+            return params;
+        }
+
+        for (let pair of queryString.split('&')) {
+            pair = pair.split('=');
+
+            if (pair[0] && pair[1]) {
+                params[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1]);
+            }
+        }
+
+        return params;
+    }, [ queryString ]);
+}
 
 
 export function getQueryParam(name : string) : string {
@@ -155,19 +160,21 @@ export function isElementVisible(el : HTMLElement) : boolean {
     return Boolean(el.offsetWidth || el.offsetHeight || el.getClientRects().length);
 }
 
-export let enablePerformance = memoize(() : boolean => {
-    /* eslint-disable compat/compat */
-    return Boolean(
-        window.performance &&
-        performance.now &&
-        performance.timing &&
-        performance.timing.connectEnd &&
-        performance.timing.navigationStart &&
-        (Math.abs(performance.now() - Date.now()) > 1000) &&
-        (performance.now() - (performance.timing.connectEnd - performance.timing.navigationStart)) > 0
-    );
-    /* eslint-enable compat/compat */
-});
+export function enablePerformance() : boolean {
+    return inlineMemoize(enablePerformance, () : boolean => {
+        /* eslint-disable compat/compat */
+        return Boolean(
+            window.performance &&
+            performance.now &&
+            performance.timing &&
+            performance.timing.connectEnd &&
+            performance.timing.navigationStart &&
+            (Math.abs(performance.now() - Date.now()) > 1000) &&
+            (performance.now() - (performance.timing.connectEnd - performance.timing.navigationStart)) > 0
+        );
+        /* eslint-enable compat/compat */
+    });
+}
 
 export function getPageRenderTime() : ZalgoPromise<?number> {
     return waitForDocumentReady().then(() => {

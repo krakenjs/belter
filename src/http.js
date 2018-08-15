@@ -128,14 +128,6 @@ export function request({ url, method = 'get', headers = {}, json, data, body, w
     });
 }
 
-request.get = (url : string, options = {}) => {
-    return request({ method: 'get', url, ...options });
-};
-
-request.post = (url : string, data, options = {}) => {
-    return request({ method: 'post', url, data, ...options });
-};
-
-request.addHeaderBuilder = (method) => {
+export function addHeaderBuilder(method : () => { [string] : string }) {
     headerBuilders.push(method);
-};
+}

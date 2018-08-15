@@ -1,12 +1,14 @@
 /* @flow */
 
-import { getStorage } from './storage';
 import { noop } from './util';
+import { getStorage } from './storage';
 
-let storage = getStorage({ name: 'belter_experiment' });
+function getBelterExperimentStorage() : Object {
+    return getStorage({ name: 'belter_experiment' });
+}
 
 function isEventUnique(name : string) : boolean {
-    return storage.getSessionState(state => {
+    return getBelterExperimentStorage().getSessionState(state => {
         state.loggedBeacons = state.loggedBeacons || [];
 
         if (state.loggedBeacons.indexOf(name) === -1) {
@@ -28,7 +30,7 @@ export type Experiment = {
 };
 
 function getThrottlePercentile(name : string) : number {
-    return storage.getState(state => {
+    return getBelterExperimentStorage().getState(state => {
         state.throttlePercentiles = state.throttlePercentiles || {};
         state.throttlePercentiles[name] = state.throttlePercentiles[name] || Math.floor(Math.random() * 100);
         return state.throttlePercentiles[name];
