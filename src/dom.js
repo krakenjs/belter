@@ -10,6 +10,16 @@ export function isDocumentReady() : boolean {
     return Boolean(document.body) && document.readyState === 'complete';
 }
 
+export let waitForWindowReady = memoize(() : ZalgoPromise<void> => {
+    return new ZalgoPromise(resolve => {
+        if (isDocumentReady()) {
+            resolve();
+        }
+
+        window.addEventListener('load', () => resolve());
+    });
+});
+
 export let waitForDocumentReady = memoize(() : ZalgoPromise<void> => {
     return new ZalgoPromise(resolve => {
 

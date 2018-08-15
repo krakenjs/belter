@@ -381,3 +381,28 @@ export function regexTokenize(text : string, regex : RegExp) : Array<string> {
     });
     return result;
 }
+
+export function promiseDebounce<T>(method : () => ZalgoPromise<T> | T, delay : number = 50) : () => ZalgoPromise<T> {
+
+    let promise;
+    let timeout;
+
+    return function promiseDebouncedMethod() : ZalgoPromise<T> {
+        if (timeout) {
+            clearTimeout(timeout);
+        }
+
+        let localPromise = promise = promise || new ZalgoPromise();
+
+        timeout = setTimeout(() => {
+            promise = null;
+            timeout = null;
+
+            ZalgoPromise.try(method)
+                .then(result => localPromise.resolve(result),
+                    err    => localPromise.reject(err));
+        }, delay);
+
+        return localPromise;
+    };
+}
