@@ -444,3 +444,23 @@ export function promiseDebounce<T>(method : () => ZalgoPromise<T> | T, delay : n
         return localPromise;
     };
 }
+
+export function safeInterval(method : Function, time : number) : { cancel : () => void } {
+
+    let timeout;
+
+    function loop() {
+        timeout = setTimeout(() => {
+            method();
+            loop();
+        }, time);
+    }
+
+    loop();
+
+    return {
+        cancel() {
+            clearTimeout(timeout);
+        }
+    };
+}
