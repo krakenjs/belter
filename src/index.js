@@ -8,3 +8,4 @@ export * from './jsx';
 export * from './storage';
 export * from './util';
 export * from './http';
+export * from './types';
