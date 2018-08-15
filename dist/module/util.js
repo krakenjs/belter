@@ -1,5 +1,3 @@
-import base32 from 'hi-base32';
-import { btoa } from 'Base64';
 import { ZalgoPromise } from 'zalgo-promise/src';
 
 export function getGlobal() {
@@ -17,12 +15,20 @@ export function memoize(method) {
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
 
+    if (method.__memoized__) {
+        return method.__memoized__;
+    }
+
     var cache = {};
 
     // eslint-disable-next-line no-unused-vars, flowtype/no-weak-types
-    return function memoizedFunction() {
+    method.__memoized__ = function memoizedFunction() {
         for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
             args[_key] = arguments[_key];
+        }
+
+        if (method.__memoized__ && method.__memoized__.__calling__) {
+            throw new Error('Can not call memoized method recursively');
         }
 
         var key = void 0;
@@ -33,9 +39,8 @@ export function memoize(method) {
             throw new Error('Arguments not serializable -- can not be used to memoize');
         }
 
-        var time = options.time;
-
-        if (cache[key] && time && Date.now() - cache[key].time < time) {
+        var cacheTime = options.time;
+        if (cache[key] && cacheTime && Date.now() - cache[key].time < cacheTime) {
             delete cache[key];
         }
 
@@ -49,13 +54,32 @@ export function memoize(method) {
             return cache[key].value;
         }
 
-        cache[key] = {
-            time: Date.now(),
-            value: method.apply(this, arguments)
-        };
+        method.__memoized__.__calling__ = true;
+
+        var time = Date.now();
+        var value = method.apply(this, arguments);
+
+        method.__memoized__.__calling__ = false;
+
+        cache[key] = { time: time, value: value };
 
         return cache[key].value;
     };
+
+    return method.__memoized__;
+}
+
+// eslint-disable-next-line flowtype/no-weak-types
+export function inlineMemoize(method, logic) {
+    var args = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+
+    if (!method.__memoized__) {
+        // $FlowFixMe
+        method.__memoized__ = memoize(logic);
+    }
+
+    // $FlowFixMe
+    return method.__memoized__.apply(method, args);
 }
 
 // eslint-disable-next-line no-unused-vars
@@ -74,6 +98,20 @@ export function once(method) {
     };
 }
 
+export function base64encode(str) {
+    if (typeof __WEB__ === 'undefined') {
+        return require('Base64').btoa(str);
+    }
+    return window.btoa(str);
+}
+
+export function base64decode(str) {
+    if (typeof __WEB__ === 'undefined') {
+        return require('Base64').atob(str);
+    }
+    return window.atob(str);
+}
+
 export function uniqueID() {
 
     var chars = '0123456789abcdef';
@@ -82,7 +120,7 @@ export function uniqueID() {
         return chars.charAt(Math.floor(Math.random() * chars.length));
     });
 
-    var timeID = base32.encode(new Date().toISOString().slice(11, 19).replace('T', '.')).replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+    var timeID = base64encode(new Date().toISOString().slice(11, 19).replace('T', '.')).replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
 
     return randomID + '_' + timeID;
 }
@@ -252,26 +290,28 @@ export function stringify(item) {
     return Object.prototype.toString.call(item);
 }
 
-export var isLocalStorageEnabled = memoize(function () {
-    try {
-        if (typeof window === 'undefined') {
-            return false;
-        }
-
-        if (window.localStorage) {
-            var _value = Math.random().toString();
-            window.localStorage.setItem('__test__localStorage__', _value);
-            var result = window.localStorage.getItem('__test__localStorage__');
-            window.localStorage.removeItem('__test__localStorage__');
-            if (_value === result) {
-                return true;
+export function isLocalStorageEnabled() {
+    return inlineMemoize(isLocalStorageEnabled, function () {
+        try {
+            if (typeof window === 'undefined') {
+                return false;
             }
+
+            if (window.localStorage) {
+                var _value = Math.random().toString();
+                window.localStorage.setItem('__test__localStorage__', _value);
+                var result = window.localStorage.getItem('__test__localStorage__');
+                window.localStorage.removeItem('__test__localStorage__');
+                if (_value === result) {
+                    return true;
+                }
+            }
+        } catch (err) {
+            // pass
         }
-    } catch (err) {
-        // pass
-    }
-    return false;
-});
+        return false;
+    });
+}
 
 export function domainMatches(hostname, domain) {
     hostname = hostname.split('://')[1];
@@ -349,7 +389,7 @@ export function regexMap(str, regex, handler) {
 }
 
 export function svgToBase64(svg) {
-    return 'data:image/svg+xml;base64,' + btoa(svg);
+    return 'data:image/svg+xml;base64,' + base64encode(svg);
 }
 
 export function objFilter(obj) {

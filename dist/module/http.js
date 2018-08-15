@@ -1,5 +1,3 @@
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 import { ZalgoPromise } from 'zalgo-promise/src';
@@ -142,18 +140,6 @@ export function request(_ref) {
     });
 }
 
-request.get = function (url) {
-    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
-    return request(_extends({ method: 'get', url: url }, options));
-};
-
-request.post = function (url, data) {
-    var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-
-    return request(_extends({ method: 'post', url: url, data: data }, options));
-};
-
-request.addHeaderBuilder = function (method) {
+export function addHeaderBuilder(method) {
     headerBuilders.push(method);
-};
+}

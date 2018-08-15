@@ -1,40 +1,44 @@
 import { ZalgoPromise } from 'zalgo-promise/src';
 
 
-import { memoize } from './util';
+import { inlineMemoize } from './util';
 import { isDevice } from './device';
 
 export function isDocumentReady() {
     return Boolean(document.body) && document.readyState === 'complete';
 }
 
-export var waitForWindowReady = memoize(function () {
-    return new ZalgoPromise(function (resolve) {
-        if (isDocumentReady()) {
-            resolve();
-        }
+export function waitForWindowReady() {
+    return inlineMemoize(waitForWindowReady, function () {
+        return new ZalgoPromise(function (resolve) {
+            if (isDocumentReady()) {
+                resolve();
+            }
 
-        window.addEventListener('load', function () {
-            return resolve();
+            window.addEventListener('load', function () {
+                return resolve();
+            });
         });
     });
-});
+}
 
-export var waitForDocumentReady = memoize(function () {
-    return new ZalgoPromise(function (resolve) {
+export function waitForDocumentReady() {
+    return inlineMemoize(waitForDocumentReady, function () {
+        return new ZalgoPromise(function (resolve) {
 
-        if (isDocumentReady()) {
-            return resolve();
-        }
-
-        var interval = setInterval(function () {
             if (isDocumentReady()) {
-                clearInterval(interval);
                 return resolve();
             }
-        }, 10);
+
+            var interval = setInterval(function () {
+                if (isDocumentReady()) {
+                    clearInterval(interval);
+                    return resolve();
+                }
+            }, 10);
+        });
     });
-});
+}
 
 export function waitForDocumentBody() {
     return waitForDocumentReady.then(function () {
@@ -46,29 +50,30 @@ export function waitForDocumentBody() {
     });
 }
 
-export var parseQuery = memoize(function (queryString) {
+export function parseQuery(queryString) {
+    return inlineMemoize(parseQuery, function () {
+        var params = {};
 
-    var params = {};
-
-    if (!queryString) {
-        return params;
-    }
-
-    if (queryString.indexOf('=') === -1) {
-        return params;
-    }
-
-    for (var _i2 = 0, _queryString$split2 = queryString.split('&'), _length2 = _queryString$split2 == null ? 0 : _queryString$split2.length; _i2 < _length2; _i2++) {
-        var pair = _queryString$split2[_i2];
-        pair = pair.split('=');
-
-        if (pair[0] && pair[1]) {
-            params[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1]);
+        if (!queryString) {
+            return params;
         }
-    }
 
-    return params;
-});
+        if (queryString.indexOf('=') === -1) {
+            return params;
+        }
+
+        for (var _i2 = 0, _queryString$split2 = queryString.split('&'), _length2 = _queryString$split2 == null ? 0 : _queryString$split2.length; _i2 < _length2; _i2++) {
+            var pair = _queryString$split2[_i2];
+            pair = pair.split('=');
+
+            if (pair[0] && pair[1]) {
+                params[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1]);
+            }
+        }
+
+        return params;
+    }, [queryString]);
+}
 
 export function getQueryParam(name) {
     return parseQuery(window.location.search.slice(1))[name];
@@ -167,11 +172,13 @@ export function isElementVisible(el) {
     return Boolean(el.offsetWidth || el.offsetHeight || el.getClientRects().length);
 }
 
-export var enablePerformance = memoize(function () {
-    /* eslint-disable compat/compat */
-    return Boolean(window.performance && performance.now && performance.timing && performance.timing.connectEnd && performance.timing.navigationStart && Math.abs(performance.now() - Date.now()) > 1000 && performance.now() - (performance.timing.connectEnd - performance.timing.navigationStart) > 0);
-    /* eslint-enable compat/compat */
-});
+export function enablePerformance() {
+    return inlineMemoize(enablePerformance, function () {
+        /* eslint-disable compat/compat */
+        return Boolean(window.performance && performance.now && performance.timing && performance.timing.connectEnd && performance.timing.navigationStart && Math.abs(performance.now() - Date.now()) > 1000 && performance.now() - (performance.timing.connectEnd - performance.timing.navigationStart) > 0);
+        /* eslint-enable compat/compat */
+    });
+}
 
 export function getPageRenderTime() {
     return waitForDocumentReady().then(function () {

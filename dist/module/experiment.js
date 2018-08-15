@@ -1,10 +1,12 @@
-import { getStorage } from './storage';
 import { noop } from './util';
+import { getStorage } from './storage';
 
-var storage = getStorage({ name: 'belter_experiment' });
+function getBelterExperimentStorage() {
+    return getStorage({ name: 'belter_experiment' });
+}
 
 function isEventUnique(name) {
-    return storage.getSessionState(function (state) {
+    return getBelterExperimentStorage().getSessionState(function (state) {
         state.loggedBeacons = state.loggedBeacons || [];
 
         if (state.loggedBeacons.indexOf(name) === -1) {
@@ -17,7 +19,7 @@ function isEventUnique(name) {
 }
 
 function getThrottlePercentile(name) {
-    return storage.getState(function (state) {
+    return getBelterExperimentStorage().getState(function (state) {
         state.throttlePercentiles = state.throttlePercentiles || {};
         state.throttlePercentiles[name] = state.throttlePercentiles[name] || Math.floor(Math.random() * 100);
         return state.throttlePercentiles[name];

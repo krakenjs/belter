@@ -1,7 +1,5 @@
 import { uniqueID, isLocalStorageEnabled, getGlobal } from './util';
 
-var storeCache = {};
-
 export function getStorage(_ref) {
     var name = _ref.name,
         _ref$version = _ref.version,
@@ -11,10 +9,6 @@ export function getStorage(_ref) {
 
 
     var STORAGE_KEY = '__' + name + '_' + version + '_storage__';
-
-    if (storeCache[STORAGE_KEY]) {
-        return storeCache[STORAGE_KEY];
-    }
 
     var accessedStorage = void 0;
 
