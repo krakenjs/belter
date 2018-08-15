@@ -193,3 +193,7 @@ export function htmlEncode(html : string = '') : string {
         .replace(/'/g, '&#39;')
         .replace(/\//g, '&#x2F;');
 }
+
+export function isBrowser() : boolean {
+    return (typeof window !== 'undefined');
+}
