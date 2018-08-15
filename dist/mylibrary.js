@@ -865,13 +865,13 @@
                 return __WEBPACK_IMPORTED_MODULE_6__util__.b;
             });
             __webpack_require__.d(__webpack_exports__, "uniqueID", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.C;
+                return __WEBPACK_IMPORTED_MODULE_6__util__.D;
             });
             __webpack_require__.d(__webpack_exports__, "hashStr", function() {
                 return __WEBPACK_IMPORTED_MODULE_6__util__.h;
             });
             __webpack_require__.d(__webpack_exports__, "strHashStr", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.x;
+                return __WEBPACK_IMPORTED_MODULE_6__util__.y;
             });
             __webpack_require__.d(__webpack_exports__, "match", function() {
                 return __WEBPACK_IMPORTED_MODULE_6__util__.l;
@@ -883,13 +883,13 @@
                 return __WEBPACK_IMPORTED_MODULE_6__util__.a;
             });
             __webpack_require__.d(__webpack_exports__, "stringifyError", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.z;
-            });
-            __webpack_require__.d(__webpack_exports__, "stringifyErrorMessage", function() {
                 return __WEBPACK_IMPORTED_MODULE_6__util__.A;
             });
+            __webpack_require__.d(__webpack_exports__, "stringifyErrorMessage", function() {
+                return __WEBPACK_IMPORTED_MODULE_6__util__.B;
+            });
             __webpack_require__.d(__webpack_exports__, "stringify", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.y;
+                return __WEBPACK_IMPORTED_MODULE_6__util__.z;
             });
             __webpack_require__.d(__webpack_exports__, "isLocalStorageEnabled", function() {
                 return __WEBPACK_IMPORTED_MODULE_6__util__.k;
@@ -904,7 +904,7 @@
                 return __WEBPACK_IMPORTED_MODULE_6__util__.f;
             });
             __webpack_require__.d(__webpack_exports__, "values", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.D;
+                return __WEBPACK_IMPORTED_MODULE_6__util__.E;
             });
             __webpack_require__.d(__webpack_exports__, "perc", function() {
                 return __WEBPACK_IMPORTED_MODULE_6__util__.t;
@@ -919,7 +919,7 @@
                 return __WEBPACK_IMPORTED_MODULE_6__util__.v;
             });
             __webpack_require__.d(__webpack_exports__, "svgToBase64", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.B;
+                return __WEBPACK_IMPORTED_MODULE_6__util__.C;
             });
             __webpack_require__.d(__webpack_exports__, "objFilter", function() {
                 return __WEBPACK_IMPORTED_MODULE_6__util__.q;
@@ -933,6 +933,9 @@
             __webpack_require__.d(__webpack_exports__, "promiseDebounce", function() {
                 return __WEBPACK_IMPORTED_MODULE_6__util__.u;
             });
+            __webpack_require__.d(__webpack_exports__, "safeInterval", function() {
+                return __WEBPACK_IMPORTED_MODULE_6__util__.x;
+            });
             var __WEBPACK_IMPORTED_MODULE_7__http__ = __webpack_require__("./src/http.js");
             __webpack_require__.d(__webpack_exports__, "request", function() {
                 return __WEBPACK_IMPORTED_MODULE_7__http__.b;
@@ -942,7 +945,7 @@
             });
             var __WEBPACK_IMPORTED_MODULE_8__types__ = __webpack_require__("./src/types.js");
             __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8__types__);
-            for (var __WEBPACK_IMPORT_KEY__ in __WEBPACK_IMPORTED_MODULE_8__types__) [ "getUserAgent", "isDevice", "isWebView", "isStandAlone", "isFacebookWebView", "isFirefoxIOS", "isEdgeIOS", "isOperaMini", "isAndroid", "isIos", "isGoogleSearchApp", "isQQBrowser", "isIosWebview", "isAndroidWebview", "isIE", "isIECompHeader", "isElectron", "isIEIntranet", "isMacOsCna", "supportsPopups", "isDocumentReady", "waitForWindowReady", "waitForDocumentReady", "waitForDocumentBody", "parseQuery", "getQueryParam", "urlWillRedirectPage", "extendUrl", "redirect", "hasMetaViewPort", "isElementVisible", "enablePerformance", "getPageRenderTime", "htmlEncode", "isBrowser", "experiment", "getGlobalNameSpace", "JsxHTMLNode", "JsxHTMLNodeContainer", "jsxToHTML", "jsxRender", "Fragment", "SVG", "placeholderToJSX", "getStorage", "getGlobal", "memoize", "inlineMemoize", "noop", "once", "base64encode", "base64decode", "uniqueID", "hashStr", "strHashStr", "match", "eventEmitter", "awaitKey", "stringifyError", "stringifyErrorMessage", "stringify", "isLocalStorageEnabled", "domainMatches", "patchMethod", "extend", "values", "perc", "min", "max", "regexMap", "svgToBase64", "objFilter", "identity", "regexTokenize", "promiseDebounce", "request", "addHeaderBuilder", "default" ].indexOf(__WEBPACK_IMPORT_KEY__) < 0 && function(key) {
+            for (var __WEBPACK_IMPORT_KEY__ in __WEBPACK_IMPORTED_MODULE_8__types__) [ "getUserAgent", "isDevice", "isWebView", "isStandAlone", "isFacebookWebView", "isFirefoxIOS", "isEdgeIOS", "isOperaMini", "isAndroid", "isIos", "isGoogleSearchApp", "isQQBrowser", "isIosWebview", "isAndroidWebview", "isIE", "isIECompHeader", "isElectron", "isIEIntranet", "isMacOsCna", "supportsPopups", "isDocumentReady", "waitForWindowReady", "waitForDocumentReady", "waitForDocumentBody", "parseQuery", "getQueryParam", "urlWillRedirectPage", "extendUrl", "redirect", "hasMetaViewPort", "isElementVisible", "enablePerformance", "getPageRenderTime", "htmlEncode", "isBrowser", "experiment", "getGlobalNameSpace", "JsxHTMLNode", "JsxHTMLNodeContainer", "jsxToHTML", "jsxRender", "Fragment", "SVG", "placeholderToJSX", "getStorage", "getGlobal", "memoize", "inlineMemoize", "noop", "once", "base64encode", "base64decode", "uniqueID", "hashStr", "strHashStr", "match", "eventEmitter", "awaitKey", "stringifyError", "stringifyErrorMessage", "stringify", "isLocalStorageEnabled", "domainMatches", "patchMethod", "extend", "values", "perc", "min", "max", "regexMap", "svgToBase64", "objFilter", "identity", "regexTokenize", "promiseDebounce", "safeInterval", "request", "addHeaderBuilder", "default" ].indexOf(__WEBPACK_IMPORT_KEY__) < 0 && function(key) {
                 __webpack_require__.d(__webpack_exports__, key, function() {
                     return __WEBPACK_IMPORTED_MODULE_8__types__[key];
                 });
@@ -979,7 +982,7 @@
                 if (!svg) throw new TypeError("Expected svg prop");
                 if ("string" != typeof svg && !(svg instanceof JsxHTMLNode)) throw new TypeError("Expected svg prop to be a string or jsx html node");
                 return jsxToHTML("img", _extends({
-                    src: Object(__WEBPACK_IMPORTED_MODULE_0__util__.B)(svg.toString())
+                    src: Object(__WEBPACK_IMPORTED_MODULE_0__util__.C)(svg.toString())
                 }, otherProps));
             };
             __webpack_exports__.g = function(text, placeholders) {
@@ -1082,9 +1085,9 @@
                     }
                     storage || (storage = Object(__WEBPACK_IMPORTED_MODULE_0__util__.g)()[STORAGE_KEY]);
                     storage || (storage = {
-                        id: Object(__WEBPACK_IMPORTED_MODULE_0__util__.C)()
+                        id: Object(__WEBPACK_IMPORTED_MODULE_0__util__.D)()
                     });
-                    storage.id || (storage.id = Object(__WEBPACK_IMPORTED_MODULE_0__util__.C)());
+                    storage.id || (storage.id = Object(__WEBPACK_IMPORTED_MODULE_0__util__.D)());
                     accessedStorage = storage;
                     var result = handler(storage);
                     localStorageEnabled ? window.localStorage.setItem(STORAGE_KEY, JSON.stringify(storage)) : Object(__WEBPACK_IMPORTED_MODULE_0__util__.g)()[STORAGE_KEY] = storage;
@@ -1096,7 +1099,7 @@
                         var session = storage.__session__, now = Date.now();
                         session && now - session.created > lifetime && (session = null);
                         session || (session = {
-                            guid: Object(__WEBPACK_IMPORTED_MODULE_0__util__.C)(),
+                            guid: Object(__WEBPACK_IMPORTED_MODULE_0__util__.D)(),
                             created: now
                         });
                         storage.__session__ = session;
@@ -1145,7 +1148,7 @@
             __webpack_exports__.b = function(str) {
                 return window.atob(str);
             };
-            __webpack_exports__.C = function() {
+            __webpack_exports__.D = function() {
                 var chars = "0123456789abcdef";
                 return "xxxxxxxxxx".replace(/./g, function() {
                     return chars.charAt(Math.floor(Math.random() * chars.length));
@@ -1155,7 +1158,7 @@
                 for (var hash = 0, i = 0; i < str.length; i++) hash += str[i].charCodeAt(0) * Math.pow(i % 10 + 1, 5);
                 return Math.floor(Math.pow(Math.sqrt(hash), 5));
             };
-            __webpack_exports__.x = function(str) {
+            __webpack_exports__.y = function(str) {
                 for (var hash = "", i = 0; i < str.length; i++) {
                     var total = str[i].charCodeAt(0) * i;
                     str[i + 1] && (total += str[i + 1].charCodeAt(0) * (i - 1));
@@ -1205,7 +1208,7 @@
                     });
                 });
             };
-            __webpack_exports__.z = function stringifyError(err) {
+            __webpack_exports__.A = function stringifyError(err) {
                 var level = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : 1;
                 if (level >= 3) return "stringifyError stack overflow";
                 try {
@@ -1222,11 +1225,11 @@
                     return "Error while stringifying error: " + stringifyError(newErr, level + 1);
                 }
             };
-            __webpack_exports__.A = function(err) {
+            __webpack_exports__.B = function(err) {
                 var defaultMessage = "<unknown error: " + Object.prototype.toString.call(err) + ">";
                 return err ? err instanceof Error ? err.message || defaultMessage : "string" == typeof err.message && err.message || defaultMessage : defaultMessage;
             };
-            __webpack_exports__.y = function(item) {
+            __webpack_exports__.z = function(item) {
                 return "string" == typeof item ? item : item && "function" == typeof item.toString ? item.toString() : Object.prototype.toString.call(item);
             };
             __webpack_exports__.k = function isLocalStorageEnabled() {
@@ -1268,7 +1271,7 @@
                 for (var _key2 in source) source.hasOwnProperty(_key2) && (obj[_key2] = source[_key2]);
                 return obj;
             };
-            __webpack_exports__.D = function(obj) {
+            __webpack_exports__.E = function(obj) {
                 var result = [];
                 for (var _key3 in obj) obj.hasOwnProperty(_key3) && result.push(obj[_key3]);
                 return result;
@@ -1289,7 +1292,7 @@
                 });
                 return results;
             };
-            __webpack_exports__.B = function(svg) {
+            __webpack_exports__.C = function(svg) {
                 return "data:image/svg+xml;base64," + base64encode(svg);
             };
             __webpack_exports__.q = function(obj) {
@@ -1323,6 +1326,20 @@
                         });
                     }, delay);
                     return localPromise;
+                };
+            };
+            __webpack_exports__.x = function(method, time) {
+                var timeout = void 0;
+                !function loop() {
+                    timeout = setTimeout(function() {
+                        method();
+                        loop();
+                    }, time);
+                }();
+                return {
+                    cancel: function() {
+                        clearTimeout(timeout);
+                    }
                 };
             };
             var __WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__ = __webpack_require__("./node_modules/zalgo-promise/src/index.js");

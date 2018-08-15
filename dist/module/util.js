@@ -449,3 +449,23 @@ export function promiseDebounce(method) {
         return localPromise;
     };
 }
+
+export function safeInterval(method, time) {
+
+    var timeout = void 0;
+
+    function loop() {
+        timeout = setTimeout(function () {
+            method();
+            loop();
+        }, time);
+    }
+
+    loop();
+
+    return {
+        cancel: function cancel() {
+            clearTimeout(timeout);
+        }
+    };
+}
