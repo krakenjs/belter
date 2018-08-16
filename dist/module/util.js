@@ -99,14 +99,14 @@ export function once(method) {
 }
 
 export function base64encode(str) {
-    if (typeof __WEB__ === 'undefined') {
+    if (typeof __WEB__ === 'undefined' || !__WEB__) {
         return require('Base64').btoa(str);
     }
     return window.btoa(str);
 }
 
 export function base64decode(str) {
-    if (typeof __WEB__ === 'undefined') {
+    if (typeof __WEB__ === 'undefined' || !__WEB__) {
         return require('Base64').atob(str);
     }
     return window.atob(str);
