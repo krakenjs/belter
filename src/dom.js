@@ -137,12 +137,10 @@ export function extendUrl(url : string, params : { [key : string] : string } = {
 
 export function redirect(url : string, win : CrossDomainWindowType = window) : ZalgoPromise<void> {
     return new ZalgoPromise(resolve => {
-        setTimeout(() => {
-            win.location = url;
-            if (!urlWillRedirectPage(url)) {
-                resolve();
-            }
-        }, 1);
+        win.location = url;
+        if (!urlWillRedirectPage(url)) {
+            resolve();
+        }
     });
 }
 
@@ -203,4 +201,8 @@ export function htmlEncode(html : string = '') : string {
 
 export function isBrowser() : boolean {
     return (typeof window !== 'undefined');
+}
+
+export function querySelectorAll(selector : string, doc : Document = window.document) : Array<Element> {
+    return Array.prototype.slice.call(doc.querySelectorAll(selector));
 }
