@@ -14,6 +14,12 @@ type RequestOptionsType = {
     timeout? : number
 };
 
+type ResponseType = {
+    status : number,
+    headers : { [string] : string },
+    body : Object
+};
+
 const HEADERS = {
     CONTENT_TYPE: 'content-type',
     ACCEPT:       'accept'
@@ -30,7 +36,7 @@ function parseHeaders(rawHeaders : string = '') : { [string] : string } {
     return result;
 }
 
-export function request({ url, method = 'get', headers = {}, json, data, body, win = window, timeout = 0 } : RequestOptionsType) : ZalgoPromise<Object> {
+export function request({ url, method = 'get', headers = {}, json, data, body, win = window, timeout = 0 } : RequestOptionsType) : ZalgoPromise<ResponseType> {
     return new ZalgoPromise((resolve, reject) => {
 
         if ((json && data) || (json && body) || (data && json)) {
@@ -71,29 +77,21 @@ export function request({ url, method = 'get', headers = {}, json, data, body, w
             
             let contentType = responseHeaders['content-type'];
             let isJSON = contentType && (contentType.indexOf('application/json') === 0 || contentType.indexOf('text/json') === 0);
-            let res = this.responseText;
+            let responseBody = this.responseText;
 
             try {
-                res = JSON.parse(this.responseText);
+                responseBody = JSON.parse(responseBody);
             } catch (err) {
                 if (isJSON) {
                     return reject(new Error(`Invalid json: ${ this.responseText }.`));
                 }
             }
 
-            if (this.status >= 400) {
-                let message = `Request to ${ method.toLowerCase() } ${ url } failed with ${ this.status } error.`;
-
-                if (res) {
-                    if (typeof res === 'object' && res !== null) {
-                        res = JSON.stringify(res, null, 4);
-                    }
-
-                    message = `${ message }\n\n${ res }\n`;
-                }
-
-                return reject(new Error(message));
-            }
+            let res = {
+                status:  this.status,
+                headers: responseHeaders,
+                body:    responseBody
+            };
 
             return resolve(res);
 
