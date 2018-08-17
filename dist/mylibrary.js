@@ -427,7 +427,7 @@
         "./src/dom.js": function(module, __webpack_exports__, __webpack_require__) {
             "use strict";
             __webpack_exports__.h = isDocumentReady;
-            __webpack_exports__.o = function waitForWindowReady() {
+            __webpack_exports__.p = function waitForWindowReady() {
                 return Object(__WEBPACK_IMPORTED_MODULE_1__util__.j)(waitForWindowReady, function() {
                     return new __WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a(function(resolve) {
                         isDocumentReady() && resolve();
@@ -437,8 +437,8 @@
                     });
                 });
             };
-            __webpack_exports__.n = waitForDocumentReady;
-            __webpack_exports__.m = function() {
+            __webpack_exports__.o = waitForDocumentReady;
+            __webpack_exports__.n = function() {
                 return waitForDocumentReady.then(function() {
                     if (document.body) return document.body;
                     throw new Error("Document ready but document.body not present");
@@ -448,7 +448,7 @@
             __webpack_exports__.d = function(name) {
                 return parseQuery(window.location.search.slice(1))[name];
             };
-            __webpack_exports__.l = urlWillRedirectPage;
+            __webpack_exports__.m = urlWillRedirectPage;
             __webpack_exports__.b = function(url) {
                 var params = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {}, hasHash = url.indexOf("#") > 0, _url$split = url.split("#"), serverUrl = _url$split[0], hash = _url$split[1];
                 if (hash && !serverUrl) {
@@ -470,13 +470,11 @@
                 hasHash && (newUrl = newUrl + "#" + (hash || ""));
                 return newUrl;
             };
-            __webpack_exports__.k = function(url) {
+            __webpack_exports__.l = function(url) {
                 var win = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : window;
                 return new __WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a(function(resolve) {
-                    setTimeout(function() {
-                        win.location = url;
-                        urlWillRedirectPage(url) || resolve();
-                    }, 1);
+                    win.location = url;
+                    urlWillRedirectPage(url) || resolve();
                 });
             };
             __webpack_exports__.e = function() {
@@ -500,6 +498,10 @@
             };
             __webpack_exports__.g = function() {
                 return "undefined" != typeof window;
+            };
+            __webpack_exports__.k = function(selector) {
+                var doc = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : window.document;
+                return Array.prototype.slice.call(doc.querySelectorAll(selector));
             };
             var __WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__ = __webpack_require__("./node_modules/zalgo-promise/src/index.js"), __WEBPACK_IMPORTED_MODULE_1__util__ = __webpack_require__("./src/util.js"), __WEBPACK_IMPORTED_MODULE_2__device__ = __webpack_require__("./src/device.js");
             function isDocumentReady() {
@@ -760,13 +762,13 @@
                 return __WEBPACK_IMPORTED_MODULE_1__dom__.h;
             });
             __webpack_require__.d(__webpack_exports__, "waitForWindowReady", function() {
-                return __WEBPACK_IMPORTED_MODULE_1__dom__.o;
+                return __WEBPACK_IMPORTED_MODULE_1__dom__.p;
             });
             __webpack_require__.d(__webpack_exports__, "waitForDocumentReady", function() {
-                return __WEBPACK_IMPORTED_MODULE_1__dom__.n;
+                return __WEBPACK_IMPORTED_MODULE_1__dom__.o;
             });
             __webpack_require__.d(__webpack_exports__, "waitForDocumentBody", function() {
-                return __WEBPACK_IMPORTED_MODULE_1__dom__.m;
+                return __WEBPACK_IMPORTED_MODULE_1__dom__.n;
             });
             __webpack_require__.d(__webpack_exports__, "parseQuery", function() {
                 return __WEBPACK_IMPORTED_MODULE_1__dom__.j;
@@ -775,13 +777,13 @@
                 return __WEBPACK_IMPORTED_MODULE_1__dom__.d;
             });
             __webpack_require__.d(__webpack_exports__, "urlWillRedirectPage", function() {
-                return __WEBPACK_IMPORTED_MODULE_1__dom__.l;
+                return __WEBPACK_IMPORTED_MODULE_1__dom__.m;
             });
             __webpack_require__.d(__webpack_exports__, "extendUrl", function() {
                 return __WEBPACK_IMPORTED_MODULE_1__dom__.b;
             });
             __webpack_require__.d(__webpack_exports__, "redirect", function() {
-                return __WEBPACK_IMPORTED_MODULE_1__dom__.k;
+                return __WEBPACK_IMPORTED_MODULE_1__dom__.l;
             });
             __webpack_require__.d(__webpack_exports__, "hasMetaViewPort", function() {
                 return __WEBPACK_IMPORTED_MODULE_1__dom__.e;
@@ -800,6 +802,9 @@
             });
             __webpack_require__.d(__webpack_exports__, "isBrowser", function() {
                 return __WEBPACK_IMPORTED_MODULE_1__dom__.g;
+            });
+            __webpack_require__.d(__webpack_exports__, "querySelectorAll", function() {
+                return __WEBPACK_IMPORTED_MODULE_1__dom__.k;
             });
             var __WEBPACK_IMPORTED_MODULE_2__experiment__ = __webpack_require__("./src/experiment.js");
             __webpack_require__.d(__webpack_exports__, "experiment", function() {
@@ -938,7 +943,7 @@
             });
             var __WEBPACK_IMPORTED_MODULE_8__types__ = __webpack_require__("./src/types.js");
             __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8__types__);
-            for (var __WEBPACK_IMPORT_KEY__ in __WEBPACK_IMPORTED_MODULE_8__types__) [ "getUserAgent", "isDevice", "isWebView", "isStandAlone", "isFacebookWebView", "isFirefoxIOS", "isEdgeIOS", "isOperaMini", "isAndroid", "isIos", "isGoogleSearchApp", "isQQBrowser", "isIosWebview", "isAndroidWebview", "isIE", "isIECompHeader", "isElectron", "isIEIntranet", "isMacOsCna", "supportsPopups", "isDocumentReady", "waitForWindowReady", "waitForDocumentReady", "waitForDocumentBody", "parseQuery", "getQueryParam", "urlWillRedirectPage", "extendUrl", "redirect", "hasMetaViewPort", "isElementVisible", "enablePerformance", "getPageRenderTime", "htmlEncode", "isBrowser", "experiment", "getGlobalNameSpace", "JsxHTMLNode", "JsxHTMLNodeContainer", "jsxToHTML", "jsxRender", "Fragment", "SVG", "placeholderToJSX", "getStorage", "getGlobal", "memoize", "inlineMemoize", "noop", "once", "base64encode", "base64decode", "uniqueID", "hashStr", "strHashStr", "match", "eventEmitter", "awaitKey", "stringifyError", "stringifyErrorMessage", "stringify", "isLocalStorageEnabled", "domainMatches", "patchMethod", "extend", "values", "perc", "min", "max", "regexMap", "svgToBase64", "objFilter", "identity", "regexTokenize", "promiseDebounce", "safeInterval", "request", "addHeaderBuilder", "default" ].indexOf(__WEBPACK_IMPORT_KEY__) < 0 && function(key) {
+            for (var __WEBPACK_IMPORT_KEY__ in __WEBPACK_IMPORTED_MODULE_8__types__) [ "getUserAgent", "isDevice", "isWebView", "isStandAlone", "isFacebookWebView", "isFirefoxIOS", "isEdgeIOS", "isOperaMini", "isAndroid", "isIos", "isGoogleSearchApp", "isQQBrowser", "isIosWebview", "isAndroidWebview", "isIE", "isIECompHeader", "isElectron", "isIEIntranet", "isMacOsCna", "supportsPopups", "isDocumentReady", "waitForWindowReady", "waitForDocumentReady", "waitForDocumentBody", "parseQuery", "getQueryParam", "urlWillRedirectPage", "extendUrl", "redirect", "hasMetaViewPort", "isElementVisible", "enablePerformance", "getPageRenderTime", "htmlEncode", "isBrowser", "querySelectorAll", "experiment", "getGlobalNameSpace", "JsxHTMLNode", "JsxHTMLNodeContainer", "jsxToHTML", "jsxRender", "Fragment", "SVG", "placeholderToJSX", "getStorage", "getGlobal", "memoize", "inlineMemoize", "noop", "once", "base64encode", "base64decode", "uniqueID", "hashStr", "strHashStr", "match", "eventEmitter", "awaitKey", "stringifyError", "stringifyErrorMessage", "stringify", "isLocalStorageEnabled", "domainMatches", "patchMethod", "extend", "values", "perc", "min", "max", "regexMap", "svgToBase64", "objFilter", "identity", "regexTokenize", "promiseDebounce", "safeInterval", "request", "addHeaderBuilder", "default" ].indexOf(__WEBPACK_IMPORT_KEY__) < 0 && function(key) {
                 __webpack_require__.d(__webpack_exports__, key, function() {
                     return __WEBPACK_IMPORTED_MODULE_8__types__[key];
                 });

@@ -149,12 +149,10 @@ export function redirect(url) {
     var win = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : window;
 
     return new ZalgoPromise(function (resolve) {
-        setTimeout(function () {
-            win.location = url;
-            if (!urlWillRedirectPage(url)) {
-                resolve();
-            }
-        }, 1);
+        win.location = url;
+        if (!urlWillRedirectPage(url)) {
+            resolve();
+        }
     });
 }
 
@@ -203,4 +201,10 @@ export function htmlEncode() {
 
 export function isBrowser() {
     return typeof window !== 'undefined';
+}
+
+export function querySelectorAll(selector) {
+    var doc = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : window.document;
+
+    return Array.prototype.slice.call(doc.querySelectorAll(selector));
 }
