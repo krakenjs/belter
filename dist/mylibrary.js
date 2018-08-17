@@ -426,10 +426,11 @@
         },
         "./src/dom.js": function(module, __webpack_exports__, __webpack_require__) {
             "use strict";
+            var src = __webpack_require__("./node_modules/zalgo-promise/src/index.js"), util = __webpack_require__("./src/util.js"), device = __webpack_require__("./src/device.js");
             __webpack_exports__.h = isDocumentReady;
-            __webpack_exports__.p = function waitForWindowReady() {
-                return Object(__WEBPACK_IMPORTED_MODULE_1__util__.j)(waitForWindowReady, function() {
-                    return new __WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a(function(resolve) {
+            __webpack_exports__.q = function waitForWindowReady() {
+                return Object(util.j)(waitForWindowReady, function() {
+                    return new src.a(function(resolve) {
                         isDocumentReady() && resolve();
                         window.addEventListener("load", function() {
                             return resolve();
@@ -437,18 +438,18 @@
                     });
                 });
             };
-            __webpack_exports__.o = waitForDocumentReady;
-            __webpack_exports__.n = function() {
+            __webpack_exports__.p = waitForDocumentReady;
+            __webpack_exports__.o = function() {
                 return waitForDocumentReady.then(function() {
                     if (document.body) return document.body;
                     throw new Error("Document ready but document.body not present");
                 });
             };
-            __webpack_exports__.j = parseQuery;
+            __webpack_exports__.k = parseQuery;
             __webpack_exports__.d = function(name) {
                 return parseQuery(window.location.search.slice(1))[name];
             };
-            __webpack_exports__.m = urlWillRedirectPage;
+            __webpack_exports__.n = urlWillRedirectPage;
             __webpack_exports__.b = function(url) {
                 var params = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {}, hasHash = url.indexOf("#") > 0, _url$split = url.split("#"), serverUrl = _url$split[0], hash = _url$split[1];
                 if (hash && !serverUrl) {
@@ -470,16 +471,16 @@
                 hasHash && (newUrl = newUrl + "#" + (hash || ""));
                 return newUrl;
             };
-            __webpack_exports__.l = function(url) {
+            __webpack_exports__.m = function(url) {
                 var win = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : window;
-                return new __WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a(function(resolve) {
+                return new src.a(function(resolve) {
                     win.location = url;
                     urlWillRedirectPage(url) || resolve();
                 });
             };
             __webpack_exports__.e = function() {
                 var meta = document.querySelector("meta[name=viewport]");
-                return !(Object(__WEBPACK_IMPORTED_MODULE_2__device__.d)() && window.screen.width < 660 && !meta);
+                return !(Object(device.d)() && window.screen.width < 660 && !meta);
             };
             __webpack_exports__.i = function(el) {
                 return Boolean(el.offsetWidth || el.offsetHeight || el.getClientRects().length);
@@ -499,17 +500,23 @@
             __webpack_exports__.g = function() {
                 return "undefined" != typeof window;
             };
-            __webpack_exports__.k = function(selector) {
+            __webpack_exports__.l = function(selector) {
                 var doc = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : window.document;
                 return Array.prototype.slice.call(doc.querySelectorAll(selector));
             };
-            var __WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__ = __webpack_require__("./node_modules/zalgo-promise/src/index.js"), __WEBPACK_IMPORTED_MODULE_1__util__ = __webpack_require__("./src/util.js"), __WEBPACK_IMPORTED_MODULE_2__device__ = __webpack_require__("./src/device.js");
+            __webpack_exports__.j = function(element, handler) {
+                element.addEventListener("touchstart", util.p);
+                element.addEventListener("click", handler);
+                element.addEventListener("keypress", function(event) {
+                    if (13 === event.keyCode) return handler(event);
+                });
+            };
             function isDocumentReady() {
                 return Boolean(document.body) && "complete" === document.readyState;
             }
             function waitForDocumentReady() {
-                return Object(__WEBPACK_IMPORTED_MODULE_1__util__.j)(waitForDocumentReady, function() {
-                    return new __WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a(function(resolve) {
+                return Object(util.j)(waitForDocumentReady, function() {
+                    return new src.a(function(resolve) {
                         if (isDocumentReady()) return resolve();
                         var interval = setInterval(function() {
                             if (isDocumentReady()) {
@@ -521,7 +528,7 @@
                 });
             }
             function parseQuery(queryString) {
-                return Object(__WEBPACK_IMPORTED_MODULE_1__util__.j)(parseQuery, function() {
+                return Object(util.j)(parseQuery, function() {
                     var params = {};
                     if (!queryString) return params;
                     if (-1 === queryString.indexOf("=")) return params;
@@ -536,7 +543,7 @@
                 return -1 === url.indexOf("#") || 0 !== url.indexOf("#") && url.split("#")[0] !== window.location.href.split("#")[0];
             }
             function enablePerformance() {
-                return Object(__WEBPACK_IMPORTED_MODULE_1__util__.j)(enablePerformance, function() {
+                return Object(util.j)(enablePerformance, function() {
                     return Boolean(window.performance && performance.now && performance.timing && performance.timing.connectEnd && performance.timing.navigationStart && Math.abs(performance.now() - Date.now()) > 1e3 && performance.now() - (performance.timing.connectEnd - performance.timing.navigationStart) > 0);
                 });
             }
@@ -762,28 +769,28 @@
                 return __WEBPACK_IMPORTED_MODULE_1__dom__.h;
             });
             __webpack_require__.d(__webpack_exports__, "waitForWindowReady", function() {
-                return __WEBPACK_IMPORTED_MODULE_1__dom__.p;
+                return __WEBPACK_IMPORTED_MODULE_1__dom__.q;
             });
             __webpack_require__.d(__webpack_exports__, "waitForDocumentReady", function() {
-                return __WEBPACK_IMPORTED_MODULE_1__dom__.o;
+                return __WEBPACK_IMPORTED_MODULE_1__dom__.p;
             });
             __webpack_require__.d(__webpack_exports__, "waitForDocumentBody", function() {
-                return __WEBPACK_IMPORTED_MODULE_1__dom__.n;
+                return __WEBPACK_IMPORTED_MODULE_1__dom__.o;
             });
             __webpack_require__.d(__webpack_exports__, "parseQuery", function() {
-                return __WEBPACK_IMPORTED_MODULE_1__dom__.j;
+                return __WEBPACK_IMPORTED_MODULE_1__dom__.k;
             });
             __webpack_require__.d(__webpack_exports__, "getQueryParam", function() {
                 return __WEBPACK_IMPORTED_MODULE_1__dom__.d;
             });
             __webpack_require__.d(__webpack_exports__, "urlWillRedirectPage", function() {
-                return __WEBPACK_IMPORTED_MODULE_1__dom__.m;
+                return __WEBPACK_IMPORTED_MODULE_1__dom__.n;
             });
             __webpack_require__.d(__webpack_exports__, "extendUrl", function() {
                 return __WEBPACK_IMPORTED_MODULE_1__dom__.b;
             });
             __webpack_require__.d(__webpack_exports__, "redirect", function() {
-                return __WEBPACK_IMPORTED_MODULE_1__dom__.l;
+                return __WEBPACK_IMPORTED_MODULE_1__dom__.m;
             });
             __webpack_require__.d(__webpack_exports__, "hasMetaViewPort", function() {
                 return __WEBPACK_IMPORTED_MODULE_1__dom__.e;
@@ -804,7 +811,10 @@
                 return __WEBPACK_IMPORTED_MODULE_1__dom__.g;
             });
             __webpack_require__.d(__webpack_exports__, "querySelectorAll", function() {
-                return __WEBPACK_IMPORTED_MODULE_1__dom__.k;
+                return __WEBPACK_IMPORTED_MODULE_1__dom__.l;
+            });
+            __webpack_require__.d(__webpack_exports__, "onClick", function() {
+                return __WEBPACK_IMPORTED_MODULE_1__dom__.j;
             });
             var __WEBPACK_IMPORTED_MODULE_2__experiment__ = __webpack_require__("./src/experiment.js");
             __webpack_require__.d(__webpack_exports__, "experiment", function() {
@@ -943,7 +953,7 @@
             });
             var __WEBPACK_IMPORTED_MODULE_8__types__ = __webpack_require__("./src/types.js");
             __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8__types__);
-            for (var __WEBPACK_IMPORT_KEY__ in __WEBPACK_IMPORTED_MODULE_8__types__) [ "getUserAgent", "isDevice", "isWebView", "isStandAlone", "isFacebookWebView", "isFirefoxIOS", "isEdgeIOS", "isOperaMini", "isAndroid", "isIos", "isGoogleSearchApp", "isQQBrowser", "isIosWebview", "isAndroidWebview", "isIE", "isIECompHeader", "isElectron", "isIEIntranet", "isMacOsCna", "supportsPopups", "isDocumentReady", "waitForWindowReady", "waitForDocumentReady", "waitForDocumentBody", "parseQuery", "getQueryParam", "urlWillRedirectPage", "extendUrl", "redirect", "hasMetaViewPort", "isElementVisible", "enablePerformance", "getPageRenderTime", "htmlEncode", "isBrowser", "querySelectorAll", "experiment", "getGlobalNameSpace", "JsxHTMLNode", "JsxHTMLNodeContainer", "jsxToHTML", "jsxRender", "Fragment", "SVG", "placeholderToJSX", "getStorage", "getGlobal", "memoize", "inlineMemoize", "noop", "once", "base64encode", "base64decode", "uniqueID", "hashStr", "strHashStr", "match", "eventEmitter", "awaitKey", "stringifyError", "stringifyErrorMessage", "stringify", "isLocalStorageEnabled", "domainMatches", "patchMethod", "extend", "values", "perc", "min", "max", "regexMap", "svgToBase64", "objFilter", "identity", "regexTokenize", "promiseDebounce", "safeInterval", "request", "addHeaderBuilder", "default" ].indexOf(__WEBPACK_IMPORT_KEY__) < 0 && function(key) {
+            for (var __WEBPACK_IMPORT_KEY__ in __WEBPACK_IMPORTED_MODULE_8__types__) [ "getUserAgent", "isDevice", "isWebView", "isStandAlone", "isFacebookWebView", "isFirefoxIOS", "isEdgeIOS", "isOperaMini", "isAndroid", "isIos", "isGoogleSearchApp", "isQQBrowser", "isIosWebview", "isAndroidWebview", "isIE", "isIECompHeader", "isElectron", "isIEIntranet", "isMacOsCna", "supportsPopups", "isDocumentReady", "waitForWindowReady", "waitForDocumentReady", "waitForDocumentBody", "parseQuery", "getQueryParam", "urlWillRedirectPage", "extendUrl", "redirect", "hasMetaViewPort", "isElementVisible", "enablePerformance", "getPageRenderTime", "htmlEncode", "isBrowser", "querySelectorAll", "onClick", "experiment", "getGlobalNameSpace", "JsxHTMLNode", "JsxHTMLNodeContainer", "jsxToHTML", "jsxRender", "Fragment", "SVG", "placeholderToJSX", "getStorage", "getGlobal", "memoize", "inlineMemoize", "noop", "once", "base64encode", "base64decode", "uniqueID", "hashStr", "strHashStr", "match", "eventEmitter", "awaitKey", "stringifyError", "stringifyErrorMessage", "stringify", "isLocalStorageEnabled", "domainMatches", "patchMethod", "extend", "values", "perc", "min", "max", "regexMap", "svgToBase64", "objFilter", "identity", "regexTokenize", "promiseDebounce", "safeInterval", "request", "addHeaderBuilder", "default" ].indexOf(__WEBPACK_IMPORT_KEY__) < 0 && function(key) {
                 __webpack_require__.d(__webpack_exports__, key, function() {
                     return __WEBPACK_IMPORTED_MODULE_8__types__[key];
                 });

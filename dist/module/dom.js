@@ -1,8 +1,9 @@
 import { ZalgoPromise } from 'zalgo-promise/src';
 
 
-import { inlineMemoize } from './util';
+import { inlineMemoize, noop } from './util';
 import { isDevice } from './device';
+import { KEY_CODES } from './constants';
 
 export function isDocumentReady() {
     return Boolean(document.body) && document.readyState === 'complete';
@@ -207,4 +208,15 @@ export function querySelectorAll(selector) {
     var doc = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : window.document;
 
     return Array.prototype.slice.call(doc.querySelectorAll(selector));
+}
+
+export function onClick(element, handler) {
+    element.addEventListener('touchstart', noop);
+    element.addEventListener('click', handler);
+    element.addEventListener('keypress', function (event) {
+        // $FlowFixMe
+        if (event.keyCode === KEY_CODES.ENTER) {
+            return handler(event);
+        }
+    });
 }
