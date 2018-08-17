@@ -1,4 +1,5 @@
 /* @flow */
+/* eslint max-lines: 0 */
 
 import { ZalgoPromise } from 'zalgo-promise/src';
 
@@ -463,4 +464,84 @@ export function safeInterval(method : Function, time : number) : { cancel : () =
             clearTimeout(timeout);
         }
     };
+}
+
+export function isInteger(str : string) : boolean {
+    return Boolean(str.match(/^[0-9]+$/));
+}
+
+export function isFloat(str : string) : boolean {
+    return Boolean(str.match(/^[0-9]+\.[0-9]+$/));
+}
+
+export function serializePrimitive(value : string | number | boolean) : string {
+    return value.toString();
+}
+
+export function deserializePrimitive(value : string) : string | number | boolean {
+    if (value === 'true') {
+        return true;
+    } else if (value === 'false') {
+        return false;
+    } else if (isInteger(value)) {
+        return parseInt(value, 10);
+    } else if (isFloat(value)) {
+        return parseFloat(value);
+    } else {
+        return value;
+    }
+}
+
+export function dotify(obj : Object, prefix : string = '', newobj : Object = {}) : { [string] : string } {
+    prefix = prefix ? `${ prefix }.` : prefix;
+    for (let key in obj) {
+        if (!obj.hasOwnProperty(key) || obj[key] === undefined || obj[key] === null || typeof obj[key] === 'function') {
+            continue;
+        } else if (obj[key] && Array.isArray(obj[key]) && obj[key].length && obj[key].every(val => typeof val !== 'object')) {
+            newobj[`${ prefix }${ key }[]`] = obj[key].join(',');
+        } else if (obj[key] && typeof obj[key] === 'object') {
+            newobj = dotify(obj[key], `${ prefix }${ key }`, newobj);
+        } else {
+            newobj[`${ prefix }${ key }`] = serializePrimitive(obj[key]);
+        }
+    }
+    return newobj;
+}
+
+export function undotify(obj : { [string] : string }) : Object {
+    
+    let result = {};
+
+    for (let key in obj) {
+        if (!obj.hasOwnProperty(key) || typeof obj[key] !== 'string') {
+            continue;
+        }
+
+        let value = obj[key];
+
+        if (key.match(/^.+\[\]$/)) {
+            key = key.slice(0, key.length - 2);
+            value = value.split(',').map(deserializePrimitive);
+        } else {
+            value = deserializePrimitive(value);
+        }
+
+        let keyResult = result;
+        let parts = key.split('.');
+        for (let i = 0; i < parts.length; i++) {
+            let part = parts[i];
+            let isLast = (i + 1 === parts.length);
+            let isIndex = !isLast && isInteger(parts[i + 1]);
+
+            if (isLast) {
+                // $FlowFixMe
+                keyResult[part] = value;
+            } else {
+                // $FlowFixMe
+                keyResult = keyResult[part] = keyResult[part] || (isIndex ? [] : {});
+            }
+        }
+    }
+
+    return result;
 }

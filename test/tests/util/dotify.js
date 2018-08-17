@@ -1,25 +1,31 @@
 /* @flow */
 
-import { once } from '../../../src';
+import { dotify, undotify } from '../../../src';
 
-describe('once cases', () => {
+describe('dotify cases', () => {
 
-    it('should create a one time function', () => {
+    it('should dotify and undotify to give the same result', () => {
 
-        let counter = 0;
+        let data = {
+            foo:    'bar',
+            baz:    [ 1, 2, 3 ],
+            bing:   [ 'aaa', 'bbb', 'ccc' ],
+            bong:   [ { a: 1 }, { b: 2 }, { c: 3 } ],
+            nested: {
+                obj: {
+                    blerf: 'foobar',
+                    blorf: 555
+                },
+                zorg: 'zerg',
+                berk: 'me,erk'
+            }
+        };
 
-        let add = once(() => {
-            counter += 1;
-        });
+        let dotified = dotify(data);
+        let undotified = undotify(dotified);
 
-        add();
-        add();
-        add();
-        add();
-        add();
-
-        if (counter !== 1) {
-            throw new Error(`Expected counter to be 1, got ${ counter }`);
+        if (JSON.stringify(data) !== JSON.stringify(undotified)) {
+            throw new Error(`Does not match. Original data:\n\n${ JSON.stringify(data, null, 4) }\n\nDotified:\n\n${ JSON.stringify(dotified, null, 4) }\n\nUndotified:\n\n${ JSON.stringify(undotified, null, 4) }`);
         }
     });
 });

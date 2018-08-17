@@ -1,4 +1,5 @@
 /* @flow */
 
 import './once';
-import './util';
+import './memoize';
+import './dotify';
