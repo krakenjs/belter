@@ -3,8 +3,9 @@
 import { ZalgoPromise } from 'zalgo-promise/src';
 import type { CrossDomainWindowType } from 'cross-domain-utils/src';
 
-import { inlineMemoize } from './util';
+import { inlineMemoize, noop } from './util';
 import { isDevice } from './device';
+import { KEY_CODES } from './constants';
 
 export function isDocumentReady() : boolean {
     return Boolean(document.body) && document.readyState === 'complete';
@@ -205,4 +206,15 @@ export function isBrowser() : boolean {
 
 export function querySelectorAll(selector : string, doc : Document = window.document) : Array<Element> {
     return Array.prototype.slice.call(doc.querySelectorAll(selector));
+}
+
+export function onClick(element : Element, handler : (Event) => void) {
+    element.addEventListener('touchstart', noop);
+    element.addEventListener('click', handler);
+    element.addEventListener('keypress', (event : Event) => {
+        // $FlowFixMe
+        if (event.keyCode === KEY_CODES.ENTER) {
+            return handler(event);
+        }
+    });
 }
