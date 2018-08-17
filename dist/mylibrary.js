@@ -652,20 +652,17 @@
                             return result;
                         }(this.getAllResponseHeaders());
                         if (!this.status) return reject(new Error("Request to " + method.toLowerCase() + " " + url + " failed: no response status code."));
-                        var contentType = responseHeaders["content-type"], isJSON = contentType && (0 === contentType.indexOf("application/json") || 0 === contentType.indexOf("text/json")), res = this.responseText;
+                        var contentType = responseHeaders["content-type"], isJSON = contentType && (0 === contentType.indexOf("application/json") || 0 === contentType.indexOf("text/json")), responseBody = this.responseText;
                         try {
-                            res = JSON.parse(this.responseText);
+                            responseBody = JSON.parse(responseBody);
                         } catch (err) {
                             if (isJSON) return reject(new Error("Invalid json: " + this.responseText + "."));
                         }
-                        if (this.status >= 400) {
-                            var message = "Request to " + method.toLowerCase() + " " + url + " failed with " + this.status + " error.";
-                            if (res) {
-                                "object" === (void 0 === res ? "undefined" : _typeof(res)) && null !== res && (res = JSON.stringify(res, null, 4));
-                                message = message + "\n\n" + res + "\n";
-                            }
-                            return reject(new Error(message));
-                        }
+                        var res = {
+                            status: this.status,
+                            headers: responseHeaders,
+                            body: responseBody
+                        };
                         return resolve(res);
                     }, !1);
                     xhr.addEventListener("error", function(evt) {
@@ -686,15 +683,11 @@
             __webpack_exports__.a = function(method) {
                 headerBuilders.push(method);
             };
-            var __WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__ = __webpack_require__("./node_modules/zalgo-promise/src/index.js"), _typeof = (__webpack_require__("./node_modules/cross-domain-utils/src/index.js"), 
-            "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(obj) {
-                return typeof obj;
-            } : function(obj) {
-                return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-            }), HEADERS = {
+            var __WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__ = __webpack_require__("./node_modules/zalgo-promise/src/index.js"), HEADERS = (__webpack_require__("./node_modules/cross-domain-utils/src/index.js"), 
+            {
                 CONTENT_TYPE: "content-type",
                 ACCEPT: "accept"
-            }, headerBuilders = [];
+            }), headerBuilders = [];
         },
         "./src/index.js": function(module, __webpack_exports__, __webpack_require__) {
             "use strict";

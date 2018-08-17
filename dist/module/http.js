@@ -1,5 +1,3 @@
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
 import { ZalgoPromise } from 'zalgo-promise/src';
 import 'cross-domain-utils/src';
 
@@ -84,29 +82,21 @@ export function request(_ref) {
 
             var contentType = responseHeaders['content-type'];
             var isJSON = contentType && (contentType.indexOf('application/json') === 0 || contentType.indexOf('text/json') === 0);
-            var res = this.responseText;
+            var responseBody = this.responseText;
 
             try {
-                res = JSON.parse(this.responseText);
+                responseBody = JSON.parse(responseBody);
             } catch (err) {
                 if (isJSON) {
                     return reject(new Error('Invalid json: ' + this.responseText + '.'));
                 }
             }
 
-            if (this.status >= 400) {
-                var message = 'Request to ' + method.toLowerCase() + ' ' + url + ' failed with ' + this.status + ' error.';
-
-                if (res) {
-                    if ((typeof res === 'undefined' ? 'undefined' : _typeof(res)) === 'object' && res !== null) {
-                        res = JSON.stringify(res, null, 4);
-                    }
-
-                    message = message + '\n\n' + res + '\n';
-                }
-
-                return reject(new Error(message));
-            }
+            var res = {
+                status: this.status,
+                headers: responseHeaders,
+                body: responseBody
+            };
 
             return resolve(res);
         }, false);
