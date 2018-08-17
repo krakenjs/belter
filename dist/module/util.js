@@ -1,3 +1,7 @@
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+/* eslint max-lines: 0 */
+
 import { ZalgoPromise } from 'zalgo-promise/src';
 
 export function getGlobal() {
@@ -468,4 +472,89 @@ export function safeInterval(method, time) {
             clearTimeout(timeout);
         }
     };
+}
+
+export function isInteger(str) {
+    return Boolean(str.match(/^[0-9]+$/));
+}
+
+export function isFloat(str) {
+    return Boolean(str.match(/^[0-9]+\.[0-9]+$/));
+}
+
+export function serializePrimitive(value) {
+    return value.toString();
+}
+
+export function deserializePrimitive(value) {
+    if (value === 'true') {
+        return true;
+    } else if (value === 'false') {
+        return false;
+    } else if (isInteger(value)) {
+        return parseInt(value, 10);
+    } else if (isFloat(value)) {
+        return parseFloat(value);
+    } else {
+        return value;
+    }
+}
+
+export function dotify(obj) {
+    var prefix = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+    var newobj = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+    prefix = prefix ? prefix + '.' : prefix;
+    for (var _key5 in obj) {
+        if (!obj.hasOwnProperty(_key5) || obj[_key5] === undefined || obj[_key5] === null || typeof obj[_key5] === 'function') {
+            continue;
+        } else if (obj[_key5] && Array.isArray(obj[_key5]) && obj[_key5].length && obj[_key5].every(function (val) {
+            return (typeof val === 'undefined' ? 'undefined' : _typeof(val)) !== 'object';
+        })) {
+            newobj['' + prefix + _key5 + '[]'] = obj[_key5].join(',');
+        } else if (obj[_key5] && _typeof(obj[_key5]) === 'object') {
+            newobj = dotify(obj[_key5], '' + prefix + _key5, newobj);
+        } else {
+            newobj['' + prefix + _key5] = serializePrimitive(obj[_key5]);
+        }
+    }
+    return newobj;
+}
+
+export function undotify(obj) {
+
+    var result = {};
+
+    for (var _key6 in obj) {
+        if (!obj.hasOwnProperty(_key6) || typeof obj[_key6] !== 'string') {
+            continue;
+        }
+
+        var _value2 = obj[_key6];
+
+        if (_key6.match(/^.+\[\]$/)) {
+            _key6 = _key6.slice(0, _key6.length - 2);
+            _value2 = _value2.split(',').map(deserializePrimitive);
+        } else {
+            _value2 = deserializePrimitive(_value2);
+        }
+
+        var keyResult = result;
+        var parts = _key6.split('.');
+        for (var i = 0; i < parts.length; i++) {
+            var part = parts[i];
+            var isLast = i + 1 === parts.length;
+            var isIndex = !isLast && isInteger(parts[i + 1]);
+
+            if (isLast) {
+                // $FlowFixMe
+                keyResult[part] = _value2;
+            } else {
+                // $FlowFixMe
+                keyResult = keyResult[part] = keyResult[part] || (isIndex ? [] : {});
+            }
+        }
+    }
+
+    return result;
 }

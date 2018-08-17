@@ -429,7 +429,7 @@
             var src = __webpack_require__("./node_modules/zalgo-promise/src/index.js"), util = __webpack_require__("./src/util.js"), device = __webpack_require__("./src/device.js");
             __webpack_exports__.h = isDocumentReady;
             __webpack_exports__.q = function waitForWindowReady() {
-                return Object(util.j)(waitForWindowReady, function() {
+                return Object(util.l)(waitForWindowReady, function() {
                     return new src.a(function(resolve) {
                         isDocumentReady() && resolve();
                         window.addEventListener("load", function() {
@@ -505,7 +505,7 @@
                 return Array.prototype.slice.call(doc.querySelectorAll(selector));
             };
             __webpack_exports__.j = function(element, handler) {
-                element.addEventListener("touchstart", util.p);
+                element.addEventListener("touchstart", util.t);
                 element.addEventListener("click", handler);
                 element.addEventListener("keypress", function(event) {
                     if (13 === event.keyCode) return handler(event);
@@ -515,7 +515,7 @@
                 return Boolean(document.body) && "complete" === document.readyState;
             }
             function waitForDocumentReady() {
-                return Object(util.j)(waitForDocumentReady, function() {
+                return Object(util.l)(waitForDocumentReady, function() {
                     return new src.a(function(resolve) {
                         if (isDocumentReady()) return resolve();
                         var interval = setInterval(function() {
@@ -528,7 +528,7 @@
                 });
             }
             function parseQuery(queryString) {
-                return Object(util.j)(parseQuery, function() {
+                return Object(util.l)(parseQuery, function() {
                     var params = {};
                     if (!queryString) return params;
                     if (-1 === queryString.indexOf("=")) return params;
@@ -543,7 +543,7 @@
                 return -1 === url.indexOf("#") || 0 !== url.indexOf("#") && url.split("#")[0] !== window.location.href.split("#")[0];
             }
             function enablePerformance() {
-                return Object(util.j)(enablePerformance, function() {
+                return Object(util.l)(enablePerformance, function() {
                     return Boolean(window.performance && performance.now && performance.timing && performance.timing.connectEnd && performance.timing.navigationStart && Math.abs(performance.now() - Date.now()) > 1e3 && performance.now() - (performance.timing.connectEnd - performance.timing.navigationStart) > 0);
                 });
             }
@@ -551,7 +551,7 @@
         "./src/experiment.js": function(module, __webpack_exports__, __webpack_require__) {
             "use strict";
             __webpack_exports__.a = function(_ref) {
-                var group, name = _ref.name, _ref$sample = _ref.sample, sample = void 0 === _ref$sample ? 50 : _ref$sample, _ref$logTreatment = _ref.logTreatment, logTreatment = void 0 === _ref$logTreatment ? __WEBPACK_IMPORTED_MODULE_0__util__.p : _ref$logTreatment, _ref$logCheckpoint = _ref.logCheckpoint, logCheckpoint = void 0 === _ref$logCheckpoint ? __WEBPACK_IMPORTED_MODULE_0__util__.p : _ref$logCheckpoint, throttle = function(name) {
+                var group, name = _ref.name, _ref$sample = _ref.sample, sample = void 0 === _ref$sample ? 50 : _ref$sample, _ref$logTreatment = _ref.logTreatment, logTreatment = void 0 === _ref$logTreatment ? __WEBPACK_IMPORTED_MODULE_0__util__.t : _ref$logTreatment, _ref$logCheckpoint = _ref.logCheckpoint, logCheckpoint = void 0 === _ref$logCheckpoint ? __WEBPACK_IMPORTED_MODULE_0__util__.t : _ref$logCheckpoint, throttle = function(name) {
                     return getBelterExperimentStorage().getState(function(state) {
                         state.throttlePercentiles = state.throttlePercentiles || {};
                         state.throttlePercentiles[name] = state.throttlePercentiles[name] || Math.floor(100 * Math.random());
@@ -624,7 +624,7 @@
         "./src/global.js": function(module, __webpack_exports__, __webpack_require__) {
             "use strict";
             __webpack_exports__.a = function(_ref) {
-                var name = _ref.name, _ref$version = _ref.version, version = void 0 === _ref$version ? "latest" : _ref$version, global = Object(__WEBPACK_IMPORTED_MODULE_0__util__.g)(), globalKey = "__" + name + "__" + version + "_global__", namespace = global[globalKey] = global[globalKey] || {};
+                var name = _ref.name, _ref$version = _ref.version, version = void 0 === _ref$version ? "latest" : _ref$version, global = Object(__WEBPACK_IMPORTED_MODULE_0__util__.i)(), globalKey = "__" + name + "__" + version + "_global__", namespace = global[globalKey] = global[globalKey] || {};
                 return {
                     get: function(key, defValue) {
                         defValue = defValue || {};
@@ -852,19 +852,19 @@
             });
             var __WEBPACK_IMPORTED_MODULE_6__util__ = __webpack_require__("./src/util.js");
             __webpack_require__.d(__webpack_exports__, "getGlobal", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.g;
+                return __WEBPACK_IMPORTED_MODULE_6__util__.i;
             });
             __webpack_require__.d(__webpack_exports__, "memoize", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.n;
+                return __WEBPACK_IMPORTED_MODULE_6__util__.r;
             });
             __webpack_require__.d(__webpack_exports__, "inlineMemoize", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.j;
+                return __WEBPACK_IMPORTED_MODULE_6__util__.l;
             });
             __webpack_require__.d(__webpack_exports__, "noop", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.p;
+                return __WEBPACK_IMPORTED_MODULE_6__util__.t;
             });
             __webpack_require__.d(__webpack_exports__, "once", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.r;
+                return __WEBPACK_IMPORTED_MODULE_6__util__.v;
             });
             __webpack_require__.d(__webpack_exports__, "base64encode", function() {
                 return __WEBPACK_IMPORTED_MODULE_6__util__.c;
@@ -873,76 +873,94 @@
                 return __WEBPACK_IMPORTED_MODULE_6__util__.b;
             });
             __webpack_require__.d(__webpack_exports__, "uniqueID", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.D;
+                return __WEBPACK_IMPORTED_MODULE_6__util__.J;
             });
             __webpack_require__.d(__webpack_exports__, "hashStr", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.h;
+                return __WEBPACK_IMPORTED_MODULE_6__util__.j;
             });
             __webpack_require__.d(__webpack_exports__, "strHashStr", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.y;
+                return __WEBPACK_IMPORTED_MODULE_6__util__.D;
             });
             __webpack_require__.d(__webpack_exports__, "match", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.l;
+                return __WEBPACK_IMPORTED_MODULE_6__util__.p;
             });
             __webpack_require__.d(__webpack_exports__, "eventEmitter", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.e;
+                return __WEBPACK_IMPORTED_MODULE_6__util__.g;
             });
             __webpack_require__.d(__webpack_exports__, "awaitKey", function() {
                 return __WEBPACK_IMPORTED_MODULE_6__util__.a;
             });
             __webpack_require__.d(__webpack_exports__, "stringifyError", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.A;
+                return __WEBPACK_IMPORTED_MODULE_6__util__.F;
             });
             __webpack_require__.d(__webpack_exports__, "stringifyErrorMessage", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.B;
+                return __WEBPACK_IMPORTED_MODULE_6__util__.G;
             });
             __webpack_require__.d(__webpack_exports__, "stringify", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.z;
-            });
-            __webpack_require__.d(__webpack_exports__, "isLocalStorageEnabled", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.k;
-            });
-            __webpack_require__.d(__webpack_exports__, "domainMatches", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.d;
-            });
-            __webpack_require__.d(__webpack_exports__, "patchMethod", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.s;
-            });
-            __webpack_require__.d(__webpack_exports__, "extend", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.f;
-            });
-            __webpack_require__.d(__webpack_exports__, "values", function() {
                 return __WEBPACK_IMPORTED_MODULE_6__util__.E;
             });
-            __webpack_require__.d(__webpack_exports__, "perc", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.t;
-            });
-            __webpack_require__.d(__webpack_exports__, "min", function() {
+            __webpack_require__.d(__webpack_exports__, "isLocalStorageEnabled", function() {
                 return __WEBPACK_IMPORTED_MODULE_6__util__.o;
             });
-            __webpack_require__.d(__webpack_exports__, "max", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.m;
+            __webpack_require__.d(__webpack_exports__, "domainMatches", function() {
+                return __WEBPACK_IMPORTED_MODULE_6__util__.e;
             });
-            __webpack_require__.d(__webpack_exports__, "regexMap", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.v;
-            });
-            __webpack_require__.d(__webpack_exports__, "svgToBase64", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.C;
-            });
-            __webpack_require__.d(__webpack_exports__, "objFilter", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.q;
-            });
-            __webpack_require__.d(__webpack_exports__, "identity", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.i;
-            });
-            __webpack_require__.d(__webpack_exports__, "regexTokenize", function() {
+            __webpack_require__.d(__webpack_exports__, "patchMethod", function() {
                 return __WEBPACK_IMPORTED_MODULE_6__util__.w;
             });
-            __webpack_require__.d(__webpack_exports__, "promiseDebounce", function() {
+            __webpack_require__.d(__webpack_exports__, "extend", function() {
+                return __WEBPACK_IMPORTED_MODULE_6__util__.h;
+            });
+            __webpack_require__.d(__webpack_exports__, "values", function() {
+                return __WEBPACK_IMPORTED_MODULE_6__util__.K;
+            });
+            __webpack_require__.d(__webpack_exports__, "perc", function() {
+                return __WEBPACK_IMPORTED_MODULE_6__util__.x;
+            });
+            __webpack_require__.d(__webpack_exports__, "min", function() {
+                return __WEBPACK_IMPORTED_MODULE_6__util__.s;
+            });
+            __webpack_require__.d(__webpack_exports__, "max", function() {
+                return __WEBPACK_IMPORTED_MODULE_6__util__.q;
+            });
+            __webpack_require__.d(__webpack_exports__, "regexMap", function() {
+                return __WEBPACK_IMPORTED_MODULE_6__util__.z;
+            });
+            __webpack_require__.d(__webpack_exports__, "svgToBase64", function() {
+                return __WEBPACK_IMPORTED_MODULE_6__util__.H;
+            });
+            __webpack_require__.d(__webpack_exports__, "objFilter", function() {
                 return __WEBPACK_IMPORTED_MODULE_6__util__.u;
             });
+            __webpack_require__.d(__webpack_exports__, "identity", function() {
+                return __WEBPACK_IMPORTED_MODULE_6__util__.k;
+            });
+            __webpack_require__.d(__webpack_exports__, "regexTokenize", function() {
+                return __WEBPACK_IMPORTED_MODULE_6__util__.A;
+            });
+            __webpack_require__.d(__webpack_exports__, "promiseDebounce", function() {
+                return __WEBPACK_IMPORTED_MODULE_6__util__.y;
+            });
             __webpack_require__.d(__webpack_exports__, "safeInterval", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.x;
+                return __WEBPACK_IMPORTED_MODULE_6__util__.B;
+            });
+            __webpack_require__.d(__webpack_exports__, "isInteger", function() {
+                return __WEBPACK_IMPORTED_MODULE_6__util__.n;
+            });
+            __webpack_require__.d(__webpack_exports__, "isFloat", function() {
+                return __WEBPACK_IMPORTED_MODULE_6__util__.m;
+            });
+            __webpack_require__.d(__webpack_exports__, "serializePrimitive", function() {
+                return __WEBPACK_IMPORTED_MODULE_6__util__.C;
+            });
+            __webpack_require__.d(__webpack_exports__, "deserializePrimitive", function() {
+                return __WEBPACK_IMPORTED_MODULE_6__util__.d;
+            });
+            __webpack_require__.d(__webpack_exports__, "dotify", function() {
+                return __WEBPACK_IMPORTED_MODULE_6__util__.f;
+            });
+            __webpack_require__.d(__webpack_exports__, "undotify", function() {
+                return __WEBPACK_IMPORTED_MODULE_6__util__.I;
             });
             var __WEBPACK_IMPORTED_MODULE_7__http__ = __webpack_require__("./src/http.js");
             __webpack_require__.d(__webpack_exports__, "request", function() {
@@ -953,7 +971,7 @@
             });
             var __WEBPACK_IMPORTED_MODULE_8__types__ = __webpack_require__("./src/types.js");
             __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8__types__);
-            for (var __WEBPACK_IMPORT_KEY__ in __WEBPACK_IMPORTED_MODULE_8__types__) [ "getUserAgent", "isDevice", "isWebView", "isStandAlone", "isFacebookWebView", "isFirefoxIOS", "isEdgeIOS", "isOperaMini", "isAndroid", "isIos", "isGoogleSearchApp", "isQQBrowser", "isIosWebview", "isAndroidWebview", "isIE", "isIECompHeader", "isElectron", "isIEIntranet", "isMacOsCna", "supportsPopups", "isDocumentReady", "waitForWindowReady", "waitForDocumentReady", "waitForDocumentBody", "parseQuery", "getQueryParam", "urlWillRedirectPage", "extendUrl", "redirect", "hasMetaViewPort", "isElementVisible", "enablePerformance", "getPageRenderTime", "htmlEncode", "isBrowser", "querySelectorAll", "onClick", "experiment", "getGlobalNameSpace", "JsxHTMLNode", "JsxHTMLNodeContainer", "jsxToHTML", "jsxRender", "Fragment", "SVG", "placeholderToJSX", "getStorage", "getGlobal", "memoize", "inlineMemoize", "noop", "once", "base64encode", "base64decode", "uniqueID", "hashStr", "strHashStr", "match", "eventEmitter", "awaitKey", "stringifyError", "stringifyErrorMessage", "stringify", "isLocalStorageEnabled", "domainMatches", "patchMethod", "extend", "values", "perc", "min", "max", "regexMap", "svgToBase64", "objFilter", "identity", "regexTokenize", "promiseDebounce", "safeInterval", "request", "addHeaderBuilder", "default" ].indexOf(__WEBPACK_IMPORT_KEY__) < 0 && function(key) {
+            for (var __WEBPACK_IMPORT_KEY__ in __WEBPACK_IMPORTED_MODULE_8__types__) [ "getUserAgent", "isDevice", "isWebView", "isStandAlone", "isFacebookWebView", "isFirefoxIOS", "isEdgeIOS", "isOperaMini", "isAndroid", "isIos", "isGoogleSearchApp", "isQQBrowser", "isIosWebview", "isAndroidWebview", "isIE", "isIECompHeader", "isElectron", "isIEIntranet", "isMacOsCna", "supportsPopups", "isDocumentReady", "waitForWindowReady", "waitForDocumentReady", "waitForDocumentBody", "parseQuery", "getQueryParam", "urlWillRedirectPage", "extendUrl", "redirect", "hasMetaViewPort", "isElementVisible", "enablePerformance", "getPageRenderTime", "htmlEncode", "isBrowser", "querySelectorAll", "onClick", "experiment", "getGlobalNameSpace", "JsxHTMLNode", "JsxHTMLNodeContainer", "jsxToHTML", "jsxRender", "Fragment", "SVG", "placeholderToJSX", "getStorage", "getGlobal", "memoize", "inlineMemoize", "noop", "once", "base64encode", "base64decode", "uniqueID", "hashStr", "strHashStr", "match", "eventEmitter", "awaitKey", "stringifyError", "stringifyErrorMessage", "stringify", "isLocalStorageEnabled", "domainMatches", "patchMethod", "extend", "values", "perc", "min", "max", "regexMap", "svgToBase64", "objFilter", "identity", "regexTokenize", "promiseDebounce", "safeInterval", "isInteger", "isFloat", "serializePrimitive", "deserializePrimitive", "dotify", "undotify", "request", "addHeaderBuilder", "default" ].indexOf(__WEBPACK_IMPORT_KEY__) < 0 && function(key) {
                 __webpack_require__.d(__webpack_exports__, key, function() {
                     return __WEBPACK_IMPORTED_MODULE_8__types__[key];
                 });
@@ -969,7 +987,7 @@
             });
             __webpack_exports__.f = jsxToHTML;
             __webpack_exports__.e = function(template, renderers) {
-                var nodes = Object(__WEBPACK_IMPORTED_MODULE_0__util__.v)(template, /\{\s*([a-z]+)(?::\s*([^} ]+))?\s*\}|([^${}]+)/g, function(match, type, value, text) {
+                var nodes = Object(__WEBPACK_IMPORTED_MODULE_0__util__.z)(template, /\{\s*([a-z]+)(?::\s*([^} ]+))?\s*\}|([^${}]+)/g, function(match, type, value, text) {
                     if (type) {
                         if (!renderers[type]) throw new Error("Can not render type: " + type);
                         return renderers[type](value);
@@ -990,11 +1008,11 @@
                 if (!svg) throw new TypeError("Expected svg prop");
                 if ("string" != typeof svg && !(svg instanceof JsxHTMLNode)) throw new TypeError("Expected svg prop to be a string or jsx html node");
                 return jsxToHTML("img", _extends({
-                    src: Object(__WEBPACK_IMPORTED_MODULE_0__util__.C)(svg.toString())
+                    src: Object(__WEBPACK_IMPORTED_MODULE_0__util__.H)(svg.toString())
                 }, otherProps));
             };
             __webpack_exports__.g = function(text, placeholders) {
-                return Object(__WEBPACK_IMPORTED_MODULE_0__util__.w)(text, /(\{[a-z]+\})|([^{}]+)/g).map(function(token) {
+                return Object(__WEBPACK_IMPORTED_MODULE_0__util__.A)(text, /(\{[a-z]+\})|([^{}]+)/g).map(function(token) {
                     var match = token.match(/^{([a-z]+)}$/);
                     return match ? placeholders[match[1]]() : placeholders.text ? placeholders.text(token) : token;
                 });
@@ -1085,20 +1103,20 @@
             __webpack_exports__.a = function(_ref) {
                 var name = _ref.name, _ref$version = _ref.version, version = void 0 === _ref$version ? "latest" : _ref$version, _ref$lifetime = _ref.lifetime, lifetime = void 0 === _ref$lifetime ? 3e5 : _ref$lifetime, STORAGE_KEY = "__" + name + "_" + version + "_storage__", accessedStorage = void 0;
                 function getState(handler) {
-                    var localStorageEnabled = Object(__WEBPACK_IMPORTED_MODULE_0__util__.k)(), storage = void 0;
+                    var localStorageEnabled = Object(__WEBPACK_IMPORTED_MODULE_0__util__.o)(), storage = void 0;
                     accessedStorage && (storage = accessedStorage);
                     if (!storage && localStorageEnabled) {
                         var rawStorage = window.localStorage.getItem(STORAGE_KEY);
                         rawStorage && (storage = JSON.parse(rawStorage));
                     }
-                    storage || (storage = Object(__WEBPACK_IMPORTED_MODULE_0__util__.g)()[STORAGE_KEY]);
+                    storage || (storage = Object(__WEBPACK_IMPORTED_MODULE_0__util__.i)()[STORAGE_KEY]);
                     storage || (storage = {
-                        id: Object(__WEBPACK_IMPORTED_MODULE_0__util__.D)()
+                        id: Object(__WEBPACK_IMPORTED_MODULE_0__util__.J)()
                     });
-                    storage.id || (storage.id = Object(__WEBPACK_IMPORTED_MODULE_0__util__.D)());
+                    storage.id || (storage.id = Object(__WEBPACK_IMPORTED_MODULE_0__util__.J)());
                     accessedStorage = storage;
                     var result = handler(storage);
-                    localStorageEnabled ? window.localStorage.setItem(STORAGE_KEY, JSON.stringify(storage)) : Object(__WEBPACK_IMPORTED_MODULE_0__util__.g)()[STORAGE_KEY] = storage;
+                    localStorageEnabled ? window.localStorage.setItem(STORAGE_KEY, JSON.stringify(storage)) : Object(__WEBPACK_IMPORTED_MODULE_0__util__.i)()[STORAGE_KEY] = storage;
                     accessedStorage = null;
                     return result;
                 }
@@ -1107,7 +1125,7 @@
                         var session = storage.__session__, now = Date.now();
                         session && now - session.created > lifetime && (session = null);
                         session || (session = {
-                            guid: Object(__WEBPACK_IMPORTED_MODULE_0__util__.D)(),
+                            guid: Object(__WEBPACK_IMPORTED_MODULE_0__util__.J)(),
                             created: now
                         });
                         storage.__session__ = session;
@@ -1139,11 +1157,11 @@
         "./src/types.js": function(module, exports) {},
         "./src/util.js": function(module, __webpack_exports__, __webpack_require__) {
             "use strict";
-            __webpack_exports__.g = getGlobal;
-            __webpack_exports__.n = memoize;
-            __webpack_exports__.j = inlineMemoize;
-            __webpack_exports__.p = function() {};
-            __webpack_exports__.r = function(method) {
+            __webpack_exports__.i = getGlobal;
+            __webpack_exports__.r = memoize;
+            __webpack_exports__.l = inlineMemoize;
+            __webpack_exports__.t = function() {};
+            __webpack_exports__.v = function(method) {
                 var called = !1;
                 return function() {
                     if (!called) {
@@ -1156,17 +1174,17 @@
             __webpack_exports__.b = function(str) {
                 return window.atob(str);
             };
-            __webpack_exports__.D = function() {
+            __webpack_exports__.J = function() {
                 var chars = "0123456789abcdef";
                 return "xxxxxxxxxx".replace(/./g, function() {
                     return chars.charAt(Math.floor(Math.random() * chars.length));
                 }) + "_" + base64encode(new Date().toISOString().slice(11, 19).replace("T", ".")).replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
             };
-            __webpack_exports__.h = function(str) {
+            __webpack_exports__.j = function(str) {
                 for (var hash = 0, i = 0; i < str.length; i++) hash += str[i].charCodeAt(0) * Math.pow(i % 10 + 1, 5);
                 return Math.floor(Math.pow(Math.sqrt(hash), 5));
             };
-            __webpack_exports__.y = function(str) {
+            __webpack_exports__.D = function(str) {
                 for (var hash = "", i = 0; i < str.length; i++) {
                     var total = str[i].charCodeAt(0) * i;
                     str[i + 1] && (total += str[i + 1].charCodeAt(0) * (i - 1));
@@ -1174,11 +1192,11 @@
                 }
                 return hash;
             };
-            __webpack_exports__.l = function(str, pattern) {
+            __webpack_exports__.p = function(str, pattern) {
                 var regmatch = str.match(pattern);
                 if (regmatch) return regmatch[1];
             };
-            __webpack_exports__.e = function() {
+            __webpack_exports__.g = function() {
                 var listeners = [];
                 return {
                     listen: function(method) {
@@ -1216,7 +1234,7 @@
                     });
                 });
             };
-            __webpack_exports__.A = function stringifyError(err) {
+            __webpack_exports__.F = function stringifyError(err) {
                 var level = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : 1;
                 if (level >= 3) return "stringifyError stack overflow";
                 try {
@@ -1233,14 +1251,14 @@
                     return "Error while stringifying error: " + stringifyError(newErr, level + 1);
                 }
             };
-            __webpack_exports__.B = function(err) {
+            __webpack_exports__.G = function(err) {
                 var defaultMessage = "<unknown error: " + Object.prototype.toString.call(err) + ">";
                 return err ? err instanceof Error ? err.message || defaultMessage : "string" == typeof err.message && err.message || defaultMessage : defaultMessage;
             };
-            __webpack_exports__.z = function(item) {
+            __webpack_exports__.E = function(item) {
                 return "string" == typeof item ? item : item && "function" == typeof item.toString ? item.toString() : Object.prototype.toString.call(item);
             };
-            __webpack_exports__.k = function isLocalStorageEnabled() {
+            __webpack_exports__.o = function isLocalStorageEnabled() {
                 return inlineMemoize(isLocalStorageEnabled, function() {
                     try {
                         if ("undefined" == typeof window) return !1;
@@ -1255,11 +1273,11 @@
                     return !1;
                 });
             };
-            __webpack_exports__.d = function(hostname, domain) {
+            __webpack_exports__.e = function(hostname, domain) {
                 var index = (hostname = hostname.split("://")[1]).indexOf(domain);
                 return -1 !== index && hostname.slice(index) === domain;
             };
-            __webpack_exports__.s = function(obj, name, handler) {
+            __webpack_exports__.w = function(obj, name, handler) {
                 var original = obj[name];
                 obj[name] = function() {
                     var _this = this, _arguments = arguments;
@@ -1273,45 +1291,45 @@
                     });
                 };
             };
-            __webpack_exports__.f = function(obj, source) {
+            __webpack_exports__.h = function(obj, source) {
                 if (!source) return obj;
                 if (Object.assign) return Object.assign(obj, source);
                 for (var _key2 in source) source.hasOwnProperty(_key2) && (obj[_key2] = source[_key2]);
                 return obj;
             };
-            __webpack_exports__.E = function(obj) {
+            __webpack_exports__.K = function(obj) {
                 var result = [];
                 for (var _key3 in obj) obj.hasOwnProperty(_key3) && result.push(obj[_key3]);
                 return result;
             };
-            __webpack_exports__.t = function(pixels, percentage) {
+            __webpack_exports__.x = function(pixels, percentage) {
                 return Math.round(pixels * percentage / 100);
             };
-            __webpack_exports__.o = function() {
+            __webpack_exports__.s = function() {
                 return Math.min.apply(Math, arguments);
             };
-            __webpack_exports__.m = function() {
+            __webpack_exports__.q = function() {
                 return Math.max.apply(Math, arguments);
             };
-            __webpack_exports__.v = function(str, regex, handler) {
+            __webpack_exports__.z = function(str, regex, handler) {
                 var results = [];
                 str.replace(regex, function() {
                     results.push(handler.apply(null, arguments));
                 });
                 return results;
             };
-            __webpack_exports__.C = function(svg) {
+            __webpack_exports__.H = function(svg) {
                 return "data:image/svg+xml;base64," + base64encode(svg);
             };
-            __webpack_exports__.q = function(obj) {
+            __webpack_exports__.u = function(obj) {
                 var filter = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : Boolean, result = {};
                 for (var _key4 in obj) obj.hasOwnProperty(_key4) && filter(obj[_key4], _key4) && (result[_key4] = obj[_key4]);
                 return result;
             };
-            __webpack_exports__.i = function(item) {
+            __webpack_exports__.k = function(item) {
                 return item;
             };
-            __webpack_exports__.w = function(text, regex) {
+            __webpack_exports__.A = function(text, regex) {
                 var result = [];
                 text.replace(regex, function(token) {
                     result.push(token);
@@ -1319,7 +1337,7 @@
                 });
                 return result;
             };
-            __webpack_exports__.u = function(method) {
+            __webpack_exports__.y = function(method) {
                 var delay = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : 50, promise = void 0, timeout = void 0;
                 return function() {
                     timeout && clearTimeout(timeout);
@@ -1336,7 +1354,7 @@
                     return localPromise;
                 };
             };
-            __webpack_exports__.x = function(method, time) {
+            __webpack_exports__.B = function(method, time) {
                 var timeout = void 0;
                 !function loop() {
                     timeout = setTimeout(function() {
@@ -1350,7 +1368,38 @@
                     }
                 };
             };
-            var __WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__ = __webpack_require__("./node_modules/zalgo-promise/src/index.js");
+            __webpack_exports__.n = isInteger;
+            __webpack_exports__.m = isFloat;
+            __webpack_exports__.C = serializePrimitive;
+            __webpack_exports__.d = deserializePrimitive;
+            __webpack_exports__.f = function dotify(obj) {
+                var prefix = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : "", newobj = arguments.length > 2 && void 0 !== arguments[2] ? arguments[2] : {};
+                prefix = prefix ? prefix + "." : prefix;
+                for (var _key5 in obj) obj.hasOwnProperty(_key5) && void 0 !== obj[_key5] && null !== obj[_key5] && "function" != typeof obj[_key5] && (obj[_key5] && Array.isArray(obj[_key5]) && obj[_key5].length && obj[_key5].every(function(val) {
+                    return "object" !== (void 0 === val ? "undefined" : _typeof(val));
+                }) ? newobj["" + prefix + _key5 + "[]"] = obj[_key5].join(",") : obj[_key5] && "object" === _typeof(obj[_key5]) ? newobj = dotify(obj[_key5], "" + prefix + _key5, newobj) : newobj["" + prefix + _key5] = serializePrimitive(obj[_key5]));
+                return newobj;
+            };
+            __webpack_exports__.I = function(obj) {
+                var result = {};
+                for (var _key6 in obj) if (obj.hasOwnProperty(_key6) && "string" == typeof obj[_key6]) {
+                    var _value2 = obj[_key6];
+                    if (_key6.match(/^.+\[\]$/)) {
+                        _key6 = _key6.slice(0, _key6.length - 2);
+                        _value2 = _value2.split(",").map(deserializePrimitive);
+                    } else _value2 = deserializePrimitive(_value2);
+                    for (var keyResult = result, parts = _key6.split("."), i = 0; i < parts.length; i++) {
+                        var part = parts[i], isLast = i + 1 === parts.length, isIndex = !isLast && isInteger(parts[i + 1]);
+                        isLast ? keyResult[part] = _value2 : keyResult = keyResult[part] = keyResult[part] || (isIndex ? [] : {});
+                    }
+                }
+                return result;
+            };
+            var __WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__ = __webpack_require__("./node_modules/zalgo-promise/src/index.js"), _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(obj) {
+                return typeof obj;
+            } : function(obj) {
+                return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+            };
             function getGlobal() {
                 if ("undefined" != typeof window) return window;
                 if ("undefined" != typeof global) return global;
@@ -1392,6 +1441,18 @@
             }
             function base64encode(str) {
                 return window.btoa(str);
+            }
+            function isInteger(str) {
+                return Boolean(str.match(/^[0-9]+$/));
+            }
+            function isFloat(str) {
+                return Boolean(str.match(/^[0-9]+\.[0-9]+$/));
+            }
+            function serializePrimitive(value) {
+                return value.toString();
+            }
+            function deserializePrimitive(value) {
+                return "true" === value || "false" !== value && (isInteger(value) ? parseInt(value, 10) : isFloat(value) ? parseFloat(value) : value);
             }
         }
     });
