@@ -31,7 +31,11 @@ export var JsxHTMLNode = function () {
     }
 
     JsxHTMLNode.prototype.toString = function toString() {
-        return '<' + this.name + (this.props ? ' ' : '') + (this.props ? this.propsToString() : '') + '>' + this.childrenToString() + '</' + this.name + '>';
+        var name = this.name;
+        var props = this.propsToString();
+        var children = this.childrenToString();
+
+        return '<' + name + (props ? ' ' : '') + props + '>' + children + '</' + name + '>';
     };
 
     JsxHTMLNode.prototype.propsToString = function propsToString() {

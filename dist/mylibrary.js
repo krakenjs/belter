@@ -1038,7 +1038,8 @@
                     this.children = children;
                 }
                 JsxHTMLNode.prototype.toString = function() {
-                    return "<" + this.name + (this.props ? " " : "") + (this.props ? this.propsToString() : "") + ">" + this.childrenToString() + "</" + this.name + ">";
+                    var name = this.name, props = this.propsToString(), children = this.childrenToString();
+                    return "<" + name + (props ? " " : "") + props + ">" + children + "</" + name + ">";
                 };
                 JsxHTMLNode.prototype.propsToString = function() {
                     var props = this.props;
