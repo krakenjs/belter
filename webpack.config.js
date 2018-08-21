@@ -3,8 +3,8 @@
 
 import { getWebpackConfig } from 'grumbler-scripts/config/webpack.config';
 
-const FILE_NAME = 'mylibrary';
-const MODULE_NAME = 'mylibrary';
+const FILE_NAME = 'belter';
+const MODULE_NAME = 'belter';
 
 export let WEBPACK_CONFIG = getWebpackConfig({
     filename:   `${ FILE_NAME }.js`,
