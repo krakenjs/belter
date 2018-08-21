@@ -36,7 +36,11 @@ export class JsxHTMLNode {
     }
 
     toString() : string {
-        return `<${ this.name }${ this.props ? ' ' : '' }${ this.props ? this.propsToString() : '' }>${ this.childrenToString() }</${ this.name }>`;
+        let name = this.name;
+        let props = this.propsToString();
+        let children = this.childrenToString();
+
+        return `<${ name }${ props ? ' ' : '' }${ props }>${ children }</${ name }>`;
     }
 
     propsToString() : string {
