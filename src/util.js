@@ -383,10 +383,11 @@ export function regexMap<T>(str : string, regex : RegExp, handler : () => T) : A
     let results = [];
 
     // $FlowFixMe
-    str.replace(regex, function regexMapMatcher() {
-        results.push(handler.apply(null, arguments));
+    str.replace(regex, function regexMapMatcher(item) {
+        results.push(handler ? handler.apply(null, arguments) : item);
     });
 
+    // $FlowFixMe
     return results;
 }
 
