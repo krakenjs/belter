@@ -1314,8 +1314,8 @@
             };
             __webpack_exports__.z = function(str, regex, handler) {
                 var results = [];
-                str.replace(regex, function() {
-                    results.push(handler.apply(null, arguments));
+                str.replace(regex, function(item) {
+                    results.push(handler ? handler.apply(null, arguments) : item);
                 });
                 return results;
             };

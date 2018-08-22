@@ -385,10 +385,11 @@ export function regexMap(str, regex, handler) {
     var results = [];
 
     // $FlowFixMe
-    str.replace(regex, function regexMapMatcher() {
-        results.push(handler.apply(null, arguments));
+    str.replace(regex, function regexMapMatcher(item) {
+        results.push(handler ? handler.apply(null, arguments) : item);
     });
 
+    // $FlowFixMe
     return results;
 }
 
