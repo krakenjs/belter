@@ -70,6 +70,10 @@ export function memoize(method) {
         return cache[key].value;
     };
 
+    method.__memoized__.reset = function () {
+        cache = {};
+    };
+
     return method.__memoized__;
 }
 
