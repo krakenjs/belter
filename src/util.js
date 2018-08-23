@@ -64,6 +64,10 @@ export function memoize<R>(method : (...args : Array<any>) => R, options : { tim
         return cache[key].value;
     };
 
+    method.__memoized__.reset = () => {
+        cache = {};
+    };
+
     return method.__memoized__;
 }
 
