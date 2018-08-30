@@ -220,3 +220,28 @@ export function onClick(element, handler) {
         }
     });
 }
+
+export function getScript(_ref2) {
+    var _ref2$host = _ref2.host,
+        host = _ref2$host === undefined ? window.location.host : _ref2$host,
+        path = _ref2.path;
+
+    return inlineMemoize(getScript, function () {
+
+        var url = '' + host + path;
+        var scripts = Array.prototype.slice.call(document.getElementsByTagName('script'));
+
+        for (var _i4 = 0, _length4 = scripts == null ? 0 : scripts.length; _i4 < _length4; _i4++) {
+            var script = scripts[_i4];
+            if (!script.src) {
+                continue;
+            }
+
+            var src = script.src.replace(/^https?:/, '').split('?')[0];
+
+            if (src === url) {
+                return script;
+            }
+        }
+    }, [path]);
+}
