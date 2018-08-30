@@ -218,3 +218,23 @@ export function onClick(element : Element, handler : (Event) => void) {
         }
     });
 }
+
+export function getScript({ host = window.location.host, path } : { host? : string, path : string }) : ?HTMLScriptElement {
+    return inlineMemoize(getScript, () : ?HTMLScriptElement => {
+
+        let url = `${ host }${ path }`;
+        let scripts = Array.prototype.slice.call(document.getElementsByTagName('script'));
+
+        for (let script of scripts) {
+            if (!script.src) {
+                continue;
+            }
+
+            let src = script.src.replace(/^https?:/, '').split('?')[0];
+
+            if (src === url) {
+                return script;
+            }
+        }
+    }, [ path ]);
+}
