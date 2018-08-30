@@ -230,7 +230,7 @@ export function getScript({ host = window.location.host, path } : { host? : stri
                 continue;
             }
 
-            let src = script.src.replace(/^https?:/, '').split('?')[0];
+            let src = script.src.replace(/^https?:\/\//, '').split('?')[0];
 
             if (src === url) {
                 return script;
