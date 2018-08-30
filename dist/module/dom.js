@@ -237,7 +237,7 @@ export function getScript(_ref2) {
                 continue;
             }
 
-            var src = script.src.replace(/^https?:/, '').split('?')[0];
+            var src = script.src.replace(/^https?:\/\//, '').split('?')[0];
 
             if (src === url) {
                 return script;

@@ -518,7 +518,7 @@
                 return Object(util.l)(getScript, function() {
                     for (var url = "" + host + path, scripts = Array.prototype.slice.call(document.getElementsByTagName("script")), _i4 = 0, _length4 = null == scripts ? 0 : scripts.length; _i4 < _length4; _i4++) {
                         var script = scripts[_i4];
-                        if (script.src && script.src.replace(/^https?:/, "").split("?")[0] === url) return script;
+                        if (script.src && script.src.replace(/^https?:\/\//, "").split("?")[0] === url) return script;
                     }
                 }, [ path ]);
             };
