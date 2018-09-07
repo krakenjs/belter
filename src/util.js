@@ -442,9 +442,10 @@ export function promiseDebounce<T>(method : () => ZalgoPromise<T> | T, delay : n
             promise = null;
             timeout = null;
 
-            ZalgoPromise.try(method)
-                .then(result => localPromise.resolve(result),
-                    err    => localPromise.reject(err));
+            ZalgoPromise.try(method).then(
+                result => { localPromise.resolve(result); },
+                err => { localPromise.reject(err); }
+            );
         }, delay);
 
         return localPromise;
