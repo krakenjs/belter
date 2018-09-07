@@ -449,9 +449,9 @@ export function promiseDebounce(method) {
             timeout = null;
 
             ZalgoPromise['try'](method).then(function (result) {
-                return localPromise.resolve(result);
+                localPromise.resolve(result);
             }, function (err) {
-                return localPromise.reject(err);
+                localPromise.reject(err);
             });
         }, delay);
 

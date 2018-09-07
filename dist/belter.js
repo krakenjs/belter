@@ -131,15 +131,15 @@
                     this.rejected = !0;
                     this.error = error;
                     this.errorHandled || setTimeout(function() {
-                        _this2.errorHandled || function(err) {
+                        _this2.errorHandled || function(err, promise) {
                             if (-1 === getGlobal().dispatchedErrors.indexOf(err)) {
                                 getGlobal().dispatchedErrors.push(err);
                                 setTimeout(function() {
                                     throw err;
                                 }, 1);
-                                for (var j = 0; j < getGlobal().possiblyUnhandledPromiseHandlers.length; j++) getGlobal().possiblyUnhandledPromiseHandlers[j](err);
+                                for (var j = 0; j < getGlobal().possiblyUnhandledPromiseHandlers.length; j++) getGlobal().possiblyUnhandledPromiseHandlers[j](err, promise);
                             }
-                        }(error);
+                        }(error, _this2);
                     }, 1);
                     this.dispatch();
                     return this;
@@ -1361,9 +1361,9 @@
                         promise = null;
                         timeout = null;
                         __WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.try(method).then(function(result) {
-                            return localPromise.resolve(result);
+                            localPromise.resolve(result);
                         }, function(err) {
-                            return localPromise.reject(err);
+                            localPromise.reject(err);
                         });
                     }, delay);
                     return localPromise;
