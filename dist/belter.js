@@ -1417,7 +1417,7 @@
             };
             function getGlobal() {
                 if ("undefined" != typeof window) return window;
-                if ("undefined" != typeof window) return window;
+                if ("undefined" != typeof global) return global;
                 throw new Error("No global found");
             }
             function memoize(method) {
