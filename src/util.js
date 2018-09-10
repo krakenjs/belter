@@ -7,8 +7,8 @@ export function getGlobal() : Object {
     if (typeof window !== 'undefined') {
         return window;
     }
-    if (typeof global !== 'undefined') {
-        return global;
+    if (typeof __GLOBAL__ !== 'undefined') {
+        return __GLOBAL__;
     }
     throw new Error(`No global found`);
 }
