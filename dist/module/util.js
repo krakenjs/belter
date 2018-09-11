@@ -19,20 +19,12 @@ export function memoize(method) {
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
 
-    if (method.__memoized__) {
-        return method.__memoized__;
-    }
-
     var cache = {};
 
     // eslint-disable-next-line no-unused-vars, flowtype/no-weak-types
-    method.__memoized__ = function memoizedFunction() {
+    function memoizedFunction() {
         for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
             args[_key] = arguments[_key];
-        }
-
-        if (method.__memoized__ && method.__memoized__.__calling__) {
-            throw new Error('Can not call memoized method recursively');
         }
 
         var key = void 0;
@@ -58,23 +50,23 @@ export function memoize(method) {
             return cache[key].value;
         }
 
-        method.__memoized__.__calling__ = true;
+        memoizedFunction.__calling__ = true;
 
         var time = Date.now();
         var value = method.apply(this, arguments);
 
-        method.__memoized__.__calling__ = false;
+        memoizedFunction.__calling__ = false;
 
         cache[key] = { time: time, value: value };
 
         return cache[key].value;
-    };
+    }
 
-    method.__memoized__.reset = function () {
+    memoizedFunction.reset = function () {
         cache = {};
     };
 
-    return method.__memoized__;
+    return memoizedFunction;
 }
 
 // eslint-disable-next-line flowtype/no-weak-types
@@ -84,6 +76,10 @@ export function inlineMemoize(method, logic) {
     if (!method.__memoized__) {
         // $FlowFixMe
         method.__memoized__ = memoize(logic);
+    }
+
+    if (method.__memoized__ && method.__memoized__.__calling__) {
+        throw new Error('Can not call memoized method recursively');
     }
 
     // $FlowFixMe

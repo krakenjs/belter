@@ -1421,12 +1421,9 @@
                 throw new Error("No global found");
             }
             function memoize(method) {
-                var options = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {};
-                if (method.__memoized__) return method.__memoized__;
-                var cache = {};
-                method.__memoized__ = function() {
+                var options = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {}, cache = {};
+                function memoizedFunction() {
                     for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) args[_key] = arguments[_key];
-                    if (method.__memoized__ && method.__memoized__.__calling__) throw new Error("Can not call memoized method recursively");
                     var key = void 0;
                     try {
                         key = JSON.stringify(Array.prototype.slice.call(arguments));
@@ -1438,23 +1435,24 @@
                     var glob = getGlobal();
                     glob.__CACHE_START_TIME__ && cache[key] && cache[key].time < glob.__CACHE_START_TIME__ && delete cache[key];
                     if (cache[key]) return cache[key].value;
-                    method.__memoized__.__calling__ = !0;
+                    memoizedFunction.__calling__ = !0;
                     var time = Date.now(), value = method.apply(this, arguments);
-                    method.__memoized__.__calling__ = !1;
+                    memoizedFunction.__calling__ = !1;
                     cache[key] = {
                         time: time,
                         value: value
                     };
                     return cache[key].value;
-                };
-                method.__memoized__.reset = function() {
+                }
+                memoizedFunction.reset = function() {
                     cache = {};
                 };
-                return method.__memoized__;
+                return memoizedFunction;
             }
             function inlineMemoize(method, logic) {
                 var args = arguments.length > 2 && void 0 !== arguments[2] ? arguments[2] : [];
                 method.__memoized__ || (method.__memoized__ = memoize(logic));
+                if (method.__memoized__ && method.__memoized__.__calling__) throw new Error("Can not call memoized method recursively");
                 return method.__memoized__.apply(method, args);
             }
             function base64encode(str) {
