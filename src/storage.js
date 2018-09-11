@@ -1,6 +1,7 @@
 /* @flow */
 
-import { uniqueID, isLocalStorageEnabled, getGlobal } from './util';
+import { uniqueID, getGlobal } from './util';
+import { isLocalStorageEnabled } from './dom';
 
 type Getter<T> = <T>(handler : (Object) => T) => T;
 
