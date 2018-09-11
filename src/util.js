@@ -36,12 +36,6 @@ export function memoize<R>(method : (...args : Array<any>) => R, options : { tim
             delete cache[key];
         }
 
-        let glob = getGlobal();
-
-        if (glob.__CACHE_START_TIME__ && cache[key] && cache[key].time < glob.__CACHE_START_TIME__) {
-            delete cache[key];
-        }
-
         if (cache[key]) {
             return cache[key].value;
         }
