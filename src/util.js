@@ -16,19 +16,10 @@ export function getGlobal() : Object {
 // eslint-disable-next-line flowtype/no-weak-types
 export function memoize<R>(method : (...args : Array<any>) => R, options : { time? : number } = {}) : ((...args : Array<any>) => R) {
 
-    if (method.__memoized__) {
-        return method.__memoized__;
-    }
-
     let cache : { [key : string] : { time : number, value : R } } = {};
 
     // eslint-disable-next-line no-unused-vars, flowtype/no-weak-types
-    method.__memoized__ = function memoizedFunction(...args : Array<any>) : R {
-
-        if (method.__memoized__ && method.__memoized__.__calling__) {
-            throw new Error(`Can not call memoized method recursively`);
-        }
-
+    function memoizedFunction(...args : Array<any>) : R {
         let key : string;
 
         try {
@@ -52,23 +43,23 @@ export function memoize<R>(method : (...args : Array<any>) => R, options : { tim
             return cache[key].value;
         }
 
-        method.__memoized__.__calling__ = true;
+        memoizedFunction.__calling__ = true;
 
         let time  = Date.now();
         let value = method.apply(this, arguments);
 
-        method.__memoized__.__calling__ = false;
+        memoizedFunction.__calling__ = false;
 
         cache[key] = { time, value };
 
         return cache[key].value;
-    };
+    }
 
-    method.__memoized__.reset = () => {
+    memoizedFunction.reset = () => {
         cache = {};
     };
 
-    return method.__memoized__;
+    return memoizedFunction;
 }
 
 // eslint-disable-next-line flowtype/no-weak-types
@@ -76,6 +67,10 @@ export function inlineMemoize<R>(method : (...args : Array<any>) => R, logic : (
     if (!method.__memoized__) {
         // $FlowFixMe
         method.__memoized__ = memoize(logic);
+    }
+
+    if (method.__memoized__ && method.__memoized__.__calling__) {
+        throw new Error(`Can not call memoized method recursively`);
     }
 
     // $FlowFixMe
