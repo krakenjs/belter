@@ -1150,57 +1150,64 @@
         },
         "./src/storage.js": function(module, __webpack_exports__, __webpack_require__) {
             "use strict";
-            __webpack_exports__.a = function(_ref) {
-                var name = _ref.name, _ref$version = _ref.version, version = void 0 === _ref$version ? "latest" : _ref$version, _ref$lifetime = _ref.lifetime, lifetime = void 0 === _ref$lifetime ? 3e5 : _ref$lifetime, STORAGE_KEY = "__" + name + "_" + version + "_storage__", accessedStorage = void 0;
-                function getState(handler) {
-                    var localStorageEnabled = Object(__WEBPACK_IMPORTED_MODULE_1__dom__.l)(), storage = void 0;
-                    accessedStorage && (storage = accessedStorage);
-                    if (!storage && localStorageEnabled) {
-                        var rawStorage = window.localStorage.getItem(STORAGE_KEY);
-                        rawStorage && (storage = JSON.parse(rawStorage));
-                    }
-                    storage || (storage = Object(__WEBPACK_IMPORTED_MODULE_0__util__.i)()[STORAGE_KEY]);
-                    storage || (storage = {
-                        id: Object(__WEBPACK_IMPORTED_MODULE_0__util__.I)()
-                    });
-                    storage.id || (storage.id = Object(__WEBPACK_IMPORTED_MODULE_0__util__.I)());
-                    accessedStorage = storage;
-                    var result = handler(storage);
-                    localStorageEnabled ? window.localStorage.setItem(STORAGE_KEY, JSON.stringify(storage)) : Object(__WEBPACK_IMPORTED_MODULE_0__util__.i)()[STORAGE_KEY] = storage;
-                    accessedStorage = null;
-                    return result;
-                }
-                function getSession(handler) {
-                    return getState(function(storage) {
-                        var session = storage.__session__, now = Date.now();
-                        session && now - session.created > lifetime && (session = null);
-                        session || (session = {
-                            guid: Object(__WEBPACK_IMPORTED_MODULE_0__util__.I)(),
-                            created: now
+            __webpack_exports__.a = function getStorage(_ref) {
+                var name = _ref.name, _ref$version = _ref.version, version = void 0 === _ref$version ? "latest" : _ref$version, _ref$lifetime = _ref.lifetime, lifetime = void 0 === _ref$lifetime ? 3e5 : _ref$lifetime;
+                return Object(__WEBPACK_IMPORTED_MODULE_0__util__.l)(getStorage, function() {
+                    var STORAGE_KEY = "__" + name + "_" + version + "_storage__", accessedStorage = void 0;
+                    function getState(handler) {
+                        var localStorageEnabled = Object(__WEBPACK_IMPORTED_MODULE_1__dom__.l)(), storage = void 0;
+                        accessedStorage && (storage = accessedStorage);
+                        if (!storage && localStorageEnabled) {
+                            var rawStorage = window.localStorage.getItem(STORAGE_KEY);
+                            rawStorage && (storage = JSON.parse(rawStorage));
+                        }
+                        storage || (storage = Object(__WEBPACK_IMPORTED_MODULE_0__util__.i)()[STORAGE_KEY]);
+                        storage || (storage = {
+                            id: Object(__WEBPACK_IMPORTED_MODULE_0__util__.I)()
                         });
-                        storage.__session__ = session;
-                        return handler(session);
-                    });
-                }
-                return {
-                    getState: getState,
-                    getID: function() {
+                        storage.id || (storage.id = Object(__WEBPACK_IMPORTED_MODULE_0__util__.I)());
+                        accessedStorage = storage;
+                        var result = handler(storage);
+                        localStorageEnabled ? window.localStorage.setItem(STORAGE_KEY, JSON.stringify(storage)) : Object(__WEBPACK_IMPORTED_MODULE_0__util__.i)()[STORAGE_KEY] = storage;
+                        accessedStorage = null;
+                        return result;
+                    }
+                    function getSession(handler) {
                         return getState(function(storage) {
-                            return storage.id;
-                        });
-                    },
-                    getSessionState: function(handler) {
-                        return getSession(function(session) {
-                            session.state = session.state || {};
-                            return handler(session.state);
-                        });
-                    },
-                    getSessionID: function() {
-                        return getSession(function(session) {
-                            return session.guid;
+                            var session = storage.__session__, now = Date.now();
+                            session && now - session.created > lifetime && (session = null);
+                            session || (session = {
+                                guid: Object(__WEBPACK_IMPORTED_MODULE_0__util__.I)(),
+                                created: now
+                            });
+                            storage.__session__ = session;
+                            return handler(session);
                         });
                     }
-                };
+                    return {
+                        getState: getState,
+                        getID: function() {
+                            return getState(function(storage) {
+                                return storage.id;
+                            });
+                        },
+                        getSessionState: function(handler) {
+                            return getSession(function(session) {
+                                session.state = session.state || {};
+                                return handler(session.state);
+                            });
+                        },
+                        getSessionID: function() {
+                            return getSession(function(session) {
+                                return session.guid;
+                            });
+                        }
+                    };
+                }, [ {
+                    name: name,
+                    version: version,
+                    lifetime: lifetime
+                } ]);
             };
             var __WEBPACK_IMPORTED_MODULE_0__util__ = __webpack_require__("./src/util.js"), __WEBPACK_IMPORTED_MODULE_1__dom__ = __webpack_require__("./src/dom.js");
         },
