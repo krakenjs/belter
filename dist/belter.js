@@ -429,8 +429,8 @@
         "./src/dom.js": function(module, __webpack_exports__, __webpack_require__) {
             "use strict";
             var src = __webpack_require__("./node_modules/zalgo-promise/src/index.js"), util = __webpack_require__("./src/util.js"), device = __webpack_require__("./src/device.js");
-            __webpack_exports__.i = isDocumentReady;
-            __webpack_exports__.r = function waitForWindowReady() {
+            __webpack_exports__.j = isDocumentReady;
+            __webpack_exports__.t = function waitForWindowReady() {
                 return Object(util.l)(waitForWindowReady, function() {
                     return new src.a(function(resolve) {
                         isDocumentReady() && resolve();
@@ -440,18 +440,18 @@
                     });
                 });
             };
-            __webpack_exports__.q = waitForDocumentReady;
-            __webpack_exports__.p = function() {
+            __webpack_exports__.s = waitForDocumentReady;
+            __webpack_exports__.r = function() {
                 return waitForDocumentReady.then(function() {
                     if (document.body) return document.body;
                     throw new Error("Document ready but document.body not present");
                 });
             };
-            __webpack_exports__.l = parseQuery;
-            __webpack_exports__.d = function(name) {
+            __webpack_exports__.n = parseQuery;
+            __webpack_exports__.e = function(name) {
                 return parseQuery(window.location.search.slice(1))[name];
             };
-            __webpack_exports__.o = urlWillRedirectPage;
+            __webpack_exports__.q = urlWillRedirectPage;
             __webpack_exports__.b = function(url) {
                 var params = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {}, hasHash = url.indexOf("#") > 0, _url$split = url.split("#"), serverUrl = _url$split[0], hash = _url$split[1];
                 if (hash && !serverUrl) {
@@ -473,22 +473,22 @@
                 hasHash && (newUrl = newUrl + "#" + (hash || ""));
                 return newUrl;
             };
-            __webpack_exports__.n = function(url) {
+            __webpack_exports__.p = function(url) {
                 var win = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : window;
                 return new src.a(function(resolve) {
                     win.location = url;
                     urlWillRedirectPage(url) || resolve();
                 });
             };
-            __webpack_exports__.f = function() {
+            __webpack_exports__.g = function() {
                 var meta = document.querySelector("meta[name=viewport]");
                 return !(Object(device.d)() && window.screen.width < 660 && !meta);
             };
-            __webpack_exports__.j = function(el) {
+            __webpack_exports__.k = function(el) {
                 return Boolean(el.offsetWidth || el.offsetHeight || el.getClientRects().length);
             };
             __webpack_exports__.a = enablePerformance;
-            __webpack_exports__.c = function() {
+            __webpack_exports__.d = function() {
                 return waitForDocumentReady().then(function() {
                     if (enablePerformance()) {
                         var timing = window.performance.timing;
@@ -496,24 +496,24 @@
                     }
                 });
             };
-            __webpack_exports__.g = function() {
+            __webpack_exports__.h = function() {
                 return (arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : "").toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;").replace(/\//g, "&#x2F;");
             };
-            __webpack_exports__.h = function() {
+            __webpack_exports__.i = function() {
                 return "undefined" != typeof window;
             };
-            __webpack_exports__.m = function(selector) {
+            __webpack_exports__.o = function(selector) {
                 var doc = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : window.document;
                 return Array.prototype.slice.call(doc.querySelectorAll(selector));
             };
-            __webpack_exports__.k = function(element, handler) {
-                element.addEventListener("touchstart", util.t);
+            __webpack_exports__.m = function(element, handler) {
+                element.addEventListener("touchstart", util.s);
                 element.addEventListener("click", handler);
                 element.addEventListener("keypress", function(event) {
                     if (13 === event.keyCode) return handler(event);
                 });
             };
-            __webpack_exports__.e = function getScript(_ref2) {
+            __webpack_exports__.f = function getScript(_ref2) {
                 var _ref2$host = _ref2.host, host = void 0 === _ref2$host ? window.location.host : _ref2$host, path = _ref2.path;
                 return Object(util.l)(getScript, function() {
                     for (var url = "" + host + path, scripts = Array.prototype.slice.call(document.getElementsByTagName("script")), _i4 = 0, _length4 = null == scripts ? 0 : scripts.length; _i4 < _length4; _i4++) {
@@ -521,6 +521,38 @@
                         if (script.src && script.src.replace(/^https?:\/\//, "").split("?")[0] === url) return script;
                     }
                 }, [ path ]);
+            };
+            __webpack_exports__.l = function isLocalStorageEnabled() {
+                return Object(util.l)(isLocalStorageEnabled, function() {
+                    try {
+                        if ("undefined" == typeof window) return !1;
+                        if (window.localStorage) {
+                            var value = Math.random().toString();
+                            window.localStorage.setItem("__test__localStorage__", value);
+                            var result = window.localStorage.getItem("__test__localStorage__");
+                            window.localStorage.removeItem("__test__localStorage__");
+                            if (value === result) return !0;
+                        }
+                    } catch (err) {}
+                    return !1;
+                });
+            };
+            __webpack_exports__.c = function() {
+                var nav = window.navigator, locales = nav.languages ? Array.prototype.slice.apply(nav.languages) : [];
+                nav.language && locales.push(nav.language);
+                nav.userLanguage && locales.push(nav.userLanguage);
+                return locales.map(function(locale) {
+                    if (locale && locale.match(/^[a-z]{2}[-_][A-Z]{2}$/)) {
+                        var _locale$split = locale.split(/[-_]/), _lang = _locale$split[0];
+                        return {
+                            country: _locale$split[1],
+                            lang: _lang
+                        };
+                    }
+                    return locale && locale.match(/^[a-z]{2}$/) ? {
+                        lang: locale
+                    } : null;
+                }).filter(Boolean);
             };
             function isDocumentReady() {
                 return Boolean(document.body) && "complete" === document.readyState;
@@ -562,7 +594,7 @@
         "./src/experiment.js": function(module, __webpack_exports__, __webpack_require__) {
             "use strict";
             __webpack_exports__.a = function(_ref) {
-                var group, name = _ref.name, _ref$sample = _ref.sample, sample = void 0 === _ref$sample ? 50 : _ref$sample, _ref$logTreatment = _ref.logTreatment, logTreatment = void 0 === _ref$logTreatment ? __WEBPACK_IMPORTED_MODULE_0__util__.t : _ref$logTreatment, _ref$logCheckpoint = _ref.logCheckpoint, logCheckpoint = void 0 === _ref$logCheckpoint ? __WEBPACK_IMPORTED_MODULE_0__util__.t : _ref$logCheckpoint, throttle = function(name) {
+                var group, name = _ref.name, _ref$sample = _ref.sample, sample = void 0 === _ref$sample ? 50 : _ref$sample, _ref$logTreatment = _ref.logTreatment, logTreatment = void 0 === _ref$logTreatment ? __WEBPACK_IMPORTED_MODULE_0__util__.s : _ref$logTreatment, _ref$logCheckpoint = _ref.logCheckpoint, logCheckpoint = void 0 === _ref$logCheckpoint ? __WEBPACK_IMPORTED_MODULE_0__util__.s : _ref$logCheckpoint, throttle = function(name) {
                     return getBelterExperimentStorage().getState(function(state) {
                         state.throttlePercentiles = state.throttlePercentiles || {};
                         state.throttlePercentiles[name] = state.throttlePercentiles[name] || Math.floor(100 * Math.random());
@@ -777,58 +809,64 @@
             });
             var __WEBPACK_IMPORTED_MODULE_1__dom__ = __webpack_require__("./src/dom.js");
             __webpack_require__.d(__webpack_exports__, "isDocumentReady", function() {
-                return __WEBPACK_IMPORTED_MODULE_1__dom__.i;
+                return __WEBPACK_IMPORTED_MODULE_1__dom__.j;
             });
             __webpack_require__.d(__webpack_exports__, "waitForWindowReady", function() {
-                return __WEBPACK_IMPORTED_MODULE_1__dom__.r;
+                return __WEBPACK_IMPORTED_MODULE_1__dom__.t;
             });
             __webpack_require__.d(__webpack_exports__, "waitForDocumentReady", function() {
-                return __WEBPACK_IMPORTED_MODULE_1__dom__.q;
+                return __WEBPACK_IMPORTED_MODULE_1__dom__.s;
             });
             __webpack_require__.d(__webpack_exports__, "waitForDocumentBody", function() {
-                return __WEBPACK_IMPORTED_MODULE_1__dom__.p;
+                return __WEBPACK_IMPORTED_MODULE_1__dom__.r;
             });
             __webpack_require__.d(__webpack_exports__, "parseQuery", function() {
-                return __WEBPACK_IMPORTED_MODULE_1__dom__.l;
+                return __WEBPACK_IMPORTED_MODULE_1__dom__.n;
             });
             __webpack_require__.d(__webpack_exports__, "getQueryParam", function() {
-                return __WEBPACK_IMPORTED_MODULE_1__dom__.d;
+                return __WEBPACK_IMPORTED_MODULE_1__dom__.e;
             });
             __webpack_require__.d(__webpack_exports__, "urlWillRedirectPage", function() {
-                return __WEBPACK_IMPORTED_MODULE_1__dom__.o;
+                return __WEBPACK_IMPORTED_MODULE_1__dom__.q;
             });
             __webpack_require__.d(__webpack_exports__, "extendUrl", function() {
                 return __WEBPACK_IMPORTED_MODULE_1__dom__.b;
             });
             __webpack_require__.d(__webpack_exports__, "redirect", function() {
-                return __WEBPACK_IMPORTED_MODULE_1__dom__.n;
+                return __WEBPACK_IMPORTED_MODULE_1__dom__.p;
             });
             __webpack_require__.d(__webpack_exports__, "hasMetaViewPort", function() {
-                return __WEBPACK_IMPORTED_MODULE_1__dom__.f;
+                return __WEBPACK_IMPORTED_MODULE_1__dom__.g;
             });
             __webpack_require__.d(__webpack_exports__, "isElementVisible", function() {
-                return __WEBPACK_IMPORTED_MODULE_1__dom__.j;
+                return __WEBPACK_IMPORTED_MODULE_1__dom__.k;
             });
             __webpack_require__.d(__webpack_exports__, "enablePerformance", function() {
                 return __WEBPACK_IMPORTED_MODULE_1__dom__.a;
             });
             __webpack_require__.d(__webpack_exports__, "getPageRenderTime", function() {
-                return __WEBPACK_IMPORTED_MODULE_1__dom__.c;
+                return __WEBPACK_IMPORTED_MODULE_1__dom__.d;
             });
             __webpack_require__.d(__webpack_exports__, "htmlEncode", function() {
-                return __WEBPACK_IMPORTED_MODULE_1__dom__.g;
-            });
-            __webpack_require__.d(__webpack_exports__, "isBrowser", function() {
                 return __WEBPACK_IMPORTED_MODULE_1__dom__.h;
             });
+            __webpack_require__.d(__webpack_exports__, "isBrowser", function() {
+                return __WEBPACK_IMPORTED_MODULE_1__dom__.i;
+            });
             __webpack_require__.d(__webpack_exports__, "querySelectorAll", function() {
-                return __WEBPACK_IMPORTED_MODULE_1__dom__.m;
+                return __WEBPACK_IMPORTED_MODULE_1__dom__.o;
             });
             __webpack_require__.d(__webpack_exports__, "onClick", function() {
-                return __WEBPACK_IMPORTED_MODULE_1__dom__.k;
+                return __WEBPACK_IMPORTED_MODULE_1__dom__.m;
             });
             __webpack_require__.d(__webpack_exports__, "getScript", function() {
-                return __WEBPACK_IMPORTED_MODULE_1__dom__.e;
+                return __WEBPACK_IMPORTED_MODULE_1__dom__.f;
+            });
+            __webpack_require__.d(__webpack_exports__, "isLocalStorageEnabled", function() {
+                return __WEBPACK_IMPORTED_MODULE_1__dom__.l;
+            });
+            __webpack_require__.d(__webpack_exports__, "getBrowserLocales", function() {
+                return __WEBPACK_IMPORTED_MODULE_1__dom__.c;
             });
             var __WEBPACK_IMPORTED_MODULE_2__experiment__ = __webpack_require__("./src/experiment.js");
             __webpack_require__.d(__webpack_exports__, "experiment", function() {
@@ -869,16 +907,16 @@
                 return __WEBPACK_IMPORTED_MODULE_6__util__.i;
             });
             __webpack_require__.d(__webpack_exports__, "memoize", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.r;
+                return __WEBPACK_IMPORTED_MODULE_6__util__.q;
             });
             __webpack_require__.d(__webpack_exports__, "inlineMemoize", function() {
                 return __WEBPACK_IMPORTED_MODULE_6__util__.l;
             });
             __webpack_require__.d(__webpack_exports__, "noop", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.t;
+                return __WEBPACK_IMPORTED_MODULE_6__util__.s;
             });
             __webpack_require__.d(__webpack_exports__, "once", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.v;
+                return __WEBPACK_IMPORTED_MODULE_6__util__.u;
             });
             __webpack_require__.d(__webpack_exports__, "base64encode", function() {
                 return __WEBPACK_IMPORTED_MODULE_6__util__.c;
@@ -887,16 +925,16 @@
                 return __WEBPACK_IMPORTED_MODULE_6__util__.b;
             });
             __webpack_require__.d(__webpack_exports__, "uniqueID", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.J;
+                return __WEBPACK_IMPORTED_MODULE_6__util__.I;
             });
             __webpack_require__.d(__webpack_exports__, "hashStr", function() {
                 return __WEBPACK_IMPORTED_MODULE_6__util__.j;
             });
             __webpack_require__.d(__webpack_exports__, "strHashStr", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.D;
+                return __WEBPACK_IMPORTED_MODULE_6__util__.C;
             });
             __webpack_require__.d(__webpack_exports__, "match", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.p;
+                return __WEBPACK_IMPORTED_MODULE_6__util__.o;
             });
             __webpack_require__.d(__webpack_exports__, "eventEmitter", function() {
                 return __WEBPACK_IMPORTED_MODULE_6__util__.g;
@@ -905,58 +943,55 @@
                 return __WEBPACK_IMPORTED_MODULE_6__util__.a;
             });
             __webpack_require__.d(__webpack_exports__, "stringifyError", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.F;
-            });
-            __webpack_require__.d(__webpack_exports__, "stringifyErrorMessage", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.G;
-            });
-            __webpack_require__.d(__webpack_exports__, "stringify", function() {
                 return __WEBPACK_IMPORTED_MODULE_6__util__.E;
             });
-            __webpack_require__.d(__webpack_exports__, "isLocalStorageEnabled", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.o;
+            __webpack_require__.d(__webpack_exports__, "stringifyErrorMessage", function() {
+                return __WEBPACK_IMPORTED_MODULE_6__util__.F;
+            });
+            __webpack_require__.d(__webpack_exports__, "stringify", function() {
+                return __WEBPACK_IMPORTED_MODULE_6__util__.D;
             });
             __webpack_require__.d(__webpack_exports__, "domainMatches", function() {
                 return __WEBPACK_IMPORTED_MODULE_6__util__.e;
             });
             __webpack_require__.d(__webpack_exports__, "patchMethod", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.w;
+                return __WEBPACK_IMPORTED_MODULE_6__util__.v;
             });
             __webpack_require__.d(__webpack_exports__, "extend", function() {
                 return __WEBPACK_IMPORTED_MODULE_6__util__.h;
             });
             __webpack_require__.d(__webpack_exports__, "values", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.K;
+                return __WEBPACK_IMPORTED_MODULE_6__util__.J;
             });
             __webpack_require__.d(__webpack_exports__, "perc", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.x;
+                return __WEBPACK_IMPORTED_MODULE_6__util__.w;
             });
             __webpack_require__.d(__webpack_exports__, "min", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.s;
+                return __WEBPACK_IMPORTED_MODULE_6__util__.r;
             });
             __webpack_require__.d(__webpack_exports__, "max", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.q;
+                return __WEBPACK_IMPORTED_MODULE_6__util__.p;
             });
             __webpack_require__.d(__webpack_exports__, "regexMap", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.z;
+                return __WEBPACK_IMPORTED_MODULE_6__util__.y;
             });
             __webpack_require__.d(__webpack_exports__, "svgToBase64", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.H;
+                return __WEBPACK_IMPORTED_MODULE_6__util__.G;
             });
             __webpack_require__.d(__webpack_exports__, "objFilter", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.u;
+                return __WEBPACK_IMPORTED_MODULE_6__util__.t;
             });
             __webpack_require__.d(__webpack_exports__, "identity", function() {
                 return __WEBPACK_IMPORTED_MODULE_6__util__.k;
             });
             __webpack_require__.d(__webpack_exports__, "regexTokenize", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.A;
+                return __WEBPACK_IMPORTED_MODULE_6__util__.z;
             });
             __webpack_require__.d(__webpack_exports__, "promiseDebounce", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.y;
+                return __WEBPACK_IMPORTED_MODULE_6__util__.x;
             });
             __webpack_require__.d(__webpack_exports__, "safeInterval", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.B;
+                return __WEBPACK_IMPORTED_MODULE_6__util__.A;
             });
             __webpack_require__.d(__webpack_exports__, "isInteger", function() {
                 return __WEBPACK_IMPORTED_MODULE_6__util__.n;
@@ -965,7 +1000,7 @@
                 return __WEBPACK_IMPORTED_MODULE_6__util__.m;
             });
             __webpack_require__.d(__webpack_exports__, "serializePrimitive", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.C;
+                return __WEBPACK_IMPORTED_MODULE_6__util__.B;
             });
             __webpack_require__.d(__webpack_exports__, "deserializePrimitive", function() {
                 return __WEBPACK_IMPORTED_MODULE_6__util__.d;
@@ -974,7 +1009,7 @@
                 return __WEBPACK_IMPORTED_MODULE_6__util__.f;
             });
             __webpack_require__.d(__webpack_exports__, "undotify", function() {
-                return __WEBPACK_IMPORTED_MODULE_6__util__.I;
+                return __WEBPACK_IMPORTED_MODULE_6__util__.H;
             });
             var __WEBPACK_IMPORTED_MODULE_7__http__ = __webpack_require__("./src/http.js");
             __webpack_require__.d(__webpack_exports__, "request", function() {
@@ -985,7 +1020,7 @@
             });
             var __WEBPACK_IMPORTED_MODULE_8__types__ = __webpack_require__("./src/types.js");
             __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8__types__);
-            for (var __WEBPACK_IMPORT_KEY__ in __WEBPACK_IMPORTED_MODULE_8__types__) [ "getUserAgent", "isDevice", "isWebView", "isStandAlone", "isFacebookWebView", "isFirefoxIOS", "isEdgeIOS", "isOperaMini", "isAndroid", "isIos", "isGoogleSearchApp", "isQQBrowser", "isIosWebview", "isAndroidWebview", "isIE", "isIECompHeader", "isElectron", "isIEIntranet", "isMacOsCna", "supportsPopups", "isDocumentReady", "waitForWindowReady", "waitForDocumentReady", "waitForDocumentBody", "parseQuery", "getQueryParam", "urlWillRedirectPage", "extendUrl", "redirect", "hasMetaViewPort", "isElementVisible", "enablePerformance", "getPageRenderTime", "htmlEncode", "isBrowser", "querySelectorAll", "onClick", "getScript", "experiment", "getGlobalNameSpace", "JsxHTMLNode", "JsxHTMLNodeContainer", "jsxToHTML", "jsxRender", "Fragment", "SVG", "placeholderToJSX", "getStorage", "getGlobal", "memoize", "inlineMemoize", "noop", "once", "base64encode", "base64decode", "uniqueID", "hashStr", "strHashStr", "match", "eventEmitter", "awaitKey", "stringifyError", "stringifyErrorMessage", "stringify", "isLocalStorageEnabled", "domainMatches", "patchMethod", "extend", "values", "perc", "min", "max", "regexMap", "svgToBase64", "objFilter", "identity", "regexTokenize", "promiseDebounce", "safeInterval", "isInteger", "isFloat", "serializePrimitive", "deserializePrimitive", "dotify", "undotify", "request", "addHeaderBuilder", "default" ].indexOf(__WEBPACK_IMPORT_KEY__) < 0 && function(key) {
+            for (var __WEBPACK_IMPORT_KEY__ in __WEBPACK_IMPORTED_MODULE_8__types__) [ "getUserAgent", "isDevice", "isWebView", "isStandAlone", "isFacebookWebView", "isFirefoxIOS", "isEdgeIOS", "isOperaMini", "isAndroid", "isIos", "isGoogleSearchApp", "isQQBrowser", "isIosWebview", "isAndroidWebview", "isIE", "isIECompHeader", "isElectron", "isIEIntranet", "isMacOsCna", "supportsPopups", "isDocumentReady", "waitForWindowReady", "waitForDocumentReady", "waitForDocumentBody", "parseQuery", "getQueryParam", "urlWillRedirectPage", "extendUrl", "redirect", "hasMetaViewPort", "isElementVisible", "enablePerformance", "getPageRenderTime", "htmlEncode", "isBrowser", "querySelectorAll", "onClick", "getScript", "isLocalStorageEnabled", "getBrowserLocales", "experiment", "getGlobalNameSpace", "JsxHTMLNode", "JsxHTMLNodeContainer", "jsxToHTML", "jsxRender", "Fragment", "SVG", "placeholderToJSX", "getStorage", "getGlobal", "memoize", "inlineMemoize", "noop", "once", "base64encode", "base64decode", "uniqueID", "hashStr", "strHashStr", "match", "eventEmitter", "awaitKey", "stringifyError", "stringifyErrorMessage", "stringify", "domainMatches", "patchMethod", "extend", "values", "perc", "min", "max", "regexMap", "svgToBase64", "objFilter", "identity", "regexTokenize", "promiseDebounce", "safeInterval", "isInteger", "isFloat", "serializePrimitive", "deserializePrimitive", "dotify", "undotify", "request", "addHeaderBuilder", "default" ].indexOf(__WEBPACK_IMPORT_KEY__) < 0 && function(key) {
                 __webpack_require__.d(__webpack_exports__, key, function() {
                     return __WEBPACK_IMPORTED_MODULE_8__types__[key];
                 });
@@ -1001,7 +1036,7 @@
             });
             __webpack_exports__.f = jsxToHTML;
             __webpack_exports__.e = function(template, renderers) {
-                var nodes = Object(__WEBPACK_IMPORTED_MODULE_0__util__.z)(template, /\{\s*([a-z]+)(?::\s*([^} ]+))?\s*\}|([^${}]+)/g, function(match, type, value, text) {
+                var nodes = Object(__WEBPACK_IMPORTED_MODULE_0__util__.y)(template, /\{\s*([a-z]+)(?::\s*([^} ]+))?\s*\}|([^${}]+)/g, function(match, type, value, text) {
                     if (type) {
                         if (!renderers[type]) throw new Error("Can not render type: " + type);
                         return renderers[type](value);
@@ -1022,11 +1057,11 @@
                 if (!svg) throw new TypeError("Expected svg prop");
                 if ("string" != typeof svg && !(svg instanceof JsxHTMLNode)) throw new TypeError("Expected svg prop to be a string or jsx html node");
                 return jsxToHTML("img", _extends({
-                    src: Object(__WEBPACK_IMPORTED_MODULE_0__util__.H)(svg.toString())
+                    src: Object(__WEBPACK_IMPORTED_MODULE_0__util__.G)(svg.toString())
                 }, otherProps));
             };
             __webpack_exports__.g = function(text, placeholders) {
-                return Object(__WEBPACK_IMPORTED_MODULE_0__util__.A)(text, /(\{[a-z]+\})|([^{}]+)/g).map(function(token) {
+                return Object(__WEBPACK_IMPORTED_MODULE_0__util__.z)(text, /(\{[a-z]+\})|([^{}]+)/g).map(function(token) {
                     var match = token.match(/^{([a-z]+)}$/);
                     return match ? placeholders[match[1]]() : placeholders.text ? placeholders.text(token) : token;
                 });
@@ -1118,7 +1153,7 @@
             __webpack_exports__.a = function(_ref) {
                 var name = _ref.name, _ref$version = _ref.version, version = void 0 === _ref$version ? "latest" : _ref$version, _ref$lifetime = _ref.lifetime, lifetime = void 0 === _ref$lifetime ? 3e5 : _ref$lifetime, STORAGE_KEY = "__" + name + "_" + version + "_storage__", accessedStorage = void 0;
                 function getState(handler) {
-                    var localStorageEnabled = Object(__WEBPACK_IMPORTED_MODULE_0__util__.o)(), storage = void 0;
+                    var localStorageEnabled = Object(__WEBPACK_IMPORTED_MODULE_1__dom__.l)(), storage = void 0;
                     accessedStorage && (storage = accessedStorage);
                     if (!storage && localStorageEnabled) {
                         var rawStorage = window.localStorage.getItem(STORAGE_KEY);
@@ -1126,9 +1161,9 @@
                     }
                     storage || (storage = Object(__WEBPACK_IMPORTED_MODULE_0__util__.i)()[STORAGE_KEY]);
                     storage || (storage = {
-                        id: Object(__WEBPACK_IMPORTED_MODULE_0__util__.J)()
+                        id: Object(__WEBPACK_IMPORTED_MODULE_0__util__.I)()
                     });
-                    storage.id || (storage.id = Object(__WEBPACK_IMPORTED_MODULE_0__util__.J)());
+                    storage.id || (storage.id = Object(__WEBPACK_IMPORTED_MODULE_0__util__.I)());
                     accessedStorage = storage;
                     var result = handler(storage);
                     localStorageEnabled ? window.localStorage.setItem(STORAGE_KEY, JSON.stringify(storage)) : Object(__WEBPACK_IMPORTED_MODULE_0__util__.i)()[STORAGE_KEY] = storage;
@@ -1140,7 +1175,7 @@
                         var session = storage.__session__, now = Date.now();
                         session && now - session.created > lifetime && (session = null);
                         session || (session = {
-                            guid: Object(__WEBPACK_IMPORTED_MODULE_0__util__.J)(),
+                            guid: Object(__WEBPACK_IMPORTED_MODULE_0__util__.I)(),
                             created: now
                         });
                         storage.__session__ = session;
@@ -1167,16 +1202,26 @@
                     }
                 };
             };
-            var __WEBPACK_IMPORTED_MODULE_0__util__ = __webpack_require__("./src/util.js");
+            var __WEBPACK_IMPORTED_MODULE_0__util__ = __webpack_require__("./src/util.js"), __WEBPACK_IMPORTED_MODULE_1__dom__ = __webpack_require__("./src/dom.js");
         },
         "./src/types.js": function(module, exports) {},
         "./src/util.js": function(module, __webpack_exports__, __webpack_require__) {
             "use strict";
-            __webpack_exports__.i = getGlobal;
-            __webpack_exports__.r = memoize;
-            __webpack_exports__.l = inlineMemoize;
-            __webpack_exports__.t = function() {};
-            __webpack_exports__.v = function(method) {
+            __webpack_exports__.i = function() {
+                if ("undefined" != typeof window) return window;
+                if ("undefined" != typeof window) return window;
+                if ("undefined" != typeof global) return global;
+                throw new Error("No global found");
+            };
+            __webpack_exports__.q = memoize;
+            __webpack_exports__.l = function(method, logic) {
+                var args = arguments.length > 2 && void 0 !== arguments[2] ? arguments[2] : [];
+                method.__memoized__ || (method.__memoized__ = memoize(logic));
+                if (method.__memoized__ && method.__memoized__.__calling__) throw new Error("Can not call memoized method recursively");
+                return method.__memoized__.apply(method, args);
+            };
+            __webpack_exports__.s = function() {};
+            __webpack_exports__.u = function(method) {
                 var called = !1;
                 return function() {
                     if (!called) {
@@ -1189,7 +1234,7 @@
             __webpack_exports__.b = function(str) {
                 return window.atob(str);
             };
-            __webpack_exports__.J = function() {
+            __webpack_exports__.I = function() {
                 var chars = "0123456789abcdef";
                 return "xxxxxxxxxx".replace(/./g, function() {
                     return chars.charAt(Math.floor(Math.random() * chars.length));
@@ -1199,7 +1244,7 @@
                 for (var hash = 0, i = 0; i < str.length; i++) hash += str[i].charCodeAt(0) * Math.pow(i % 10 + 1, 5);
                 return Math.floor(Math.pow(Math.sqrt(hash), 5));
             };
-            __webpack_exports__.D = function(str) {
+            __webpack_exports__.C = function(str) {
                 for (var hash = "", i = 0; i < str.length; i++) {
                     var total = str[i].charCodeAt(0) * i;
                     str[i + 1] && (total += str[i + 1].charCodeAt(0) * (i - 1));
@@ -1207,7 +1252,7 @@
                 }
                 return hash;
             };
-            __webpack_exports__.p = function(str, pattern) {
+            __webpack_exports__.o = function(str, pattern) {
                 var regmatch = str.match(pattern);
                 if (regmatch) return regmatch[1];
             };
@@ -1249,7 +1294,7 @@
                     });
                 });
             };
-            __webpack_exports__.F = function stringifyError(err) {
+            __webpack_exports__.E = function stringifyError(err) {
                 var level = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : 1;
                 if (level >= 3) return "stringifyError stack overflow";
                 try {
@@ -1266,33 +1311,18 @@
                     return "Error while stringifying error: " + stringifyError(newErr, level + 1);
                 }
             };
-            __webpack_exports__.G = function(err) {
+            __webpack_exports__.F = function(err) {
                 var defaultMessage = "<unknown error: " + Object.prototype.toString.call(err) + ">";
                 return err ? err instanceof Error ? err.message || defaultMessage : "string" == typeof err.message && err.message || defaultMessage : defaultMessage;
             };
-            __webpack_exports__.E = function(item) {
+            __webpack_exports__.D = function(item) {
                 return "string" == typeof item ? item : item && "function" == typeof item.toString ? item.toString() : Object.prototype.toString.call(item);
-            };
-            __webpack_exports__.o = function isLocalStorageEnabled() {
-                return inlineMemoize(isLocalStorageEnabled, function() {
-                    try {
-                        if ("undefined" == typeof window) return !1;
-                        if (window.localStorage) {
-                            var _value = Math.random().toString();
-                            window.localStorage.setItem("__test__localStorage__", _value);
-                            var result = window.localStorage.getItem("__test__localStorage__");
-                            window.localStorage.removeItem("__test__localStorage__");
-                            if (_value === result) return !0;
-                        }
-                    } catch (err) {}
-                    return !1;
-                });
             };
             __webpack_exports__.e = function(hostname, domain) {
                 var index = (hostname = hostname.split("://")[1]).indexOf(domain);
                 return -1 !== index && hostname.slice(index) === domain;
             };
-            __webpack_exports__.w = function(obj, name, handler) {
+            __webpack_exports__.v = function(obj, name, handler) {
                 var original = obj[name];
                 obj[name] = function() {
                     var _this = this, _arguments = arguments;
@@ -1312,31 +1342,31 @@
                 for (var _key2 in source) source.hasOwnProperty(_key2) && (obj[_key2] = source[_key2]);
                 return obj;
             };
-            __webpack_exports__.K = function(obj) {
+            __webpack_exports__.J = function(obj) {
                 var result = [];
                 for (var _key3 in obj) obj.hasOwnProperty(_key3) && result.push(obj[_key3]);
                 return result;
             };
-            __webpack_exports__.x = function(pixels, percentage) {
+            __webpack_exports__.w = function(pixels, percentage) {
                 return Math.round(pixels * percentage / 100);
             };
-            __webpack_exports__.s = function() {
+            __webpack_exports__.r = function() {
                 return Math.min.apply(Math, arguments);
             };
-            __webpack_exports__.q = function() {
+            __webpack_exports__.p = function() {
                 return Math.max.apply(Math, arguments);
             };
-            __webpack_exports__.z = function(str, regex, handler) {
+            __webpack_exports__.y = function(str, regex, handler) {
                 var results = [];
                 str.replace(regex, function(item) {
                     results.push(handler ? handler.apply(null, arguments) : item);
                 });
                 return results;
             };
-            __webpack_exports__.H = function(svg) {
+            __webpack_exports__.G = function(svg) {
                 return "data:image/svg+xml;base64," + base64encode(svg);
             };
-            __webpack_exports__.u = function(obj) {
+            __webpack_exports__.t = function(obj) {
                 var filter = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : Boolean, result = {};
                 for (var _key4 in obj) obj.hasOwnProperty(_key4) && filter(obj[_key4], _key4) && (result[_key4] = obj[_key4]);
                 return result;
@@ -1344,7 +1374,7 @@
             __webpack_exports__.k = function(item) {
                 return item;
             };
-            __webpack_exports__.A = function(text, regex) {
+            __webpack_exports__.z = function(text, regex) {
                 var result = [];
                 text.replace(regex, function(token) {
                     result.push(token);
@@ -1352,7 +1382,7 @@
                 });
                 return result;
             };
-            __webpack_exports__.y = function(method) {
+            __webpack_exports__.x = function(method) {
                 var delay = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : 50, promise = void 0, timeout = void 0;
                 return function() {
                     timeout && clearTimeout(timeout);
@@ -1369,7 +1399,7 @@
                     return localPromise;
                 };
             };
-            __webpack_exports__.B = function(method, time) {
+            __webpack_exports__.A = function(method, time) {
                 var timeout = void 0;
                 !function loop() {
                     timeout = setTimeout(function() {
@@ -1385,7 +1415,7 @@
             };
             __webpack_exports__.n = isInteger;
             __webpack_exports__.m = isFloat;
-            __webpack_exports__.C = serializePrimitive;
+            __webpack_exports__.B = serializePrimitive;
             __webpack_exports__.d = deserializePrimitive;
             __webpack_exports__.f = function dotify(obj) {
                 var prefix = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : "", newobj = arguments.length > 2 && void 0 !== arguments[2] ? arguments[2] : {};
@@ -1395,17 +1425,17 @@
                 }) ? newobj["" + prefix + _key5 + "[]"] = obj[_key5].join(",") : obj[_key5] && "object" === _typeof(obj[_key5]) ? newobj = dotify(obj[_key5], "" + prefix + _key5, newobj) : newobj["" + prefix + _key5] = serializePrimitive(obj[_key5]));
                 return newobj;
             };
-            __webpack_exports__.I = function(obj) {
+            __webpack_exports__.H = function(obj) {
                 var result = {};
                 for (var _key6 in obj) if (obj.hasOwnProperty(_key6) && "string" == typeof obj[_key6]) {
-                    var _value2 = obj[_key6];
+                    var _value = obj[_key6];
                     if (_key6.match(/^.+\[\]$/)) {
                         _key6 = _key6.slice(0, _key6.length - 2);
-                        _value2 = _value2.split(",").map(deserializePrimitive);
-                    } else _value2 = deserializePrimitive(_value2);
+                        _value = _value.split(",").map(deserializePrimitive);
+                    } else _value = deserializePrimitive(_value);
                     for (var keyResult = result, parts = _key6.split("."), i = 0; i < parts.length; i++) {
                         var part = parts[i], isLast = i + 1 === parts.length, isIndex = !isLast && isInteger(parts[i + 1]);
-                        isLast ? keyResult[part] = _value2 : keyResult = keyResult[part] = keyResult[part] || (isIndex ? [] : {});
+                        isLast ? keyResult[part] = _value : keyResult = keyResult[part] = keyResult[part] || (isIndex ? [] : {});
                     }
                 }
                 return result;
@@ -1415,11 +1445,6 @@
             } : function(obj) {
                 return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
             };
-            function getGlobal() {
-                if ("undefined" != typeof window) return window;
-                if ("undefined" != typeof global) return global;
-                throw new Error("No global found");
-            }
             function memoize(method) {
                 var options = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {}, cache = {};
                 function memoizedFunction() {
@@ -1432,8 +1457,6 @@
                     }
                     var cacheTime = options.time;
                     cache[key] && cacheTime && Date.now() - cache[key].time < cacheTime && delete cache[key];
-                    var glob = getGlobal();
-                    glob.__CACHE_START_TIME__ && cache[key] && cache[key].time < glob.__CACHE_START_TIME__ && delete cache[key];
                     if (cache[key]) return cache[key].value;
                     memoizedFunction.__calling__ = !0;
                     var time = Date.now(), value = method.apply(this, arguments);
@@ -1448,12 +1471,6 @@
                     cache = {};
                 };
                 return memoizedFunction;
-            }
-            function inlineMemoize(method, logic) {
-                var args = arguments.length > 2 && void 0 !== arguments[2] ? arguments[2] : [];
-                method.__memoized__ || (method.__memoized__ = memoize(logic));
-                if (method.__memoized__ && method.__memoized__.__calling__) throw new Error("Can not call memoized method recursively");
-                return method.__memoized__.apply(method, args);
             }
             function base64encode(str) {
                 return window.btoa(str);

@@ -8,6 +8,9 @@ export function getGlobal() {
     if (typeof window !== 'undefined') {
         return window;
     }
+    if (typeof global !== 'undefined') {
+        return global;
+    }
     if (typeof __GLOBAL__ !== 'undefined') {
         return __GLOBAL__;
     }
@@ -37,12 +40,6 @@ export function memoize(method) {
 
         var cacheTime = options.time;
         if (cache[key] && cacheTime && Date.now() - cache[key].time < cacheTime) {
-            delete cache[key];
-        }
-
-        var glob = getGlobal();
-
-        if (glob.__CACHE_START_TIME__ && cache[key] && cache[key].time < glob.__CACHE_START_TIME__) {
             delete cache[key];
         }
 
@@ -294,29 +291,6 @@ export function stringify(item) {
     return Object.prototype.toString.call(item);
 }
 
-export function isLocalStorageEnabled() {
-    return inlineMemoize(isLocalStorageEnabled, function () {
-        try {
-            if (typeof window === 'undefined') {
-                return false;
-            }
-
-            if (window.localStorage) {
-                var _value = Math.random().toString();
-                window.localStorage.setItem('__test__localStorage__', _value);
-                var result = window.localStorage.getItem('__test__localStorage__');
-                window.localStorage.removeItem('__test__localStorage__');
-                if (_value === result) {
-                    return true;
-                }
-            }
-        } catch (err) {
-            // pass
-        }
-        return false;
-    });
-}
-
 export function domainMatches(hostname, domain) {
     hostname = hostname.split('://')[1];
     var index = hostname.indexOf(domain);
@@ -531,13 +505,13 @@ export function undotify(obj) {
             continue;
         }
 
-        var _value2 = obj[_key6];
+        var _value = obj[_key6];
 
         if (_key6.match(/^.+\[\]$/)) {
             _key6 = _key6.slice(0, _key6.length - 2);
-            _value2 = _value2.split(',').map(deserializePrimitive);
+            _value = _value.split(',').map(deserializePrimitive);
         } else {
-            _value2 = deserializePrimitive(_value2);
+            _value = deserializePrimitive(_value);
         }
 
         var keyResult = result;
@@ -549,7 +523,7 @@ export function undotify(obj) {
 
             if (isLast) {
                 // $FlowFixMe
-                keyResult[part] = _value2;
+                keyResult[part] = _value;
             } else {
                 // $FlowFixMe
                 keyResult = keyResult[part] = keyResult[part] || (isIndex ? [] : {});

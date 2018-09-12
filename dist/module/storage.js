@@ -1,4 +1,5 @@
-import { uniqueID, isLocalStorageEnabled, getGlobal } from './util';
+import { uniqueID, getGlobal } from './util';
+import { isLocalStorageEnabled } from './dom';
 
 export function getStorage(_ref) {
     var name = _ref.name,

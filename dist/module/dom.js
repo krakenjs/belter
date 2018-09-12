@@ -245,3 +245,57 @@ export function getScript(_ref2) {
         }
     }, [path]);
 }
+
+export function isLocalStorageEnabled() {
+    return inlineMemoize(isLocalStorageEnabled, function () {
+        try {
+            if (typeof window === 'undefined') {
+                return false;
+            }
+
+            if (window.localStorage) {
+                var value = Math.random().toString();
+                window.localStorage.setItem('__test__localStorage__', value);
+                var result = window.localStorage.getItem('__test__localStorage__');
+                window.localStorage.removeItem('__test__localStorage__');
+                if (value === result) {
+                    return true;
+                }
+            }
+        } catch (err) {
+            // pass
+        }
+        return false;
+    });
+}
+
+export function getBrowserLocales() {
+    var nav = window.navigator;
+
+    var locales = nav.languages ? Array.prototype.slice.apply(nav.languages) : [];
+
+    if (nav.language) {
+        locales.push(nav.language);
+    }
+
+    if (nav.userLanguage) {
+        locales.push(nav.userLanguage);
+    }
+
+    return locales.map(function (locale) {
+
+        if (locale && locale.match(/^[a-z]{2}[-_][A-Z]{2}$/)) {
+            var _locale$split = locale.split(/[-_]/),
+                _lang = _locale$split[0],
+                _country = _locale$split[1];
+
+            return { country: _country, lang: _lang };
+        }
+
+        if (locale && locale.match(/^[a-z]{2}$/)) {
+            return { lang: locale };
+        }
+
+        return null;
+    }).filter(Boolean);
+}
