@@ -261,3 +261,34 @@ export function isLocalStorageEnabled() : boolean {
         return false;
     });
 }
+
+export function getBrowserLocales() : Array<{ country? : string, lang : string }> {
+    let nav = window.navigator;
+
+    let locales = nav.languages
+        ? Array.prototype.slice.apply(nav.languages)
+        : [];
+
+    if (nav.language) {
+        locales.push(nav.language);
+    }
+
+    if (nav.userLanguage) {
+        locales.push(nav.userLanguage);
+    }
+
+    return locales.map(locale => {
+
+        if (locale && locale.match(/^[a-z]{2}[-_][A-Z]{2}$/)) {
+            let [ lang, country ] = locale.split(/[-_]/);
+            return { country, lang };
+        }
+
+        if (locale && locale.match(/^[a-z]{2}$/)) {
+            return { lang: locale };
+        }
+
+        return null;
+
+    }).filter(Boolean);
+}
