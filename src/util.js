@@ -3,6 +3,37 @@
 
 import { ZalgoPromise } from 'zalgo-promise/src';
 
+import type { CancelableType } from './types';
+
+export function base64encode(str : string) : string {
+    if (typeof __WEB__ === 'undefined' || !__WEB__) {
+        return require('Base64').btoa(str);
+    }
+    return window.btoa(str);
+}
+
+export function base64decode(str : string) : string {
+    if (typeof __WEB__ === 'undefined' || !__WEB__) {
+        return require('Base64').atob(str);
+    }
+    return window.atob(str);
+}
+
+export function uniqueID() : string {
+
+    let chars = '0123456789abcdef';
+
+    let randomID = 'xxxxxxxxxx'.replace(/./g, () => {
+        return chars.charAt(Math.floor(Math.random() * chars.length));
+    });
+
+    let timeID = base64encode(
+        new Date().toISOString().slice(11, 19).replace('T', '.')
+    ).replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+
+    return `${ randomID }_${ timeID }`;
+}
+
 export function getGlobal() : Object {
     if (typeof window !== 'undefined') {
         return window;
@@ -16,8 +47,28 @@ export function getGlobal() : Object {
     throw new Error(`No global found`);
 }
 
+let objectIDs;
+
+export function getObjectID(obj : Object) : string {
+
+    objectIDs = objectIDs || new WeakMap();
+
+    if (obj === null || obj === undefined || (typeof obj !== 'object' && typeof obj !== 'function')) {
+        throw new Error(`Invalid object`);
+    }
+
+    let uid = objectIDs.get(obj);
+
+    if (!uid) {
+        uid = `${ typeof obj }:${ uniqueID() }`;
+        objectIDs.set(obj, uid);
+    }
+
+    return uid;
+}
+
 // eslint-disable-next-line flowtype/no-weak-types
-export function memoize<R>(method : (...args : Array<any>) => R, options : { time? : number } = {}) : ((...args : Array<any>) => R) {
+export function memoize<R>(method : (...args : Array<any>) => R, options : { time? : number, name? : string } = {}) : ((...args : Array<any>) => R) {
 
     let cache : { [key : string] : { time : number, value : R } } = {};
 
@@ -26,7 +77,14 @@ export function memoize<R>(method : (...args : Array<any>) => R, options : { tim
         let key : string;
 
         try {
-            key = JSON.stringify(Array.prototype.slice.call(arguments));
+            key = JSON.stringify(Array.prototype.slice.call(arguments), (subkey, val) => {
+
+                if (typeof val === 'function') {
+                    return `memoize[${ getObjectID(val) }]`;
+                }
+
+                return val;
+            });
         } catch (err) {
             throw new Error(`Arguments not serializable -- can not be used to memoize`);
         }
@@ -56,7 +114,24 @@ export function memoize<R>(method : (...args : Array<any>) => R, options : { tim
         cache = {};
     };
 
+    if (options.name) {
+        memoizedFunction.displayName = `${ options.name }:memoized`;
+    }
+
     return memoizedFunction;
+}
+
+// eslint-disable-next-line flowtype/no-weak-types
+export function promisify<R>(method : (...args : Array<any>) => R, options : { name? : string } = {}) : ((...args : Array<any>) => ZalgoPromise<R>) {
+    function promisifiedFunction() : ZalgoPromise<R> {
+        return ZalgoPromise.try(method, this, arguments);
+    }
+
+    if (options.name) {
+        promisifiedFunction.displayName = `${ options.name }:promisified`;
+    }
+
+    return promisifiedFunction;
 }
 
 // eslint-disable-next-line flowtype/no-weak-types
@@ -90,35 +165,6 @@ export function once(method : Function) : Function {
     };
 }
 
-export function base64encode(str : string) : string {
-    if (typeof __WEB__ === 'undefined' || !__WEB__) {
-        return require('Base64').btoa(str);
-    }
-    return window.btoa(str);
-}
-
-export function base64decode(str : string) : string {
-    if (typeof __WEB__ === 'undefined' || !__WEB__) {
-        return require('Base64').atob(str);
-    }
-    return window.atob(str);
-}
-
-export function uniqueID() : string {
-
-    let chars = '0123456789abcdef';
-
-    let randomID = 'xxxxxxxxxx'.replace(/./g, () => {
-        return chars.charAt(Math.floor(Math.random() * chars.length));
-    });
-
-    let timeID = base64encode(
-        new Date().toISOString().slice(11, 19).replace('T', '.')
-    ).replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
-    
-    return `${ randomID }_${ timeID }`;
-}
-
 export function hashStr(str : string) : number {
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
@@ -148,44 +194,6 @@ export function match(str : string, pattern : RegExp) : ?string {
     if (regmatch) {
         return regmatch[1];
     }
-}
-
-type Listener = {
-    listen : (method : Function) => {
-        cancel : () => void
-    },
-    once : (method : Function) => void,
-    trigger : (...args : Array<mixed>) => void
-};
-
-export function eventEmitter() : Listener {
-
-    let listeners = [];
-
-    return {
-        listen(method : Function) : { cancel : () => void } {
-            listeners.push(method);
-
-            return {
-                cancel() {
-                    listeners.splice(listeners.indexOf(method), 1);
-                }
-            };
-        },
-
-        once(method : Function) {
-            let listener = this.listen(function onceListener() {
-                method.apply(null, arguments);
-                listener.cancel();
-            });
-        },
-
-        trigger(...args : Array<mixed>) {
-            for (let listener of listeners) {
-                listener(...args);
-            }
-        }
-    };
 }
 
 export function awaitKey<T: mixed>(obj : Object, key : string) : ZalgoPromise<T> {
@@ -351,11 +359,11 @@ export function max(...args : Array<number>) : number {
     return Math.max(...args);
 }
 
-export function regexMap<T>(str : string, regex : RegExp, handler : () => T) : Array<T> {
+export function regexMap<T>(str : string, regexp : RegExp, handler : () => T) : Array<T> {
     let results = [];
 
     // $FlowFixMe
-    str.replace(regex, function regexMapMatcher(item) {
+    str.replace(regexp, function regexMapMatcher(item) {
         results.push(handler ? handler.apply(null, arguments) : item);
     });
 
@@ -385,9 +393,9 @@ export function identity <T>(item : T) : T {
     return item;
 }
 
-export function regexTokenize(text : string, regex : RegExp) : Array<string> {
+export function regexTokenize(text : string, regexp : RegExp) : Array<string> {
     let result = [];
-    text.replace(regex, token => {
+    text.replace(regexp, token => {
         result.push(token);
         return '';
     });
@@ -518,4 +526,310 @@ export function undotify(obj : { [string] : string }) : Object {
     }
 
     return result;
+}
+
+export type EventEmitterType = {
+    on : (eventName : string, handler : Function) => CancelableType,
+    once : (eventName : string, handler : Function) => CancelableType,
+    trigger : (eventName : string) => void,
+    triggerOnce : (eventName : string) => void
+};
+
+export function eventEmitter() : EventEmitterType {
+
+    let triggered = {};
+    let handlers = {};
+
+    return {
+
+        on(eventName : string, handler : Function) : CancelableType {
+
+            let handlerList = handlers[eventName] = handlers[eventName] || [];
+
+            handlerList.push(handler);
+
+            let cancelled = false;
+
+            return {
+                cancel() {
+                    if (!cancelled) {
+                        cancelled = true;
+                        handlerList.splice(handlerList.indexOf(handler), 1);
+                    }
+
+                }
+            };
+        },
+
+        once(eventName : string, handler : Function) : CancelableType {
+
+            let listener = this.on(eventName, () => {
+                listener.cancel();
+                handler();
+            });
+
+            return listener;
+        },
+
+        trigger(eventName : string) {
+
+            let handlerList = handlers[eventName];
+
+            if (handlerList) {
+                for (let handler of handlerList) {
+                    handler();
+                }
+            }
+        },
+
+        triggerOnce(eventName : string) {
+
+            if (triggered[eventName]) {
+                return;
+            }
+
+            triggered[eventName] = true;
+            this.trigger(eventName);
+        }
+    };
+}
+
+export function camelToDasherize(string : string) : string {
+    return string.replace(/([A-Z])/g, (g) => {
+        return `-${ g.toLowerCase() }`;
+    });
+}
+
+export function dasherizeToCamel(string : string) : string {
+    return string.replace(/-([a-z])/g, (g) => {
+        return g[1].toUpperCase();
+    });
+}
+
+export function capitalizeFirstLetter(string : string) : string {
+    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+}
+
+export function get(item : Object, path : string, def : mixed) : mixed {
+
+    if (!path) {
+        return def;
+    }
+
+    let pathParts = path.split('.');
+
+    // Loop through each section of our key path
+
+    for (let i = 0; i < pathParts.length; i++) {
+
+        // If we have an object, we can get the key
+        if (typeof item === 'object' && item !== null) {
+            item = item[pathParts[i]];
+
+        // Otherwise, we should return the default (undefined if not provided)
+        } else {
+            return def;
+        }
+    }
+
+    // If our final result is undefined, we should return the default
+
+    return item === undefined ? def : item;
+}
+
+export function safeTimeout(method : Function, time : number) {
+
+    let interval = safeInterval(() => {
+        time -= 100;
+        if (time <= 0) {
+            interval.cancel();
+            method();
+        }
+    }, 100);
+}
+
+export function replaceObject<T : Object | Array<mixed>> (item : T, replacers : { [string] : Function }, fullKey : string = '') : T {
+
+    if (Array.isArray(item)) {
+        let length = item.length;
+        let result = [];
+
+        for (let i = 0; i < length; i++) {
+            Object.defineProperty(result, i, {
+                configurable: true,
+                enumerable:   true,
+                get:          () => {
+                    let itemKey = fullKey ? `${ fullKey }.${ i }` : `${ i }`;
+                    let child = item[i];
+
+                    let type = (typeof child);
+                    let replacer = replacers[type];
+                    if (replacer) {
+                        let replaced = replacer(child, i, itemKey);
+                        if (typeof replaced !== 'undefined') {
+                            result[i] = replaced;
+                            return result[i];
+                        }
+                    }
+
+                    if (typeof child === 'object' && child !== null) {
+                        result[i] = replaceObject(child, replacers, itemKey);
+                        return result[i];
+                    }
+
+                    result[i] = child;
+                    return result[i];
+                },
+                set: (value) => {
+                    delete result[i];
+                    result[i] = value;
+                }
+            });
+        }
+
+        // $FlowFixMe
+        return result;
+    } else if (typeof item === 'object' && item !== null) {
+        let result = {};
+
+        for (let key in item) {
+            if (!item.hasOwnProperty(key)) {
+                continue;
+            }
+
+            Object.defineProperty(result, key, {
+                configurable: true,
+                enumerable:   true,
+                get:          () => {
+                    let itemKey = fullKey ? `${ fullKey }.${ key }` : `${ key }`;
+                    // $FlowFixMe
+                    let child = item[key];
+
+                    let type = (typeof child);
+                    let replacer = replacers[type];
+                    if (replacer) {
+                        let replaced = replacer(child, key, itemKey);
+                        if (typeof replaced !== 'undefined') {
+                            result[key] = replaced;
+                            return result[key];
+                        }
+                    }
+
+                    if (typeof child === 'object' && child !== null) {
+                        result[key] = replaceObject(child, replacers, itemKey);
+                        return result[key];
+                    }
+
+                    result[key] = child;
+                    return result[key];
+                },
+                set: (value) => {
+                    delete result[key];
+                    result[key] = value;
+                }
+            });
+        }
+
+        // $FlowFixMe
+        return result;
+    } else {
+        throw new Error(`Pass an object or array`);
+    }
+}
+
+
+export function copyProp(source : Object, target : Object, name : string, def : mixed) {
+    if (source.hasOwnProperty(name)) {
+        let descriptor = Object.getOwnPropertyDescriptor(source, name);
+        // $FlowFixMe
+        Object.defineProperty(target, name, descriptor);
+
+    } else {
+        target[name] = def;
+    }
+}
+
+type RegexResultType = {
+    text : string,
+    groups : Array<string>,
+    start : number,
+    end : number,
+    length : number,
+    replace : (text : string) => string
+};
+
+export function regex(pattern : string | RegExp, string : string, start : number = 0) : ?RegexResultType {
+
+    if (typeof pattern === 'string') {
+        // eslint-disable-next-line security/detect-non-literal-regexp
+        pattern = new RegExp(pattern);
+    }
+
+    let result = string.slice(start).match(pattern);
+
+    if (!result) {
+        return;
+    }
+
+    // $FlowFixMe
+    let index : number = result.index;
+    let regmatch = result[0];
+
+    return {
+        text:   regmatch,
+        groups: result.slice(1),
+        start:  start + index,
+        end:    start + index + regmatch.length,
+        length: regmatch.length,
+
+        replace(text : string) : string {
+
+            if (!regmatch) {
+                return '';
+            }
+
+            return `${ regmatch.slice(0, start + index) }${ text }${ regmatch.slice(index + regmatch.length) }`;
+        }
+    };
+}
+
+export function regexAll(pattern : string | RegExp, string : string) : Array<RegexResultType> {
+
+    let matches = [];
+    let start = 0;
+
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
+        let regmatch = regex(pattern, string, start);
+
+        if (!regmatch) {
+            break;
+        }
+
+        matches.push(regmatch);
+        start = match.end;
+    }
+
+    return matches;
+}
+
+export function isDefined(value : ?mixed) : boolean {
+    return value !== null && value !== undefined;
+}
+
+export function cycle(method : Function) : ZalgoPromise<void> {
+    return ZalgoPromise.try(method).then(() => cycle(method));
+}
+
+export function debounce<T>(method : (...args : Array<mixed>) => T, time : number = 100) : (...args : Array<mixed>) => void {
+
+    let timeout;
+
+    return function debounceWrapper() {
+        clearTimeout(timeout);
+
+        timeout = setTimeout(() => {
+            return method.apply(this, arguments);
+        }, time);
+    };
 }
