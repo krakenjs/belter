@@ -1,3 +1,5 @@
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
@@ -11,6 +13,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 /* @jsx jsxToHTML */
 
 import { regexMap, svgToBase64, regexTokenize } from './util';
+import { fixScripts, setStyle, writeToWindow, writeElementToWindow, appendChild } from './dom';
+
+var JSX_EVENTS = {
+    onClick: 'click'
+};
 
 // eslint-disable-next-line no-use-before-define
 
@@ -194,4 +201,89 @@ export function placeholderToJSX(text, placeholders) {
             return token;
         }
     });
+}
+
+export function jsxDom(element, props) {
+    for (var _len2 = arguments.length, children = Array(_len2 > 2 ? _len2 - 2 : 0), _key2 = 2; _key2 < _len2; _key2++) {
+        children[_key2 - 2] = arguments[_key2];
+    }
+
+    if (typeof element === 'function') {
+        return element(props, children);
+    }
+
+    var name = element.toLowerCase();
+
+    var doc = this && this.createElement ? this : window.document;
+
+    var el = doc.createElement(name);
+
+    for (var prop in props) {
+        if (prop in JSX_EVENTS) {
+            el.addEventListener(JSX_EVENTS[prop], props[prop]);
+        } else if (prop === 'innerHTML') {
+            el.innerHTML = props[prop];
+            fixScripts(el, doc);
+        } else {
+            el.setAttribute(prop, props[prop]);
+        }
+    }
+
+    var content = children[0],
+        remaining = children.slice(1);
+
+
+    if (name === 'style') {
+
+        if (typeof content !== 'string') {
+            throw new TypeError('Expected ' + name + ' tag content to be string, got ' + (typeof content === 'undefined' ? 'undefined' : _typeof(content)));
+        }
+
+        if (remaining.length) {
+            throw new Error('Expected only text content for ' + name + ' tag');
+        }
+
+        setStyle(el, content, doc);
+    } else if (name === 'iframe') {
+
+        if (remaining.length) {
+            throw new Error('Expected only single child node for iframe');
+        }
+
+        el.addEventListener('load', function () {
+            var win = el.contentWindow;
+
+            if (!win) {
+                throw new Error('Expected frame to have contentWindow');
+            }
+
+            if (typeof content === 'string') {
+                writeToWindow(win, content);
+            } else {
+                writeElementToWindow(win, content);
+            }
+        });
+    } else if (name === 'script') {
+
+        if (typeof content !== 'string') {
+            throw new TypeError('Expected ' + name + ' tag content to be string, got ' + (typeof content === 'undefined' ? 'undefined' : _typeof(content)));
+        }
+
+        if (remaining.length) {
+            throw new Error('Expected only text content for ' + name + ' tag');
+        }
+
+        el.text = content;
+    } else {
+        for (var i = 0; i < children.length; i++) {
+            if (typeof children[i] === 'string') {
+                var textNode = doc.createTextNode(children[i]);
+                appendChild(el, textNode);
+            } else {
+                appendChild(el, children[i]);
+            }
+        }
+    }
+
+    return el;
 }

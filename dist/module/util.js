@@ -4,6 +4,33 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 import { ZalgoPromise } from 'zalgo-promise/src';
 
+export function base64encode(str) {
+    if (typeof __WEB__ === 'undefined' || !__WEB__) {
+        return require('Base64').btoa(str);
+    }
+    return window.btoa(str);
+}
+
+export function base64decode(str) {
+    if (typeof __WEB__ === 'undefined' || !__WEB__) {
+        return require('Base64').atob(str);
+    }
+    return window.atob(str);
+}
+
+export function uniqueID() {
+
+    var chars = '0123456789abcdef';
+
+    var randomID = 'xxxxxxxxxx'.replace(/./g, function () {
+        return chars.charAt(Math.floor(Math.random() * chars.length));
+    });
+
+    var timeID = base64encode(new Date().toISOString().slice(11, 19).replace('T', '.')).replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
+
+    return randomID + '_' + timeID;
+}
+
 export function getGlobal() {
     if (typeof window !== 'undefined') {
         return window;
@@ -15,6 +42,26 @@ export function getGlobal() {
         return __GLOBAL__;
     }
     throw new Error('No global found');
+}
+
+var objectIDs = void 0;
+
+export function getObjectID(obj) {
+
+    objectIDs = objectIDs || new WeakMap();
+
+    if (obj === null || obj === undefined || (typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) !== 'object' && typeof obj !== 'function') {
+        throw new Error('Invalid object');
+    }
+
+    var uid = objectIDs.get(obj);
+
+    if (!uid) {
+        uid = (typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) + ':' + uniqueID();
+        objectIDs.set(obj, uid);
+    }
+
+    return uid;
 }
 
 // eslint-disable-next-line flowtype/no-weak-types
@@ -33,7 +80,14 @@ export function memoize(method) {
         var key = void 0;
 
         try {
-            key = JSON.stringify(Array.prototype.slice.call(arguments));
+            key = JSON.stringify(Array.prototype.slice.call(arguments), function (subkey, val) {
+
+                if (typeof val === 'function') {
+                    return 'memoize[' + getObjectID(val) + ']';
+                }
+
+                return val;
+            });
         } catch (err) {
             throw new Error('Arguments not serializable -- can not be used to memoize');
         }
@@ -63,7 +117,26 @@ export function memoize(method) {
         cache = {};
     };
 
+    if (options.name) {
+        memoizedFunction.displayName = options.name + ':memoized';
+    }
+
     return memoizedFunction;
+}
+
+// eslint-disable-next-line flowtype/no-weak-types
+export function promisify(method) {
+    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+    function promisifiedFunction() {
+        return ZalgoPromise['try'](method, this, arguments);
+    }
+
+    if (options.name) {
+        promisifiedFunction.displayName = options.name + ':promisified';
+    }
+
+    return promisifiedFunction;
 }
 
 // eslint-disable-next-line flowtype/no-weak-types
@@ -99,33 +172,6 @@ export function once(method) {
     };
 }
 
-export function base64encode(str) {
-    if (typeof __WEB__ === 'undefined' || !__WEB__) {
-        return require('Base64').btoa(str);
-    }
-    return window.btoa(str);
-}
-
-export function base64decode(str) {
-    if (typeof __WEB__ === 'undefined' || !__WEB__) {
-        return require('Base64').atob(str);
-    }
-    return window.atob(str);
-}
-
-export function uniqueID() {
-
-    var chars = '0123456789abcdef';
-
-    var randomID = 'xxxxxxxxxx'.replace(/./g, function () {
-        return chars.charAt(Math.floor(Math.random() * chars.length));
-    });
-
-    var timeID = base64encode(new Date().toISOString().slice(11, 19).replace('T', '.')).replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
-
-    return randomID + '_' + timeID;
-}
-
 export function hashStr(str) {
     var hash = 0;
     for (var i = 0; i < str.length; i++) {
@@ -155,35 +201,6 @@ export function match(str, pattern) {
     if (regmatch) {
         return regmatch[1];
     }
-}
-
-export function eventEmitter() {
-
-    var listeners = [];
-
-    return {
-        listen: function listen(method) {
-            listeners.push(method);
-
-            return {
-                cancel: function cancel() {
-                    listeners.splice(listeners.indexOf(method), 1);
-                }
-            };
-        },
-        once: function once(method) {
-            var listener = this.listen(function onceListener() {
-                method.apply(null, arguments);
-                listener.cancel();
-            });
-        },
-        trigger: function trigger() {
-            for (var _i2 = 0, _length2 = listeners == null ? 0 : listeners.length; _i2 < _length2; _i2++) {
-                var listener = listeners[_i2];
-                listener.apply(undefined, arguments);
-            }
-        }
-    };
 }
 
 export function awaitKey(obj, key) {
@@ -355,11 +372,11 @@ export function max() {
     return Math.max.apply(Math, arguments);
 }
 
-export function regexMap(str, regex, handler) {
+export function regexMap(str, regexp, handler) {
     var results = [];
 
     // $FlowFixMe
-    str.replace(regex, function regexMapMatcher(item) {
+    str.replace(regexp, function regexMapMatcher(item) {
         results.push(handler ? handler.apply(null, arguments) : item);
     });
 
@@ -391,9 +408,9 @@ export function identity(item) {
     return item;
 }
 
-export function regexTokenize(text, regex) {
+export function regexTokenize(text, regexp) {
     var result = [];
-    text.replace(regex, function (token) {
+    text.replace(regexp, function (token) {
         result.push(token);
         return '';
     });
@@ -532,4 +549,321 @@ export function undotify(obj) {
     }
 
     return result;
+}
+
+export function eventEmitter() {
+
+    var triggered = {};
+    var handlers = {};
+
+    return {
+        on: function on(eventName, handler) {
+
+            var handlerList = handlers[eventName] = handlers[eventName] || [];
+
+            handlerList.push(handler);
+
+            var cancelled = false;
+
+            return {
+                cancel: function cancel() {
+                    if (!cancelled) {
+                        cancelled = true;
+                        handlerList.splice(handlerList.indexOf(handler), 1);
+                    }
+                }
+            };
+        },
+        once: function once(eventName, handler) {
+
+            var listener = this.on(eventName, function () {
+                listener.cancel();
+                handler();
+            });
+
+            return listener;
+        },
+        trigger: function trigger(eventName) {
+
+            var handlerList = handlers[eventName];
+
+            if (handlerList) {
+                for (var _i2 = 0, _length2 = handlerList == null ? 0 : handlerList.length; _i2 < _length2; _i2++) {
+                    var _handler = handlerList[_i2];
+                    _handler();
+                }
+            }
+        },
+        triggerOnce: function triggerOnce(eventName) {
+
+            if (triggered[eventName]) {
+                return;
+            }
+
+            triggered[eventName] = true;
+            this.trigger(eventName);
+        }
+    };
+}
+
+export function camelToDasherize(string) {
+    return string.replace(/([A-Z])/g, function (g) {
+        return '-' + g.toLowerCase();
+    });
+}
+
+export function dasherizeToCamel(string) {
+    return string.replace(/-([a-z])/g, function (g) {
+        return g[1].toUpperCase();
+    });
+}
+
+export function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+}
+
+export function get(item, path, def) {
+
+    if (!path) {
+        return def;
+    }
+
+    var pathParts = path.split('.');
+
+    // Loop through each section of our key path
+
+    for (var i = 0; i < pathParts.length; i++) {
+
+        // If we have an object, we can get the key
+        if ((typeof item === 'undefined' ? 'undefined' : _typeof(item)) === 'object' && item !== null) {
+            item = item[pathParts[i]];
+
+            // Otherwise, we should return the default (undefined if not provided)
+        } else {
+            return def;
+        }
+    }
+
+    // If our final result is undefined, we should return the default
+
+    return item === undefined ? def : item;
+}
+
+export function safeTimeout(method, time) {
+
+    var interval = safeInterval(function () {
+        time -= 100;
+        if (time <= 0) {
+            interval.cancel();
+            method();
+        }
+    }, 100);
+}
+
+export function replaceObject(item, replacers) {
+    var fullKey = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
+
+
+    if (Array.isArray(item)) {
+        var _ret = function () {
+            var length = item.length;
+            var result = [];
+
+            var _loop = function _loop(i) {
+                Object.defineProperty(result, i, {
+                    configurable: true,
+                    enumerable: true,
+                    get: function get() {
+                        var itemKey = fullKey ? fullKey + '.' + i : '' + i;
+                        var child = item[i];
+
+                        var type = typeof child === 'undefined' ? 'undefined' : _typeof(child);
+                        var replacer = replacers[type];
+                        if (replacer) {
+                            var replaced = replacer(child, i, itemKey);
+                            if (typeof replaced !== 'undefined') {
+                                result[i] = replaced;
+                                return result[i];
+                            }
+                        }
+
+                        if ((typeof child === 'undefined' ? 'undefined' : _typeof(child)) === 'object' && child !== null) {
+                            result[i] = replaceObject(child, replacers, itemKey);
+                            return result[i];
+                        }
+
+                        result[i] = child;
+                        return result[i];
+                    },
+                    set: function set(value) {
+                        delete result[i];
+                        result[i] = value;
+                    }
+                });
+            };
+
+            for (var i = 0; i < length; i++) {
+                _loop(i);
+            }
+
+            // $FlowFixMe
+            return {
+                v: result
+            };
+        }();
+
+        if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
+    } else if ((typeof item === 'undefined' ? 'undefined' : _typeof(item)) === 'object' && item !== null) {
+        var _ret3 = function () {
+            var result = {};
+
+            var _loop2 = function _loop2(_key7) {
+                if (!item.hasOwnProperty(_key7)) {
+                    return 'continue';
+                }
+
+                Object.defineProperty(result, _key7, {
+                    configurable: true,
+                    enumerable: true,
+                    get: function get() {
+                        var itemKey = fullKey ? fullKey + '.' + _key7 : '' + _key7;
+                        // $FlowFixMe
+                        var child = item[_key7];
+
+                        var type = typeof child === 'undefined' ? 'undefined' : _typeof(child);
+                        var replacer = replacers[type];
+                        if (replacer) {
+                            var replaced = replacer(child, _key7, itemKey);
+                            if (typeof replaced !== 'undefined') {
+                                result[_key7] = replaced;
+                                return result[_key7];
+                            }
+                        }
+
+                        if ((typeof child === 'undefined' ? 'undefined' : _typeof(child)) === 'object' && child !== null) {
+                            result[_key7] = replaceObject(child, replacers, itemKey);
+                            return result[_key7];
+                        }
+
+                        result[_key7] = child;
+                        return result[_key7];
+                    },
+                    set: function set(value) {
+                        delete result[_key7];
+                        result[_key7] = value;
+                    }
+                });
+            };
+
+            for (var _key7 in item) {
+                var _ret4 = _loop2(_key7);
+
+                if (_ret4 === 'continue') continue;
+            }
+
+            // $FlowFixMe
+            return {
+                v: result
+            };
+        }();
+
+        if ((typeof _ret3 === 'undefined' ? 'undefined' : _typeof(_ret3)) === "object") return _ret3.v;
+    } else {
+        throw new Error('Pass an object or array');
+    }
+}
+
+export function copyProp(source, target, name, def) {
+    if (source.hasOwnProperty(name)) {
+        var descriptor = Object.getOwnPropertyDescriptor(source, name);
+        // $FlowFixMe
+        Object.defineProperty(target, name, descriptor);
+    } else {
+        target[name] = def;
+    }
+}
+
+export function regex(pattern, string) {
+    var start = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+
+
+    if (typeof pattern === 'string') {
+        // eslint-disable-next-line security/detect-non-literal-regexp
+        pattern = new RegExp(pattern);
+    }
+
+    var result = string.slice(start).match(pattern);
+
+    if (!result) {
+        return;
+    }
+
+    // $FlowFixMe
+    var index = result.index;
+    var regmatch = result[0];
+
+    return {
+        text: regmatch,
+        groups: result.slice(1),
+        start: start + index,
+        end: start + index + regmatch.length,
+        length: regmatch.length,
+
+        replace: function replace(text) {
+
+            if (!regmatch) {
+                return '';
+            }
+
+            return '' + regmatch.slice(0, start + index) + text + regmatch.slice(index + regmatch.length);
+        }
+    };
+}
+
+export function regexAll(pattern, string) {
+
+    var matches = [];
+    var start = 0;
+
+    // eslint-disable-next-line no-constant-condition
+    while (true) {
+        var regmatch = regex(pattern, string, start);
+
+        if (!regmatch) {
+            break;
+        }
+
+        matches.push(regmatch);
+        start = match.end;
+    }
+
+    return matches;
+}
+
+export function isDefined(value) {
+    return value !== null && value !== undefined;
+}
+
+export function cycle(method) {
+    return ZalgoPromise['try'](method).then(function () {
+        return cycle(method);
+    });
+}
+
+export function debounce(method) {
+    var time = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 100;
+
+
+    var timeout = void 0;
+
+    return function debounceWrapper() {
+        var _this2 = this,
+            _arguments2 = arguments;
+
+        clearTimeout(timeout);
+
+        timeout = setTimeout(function () {
+            return method.apply(_this2, _arguments2);
+        }, time);
+    };
 }
