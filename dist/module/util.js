@@ -871,3 +871,30 @@ export function debounce(method) {
         }, time);
     };
 }
+
+export function isRegex(item) {
+    return Object.prototype.toString.call(item) === '[object RegExp]';
+}
+
+// eslint-disable-next-line flowtype/no-weak-types
+export var weakMapMemoize = function weakMapMemoize(method) {
+
+    var weakmap = new WeakMap();
+
+    // eslint-disable-next-line flowtype/no-weak-types
+    return function weakmapMemoized(arg) {
+        var result = weakmap.get(arg);
+
+        if (typeof result !== 'undefined') {
+            return result;
+        }
+
+        result = method.call(this, arg);
+
+        if (typeof result !== 'undefined') {
+            weakmap.set(arg, result);
+        }
+
+        return result;
+    };
+};
