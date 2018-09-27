@@ -3,6 +3,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 /* eslint max-lines: 0 */
 
 import { ZalgoPromise } from 'zalgo-promise/src';
+import { WeakMap } from 'cross-domain-safe-weakmap/src';
 
 export function base64encode(str) {
     if (typeof __WEB__ === 'undefined' || !__WEB__) {
@@ -64,33 +65,38 @@ export function getObjectID(obj) {
     return uid;
 }
 
+function serializeArgs(args) {
+    try {
+        return JSON.stringify(Array.prototype.slice.call(args), function (subkey, val) {
+            if (typeof val === 'function') {
+                return 'memoize[' + getObjectID(val) + ']';
+            }
+            return val;
+        });
+    } catch (err) {
+        throw new Error('Arguments not serializable -- can not be used to memoize');
+    }
+}
+
 // eslint-disable-next-line flowtype/no-weak-types
 export function memoize(method) {
+    var _this = this;
+
     var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
+    var cacheMap = new WeakMap();
 
-    var cache = {};
-
-    // eslint-disable-next-line no-unused-vars, flowtype/no-weak-types
+    // eslint-disable-next-line flowtype/no-weak-types
     function memoizedFunction() {
         for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
             args[_key] = arguments[_key];
         }
 
-        var key = void 0;
+        var cache = cacheMap.getOrSet(options.thisNamespace ? this : method, function () {
+            return {};
+        });
 
-        try {
-            key = JSON.stringify(Array.prototype.slice.call(arguments), function (subkey, val) {
-
-                if (typeof val === 'function') {
-                    return 'memoize[' + getObjectID(val) + ']';
-                }
-
-                return val;
-            });
-        } catch (err) {
-            throw new Error('Arguments not serializable -- can not be used to memoize');
-        }
+        var key = serializeArgs(args);
 
         var cacheTime = options.time;
         if (cache[key] && cacheTime && Date.now() - cache[key].time < cacheTime) {
@@ -114,7 +120,7 @@ export function memoize(method) {
     }
 
     memoizedFunction.reset = function () {
-        cache = {};
+        cacheMap['delete'](options.thisNamespace ? _this : method);
     };
 
     if (options.name) {
@@ -143,17 +149,15 @@ export function promisify(method) {
 export function inlineMemoize(method, logic) {
     var args = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
 
-    if (!method.__memoized__) {
-        // $FlowFixMe
-        method.__memoized__ = memoize(logic);
+    var cache = method.__inline_memoize_cache__ = method.__inline_memoize_cache__ || {};
+    var key = serializeArgs(args);
+
+    if (cache.hasOwnProperty(key)) {
+        return cache[key];
     }
 
-    if (method.__memoized__ && method.__memoized__.__calling__) {
-        throw new Error('Can not call memoized method recursively');
-    }
-
-    // $FlowFixMe
-    return method.__memoized__.apply(method, args);
+    var result = cache[key] = logic.apply(undefined, args);
+    return result;
 }
 
 // eslint-disable-next-line no-unused-vars
@@ -318,7 +322,7 @@ export function patchMethod(obj, name, handler) {
     var original = obj[name];
 
     obj[name] = function patchedMethod() {
-        var _this = this,
+        var _this2 = this,
             _arguments = arguments;
 
         return handler({
@@ -326,7 +330,7 @@ export function patchMethod(obj, name, handler) {
             args: Array.prototype.slice.call(arguments),
             original: original,
             callOriginal: function callOriginal() {
-                return original.apply(_this, _arguments);
+                return original.apply(_this2, _arguments);
             }
         });
     };
@@ -341,9 +345,9 @@ export function extend(obj, source) {
         return Object.assign(obj, source);
     }
 
-    for (var _key2 in source) {
-        if (source.hasOwnProperty(_key2)) {
-            obj[_key2] = source[_key2];
+    for (var key in source) {
+        if (source.hasOwnProperty(key)) {
+            obj[key] = source[key];
         }
     }
 
@@ -352,9 +356,9 @@ export function extend(obj, source) {
 
 export function values(obj) {
     var result = [];
-    for (var _key3 in obj) {
-        if (obj.hasOwnProperty(_key3)) {
-            result.push(obj[_key3]);
+    for (var key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            result.push(obj[key]);
         }
     }
     return result;
@@ -393,12 +397,12 @@ export function objFilter(obj) {
 
     var result = {};
 
-    for (var _key4 in obj) {
-        if (!obj.hasOwnProperty(_key4) || !filter(obj[_key4], _key4)) {
+    for (var key in obj) {
+        if (!obj.hasOwnProperty(key) || !filter(obj[key], key)) {
             continue;
         }
 
-        result[_key4] = obj[_key4];
+        result[key] = obj[key];
     }
 
     return result;
@@ -497,17 +501,17 @@ export function dotify(obj) {
     var newobj = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
     prefix = prefix ? prefix + '.' : prefix;
-    for (var _key5 in obj) {
-        if (!obj.hasOwnProperty(_key5) || obj[_key5] === undefined || obj[_key5] === null || typeof obj[_key5] === 'function') {
+    for (var key in obj) {
+        if (!obj.hasOwnProperty(key) || obj[key] === undefined || obj[key] === null || typeof obj[key] === 'function') {
             continue;
-        } else if (obj[_key5] && Array.isArray(obj[_key5]) && obj[_key5].length && obj[_key5].every(function (val) {
+        } else if (obj[key] && Array.isArray(obj[key]) && obj[key].length && obj[key].every(function (val) {
             return (typeof val === 'undefined' ? 'undefined' : _typeof(val)) !== 'object';
         })) {
-            newobj['' + prefix + _key5 + '[]'] = obj[_key5].join(',');
-        } else if (obj[_key5] && _typeof(obj[_key5]) === 'object') {
-            newobj = dotify(obj[_key5], '' + prefix + _key5, newobj);
+            newobj['' + prefix + key + '[]'] = obj[key].join(',');
+        } else if (obj[key] && _typeof(obj[key]) === 'object') {
+            newobj = dotify(obj[key], '' + prefix + key, newobj);
         } else {
-            newobj['' + prefix + _key5] = serializePrimitive(obj[_key5]);
+            newobj['' + prefix + key] = serializePrimitive(obj[key]);
         }
     }
     return newobj;
@@ -517,22 +521,22 @@ export function undotify(obj) {
 
     var result = {};
 
-    for (var _key6 in obj) {
-        if (!obj.hasOwnProperty(_key6) || typeof obj[_key6] !== 'string') {
+    for (var key in obj) {
+        if (!obj.hasOwnProperty(key) || typeof obj[key] !== 'string') {
             continue;
         }
 
-        var _value = obj[_key6];
+        var value = obj[key];
 
-        if (_key6.match(/^.+\[\]$/)) {
-            _key6 = _key6.slice(0, _key6.length - 2);
-            _value = _value.split(',').map(deserializePrimitive);
+        if (key.match(/^.+\[\]$/)) {
+            key = key.slice(0, key.length - 2);
+            value = value.split(',').map(deserializePrimitive);
         } else {
-            _value = deserializePrimitive(_value);
+            value = deserializePrimitive(value);
         }
 
         var keyResult = result;
-        var parts = _key6.split('.');
+        var parts = key.split('.');
         for (var i = 0; i < parts.length; i++) {
             var part = parts[i];
             var isLast = i + 1 === parts.length;
@@ -540,7 +544,7 @@ export function undotify(obj) {
 
             if (isLast) {
                 // $FlowFixMe
-                keyResult[part] = _value;
+                keyResult[part] = value;
             } else {
                 // $FlowFixMe
                 keyResult = keyResult[part] = keyResult[part] || (isIndex ? [] : {});
@@ -717,46 +721,46 @@ export function replaceObject(item, replacers) {
         var _ret3 = function () {
             var result = {};
 
-            var _loop2 = function _loop2(_key7) {
-                if (!item.hasOwnProperty(_key7)) {
+            var _loop2 = function _loop2(key) {
+                if (!item.hasOwnProperty(key)) {
                     return 'continue';
                 }
 
-                Object.defineProperty(result, _key7, {
+                Object.defineProperty(result, key, {
                     configurable: true,
                     enumerable: true,
                     get: function get() {
-                        var itemKey = fullKey ? fullKey + '.' + _key7 : '' + _key7;
+                        var itemKey = fullKey ? fullKey + '.' + key : '' + key;
                         // $FlowFixMe
-                        var child = item[_key7];
+                        var child = item[key];
 
                         var type = typeof child === 'undefined' ? 'undefined' : _typeof(child);
                         var replacer = replacers[type];
                         if (replacer) {
-                            var replaced = replacer(child, _key7, itemKey);
+                            var replaced = replacer(child, key, itemKey);
                             if (typeof replaced !== 'undefined') {
-                                result[_key7] = replaced;
-                                return result[_key7];
+                                result[key] = replaced;
+                                return result[key];
                             }
                         }
 
                         if ((typeof child === 'undefined' ? 'undefined' : _typeof(child)) === 'object' && child !== null) {
-                            result[_key7] = replaceObject(child, replacers, itemKey);
-                            return result[_key7];
+                            result[key] = replaceObject(child, replacers, itemKey);
+                            return result[key];
                         }
 
-                        result[_key7] = child;
-                        return result[_key7];
+                        result[key] = child;
+                        return result[key];
                     },
                     set: function set(value) {
-                        delete result[_key7];
-                        result[_key7] = value;
+                        delete result[key];
+                        result[key] = value;
                     }
                 });
             };
 
-            for (var _key7 in item) {
-                var _ret4 = _loop2(_key7);
+            for (var key in item) {
+                var _ret4 = _loop2(key);
 
                 if (_ret4 === 'continue') continue;
             }
@@ -857,13 +861,13 @@ export function debounce(method) {
     var timeout = void 0;
 
     return function debounceWrapper() {
-        var _this2 = this,
+        var _this3 = this,
             _arguments2 = arguments;
 
         clearTimeout(timeout);
 
         timeout = setTimeout(function () {
-            return method.apply(_this2, _arguments2);
+            return method.apply(_this3, _arguments2);
         }, time);
     };
 }

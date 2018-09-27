@@ -1,6 +1,6 @@
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 /* eslint max-lines: off */
 
@@ -109,53 +109,62 @@ export function urlWillRedirectPage(url) {
     return true;
 }
 
-export function extendUrl(url) {
-    var params = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+export function formatQuery() {
+    var obj = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
 
-    var hasHash = url.indexOf('#') > 0;
-
-    var _url$split = url.split('#'),
-        serverUrl = _url$split[0],
-        hash = _url$split[1];
-
-    if (hash && !serverUrl) {
-        var _ref = ['#' + hash, ''];
-        serverUrl = _ref[0];
-        hash = _ref[1];
-    }
-
-    var _serverUrl$split = serverUrl.split('?'),
-        originalUrl = _serverUrl$split[0],
-        originalQueryString = _serverUrl$split[1];
-
-    if (originalQueryString) {
-        var originalQuery = parseQuery(originalQueryString);
-
-        for (var _key in originalQuery) {
-            if (!params.hasOwnProperty(_key)) {
-                params[_key] = originalQuery[_key];
-            }
-        }
-    }
-
-    var newQueryString = Object.keys(params).filter(function (key) {
-        return key && params[key];
-    }).sort().map(function (key) {
-        return encodeURIComponent(key) + '=' + encodeURIComponent(params[key]);
+    return Object.keys(obj).filter(function (key) {
+        return typeof obj[key] === 'string';
+    }).map(function (key) {
+        return urlEncode(key) + '=' + urlEncode(obj[key]);
     }).join('&');
+}
 
-    var newUrl = originalUrl;
+export function extendQuery(originalQuery) {
+    var props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 
-    if (newQueryString) {
-        newUrl = newUrl + '?' + newQueryString;
+
+    if (!props || !Object.keys(props).length) {
+        return originalQuery;
     }
 
-    if (hasHash) {
-        newUrl = newUrl + '#' + (hash || '');
+    return formatQuery(_extends({}, parseQuery(originalQuery), props));
+}
+
+export function extendUrl(url) {
+    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+
+    var query = options.query || {};
+    var hash = options.hash || {};
+
+    var originalUrl = void 0;
+    var originalQuery = void 0;
+    var originalHash = void 0;
+
+    var _url$split = url.split('#');
+
+    originalUrl = _url$split[0];
+    originalHash = _url$split[1];
+
+    var _originalUrl$split = originalUrl.split('?');
+
+    originalUrl = _originalUrl$split[0];
+    originalQuery = _originalUrl$split[1];
+
+
+    var queryString = extendQuery(originalQuery, query);
+    var hashString = extendQuery(originalHash, hash);
+
+    if (queryString) {
+        originalUrl = originalUrl + '?' + queryString;
     }
 
-    return newUrl;
+    if (hashString) {
+        originalUrl = originalUrl + '#' + hashString;
+    }
+
+    return originalUrl;
 }
 
 export function redirect(url) {
@@ -233,10 +242,10 @@ export function onClick(element, handler) {
     });
 }
 
-export function getScript(_ref2) {
-    var _ref2$host = _ref2.host,
-        host = _ref2$host === undefined ? window.location.host : _ref2$host,
-        path = _ref2.path;
+export function getScript(_ref) {
+    var _ref$host = _ref.host,
+        host = _ref$host === undefined ? window.location.host : _ref$host,
+        path = _ref.path;
 
     return inlineMemoize(getScript, function () {
 
@@ -538,8 +547,8 @@ export function createElement() {
 
     if (options.attributes) {
         for (var _i6 = 0, _Object$keys2 = Object.keys(options.attributes), _length6 = _Object$keys2 == null ? 0 : _Object$keys2.length; _i6 < _length6; _i6++) {
-            var _key2 = _Object$keys2[_i6];
-            element.setAttribute(_key2, options.attributes[_key2]);
+            var key = _Object$keys2[_i6];
+            element.setAttribute(key, options.attributes[key]);
         }
     }
 
@@ -612,28 +621,6 @@ export function addEventListener(obj, event, handler) {
     };
 }
 
-export function formatQuery() {
-    var obj = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-
-    return Object.keys(obj).filter(function (key) {
-        return typeof obj[key] === 'string';
-    }).map(function (key) {
-        return urlEncode(key) + '=' + urlEncode(obj[key]);
-    }).join('&');
-}
-
-export function extendQuery(originalQuery) {
-    var props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
-
-    if (!props || !Object.keys(props).length) {
-        return originalQuery;
-    }
-
-    return formatQuery(_extends({}, parseQuery(originalQuery), props));
-}
-
 export function elementStoppedMoving(element) {
     var timeout = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 5000;
 
@@ -690,13 +677,13 @@ export function setOverflow(el) {
     };
 }
 
-function dimensionsDiff(one, two, _ref3) {
-    var _ref3$width = _ref3.width,
-        width = _ref3$width === undefined ? true : _ref3$width,
-        _ref3$height = _ref3.height,
-        height = _ref3$height === undefined ? true : _ref3$height,
-        _ref3$threshold = _ref3.threshold,
-        threshold = _ref3$threshold === undefined ? 0 : _ref3$threshold;
+function dimensionsDiff(one, two, _ref2) {
+    var _ref2$width = _ref2.width,
+        width = _ref2$width === undefined ? true : _ref2$width,
+        _ref2$height = _ref2.height,
+        height = _ref2$height === undefined ? true : _ref2$height,
+        _ref2$threshold = _ref2.threshold,
+        threshold = _ref2$threshold === undefined ? 0 : _ref2$threshold;
 
 
     if (width && Math.abs(one.width - two.width) > threshold) {
@@ -710,13 +697,13 @@ function dimensionsDiff(one, two, _ref3) {
     return false;
 }
 
-export function trackDimensions(el, _ref4) {
-    var _ref4$width = _ref4.width,
-        width = _ref4$width === undefined ? true : _ref4$width,
-        _ref4$height = _ref4.height,
-        height = _ref4$height === undefined ? true : _ref4$height,
-        _ref4$threshold = _ref4.threshold,
-        threshold = _ref4$threshold === undefined ? 0 : _ref4$threshold;
+export function trackDimensions(el, _ref3) {
+    var _ref3$width = _ref3.width,
+        width = _ref3$width === undefined ? true : _ref3$width,
+        _ref3$height = _ref3.height,
+        height = _ref3$height === undefined ? true : _ref3$height,
+        _ref3$threshold = _ref3.threshold,
+        threshold = _ref3$threshold === undefined ? 0 : _ref3$threshold;
 
 
     var currentDimensions = getCurrentDimensions(el);
@@ -736,15 +723,15 @@ export function trackDimensions(el, _ref4) {
     };
 }
 
-export function onDimensionsChange(el, _ref5) {
-    var _ref5$width = _ref5.width,
-        width = _ref5$width === undefined ? true : _ref5$width,
-        _ref5$height = _ref5.height,
-        height = _ref5$height === undefined ? true : _ref5$height,
-        _ref5$delay = _ref5.delay,
-        delay = _ref5$delay === undefined ? 50 : _ref5$delay,
-        _ref5$threshold = _ref5.threshold,
-        threshold = _ref5$threshold === undefined ? 0 : _ref5$threshold;
+export function onDimensionsChange(el, _ref4) {
+    var _ref4$width = _ref4.width,
+        width = _ref4$width === undefined ? true : _ref4$width,
+        _ref4$height = _ref4.height,
+        height = _ref4$height === undefined ? true : _ref4$height,
+        _ref4$delay = _ref4.delay,
+        delay = _ref4$delay === undefined ? 50 : _ref4$delay,
+        _ref4$threshold = _ref4.threshold,
+        threshold = _ref4$threshold === undefined ? 0 : _ref4$threshold;
 
 
     return new ZalgoPromise(function (resolve) {
@@ -785,9 +772,9 @@ export function onDimensionsChange(el, _ref5) {
     });
 }
 
-export function dimensionsMatchViewport(el, _ref6) {
-    var width = _ref6.width,
-        height = _ref6.height;
+export function dimensionsMatchViewport(el, _ref5) {
+    var width = _ref5.width,
+        height = _ref5.height;
 
 
     var dimensions = getCurrentDimensions(el);

@@ -38,6 +38,152 @@
         __webpack_require__.p = "";
         return __webpack_require__(__webpack_require__.s = "./src/index.js");
     }({
+        "./node_modules/cross-domain-safe-weakmap/src/index.js": function(module, __webpack_exports__, __webpack_require__) {
+            "use strict";
+            __webpack_require__.d({}, "WeakMap", function() {
+                return weakmap_CrossDomainSafeWeakMap;
+            });
+            var src = __webpack_require__("./node_modules/cross-domain-utils/src/index.js");
+            function safeIndexOf(collection, item) {
+                for (var i = 0; i < collection.length; i++) try {
+                    if (collection[i] === item) return i;
+                } catch (err) {}
+                return -1;
+            }
+            var defineProperty = Object.defineProperty, counter = Date.now() % 1e9, weakmap_CrossDomainSafeWeakMap = function() {
+                function CrossDomainSafeWeakMap() {
+                    !function(instance, Constructor) {
+                        if (!(instance instanceof CrossDomainSafeWeakMap)) throw new TypeError("Cannot call a class as a function");
+                    }(this);
+                    counter += 1;
+                    this.name = "__weakmap_" + (1e9 * Math.random() >>> 0) + "__" + counter;
+                    if (function() {
+                        if (!window.WeakMap) return !1;
+                        if (!window.Object.freeze) return !1;
+                        try {
+                            var testWeakMap = new window.WeakMap(), testKey = {};
+                            window.Object.freeze(testKey);
+                            testWeakMap.set(testKey, "__testvalue__");
+                            return "__testvalue__" === testWeakMap.get(testKey);
+                        } catch (err) {
+                            return !1;
+                        }
+                    }()) try {
+                        this.weakmap = new window.WeakMap();
+                    } catch (err) {}
+                    this.keys = [];
+                    this.values = [];
+                }
+                CrossDomainSafeWeakMap.prototype._cleanupClosedWindows = function() {
+                    for (var weakmap = this.weakmap, keys = this.keys, i = 0; i < keys.length; i++) {
+                        var value = keys[i];
+                        if (Object(src.isWindow)(value) && Object(src.isWindowClosed)(value)) {
+                            if (weakmap) try {
+                                weakmap.delete(value);
+                            } catch (err) {}
+                            keys.splice(i, 1);
+                            this.values.splice(i, 1);
+                            i -= 1;
+                        }
+                    }
+                };
+                CrossDomainSafeWeakMap.prototype.isSafeToReadWrite = function(key) {
+                    if (Object(src.isWindow)(key)) return !1;
+                    try {
+                        key && key.self;
+                        key && key[this.name];
+                    } catch (err) {
+                        return !1;
+                    }
+                    return !0;
+                };
+                CrossDomainSafeWeakMap.prototype.set = function(key, value) {
+                    if (!key) throw new Error("WeakMap expected key");
+                    var weakmap = this.weakmap;
+                    if (weakmap) try {
+                        weakmap.set(key, value);
+                    } catch (err) {
+                        delete this.weakmap;
+                    }
+                    if (this.isSafeToReadWrite(key)) {
+                        var name = this.name, entry = key[name];
+                        entry && entry[0] === key ? entry[1] = value : defineProperty(key, name, {
+                            value: [ key, value ],
+                            writable: !0
+                        });
+                    } else {
+                        this._cleanupClosedWindows();
+                        var keys = this.keys, values = this.values, index = safeIndexOf(keys, key);
+                        if (-1 === index) {
+                            keys.push(key);
+                            values.push(value);
+                        } else values[index] = value;
+                    }
+                };
+                CrossDomainSafeWeakMap.prototype.get = function(key) {
+                    if (!key) throw new Error("WeakMap expected key");
+                    var weakmap = this.weakmap;
+                    if (weakmap) try {
+                        if (weakmap.has(key)) return weakmap.get(key);
+                    } catch (err) {
+                        delete this.weakmap;
+                    }
+                    if (!this.isSafeToReadWrite(key)) {
+                        this._cleanupClosedWindows();
+                        var index = safeIndexOf(this.keys, key);
+                        if (-1 === index) return;
+                        return this.values[index];
+                    }
+                    var entry = key[this.name];
+                    if (entry && entry[0] === key) return entry[1];
+                };
+                CrossDomainSafeWeakMap.prototype.delete = function(key) {
+                    if (!key) throw new Error("WeakMap expected key");
+                    var weakmap = this.weakmap;
+                    if (weakmap) try {
+                        weakmap.delete(key);
+                    } catch (err) {
+                        delete this.weakmap;
+                    }
+                    if (this.isSafeToReadWrite(key)) {
+                        var entry = key[this.name];
+                        entry && entry[0] === key && (entry[0] = entry[1] = void 0);
+                    } else {
+                        this._cleanupClosedWindows();
+                        var keys = this.keys, index = safeIndexOf(keys, key);
+                        if (-1 !== index) {
+                            keys.splice(index, 1);
+                            this.values.splice(index, 1);
+                        }
+                    }
+                };
+                CrossDomainSafeWeakMap.prototype.has = function(key) {
+                    if (!key) throw new Error("WeakMap expected key");
+                    var weakmap = this.weakmap;
+                    if (weakmap) try {
+                        return weakmap.has(key);
+                    } catch (err) {
+                        delete this.weakmap;
+                    }
+                    if (this.isSafeToReadWrite(key)) {
+                        var entry = key[this.name];
+                        return !(!entry || entry[0] !== key);
+                    }
+                    this._cleanupClosedWindows();
+                    return -1 !== safeIndexOf(this.keys, key);
+                };
+                CrossDomainSafeWeakMap.prototype.getOrSet = function(key, getter) {
+                    if (this.has(key)) return this.get(key);
+                    var value = getter();
+                    this.set(key, value);
+                    return value;
+                };
+                return CrossDomainSafeWeakMap;
+            }();
+            __webpack_require__.d(__webpack_exports__, "a", function() {
+                return weakmap_CrossDomainSafeWeakMap;
+            });
+        },
         "./node_modules/cross-domain-utils/src/index.js": function(module, __webpack_exports__, __webpack_require__) {
             "use strict";
             var __WEBPACK_IMPORTED_MODULE_0__utils__ = __webpack_require__("./node_modules/cross-domain-utils/src/utils.js");
@@ -531,7 +677,8 @@
             "use strict";
             __webpack_exports__.a = function(target, name, descriptor) {
                 descriptor.value = Object(__WEBPACK_IMPORTED_MODULE_0__util__.z)(descriptor.value, {
-                    name: name
+                    name: name,
+                    thisNamespace: !0
                 });
             };
             __webpack_exports__.b = function(target, name, descriptor) {
@@ -644,140 +791,7 @@
         },
         "./src/dom.js": function(module, __webpack_exports__, __webpack_require__) {
             "use strict";
-            __webpack_require__.d({}, "WeakMap", function() {
-                return weakmap_CrossDomainSafeWeakMap;
-            });
-            var src = __webpack_require__("./node_modules/zalgo-promise/src/index.js"), cross_domain_utils_src = __webpack_require__("./node_modules/cross-domain-utils/src/index.js");
-            function safeIndexOf(collection, item) {
-                for (var i = 0; i < collection.length; i++) try {
-                    if (collection[i] === item) return i;
-                } catch (err) {}
-                return -1;
-            }
-            var defineProperty = Object.defineProperty, counter = Date.now() % 1e9, weakmap_CrossDomainSafeWeakMap = function() {
-                function CrossDomainSafeWeakMap() {
-                    !function(instance, Constructor) {
-                        if (!(instance instanceof CrossDomainSafeWeakMap)) throw new TypeError("Cannot call a class as a function");
-                    }(this);
-                    counter += 1;
-                    this.name = "__weakmap_" + (1e9 * Math.random() >>> 0) + "__" + counter;
-                    if (function() {
-                        if (!window.WeakMap) return !1;
-                        if (!window.Object.freeze) return !1;
-                        try {
-                            var testWeakMap = new window.WeakMap(), testKey = {};
-                            window.Object.freeze(testKey);
-                            testWeakMap.set(testKey, "__testvalue__");
-                            return "__testvalue__" === testWeakMap.get(testKey);
-                        } catch (err) {
-                            return !1;
-                        }
-                    }()) try {
-                        this.weakmap = new window.WeakMap();
-                    } catch (err) {}
-                    this.keys = [];
-                    this.values = [];
-                }
-                CrossDomainSafeWeakMap.prototype._cleanupClosedWindows = function() {
-                    for (var weakmap = this.weakmap, keys = this.keys, i = 0; i < keys.length; i++) {
-                        var value = keys[i];
-                        if (Object(cross_domain_utils_src.isWindow)(value) && Object(cross_domain_utils_src.isWindowClosed)(value)) {
-                            if (weakmap) try {
-                                weakmap.delete(value);
-                            } catch (err) {}
-                            keys.splice(i, 1);
-                            this.values.splice(i, 1);
-                            i -= 1;
-                        }
-                    }
-                };
-                CrossDomainSafeWeakMap.prototype.isSafeToReadWrite = function(key) {
-                    if (Object(cross_domain_utils_src.isWindow)(key)) return !1;
-                    try {
-                        key && key.self;
-                        key && key[this.name];
-                    } catch (err) {
-                        return !1;
-                    }
-                    return !0;
-                };
-                CrossDomainSafeWeakMap.prototype.set = function(key, value) {
-                    if (!key) throw new Error("WeakMap expected key");
-                    var weakmap = this.weakmap;
-                    if (weakmap) try {
-                        weakmap.set(key, value);
-                    } catch (err) {
-                        delete this.weakmap;
-                    }
-                    if (this.isSafeToReadWrite(key)) {
-                        var name = this.name, entry = key[name];
-                        entry && entry[0] === key ? entry[1] = value : defineProperty(key, name, {
-                            value: [ key, value ],
-                            writable: !0
-                        });
-                    } else {
-                        this._cleanupClosedWindows();
-                        var keys = this.keys, values = this.values, index = safeIndexOf(keys, key);
-                        if (-1 === index) {
-                            keys.push(key);
-                            values.push(value);
-                        } else values[index] = value;
-                    }
-                };
-                CrossDomainSafeWeakMap.prototype.get = function(key) {
-                    if (!key) throw new Error("WeakMap expected key");
-                    var weakmap = this.weakmap;
-                    if (weakmap) try {
-                        if (weakmap.has(key)) return weakmap.get(key);
-                    } catch (err) {
-                        delete this.weakmap;
-                    }
-                    if (!this.isSafeToReadWrite(key)) {
-                        this._cleanupClosedWindows();
-                        var index = safeIndexOf(this.keys, key);
-                        if (-1 === index) return;
-                        return this.values[index];
-                    }
-                    var entry = key[this.name];
-                    if (entry && entry[0] === key) return entry[1];
-                };
-                CrossDomainSafeWeakMap.prototype.delete = function(key) {
-                    if (!key) throw new Error("WeakMap expected key");
-                    var weakmap = this.weakmap;
-                    if (weakmap) try {
-                        weakmap.delete(key);
-                    } catch (err) {
-                        delete this.weakmap;
-                    }
-                    if (this.isSafeToReadWrite(key)) {
-                        var entry = key[this.name];
-                        entry && entry[0] === key && (entry[0] = entry[1] = void 0);
-                    } else {
-                        this._cleanupClosedWindows();
-                        var keys = this.keys, index = safeIndexOf(keys, key);
-                        if (-1 !== index) {
-                            keys.splice(index, 1);
-                            this.values.splice(index, 1);
-                        }
-                    }
-                };
-                CrossDomainSafeWeakMap.prototype.has = function(key) {
-                    if (!key) throw new Error("WeakMap expected key");
-                    var weakmap = this.weakmap;
-                    if (weakmap) try {
-                        return weakmap.has(key);
-                    } catch (err) {
-                        delete this.weakmap;
-                    }
-                    if (this.isSafeToReadWrite(key)) {
-                        var entry = key[this.name];
-                        return !(!entry || entry[0] !== key);
-                    }
-                    this._cleanupClosedWindows();
-                    return -1 !== safeIndexOf(this.keys, key);
-                };
-                return CrossDomainSafeWeakMap;
-            }(), util = __webpack_require__("./src/util.js"), device = __webpack_require__("./src/device.js");
+            var src = __webpack_require__("./node_modules/zalgo-promise/src/index.js"), cross_domain_utils_src = __webpack_require__("./node_modules/cross-domain-utils/src/index.js"), cross_domain_safe_weakmap_src = __webpack_require__("./node_modules/cross-domain-safe-weakmap/src/index.js"), util = __webpack_require__("./src/util.js"), device = __webpack_require__("./src/device.js");
             __webpack_exports__.F = isDocumentReady;
             __webpack_exports__.Z = urlEncode;
             __webpack_exports__._3 = function waitForWindowReady() {
@@ -802,26 +816,18 @@
                 return parseQuery(window.location.search.slice(1))[name];
             };
             __webpack_exports__._0 = urlWillRedirectPage;
+            __webpack_exports__.s = formatQuery;
+            __webpack_exports__.p = extendQuery;
             __webpack_exports__.q = function(url) {
-                var params = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {}, hasHash = url.indexOf("#") > 0, _url$split = url.split("#"), serverUrl = _url$split[0], hash = _url$split[1];
-                if (hash && !serverUrl) {
-                    var _ref = [ "#" + hash, "" ];
-                    serverUrl = _ref[0];
-                    hash = _ref[1];
-                }
-                var _serverUrl$split = serverUrl.split("?"), originalUrl = _serverUrl$split[0], originalQueryString = _serverUrl$split[1];
-                if (originalQueryString) {
-                    var originalQuery = parseQuery(originalQueryString);
-                    for (var _key in originalQuery) params.hasOwnProperty(_key) || (params[_key] = originalQuery[_key]);
-                }
-                var newQueryString = Object.keys(params).filter(function(key) {
-                    return key && params[key];
-                }).sort().map(function(key) {
-                    return encodeURIComponent(key) + "=" + encodeURIComponent(params[key]);
-                }).join("&"), newUrl = originalUrl;
-                newQueryString && (newUrl = newUrl + "?" + newQueryString);
-                hasHash && (newUrl = newUrl + "#" + (hash || ""));
-                return newUrl;
+                var originalHash, options = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {}, query = options.query || {}, hash = options.hash || {}, originalUrl = void 0, _url$split = url.split("#");
+                originalUrl = _url$split[0];
+                originalHash = _url$split[1];
+                var _originalUrl$split = originalUrl.split("?");
+                originalUrl = _originalUrl$split[0];
+                var queryString = extendQuery(_originalUrl$split[1], query), hashString = extendQuery(originalHash, hash);
+                queryString && (originalUrl = originalUrl + "?" + queryString);
+                hashString && (originalUrl = originalUrl + "#" + hashString);
+                return originalUrl;
             };
             __webpack_exports__.R = function(url) {
                 var win = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : window;
@@ -860,8 +866,8 @@
                     if (13 === event.keyCode) return handler(event);
                 });
             };
-            __webpack_exports__.z = function getScript(_ref2) {
-                var _ref2$host = _ref2.host, host = void 0 === _ref2$host ? window.location.host : _ref2$host, path = _ref2.path;
+            __webpack_exports__.z = function getScript(_ref) {
+                var _ref$host = _ref.host, host = void 0 === _ref$host ? window.location.host : _ref$host, path = _ref.path;
                 return Object(util.t)(getScript, function() {
                     for (var url = "" + host + path, scripts = Array.prototype.slice.call(document.getElementsByTagName("script")), _i4 = 0, _length4 = null == scripts ? 0 : scripts.length; _i4 < _length4; _i4++) {
                         var script = scripts[_i4];
@@ -979,11 +985,6 @@
                     }
                 };
             };
-            __webpack_exports__.s = formatQuery;
-            __webpack_exports__.p = function(originalQuery) {
-                var props = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {};
-                return props && Object.keys(props).length ? formatQuery(_extends({}, parseQuery(originalQuery), props)) : originalQuery;
-            };
             __webpack_exports__.n = function(element) {
                 var timeout = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : 5e3;
                 return new src.a(function(resolve, reject) {
@@ -1016,8 +1017,8 @@
                 };
             };
             __webpack_exports__.Y = trackDimensions;
-            __webpack_exports__.N = function(el, _ref5) {
-                var _ref5$width = _ref5.width, width = void 0 === _ref5$width || _ref5$width, _ref5$height = _ref5.height, height = void 0 === _ref5$height || _ref5$height, _ref5$delay = _ref5.delay, delay = void 0 === _ref5$delay ? 50 : _ref5$delay, _ref5$threshold = _ref5.threshold, threshold = void 0 === _ref5$threshold ? 0 : _ref5$threshold;
+            __webpack_exports__.N = function(el, _ref4) {
+                var _ref4$width = _ref4.width, width = void 0 === _ref4$width || _ref4$width, _ref4$height = _ref4.height, height = void 0 === _ref4$height || _ref4$height, _ref4$delay = _ref4.delay, delay = void 0 === _ref4$delay ? 50 : _ref4$delay, _ref4$threshold = _ref4.threshold, threshold = void 0 === _ref4$threshold ? 0 : _ref4$threshold;
                 return new src.a(function(resolve) {
                     var tracker = trackDimensions(el, {
                         width: width,
@@ -1044,8 +1045,8 @@
                     });
                 });
             };
-            __webpack_exports__.l = function(el, _ref6) {
-                var width = _ref6.width, height = _ref6.height, dimensions = getCurrentDimensions(el);
+            __webpack_exports__.l = function(el, _ref5) {
+                var width = _ref5.width, height = _ref5.height, dimensions = getCurrentDimensions(el);
                 return !(width && dimensions.width !== window.innerWidth || height && dimensions.height !== window.innerHeight);
             };
             __webpack_exports__.i = bindEvents;
@@ -1104,16 +1105,16 @@
                     }
                 }
             };
-            var _extends = Object.assign || function(target) {
+            var _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(obj) {
+                return typeof obj;
+            } : function(obj) {
+                return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+            }, _extends = Object.assign || function(target) {
                 for (var i = 1; i < arguments.length; i++) {
                     var source = arguments[i];
                     for (var key in source) Object.prototype.hasOwnProperty.call(source, key) && (target[key] = source[key]);
                 }
                 return target;
-            }, _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(obj) {
-                return typeof obj;
-            } : function(obj) {
-                return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
             };
             function isDocumentReady() {
                 return Boolean(document.body) && "complete" === document.readyState;
@@ -1148,6 +1149,18 @@
             }
             function urlWillRedirectPage(url) {
                 return -1 === url.indexOf("#") || 0 !== url.indexOf("#") && url.split("#")[0] !== window.location.href.split("#")[0];
+            }
+            function formatQuery() {
+                var obj = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : {};
+                return Object.keys(obj).filter(function(key) {
+                    return "string" == typeof obj[key];
+                }).map(function(key) {
+                    return urlEncode(key) + "=" + urlEncode(obj[key]);
+                }).join("&");
+            }
+            function extendQuery(originalQuery) {
+                var props = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {};
+                return props && Object.keys(props).length ? formatQuery(_extends({}, parseQuery(originalQuery), props)) : originalQuery;
             }
             function enablePerformance() {
                 return Object(util.t)(enablePerformance, function() {
@@ -1199,7 +1212,7 @@
             }
             var awaitFrameLoadPromises = void 0;
             function awaitFrameLoad(frame) {
-                if ((awaitFrameLoadPromises = awaitFrameLoadPromises || new weakmap_CrossDomainSafeWeakMap()).has(frame)) {
+                if ((awaitFrameLoadPromises = awaitFrameLoadPromises || new cross_domain_safe_weakmap_src.a()).has(frame)) {
                     var _promise = awaitFrameLoadPromises.get(frame);
                     if (_promise) return _promise;
                 }
@@ -1222,8 +1235,8 @@
                 options.style && Object(util.n)(element.style, options.style);
                 options.class && (element.className = options.class.join(" "));
                 if (options.attributes) for (var _i6 = 0, _Object$keys2 = Object.keys(options.attributes), _length6 = null == _Object$keys2 ? 0 : _Object$keys2.length; _i6 < _length6; _i6++) {
-                    var _key2 = _Object$keys2[_i6];
-                    element.setAttribute(_key2, options.attributes[_key2]);
+                    var key = _Object$keys2[_i6];
+                    element.setAttribute(key, options.attributes[key]);
                 }
                 options.styleSheet && setStyle(element, options.styleSheet);
                 container && appendChild(container, element);
@@ -1233,29 +1246,21 @@
                 } else element.innerHTML = options.html;
                 return element;
             }
-            function formatQuery() {
-                var obj = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : {};
-                return Object.keys(obj).filter(function(key) {
-                    return "string" == typeof obj[key];
-                }).map(function(key) {
-                    return urlEncode(key) + "=" + urlEncode(obj[key]);
-                }).join("&");
-            }
             function getCurrentDimensions(el) {
                 return {
                     width: el.offsetWidth,
                     height: el.offsetHeight
                 };
             }
-            function trackDimensions(el, _ref4) {
-                var _ref4$width = _ref4.width, width = void 0 === _ref4$width || _ref4$width, _ref4$height = _ref4.height, height = void 0 === _ref4$height || _ref4$height, _ref4$threshold = _ref4.threshold, threshold = void 0 === _ref4$threshold ? 0 : _ref4$threshold, currentDimensions = getCurrentDimensions(el);
+            function trackDimensions(el, _ref3) {
+                var _ref3$width = _ref3.width, width = void 0 === _ref3$width || _ref3$width, _ref3$height = _ref3.height, height = void 0 === _ref3$height || _ref3$height, _ref3$threshold = _ref3.threshold, threshold = void 0 === _ref3$threshold ? 0 : _ref3$threshold, currentDimensions = getCurrentDimensions(el);
                 return {
                     check: function() {
                         var newDimensions = getCurrentDimensions(el);
                         return {
-                            changed: function(one, two, _ref3) {
-                                var _ref3$width = _ref3.width, _ref3$height = _ref3.height, height = void 0 === _ref3$height || _ref3$height, _ref3$threshold = _ref3.threshold, threshold = void 0 === _ref3$threshold ? 0 : _ref3$threshold;
-                                return !(void 0 !== _ref3$width && !_ref3$width || !(Math.abs(one.width - two.width) > threshold)) || !!(height && Math.abs(one.height - two.height) > threshold);
+                            changed: function(one, two, _ref2) {
+                                var _ref2$width = _ref2.width, _ref2$height = _ref2.height, height = void 0 === _ref2$height || _ref2$height, _ref2$threshold = _ref2.threshold, threshold = void 0 === _ref2$threshold ? 0 : _ref2$threshold;
+                                return !(void 0 !== _ref2$width && !_ref2$width || !(Math.abs(one.width - two.width) > threshold)) || !!(height && Math.abs(one.height - two.height) > threshold);
                             }(currentDimensions, newDimensions, {
                                 width: width,
                                 height: height,
@@ -1610,6 +1615,12 @@
             __webpack_require__.d(__webpack_exports__, "urlWillRedirectPage", function() {
                 return __WEBPACK_IMPORTED_MODULE_1__dom__._0;
             });
+            __webpack_require__.d(__webpack_exports__, "formatQuery", function() {
+                return __WEBPACK_IMPORTED_MODULE_1__dom__.s;
+            });
+            __webpack_require__.d(__webpack_exports__, "extendQuery", function() {
+                return __WEBPACK_IMPORTED_MODULE_1__dom__.p;
+            });
             __webpack_require__.d(__webpack_exports__, "extendUrl", function() {
                 return __WEBPACK_IMPORTED_MODULE_1__dom__.q;
             });
@@ -1693,12 +1704,6 @@
             });
             __webpack_require__.d(__webpack_exports__, "addEventListener", function() {
                 return __WEBPACK_IMPORTED_MODULE_1__dom__.c;
-            });
-            __webpack_require__.d(__webpack_exports__, "formatQuery", function() {
-                return __WEBPACK_IMPORTED_MODULE_1__dom__.s;
-            });
-            __webpack_require__.d(__webpack_exports__, "extendQuery", function() {
-                return __WEBPACK_IMPORTED_MODULE_1__dom__.p;
             });
             __webpack_require__.d(__webpack_exports__, "elementStoppedMoving", function() {
                 return __WEBPACK_IMPORTED_MODULE_1__dom__.n;
@@ -1960,7 +1965,7 @@
             });
             var __WEBPACK_IMPORTED_MODULE_8__types__ = __webpack_require__("./src/types.js");
             __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_8__types__);
-            for (var __WEBPACK_IMPORT_KEY__ in __WEBPACK_IMPORTED_MODULE_8__types__) [ "getUserAgent", "isDevice", "isWebView", "isStandAlone", "isFacebookWebView", "isFirefoxIOS", "isEdgeIOS", "isOperaMini", "isAndroid", "isIos", "isGoogleSearchApp", "isQQBrowser", "isIosWebview", "isAndroidWebview", "isIE", "isIECompHeader", "isElectron", "isIEIntranet", "isMacOsCna", "supportsPopups", "isDocumentReady", "urlEncode", "waitForWindowReady", "waitForDocumentReady", "waitForDocumentBody", "parseQuery", "getQueryParam", "urlWillRedirectPage", "extendUrl", "redirect", "hasMetaViewPort", "isElementVisible", "enablePerformance", "getPageRenderTime", "htmlEncode", "isBrowser", "querySelectorAll", "onClick", "getScript", "isLocalStorageEnabled", "getBrowserLocales", "appendChild", "isElement", "getElementSafe", "getElement", "elementReady", "PopupOpenError", "popup", "writeToWindow", "writeElementToWindow", "setStyle", "awaitFrameLoad", "awaitFrameWindow", "createElement", "iframe", "addEventListener", "formatQuery", "extendQuery", "elementStoppedMoving", "getCurrentDimensions", "setOverflow", "trackDimensions", "onDimensionsChange", "dimensionsMatchViewport", "bindEvents", "setVendorCSS", "animate", "makeElementVisible", "makeElementInvisible", "showElement", "hideElement", "destroyElement", "showAndAnimate", "animateAndHide", "addClass", "removeClass", "isElementClosed", "watchElementForClose", "fixScripts", "experiment", "getGlobalNameSpace", "JsxHTMLNode", "JsxHTMLNodeContainer", "jsxToHTML", "jsxRender", "Fragment", "SVG", "placeholderToJSX", "jsxDom", "getStorage", "base64encode", "base64decode", "uniqueID", "getGlobal", "getObjectID", "memoize", "promisify", "inlineMemoize", "noop", "once", "hashStr", "strHashStr", "match", "awaitKey", "stringifyError", "stringifyErrorMessage", "stringify", "domainMatches", "patchMethod", "extend", "values", "perc", "min", "max", "regexMap", "svgToBase64", "objFilter", "identity", "regexTokenize", "promiseDebounce", "safeInterval", "isInteger", "isFloat", "serializePrimitive", "deserializePrimitive", "dotify", "undotify", "eventEmitter", "camelToDasherize", "dasherizeToCamel", "capitalizeFirstLetter", "get", "safeTimeout", "replaceObject", "copyProp", "regex", "regexAll", "isDefined", "cycle", "debounce", "request", "addHeaderBuilder", "default" ].indexOf(__WEBPACK_IMPORT_KEY__) < 0 && function(key) {
+            for (var __WEBPACK_IMPORT_KEY__ in __WEBPACK_IMPORTED_MODULE_8__types__) [ "getUserAgent", "isDevice", "isWebView", "isStandAlone", "isFacebookWebView", "isFirefoxIOS", "isEdgeIOS", "isOperaMini", "isAndroid", "isIos", "isGoogleSearchApp", "isQQBrowser", "isIosWebview", "isAndroidWebview", "isIE", "isIECompHeader", "isElectron", "isIEIntranet", "isMacOsCna", "supportsPopups", "isDocumentReady", "urlEncode", "waitForWindowReady", "waitForDocumentReady", "waitForDocumentBody", "parseQuery", "getQueryParam", "urlWillRedirectPage", "formatQuery", "extendQuery", "extendUrl", "redirect", "hasMetaViewPort", "isElementVisible", "enablePerformance", "getPageRenderTime", "htmlEncode", "isBrowser", "querySelectorAll", "onClick", "getScript", "isLocalStorageEnabled", "getBrowserLocales", "appendChild", "isElement", "getElementSafe", "getElement", "elementReady", "PopupOpenError", "popup", "writeToWindow", "writeElementToWindow", "setStyle", "awaitFrameLoad", "awaitFrameWindow", "createElement", "iframe", "addEventListener", "elementStoppedMoving", "getCurrentDimensions", "setOverflow", "trackDimensions", "onDimensionsChange", "dimensionsMatchViewport", "bindEvents", "setVendorCSS", "animate", "makeElementVisible", "makeElementInvisible", "showElement", "hideElement", "destroyElement", "showAndAnimate", "animateAndHide", "addClass", "removeClass", "isElementClosed", "watchElementForClose", "fixScripts", "experiment", "getGlobalNameSpace", "JsxHTMLNode", "JsxHTMLNodeContainer", "jsxToHTML", "jsxRender", "Fragment", "SVG", "placeholderToJSX", "jsxDom", "getStorage", "base64encode", "base64decode", "uniqueID", "getGlobal", "getObjectID", "memoize", "promisify", "inlineMemoize", "noop", "once", "hashStr", "strHashStr", "match", "awaitKey", "stringifyError", "stringifyErrorMessage", "stringify", "domainMatches", "patchMethod", "extend", "values", "perc", "min", "max", "regexMap", "svgToBase64", "objFilter", "identity", "regexTokenize", "promiseDebounce", "safeInterval", "isInteger", "isFloat", "serializePrimitive", "deserializePrimitive", "dotify", "undotify", "eventEmitter", "camelToDasherize", "dasherizeToCamel", "capitalizeFirstLetter", "get", "safeTimeout", "replaceObject", "copyProp", "regex", "regexAll", "isDefined", "cycle", "debounce", "request", "addHeaderBuilder", "default" ].indexOf(__WEBPACK_IMPORT_KEY__) < 0 && function(key) {
                 __webpack_require__.d(__webpack_exports__, key, function() {
                     return __WEBPACK_IMPORTED_MODULE_8__types__[key];
                 });
@@ -2232,7 +2237,30 @@
                 throw new Error("No global found");
             };
             __webpack_exports__.q = getObjectID;
-            __webpack_exports__.z = memoize;
+            __webpack_exports__.z = function(method) {
+                var _this = this, options = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {}, cacheMap = new __WEBPACK_IMPORTED_MODULE_1_cross_domain_safe_weakmap_src__.a();
+                function memoizedFunction() {
+                    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) args[_key] = arguments[_key];
+                    var cache = cacheMap.getOrSet(options.thisNamespace ? this : method, function() {
+                        return {};
+                    }), key = serializeArgs(args), cacheTime = options.time;
+                    cache[key] && cacheTime && Date.now() - cache[key].time < cacheTime && delete cache[key];
+                    if (cache[key]) return cache[key].value;
+                    memoizedFunction.__calling__ = !0;
+                    var time = Date.now(), value = method.apply(this, arguments);
+                    memoizedFunction.__calling__ = !1;
+                    cache[key] = {
+                        time: time,
+                        value: value
+                    };
+                    return cache[key].value;
+                }
+                memoizedFunction.reset = function() {
+                    cacheMap.delete(options.thisNamespace ? _this : method);
+                };
+                options.name && (memoizedFunction.displayName = options.name + ":memoized");
+                return memoizedFunction;
+            };
             __webpack_exports__.H = function(method) {
                 var options = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {};
                 function promisifiedFunction() {
@@ -2242,10 +2270,8 @@
                 return promisifiedFunction;
             };
             __webpack_exports__.t = function(method, logic) {
-                var args = arguments.length > 2 && void 0 !== arguments[2] ? arguments[2] : [];
-                method.__memoized__ || (method.__memoized__ = memoize(logic));
-                if (method.__memoized__ && method.__memoized__.__calling__) throw new Error("Can not call memoized method recursively");
-                return method.__memoized__.apply(method, args);
+                var args = arguments.length > 2 && void 0 !== arguments[2] ? arguments[2] : [], cache = method.__inline_memoize_cache__ = method.__inline_memoize_cache__ || {}, key = serializeArgs(args);
+                return cache.hasOwnProperty(key) ? cache[key] : cache[key] = logic.apply(void 0, args);
             };
             __webpack_exports__.B = function() {};
             __webpack_exports__.D = function(method) {
@@ -2317,13 +2343,13 @@
             __webpack_exports__.E = function(obj, name, handler) {
                 var original = obj[name];
                 obj[name] = function() {
-                    var _this = this, _arguments = arguments;
+                    var _this2 = this, _arguments = arguments;
                     return handler({
                         context: this,
                         args: Array.prototype.slice.call(arguments),
                         original: original,
                         callOriginal: function() {
-                            return original.apply(_this, _arguments);
+                            return original.apply(_this2, _arguments);
                         }
                     });
                 };
@@ -2331,12 +2357,12 @@
             __webpack_exports__.n = function(obj, source) {
                 if (!source) return obj;
                 if (Object.assign) return Object.assign(obj, source);
-                for (var _key2 in source) source.hasOwnProperty(_key2) && (obj[_key2] = source[_key2]);
+                for (var key in source) source.hasOwnProperty(key) && (obj[key] = source[key]);
                 return obj;
             };
             __webpack_exports__.X = function(obj) {
                 var result = [];
-                for (var _key3 in obj) obj.hasOwnProperty(_key3) && result.push(obj[_key3]);
+                for (var key in obj) obj.hasOwnProperty(key) && result.push(obj[key]);
                 return result;
             };
             __webpack_exports__.F = function(pixels, percentage) {
@@ -2360,7 +2386,7 @@
             };
             __webpack_exports__.C = function(obj) {
                 var filter = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : Boolean, result = {};
-                for (var _key4 in obj) obj.hasOwnProperty(_key4) && filter(obj[_key4], _key4) && (result[_key4] = obj[_key4]);
+                for (var key in obj) obj.hasOwnProperty(key) && filter(obj[key], key) && (result[key] = obj[key]);
                 return result;
             };
             __webpack_exports__.s = function(item) {
@@ -2399,22 +2425,22 @@
             __webpack_exports__.l = function dotify(obj) {
                 var prefix = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : "", newobj = arguments.length > 2 && void 0 !== arguments[2] ? arguments[2] : {};
                 prefix = prefix ? prefix + "." : prefix;
-                for (var _key5 in obj) obj.hasOwnProperty(_key5) && void 0 !== obj[_key5] && null !== obj[_key5] && "function" != typeof obj[_key5] && (obj[_key5] && Array.isArray(obj[_key5]) && obj[_key5].length && obj[_key5].every(function(val) {
+                for (var key in obj) obj.hasOwnProperty(key) && void 0 !== obj[key] && null !== obj[key] && "function" != typeof obj[key] && (obj[key] && Array.isArray(obj[key]) && obj[key].length && obj[key].every(function(val) {
                     return "object" !== (void 0 === val ? "undefined" : _typeof(val));
-                }) ? newobj["" + prefix + _key5 + "[]"] = obj[_key5].join(",") : obj[_key5] && "object" === _typeof(obj[_key5]) ? newobj = dotify(obj[_key5], "" + prefix + _key5, newobj) : newobj["" + prefix + _key5] = serializePrimitive(obj[_key5]));
+                }) ? newobj["" + prefix + key + "[]"] = obj[key].join(",") : obj[key] && "object" === _typeof(obj[key]) ? newobj = dotify(obj[key], "" + prefix + key, newobj) : newobj["" + prefix + key] = serializePrimitive(obj[key]));
                 return newobj;
             };
             __webpack_exports__.V = function(obj) {
                 var result = {};
-                for (var _key6 in obj) if (obj.hasOwnProperty(_key6) && "string" == typeof obj[_key6]) {
-                    var _value = obj[_key6];
-                    if (_key6.match(/^.+\[\]$/)) {
-                        _key6 = _key6.slice(0, _key6.length - 2);
-                        _value = _value.split(",").map(deserializePrimitive);
-                    } else _value = deserializePrimitive(_value);
-                    for (var keyResult = result, parts = _key6.split("."), i = 0; i < parts.length; i++) {
+                for (var key in obj) if (obj.hasOwnProperty(key) && "string" == typeof obj[key]) {
+                    var value = obj[key];
+                    if (key.match(/^.+\[\]$/)) {
+                        key = key.slice(0, key.length - 2);
+                        value = value.split(",").map(deserializePrimitive);
+                    } else value = deserializePrimitive(value);
+                    for (var keyResult = result, parts = key.split("."), i = 0; i < parts.length; i++) {
                         var part = parts[i], isLast = i + 1 === parts.length, isIndex = !isLast && isInteger(parts[i + 1]);
-                        isLast ? keyResult[part] = _value : keyResult = keyResult[part] = keyResult[part] || (isIndex ? [] : {});
+                        isLast ? keyResult[part] = value : keyResult = keyResult[part] = keyResult[part] || (isIndex ? [] : {});
                     }
                 }
                 return result;
@@ -2522,34 +2548,34 @@
                 } else {
                     if ("object" !== (void 0 === item ? "undefined" : _typeof(item)) || null === item) throw new Error("Pass an object or array");
                     var _ret3 = function() {
-                        var result = {}, _loop2 = function(_key7) {
-                            if (!item.hasOwnProperty(_key7)) return "continue";
-                            Object.defineProperty(result, _key7, {
+                        var result = {}, _loop2 = function(key) {
+                            if (!item.hasOwnProperty(key)) return "continue";
+                            Object.defineProperty(result, key, {
                                 configurable: !0,
                                 enumerable: !0,
                                 get: function() {
-                                    var itemKey = fullKey ? fullKey + "." + _key7 : "" + _key7, child = item[_key7], type = void 0 === child ? "undefined" : _typeof(child), replacer = replacers[type];
+                                    var itemKey = fullKey ? fullKey + "." + key : "" + key, child = item[key], type = void 0 === child ? "undefined" : _typeof(child), replacer = replacers[type];
                                     if (replacer) {
-                                        var replaced = replacer(child, _key7, itemKey);
+                                        var replaced = replacer(child, key, itemKey);
                                         if (void 0 !== replaced) {
-                                            result[_key7] = replaced;
-                                            return result[_key7];
+                                            result[key] = replaced;
+                                            return result[key];
                                         }
                                     }
                                     if ("object" === (void 0 === child ? "undefined" : _typeof(child)) && null !== child) {
-                                        result[_key7] = replaceObject(child, replacers, itemKey);
-                                        return result[_key7];
+                                        result[key] = replaceObject(child, replacers, itemKey);
+                                        return result[key];
                                     }
-                                    result[_key7] = child;
-                                    return result[_key7];
+                                    result[key] = child;
+                                    return result[key];
                                 },
                                 set: function(value) {
-                                    delete result[_key7];
-                                    result[_key7] = value;
+                                    delete result[key];
+                                    result[key] = value;
                                 }
                             });
                         };
-                        for (var _key7 in item) _loop2(_key7);
+                        for (var key in item) _loop2(key);
                         return {
                             v: result
                         };
@@ -2584,14 +2610,14 @@
             __webpack_exports__.i = function(method) {
                 var time = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : 100, timeout = void 0;
                 return function() {
-                    var _this2 = this, _arguments2 = arguments;
+                    var _this3 = this, _arguments2 = arguments;
                     clearTimeout(timeout);
                     timeout = setTimeout(function() {
-                        return method.apply(_this2, _arguments2);
+                        return method.apply(_this3, _arguments2);
                     }, time);
                 };
             };
-            var __WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__ = __webpack_require__("./node_modules/zalgo-promise/src/index.js"), _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(obj) {
+            var __WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__ = __webpack_require__("./node_modules/zalgo-promise/src/index.js"), __WEBPACK_IMPORTED_MODULE_1_cross_domain_safe_weakmap_src__ = __webpack_require__("./node_modules/cross-domain-safe-weakmap/src/index.js"), _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(obj) {
                 return typeof obj;
             } : function(obj) {
                 return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
@@ -2607,7 +2633,7 @@
             }
             var objectIDs = void 0;
             function getObjectID(obj) {
-                objectIDs = objectIDs || new WeakMap();
+                objectIDs = objectIDs || new __WEBPACK_IMPORTED_MODULE_1_cross_domain_safe_weakmap_src__.a();
                 if (null === obj || void 0 === obj || "object" !== (void 0 === obj ? "undefined" : _typeof(obj)) && "function" != typeof obj) throw new Error("Invalid object");
                 var uid = objectIDs.get(obj);
                 if (!uid) {
@@ -2616,35 +2642,14 @@
                 }
                 return uid;
             }
-            function memoize(method) {
-                var options = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {}, cache = {};
-                function memoizedFunction() {
-                    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) args[_key] = arguments[_key];
-                    var key = void 0;
-                    try {
-                        key = JSON.stringify(Array.prototype.slice.call(arguments), function(subkey, val) {
-                            return "function" == typeof val ? "memoize[" + getObjectID(val) + "]" : val;
-                        });
-                    } catch (err) {
-                        throw new Error("Arguments not serializable -- can not be used to memoize");
-                    }
-                    var cacheTime = options.time;
-                    cache[key] && cacheTime && Date.now() - cache[key].time < cacheTime && delete cache[key];
-                    if (cache[key]) return cache[key].value;
-                    memoizedFunction.__calling__ = !0;
-                    var time = Date.now(), value = method.apply(this, arguments);
-                    memoizedFunction.__calling__ = !1;
-                    cache[key] = {
-                        time: time,
-                        value: value
-                    };
-                    return cache[key].value;
+            function serializeArgs(args) {
+                try {
+                    return JSON.stringify(Array.prototype.slice.call(args), function(subkey, val) {
+                        return "function" == typeof val ? "memoize[" + getObjectID(val) + "]" : val;
+                    });
+                } catch (err) {
+                    throw new Error("Arguments not serializable -- can not be used to memoize");
                 }
-                memoizedFunction.reset = function() {
-                    cache = {};
-                };
-                options.name && (memoizedFunction.displayName = options.name + ":memoized");
-                return memoizedFunction;
             }
             function match(str, pattern) {
                 var regmatch = str.match(pattern);
