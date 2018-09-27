@@ -108,43 +108,51 @@ export function urlWillRedirectPage(url : string) : boolean {
     return true;
 }
 
-export function extendUrl(url : string, params : { [key : string] : string } = {}) : string {
+export function formatQuery(obj : { [ string ] : string } = {}) : string {
 
-    let hasHash = url.indexOf('#') > 0;
-
-    let [ serverUrl, hash ] = url.split('#');
-
-    if (hash && !serverUrl) {
-        [ serverUrl, hash ] = [ `#${ hash }`, '' ];
-    }
-
-    let [ originalUrl, originalQueryString ] = serverUrl.split('?');
-
-    if (originalQueryString) {
-        let originalQuery = parseQuery(originalQueryString);
-
-        for (let key in originalQuery) {
-            if (!params.hasOwnProperty(key)) {
-                params[key] = originalQuery[key];
-            }
-        }
-    }
-
-    let newQueryString = Object.keys(params).filter(key => key && params[key]).sort().map(key => {
-        return `${ encodeURIComponent(key) }=${ encodeURIComponent(params[key]) }`;
+    return Object.keys(obj).filter(key => {
+        return typeof obj[key] === 'string';
+    }).map(key => {
+        return `${ urlEncode(key) }=${ urlEncode(obj[key]) }`;
     }).join('&');
+}
 
-    let newUrl = originalUrl;
+export function extendQuery(originalQuery : string, props : { [ string ] : string } = {}) : string {
 
-    if (newQueryString) {
-        newUrl = `${ newUrl }?${ newQueryString }`;
+    if (!props || !Object.keys(props).length) {
+        return originalQuery;
     }
 
-    if (hasHash) {
-        newUrl = `${ newUrl }#${ hash || '' }`;
+    return formatQuery({
+        ...parseQuery(originalQuery),
+        ...props
+    });
+}
+
+export function extendUrl(url : string, options : { query? : { [string] : string }, hash? : { [string] : string } } = {}) : string {
+
+    let query = options.query || {};
+    let hash = options.hash || {};
+
+    let originalUrl;
+    let originalQuery;
+    let originalHash;
+
+    [ originalUrl, originalHash ] = url.split('#');
+    [ originalUrl, originalQuery ] = originalUrl.split('?');
+
+    let queryString = extendQuery(originalQuery, query);
+    let hashString = extendQuery(originalHash, hash);
+
+    if (queryString) {
+        originalUrl = `${ originalUrl }?${ queryString }`;
     }
 
-    return newUrl;
+    if (hashString) {
+        originalUrl = `${ originalUrl }#${ hashString }`;
+    }
+
+    return originalUrl;
 }
 
 export function redirect(url : string, win : CrossDomainWindowType = window) : ZalgoPromise<void> {
@@ -615,27 +623,6 @@ export function addEventListener(obj : HTMLElement, event : string, handler : (e
             obj.removeEventListener(event, handler);
         }
     };
-}
-
-export function formatQuery(obj : { [ string ] : string } = {}) : string {
-
-    return Object.keys(obj).filter(key => {
-        return typeof obj[key] === 'string';
-    }).map(key => {
-        return `${ urlEncode(key) }=${ urlEncode(obj[key]) }`;
-    }).join('&');
-}
-
-export function extendQuery(originalQuery : string, props : { [ string ] : string } = {}) : string {
-
-    if (!props || !Object.keys(props).length) {
-        return originalQuery;
-    }
-
-    return formatQuery({
-        ...parseQuery(originalQuery),
-        ...props
-    });
 }
 
 export function elementStoppedMoving(element : ElementRefType, timeout : number = 5000) : ZalgoPromise<void> {

@@ -23,6 +23,26 @@ describe('memoize cases', () => {
         }
     });
 
+    it('should create a memoized function with a parameter', () => {
+
+        let counter = 0;
+
+        let add = memoize((number) => {
+            counter += number;
+        });
+
+        add(1);
+        add(2);
+        add(2);
+        add(3);
+        add(3);
+        add(3);
+
+        if (counter !== 6) {
+            throw new Error(`Expected counter to be 6, got ${ counter }`);
+        }
+    });
+
     it('should create a self-memoized function', () => {
 
         let counter = 0;
@@ -44,7 +64,29 @@ describe('memoize cases', () => {
         }
     });
 
-    it('should create a self-memoized function and error out when it is called recursively', () => {
+    it('should create a self-memoized function with a parameter', () => {
+
+        let counter = 0;
+
+        let add = (number) => {
+            return inlineMemoize(add, () => {
+                counter += number;
+            }, [ number ]);
+        };
+
+        add(1);
+        add(2);
+        add(2);
+        add(3);
+        add(3);
+        add(3);
+
+        if (counter !== 6) {
+            throw new Error(`Expected counter to be 6, got ${ counter }`);
+        }
+    });
+
+    it('should create a self-memoized function and call recursively', () => {
 
         let counter = 0;
 
@@ -57,16 +99,66 @@ describe('memoize cases', () => {
             });
         };
 
-        let expectedError;
+        add();
 
-        try {
-            add();
-        } catch (err) {
-            expectedError = err;
+        if (counter !== 2) {
+            throw new Error(`Expected counter to be 2, got ${ counter }`);
         }
+    });
 
-        if (!expectedError) {
-            throw new Error(`Expected error to be thrown ${ counter }`);
+    it('should create a memoized function with cache based on this', () => {
+
+        let counter = 0;
+
+        let add = memoize(() => {
+            counter += 1;
+        }, { thisNamespace: true });
+
+        let obj1 = {};
+        let obj2 = {};
+
+        add.call(obj1);
+        add.call(obj1);
+        add.call(obj1);
+        add.call(obj1);
+
+        add.call(obj2);
+        add.call(obj2);
+        add.call(obj2);
+        add.call(obj2);
+
+        if (counter !== 2) {
+            throw new Error(`Expected counter to be 2, got ${ counter }`);
+        }
+    });
+
+    it('should create a memoized function with cache based on this and a parameter', () => {
+
+        let counter = 0;
+
+        let add = memoize((number) => {
+            counter += number;
+        }, { thisNamespace: true });
+
+        let obj1 = {};
+        let obj2 = {};
+
+        add.call(obj1, 1);
+        add.call(obj1, 2);
+        add.call(obj1, 2);
+        add.call(obj1, 3);
+        add.call(obj1, 3);
+        add.call(obj1, 3);
+
+        add.call(obj2, 1);
+        add.call(obj2, 2);
+        add.call(obj2, 2);
+        add.call(obj2, 3);
+        add.call(obj2, 3);
+        add.call(obj2, 3);
+
+        if (counter !== 12) {
+            throw new Error(`Expected counter to be 12, got ${ counter }`);
         }
     });
 });

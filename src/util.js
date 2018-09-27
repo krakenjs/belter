@@ -2,6 +2,7 @@
 /* eslint max-lines: 0 */
 
 import { ZalgoPromise } from 'zalgo-promise/src';
+import { WeakMap } from 'cross-domain-safe-weakmap/src';
 
 import type { CancelableType } from './types';
 
@@ -67,27 +68,28 @@ export function getObjectID(obj : Object) : string {
     return uid;
 }
 
+function serializeArgs(args : Array<mixed>) : string {
+    try {
+        return JSON.stringify(Array.prototype.slice.call(args), (subkey, val) => {
+            if (typeof val === 'function') {
+                return `memoize[${ getObjectID(val) }]`;
+            }
+            return val;
+        });
+    } catch (err) {
+        throw new Error(`Arguments not serializable -- can not be used to memoize`);
+    }
+}
+
 // eslint-disable-next-line flowtype/no-weak-types
-export function memoize<R>(method : (...args : Array<any>) => R, options : { time? : number, name? : string } = {}) : ((...args : Array<any>) => R) {
+export function memoize<R>(method : (...args : Array<any>) => R, options : { time? : number, name? : string, thisNamespace? : boolean } = {}) : ((...args : Array<any>) => R) {
+    let cacheMap = new WeakMap();
 
-    let cache : { [key : string] : { time : number, value : R } } = {};
-
-    // eslint-disable-next-line no-unused-vars, flowtype/no-weak-types
+    // eslint-disable-next-line flowtype/no-weak-types
     function memoizedFunction(...args : Array<any>) : R {
-        let key : string;
+        let cache = cacheMap.getOrSet(options.thisNamespace ? this : method, () => ({}));
 
-        try {
-            key = JSON.stringify(Array.prototype.slice.call(arguments), (subkey, val) => {
-
-                if (typeof val === 'function') {
-                    return `memoize[${ getObjectID(val) }]`;
-                }
-
-                return val;
-            });
-        } catch (err) {
-            throw new Error(`Arguments not serializable -- can not be used to memoize`);
-        }
+        let key : string = serializeArgs(args);
 
         let cacheTime = options.time;
         if (cache[key] && cacheTime && (Date.now() - cache[key].time) < cacheTime) {
@@ -111,7 +113,7 @@ export function memoize<R>(method : (...args : Array<any>) => R, options : { tim
     }
 
     memoizedFunction.reset = () => {
-        cache = {};
+        cacheMap.delete(options.thisNamespace ? this : method);
     };
 
     if (options.name) {
@@ -136,17 +138,15 @@ export function promisify<R>(method : (...args : Array<any>) => R, options : { n
 
 // eslint-disable-next-line flowtype/no-weak-types
 export function inlineMemoize<R>(method : (...args : Array<any>) => R, logic : (...args : Array<any>) => R, args : Array<any> = []) : R {
-    if (!method.__memoized__) {
-        // $FlowFixMe
-        method.__memoized__ = memoize(logic);
-    }
+    let cache = method.__inline_memoize_cache__ = method.__inline_memoize_cache__ || {};
+    let key = serializeArgs(args);
 
-    if (method.__memoized__ && method.__memoized__.__calling__) {
-        throw new Error(`Can not call memoized method recursively`);
+    if (cache.hasOwnProperty(key)) {
+        return cache[key];
     }
-
-    // $FlowFixMe
-    return method.__memoized__(...args);
+    
+    let result = cache[key] = logic(...args);
+    return result;
 }
 
 // eslint-disable-next-line no-unused-vars
