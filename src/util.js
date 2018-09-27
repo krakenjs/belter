@@ -833,3 +833,32 @@ export function debounce<T>(method : (...args : Array<mixed>) => T, time : numbe
         }, time);
     };
 }
+
+export function isRegex(item : mixed) : boolean {
+    return Object.prototype.toString.call(item) === '[object RegExp]';
+}
+
+type FunctionProxy<T : Function> = (method : T) => T;
+
+// eslint-disable-next-line flowtype/no-weak-types
+export let weakMapMemoize : FunctionProxy<*> = <R : mixed>(method : (arg : any) => R) : ((...args : Array<any>) => R) => {
+
+    let weakmap = new WeakMap();
+
+    // eslint-disable-next-line flowtype/no-weak-types
+    return function weakmapMemoized(arg : any) : R {
+        let result = weakmap.get(arg);
+
+        if (typeof result !== 'undefined') {
+            return result;
+        }
+
+        result = method.call(this, arg);
+
+        if (typeof result !== 'undefined') {
+            weakmap.set(arg, result);
+        }
+
+        return result;
+    };
+};
