@@ -648,48 +648,97 @@ export function safeTimeout(method : Function, time : number) {
     }, 100);
 }
 
-export function replaceObject<T : Object | Array<mixed>> (item : T, replacers : { [string] : Function }, fullKey : string = '') : T {
+export function defineLazyProp<T>(obj : Object | Array<mixed>, key : string | number, getter : () => T) {
+    if (Array.isArray(obj)) {
+        if (typeof key !== 'number') {
+            throw new TypeError(`Array key must be number`);
+        }
+    } else if (typeof obj === 'object' && obj !== null) {
+        if (typeof key !== 'string') {
+            throw new TypeError(`Object key must be string`);
+        }
+    }
+    
+    Object.defineProperty(obj, key, {
+        configurable: true,
+        enumerable:   true,
+        get:          () => {
+            // $FlowFixMe
+            delete obj[key];
+            let value = getter();
+            // $FlowFixMe
+            obj[key] = value;
+            return value;
+        },
+        set: (value : T) => {
+            // $FlowFixMe
+            delete obj[key];
+            // $FlowFixMe
+            obj[key] = value;
+        }
+    });
+}
+
+export function isObject(item : mixed) : boolean {
+    return (typeof item === 'object' && item !== null);
+}
+
+export function isObjectObject(obj : mixed) : boolean {
+    return isObject(obj) && Object.prototype.toString.call(obj) === '[object Object]';
+}
+
+export function isPlainObject(obj : mixed) : boolean {
+    if (!isObjectObject(obj)) {
+        return false;
+    }
+
+    // $FlowFixMe
+    let constructor = obj.constructor;
+
+    if (typeof constructor !== 'function') {
+        return false;
+    }
+
+    let prototype = constructor.prototype;
+
+    if (!isObjectObject(prototype)) {
+        return false;
+    }
+
+    if (!prototype.hasOwnProperty('isPrototypeOf')) {
+        return false;
+    }
+
+    return true;
+}
+
+export function replaceObject<T : Object | Array<mixed>> (item : T, replacer : (mixed, string | number, string) => mixed, fullKey : string = '') : T {
 
     if (Array.isArray(item)) {
         let length = item.length;
         let result = [];
 
         for (let i = 0; i < length; i++) {
-            Object.defineProperty(result, i, {
-                configurable: true,
-                enumerable:   true,
-                get:          () => {
-                    let itemKey = fullKey ? `${ fullKey }.${ i }` : `${ i }`;
-                    let child = item[i];
 
-                    let type = (typeof child);
-                    let replacer = replacers[type];
-                    if (replacer) {
-                        let replaced = replacer(child, i, itemKey);
-                        if (typeof replaced !== 'undefined') {
-                            result[i] = replaced;
-                            return result[i];
-                        }
-                    }
+            
+            defineLazyProp(result, i, () => {
+                let itemKey = fullKey ? `${ fullKey }.${ i }` : `${ i }`;
+                let el = item[i];
 
-                    if (typeof child === 'object' && child !== null) {
-                        result[i] = replaceObject(child, replacers, itemKey);
-                        return result[i];
-                    }
+                let child = replacer(el, i, itemKey);
 
-                    result[i] = child;
-                    return result[i];
-                },
-                set: (value) => {
-                    delete result[i];
-                    result[i] = value;
+                if (isPlainObject(child) || Array.isArray(child)) {
+                    // $FlowFixMe
+                    child = replaceObject(child, replacer, itemKey);
                 }
+
+                return child;
             });
         }
 
         // $FlowFixMe
         return result;
-    } else if (typeof item === 'object' && item !== null) {
+    } else if (isPlainObject(item)) {
         let result = {};
 
         for (let key in item) {
@@ -697,36 +746,19 @@ export function replaceObject<T : Object | Array<mixed>> (item : T, replacers : 
                 continue;
             }
 
-            Object.defineProperty(result, key, {
-                configurable: true,
-                enumerable:   true,
-                get:          () => {
-                    let itemKey = fullKey ? `${ fullKey }.${ key }` : `${ key }`;
+            defineLazyProp(result, key, () => {
+                let itemKey = fullKey ? `${ fullKey }.${ key }` : `${ key }`;
+                // $FlowFixMe
+                let el = item[key];
+
+                let child = replacer(el, key, itemKey);
+
+                if (isPlainObject(child) || Array.isArray(child)) {
                     // $FlowFixMe
-                    let child = item[key];
-
-                    let type = (typeof child);
-                    let replacer = replacers[type];
-                    if (replacer) {
-                        let replaced = replacer(child, key, itemKey);
-                        if (typeof replaced !== 'undefined') {
-                            result[key] = replaced;
-                            return result[key];
-                        }
-                    }
-
-                    if (typeof child === 'object' && child !== null) {
-                        result[key] = replaceObject(child, replacers, itemKey);
-                        return result[key];
-                    }
-
-                    result[key] = child;
-                    return result[key];
-                },
-                set: (value) => {
-                    delete result[key];
-                    result[key] = value;
+                    child = replaceObject(child, replacer, itemKey);
                 }
+
+                return child;
             });
         }
 
