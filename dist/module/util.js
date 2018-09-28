@@ -664,114 +664,133 @@ export function safeTimeout(method, time) {
     }, 100);
 }
 
-export function replaceObject(item, replacers) {
+export function defineLazyProp(obj, key, getter) {
+    if (Array.isArray(obj)) {
+        if (typeof key !== 'number') {
+            throw new TypeError('Array key must be number');
+        }
+    } else if ((typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) === 'object' && obj !== null) {
+        if (typeof key !== 'string') {
+            throw new TypeError('Object key must be string');
+        }
+    }
+
+    Object.defineProperty(obj, key, {
+        configurable: true,
+        enumerable: true,
+        get: function get() {
+            // $FlowFixMe
+            delete obj[key];
+            var value = getter();
+            // $FlowFixMe
+            obj[key] = value;
+            return value;
+        },
+        set: function set(value) {
+            // $FlowFixMe
+            delete obj[key];
+            // $FlowFixMe
+            obj[key] = value;
+        }
+    });
+}
+
+export function isObject(item) {
+    return (typeof item === 'undefined' ? 'undefined' : _typeof(item)) === 'object' && item !== null;
+}
+
+export function isObjectObject(obj) {
+    return isObject(obj) && Object.prototype.toString.call(obj) === '[object Object]';
+}
+
+export function isPlainObject(obj) {
+    if (!isObjectObject(obj)) {
+        return false;
+    }
+
+    // $FlowFixMe
+    var constructor = obj.constructor;
+
+    if (typeof constructor !== 'function') {
+        return false;
+    }
+
+    var prototype = constructor.prototype;
+
+    if (!isObjectObject(prototype)) {
+        return false;
+    }
+
+    if (!prototype.hasOwnProperty('isPrototypeOf')) {
+        return false;
+    }
+
+    return true;
+}
+
+export function replaceObject(item, replacer) {
     var fullKey = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
 
 
     if (Array.isArray(item)) {
-        var _ret = function () {
-            var length = item.length;
-            var result = [];
+        var _length3 = item.length;
+        var result = [];
 
-            var _loop = function _loop(i) {
-                Object.defineProperty(result, i, {
-                    configurable: true,
-                    enumerable: true,
-                    get: function get() {
-                        var itemKey = fullKey ? fullKey + '.' + i : '' + i;
-                        var child = item[i];
+        var _loop = function _loop(i) {
 
-                        var type = typeof child === 'undefined' ? 'undefined' : _typeof(child);
-                        var replacer = replacers[type];
-                        if (replacer) {
-                            var replaced = replacer(child, i, itemKey);
-                            if (typeof replaced !== 'undefined') {
-                                result[i] = replaced;
-                                return result[i];
-                            }
-                        }
+            defineLazyProp(result, i, function () {
+                var itemKey = fullKey ? fullKey + '.' + i : '' + i;
+                var el = item[i];
 
-                        if ((typeof child === 'undefined' ? 'undefined' : _typeof(child)) === 'object' && child !== null) {
-                            result[i] = replaceObject(child, replacers, itemKey);
-                            return result[i];
-                        }
+                var child = replacer(el, i, itemKey);
 
-                        result[i] = child;
-                        return result[i];
-                    },
-                    set: function set(value) {
-                        delete result[i];
-                        result[i] = value;
-                    }
-                });
-            };
-
-            for (var i = 0; i < length; i++) {
-                _loop(i);
-            }
-
-            // $FlowFixMe
-            return {
-                v: result
-            };
-        }();
-
-        if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
-    } else if ((typeof item === 'undefined' ? 'undefined' : _typeof(item)) === 'object' && item !== null) {
-        var _ret3 = function () {
-            var result = {};
-
-            var _loop2 = function _loop2(key) {
-                if (!item.hasOwnProperty(key)) {
-                    return 'continue';
+                if (isPlainObject(child) || Array.isArray(child)) {
+                    // $FlowFixMe
+                    child = replaceObject(child, replacer, itemKey);
                 }
 
-                Object.defineProperty(result, key, {
-                    configurable: true,
-                    enumerable: true,
-                    get: function get() {
-                        var itemKey = fullKey ? fullKey + '.' + key : '' + key;
-                        // $FlowFixMe
-                        var child = item[key];
+                return child;
+            });
+        };
 
-                        var type = typeof child === 'undefined' ? 'undefined' : _typeof(child);
-                        var replacer = replacers[type];
-                        if (replacer) {
-                            var replaced = replacer(child, key, itemKey);
-                            if (typeof replaced !== 'undefined') {
-                                result[key] = replaced;
-                                return result[key];
-                            }
-                        }
+        for (var i = 0; i < _length3; i++) {
+            _loop(i);
+        }
 
-                        if ((typeof child === 'undefined' ? 'undefined' : _typeof(child)) === 'object' && child !== null) {
-                            result[key] = replaceObject(child, replacers, itemKey);
-                            return result[key];
-                        }
+        // $FlowFixMe
+        return result;
+    } else if (isPlainObject(item)) {
+        var _result = {};
 
-                        result[key] = child;
-                        return result[key];
-                    },
-                    set: function set(value) {
-                        delete result[key];
-                        result[key] = value;
-                    }
-                });
-            };
-
-            for (var key in item) {
-                var _ret4 = _loop2(key);
-
-                if (_ret4 === 'continue') continue;
+        var _loop2 = function _loop2(key) {
+            if (!item.hasOwnProperty(key)) {
+                return 'continue';
             }
 
-            // $FlowFixMe
-            return {
-                v: result
-            };
-        }();
+            defineLazyProp(_result, key, function () {
+                var itemKey = fullKey ? fullKey + '.' + key : '' + key;
+                // $FlowFixMe
+                var el = item[key];
 
-        if ((typeof _ret3 === 'undefined' ? 'undefined' : _typeof(_ret3)) === "object") return _ret3.v;
+                var child = replacer(el, key, itemKey);
+
+                if (isPlainObject(child) || Array.isArray(child)) {
+                    // $FlowFixMe
+                    child = replaceObject(child, replacer, itemKey);
+                }
+
+                return child;
+            });
+        };
+
+        for (var key in item) {
+            var _ret2 = _loop2(key);
+
+            if (_ret2 === 'continue') continue;
+        }
+
+        // $FlowFixMe
+        return _result;
     } else {
         throw new Error('Pass an object or array');
     }
