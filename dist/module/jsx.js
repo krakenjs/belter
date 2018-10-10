@@ -25,7 +25,7 @@ var JSX_EVENTS = {
 function htmlEncode() {
     var html = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
 
-    return html.toString().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/\//g, '&#x2F;');
+    return html.toString().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#x27;').replace(/\//g, '&#x2F;');
 }
 
 export var JsxHTMLNode = function () {
@@ -124,23 +124,26 @@ export var JsxHTMLNodeContainer = function (_JsxHTMLNode) {
     return JsxHTMLNodeContainer;
 }(JsxHTMLNode);
 
-export function jsxToHTML(element) {
-    var props = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-
+export var jsxToHTML = function jsxToHTML(element, props) {
     for (var _len = arguments.length, children = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
         children[_key - 2] = arguments[_key];
     }
 
+    // $FlowFixMe
+    var objProps = props || {};
+
     if (typeof element === 'string') {
-        return new JsxHTMLNode(element, props, children);
+        // $FlowFixMe
+        return new JsxHTMLNode(element, objProps, children);
     }
 
     if (typeof element === 'function') {
-        return element(props, children);
+        // $FlowFixMe
+        return element(objProps, children);
     }
 
     throw new TypeError('Expected jsx Element to be a string or a function');
-}
+};
 
 export function jsxRender(template, renderers) {
 

@@ -2026,7 +2026,9 @@
             __webpack_require__.d(__webpack_exports__, "c", function() {
                 return JsxHTMLNodeContainer;
             });
-            __webpack_exports__.g = jsxToHTML;
+            __webpack_require__.d(__webpack_exports__, "g", function() {
+                return jsxToHTML;
+            });
             __webpack_exports__.f = function(template, renderers) {
                 var nodes = Object(__WEBPACK_IMPORTED_MODULE_0__util__.P)(template, /\{\s*([a-z]+)(?::\s*([^} ]+))?\s*\}|([^${}]+)/g, function(match, type, value, text) {
                     if (type) {
@@ -2106,7 +2108,7 @@
                 onClick: "click"
             };
             function htmlEncode() {
-                return (arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : "").toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;").replace(/\//g, "&#x2F;");
+                return (arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : "").toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#x27;").replace(/\//g, "&#x2F;");
             }
             var JsxHTMLNode = function() {
                 function JsxHTMLNode(name, props, children) {
@@ -2169,13 +2171,13 @@
                     return this.childrenToString();
                 };
                 return JsxHTMLNodeContainer;
-            }(JsxHTMLNode);
-            function jsxToHTML(element) {
-                for (var props = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {}, _len = arguments.length, children = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) children[_key - 2] = arguments[_key];
-                if ("string" == typeof element) return new JsxHTMLNode(element, props, children);
-                if ("function" == typeof element) return element(props, children);
+            }(JsxHTMLNode), jsxToHTML = function(element, props) {
+                for (var _len = arguments.length, children = Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) children[_key - 2] = arguments[_key];
+                var objProps = props || {};
+                if ("string" == typeof element) return new JsxHTMLNode(element, objProps, children);
+                if ("function" == typeof element) return element(objProps, children);
                 throw new TypeError("Expected jsx Element to be a string or a function");
-            }
+            };
         },
         "./src/storage.js": function(module, __webpack_exports__, __webpack_require__) {
             "use strict";
