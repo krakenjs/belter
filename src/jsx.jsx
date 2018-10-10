@@ -9,8 +9,8 @@ const JSX_EVENTS = {
 };
 
 // eslint-disable-next-line no-use-before-define
-type ChildType = $ReadOnlyArray<ChildType> | JsxHTMLNode | string | void | null;
-export type ChildrenType = $ReadOnlyArray<ChildType>;
+export type JsxChildType = $ReadOnlyArray<JsxChildType> | JsxHTMLNode | string | void | null;
+export type JsxChildrenType = $ReadOnlyArray<JsxChildType>;
 
 export type PropsType = {
     class? : string,
@@ -25,16 +25,16 @@ function htmlEncode(html : string = '') : string {
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
-        .replace(/'/g, '&#39;')
+        .replace(/'/g, '&#x27;')
         .replace(/\//g, '&#x2F;');
 }
 
 export class JsxHTMLNode {
     name : string
     props : ?PropsType
-    children : ChildrenType
+    children : JsxChildrenType
 
-    constructor(name : string, props : ?PropsType, children : ChildrenType) {
+    constructor(name : string, props : ?PropsType, children : JsxChildrenType) {
         this.name = name;
         this.props = props;
         this.children = children;
@@ -111,7 +111,7 @@ export class JsxHTMLNode {
 export class JsxHTMLNodeContainer extends JsxHTMLNode {
 
 
-    constructor(children : ChildrenType) {
+    constructor(children : JsxChildrenType) {
         super('', {}, children);
     }
 
@@ -120,13 +120,23 @@ export class JsxHTMLNodeContainer extends JsxHTMLNode {
     }
 }
 
-export function jsxToHTML(element : mixed, props : ?PropsType = {}, ...children : ChildrenType) : JsxHTMLNode {
+type JSXRenderer = 
+    (<P : PropsType, C : JsxChildrenType, R : JsxHTMLNode>(element : string, props : P | null, ...children : C) => R) &
+    (<P : PropsType, C : JsxChildrenType, R : JsxChildType>(element : (P, C) => R, props : P | null, ...children : C) => R);
+
+export let jsxToHTML : JSXRenderer = (element, props, ...children) => {
+    
+    // $FlowFixMe
+    let objProps : P = props || {};
+    
     if (typeof element === 'string') {
-        return new JsxHTMLNode(element, props, children);
+        // $FlowFixMe
+        return new JsxHTMLNode(element, objProps, children);
     }
 
     if (typeof element === 'function') {
-        return element(props, children);
+        // $FlowFixMe
+        return element(objProps, children);
     }
     
     throw new TypeError(`Expected jsx Element to be a string or a function`);
@@ -161,7 +171,7 @@ export function jsxRender(template : string, renderers : { [string] : (string) =
     return new JsxHTMLNodeContainer(nodes);
 }
 
-export function Fragment(props : PropsType, children : ChildrenType) : JsxHTMLNode {
+export function Fragment(props : PropsType, children : JsxChildrenType) : JsxHTMLNode {
     return new JsxHTMLNodeContainer(children);
 }
 
