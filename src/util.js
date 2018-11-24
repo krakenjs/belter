@@ -894,3 +894,13 @@ export let weakMapMemoize : FunctionProxy<*> = <R : mixed>(method : (arg : any) 
         return result;
     };
 };
+
+export function getOrSet<O : Object, T : mixed>(obj : O, key : string, getter : () => T) : T {
+    if (obj.hasOwnProperty(key)) {
+        return obj[key];
+    }
+
+    const val = getter();
+    obj[key] = val;
+    return val;
+}
