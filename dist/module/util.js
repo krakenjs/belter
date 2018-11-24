@@ -917,3 +917,13 @@ export var weakMapMemoize = function weakMapMemoize(method) {
         return result;
     };
 };
+
+export function getOrSet(obj, key, getter) {
+    if (obj.hasOwnProperty(key)) {
+        return obj[key];
+    }
+
+    var val = getter();
+    obj[key] = val;
+    return val;
+}
