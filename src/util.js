@@ -879,19 +879,24 @@ export let weakMapMemoize : FunctionProxy<*> = <R : mixed>(method : (arg : any) 
 
     // eslint-disable-next-line flowtype/no-weak-types
     return function weakmapMemoized(arg : any) : R {
-        let result = weakmap.get(arg);
+        return weakmap.getOrSet(arg, () => method.call(this, arg));
+    };
+};
 
-        if (typeof result !== 'undefined') {
-            return result;
-        }
+type FunctionPromiseProxy<R : mixed, T : (...args : $ReadOnlyArray<mixed>) => ZalgoPromise<R>> = (T) => T;
 
-        result = method.call(this, arg);
+// eslint-disable-next-line flowtype/no-weak-types
+export let weakMapMemoizePromise : FunctionPromiseProxy<*, *> = <R : mixed>(method : (arg : any) => ZalgoPromise<R>) : ((...args : Array<any>) => ZalgoPromise<R>) => {
 
-        if (typeof result !== 'undefined') {
-            weakmap.set(arg, result);
-        }
+    let weakmap = new WeakMap();
 
-        return result;
+    // eslint-disable-next-line flowtype/no-weak-types
+    return function weakmapMemoizedPromise(arg : any) : ZalgoPromise<R> {
+        return weakmap.getOrSet(arg, () =>
+            method.call(this, arg).finally(() => {
+                weakmap.delete(arg);
+            })
+        );
     };
 };
 
