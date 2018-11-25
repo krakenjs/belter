@@ -902,19 +902,28 @@ export var weakMapMemoize = function weakMapMemoize(method) {
 
     // eslint-disable-next-line flowtype/no-weak-types
     return function weakmapMemoized(arg) {
-        var result = weakmap.get(arg);
+        var _this4 = this;
 
-        if (typeof result !== 'undefined') {
-            return result;
-        }
+        return weakmap.getOrSet(arg, function () {
+            return method.call(_this4, arg);
+        });
+    };
+};
 
-        result = method.call(this, arg);
+// eslint-disable-next-line flowtype/no-weak-types
+export var weakMapMemoizePromise = function weakMapMemoizePromise(method) {
 
-        if (typeof result !== 'undefined') {
-            weakmap.set(arg, result);
-        }
+    var weakmap = new WeakMap();
 
-        return result;
+    // eslint-disable-next-line flowtype/no-weak-types
+    return function weakmapMemoizedPromise(arg) {
+        var _this5 = this;
+
+        return weakmap.getOrSet(arg, function () {
+            return method.call(_this5, arg)['finally'](function () {
+                weakmap['delete'](arg);
+            });
+        });
     };
 };
 

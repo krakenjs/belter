@@ -184,6 +184,20 @@
                 return weakmap_CrossDomainSafeWeakMap;
             });
         },
+        "./node_modules/cross-domain-utils/src/constants.js": function(module, __webpack_exports__, __webpack_require__) {
+            "use strict";
+            __webpack_require__.d(__webpack_exports__, "a", function() {
+                return PROTOCOL;
+            });
+            __webpack_require__.d(__webpack_exports__, "b", function() {
+                return WILDCARD;
+            });
+            var PROTOCOL = {
+                MOCK: "mock:",
+                FILE: "file:",
+                ABOUT: "about:"
+            }, WILDCARD = "*";
+        },
         "./node_modules/cross-domain-utils/src/index.js": function(module, __webpack_exports__, __webpack_require__) {
             "use strict";
             var __WEBPACK_IMPORTED_MODULE_0__utils__ = __webpack_require__("./node_modules/cross-domain-utils/src/utils.js");
@@ -197,11 +211,12 @@
                 return __WEBPACK_IMPORTED_MODULE_0__utils__.c;
             });
             var __WEBPACK_IMPORTED_MODULE_1__types__ = __webpack_require__("./node_modules/cross-domain-utils/src/types.js");
-            __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__types__);
+            __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__types__), __webpack_require__("./node_modules/cross-domain-utils/src/constants.js");
         },
         "./node_modules/cross-domain-utils/src/types.js": function(module, exports) {},
         "./node_modules/cross-domain-utils/src/utils.js": function(module, __webpack_exports__, __webpack_require__) {
             "use strict";
+            var constants = __webpack_require__("./node_modules/cross-domain-utils/src/constants.js");
             __webpack_exports__.b = isWindowClosed;
             __webpack_exports__.c = function(frame) {
                 !function() {
@@ -257,14 +272,9 @@
                 }
                 return !1;
             };
-            var CONSTANTS = {
-                MOCK_PROTOCOL: "mock:",
-                FILE_PROTOCOL: "file:",
-                ABOUT_PROTOCOL: "about:",
-                WILDCARD: "*"
-            }, IE_WIN_ACCESS_ERROR = "Call was rejected by callee.\r\n";
+            var IE_WIN_ACCESS_ERROR = "Call was rejected by callee.\r\n";
             function isAboutProtocol() {
-                return (arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : window).location.protocol === CONSTANTS.ABOUT_PROTOCOL;
+                return (arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : window).location.protocol === constants.a.ABOUT;
             }
             function canReadFromWindow(win) {
                 try {
@@ -278,14 +288,14 @@
                 if (!location) throw new Error("Can not read window location");
                 var protocol = location.protocol;
                 if (!protocol) throw new Error("Can not read window protocol");
-                if (protocol === CONSTANTS.FILE_PROTOCOL) return CONSTANTS.FILE_PROTOCOL + "//";
-                if (protocol === CONSTANTS.ABOUT_PROTOCOL) {
+                if (protocol === constants.a.FILE) return constants.a.FILE + "//";
+                if (protocol === constants.a.ABOUT) {
                     var parent = function(win) {
                         if (win) try {
                             if (win.parent && win.parent !== win) return win.parent;
                         } catch (err) {}
                     }(win);
-                    return parent && canReadFromWindow(parent) ? getActualDomain(parent) : CONSTANTS.ABOUT_PROTOCOL + "//";
+                    return parent && canReadFromWindow(parent) ? getActualDomain(parent) : constants.a.ABOUT + "//";
                 }
                 var host = location.host;
                 if (!host) throw new Error("Can not read window host");
@@ -293,7 +303,7 @@
             }
             function getDomain(win) {
                 var domain = getActualDomain(win = win || window);
-                return domain && win.mockDomain && 0 === win.mockDomain.indexOf(CONSTANTS.MOCK_PROTOCOL) ? win.mockDomain : domain;
+                return domain && win.mockDomain && 0 === win.mockDomain.indexOf(constants.a.MOCK) ? win.mockDomain : domain;
             }
             function isFrameWindowClosed(frame) {
                 if (!frame.contentWindow) return !0;
@@ -1949,6 +1959,9 @@
             __webpack_require__.d(__webpack_exports__, "weakMapMemoize", function() {
                 return __WEBPACK_IMPORTED_MODULE_5__util__._4;
             });
+            __webpack_require__.d(__webpack_exports__, "weakMapMemoizePromise", function() {
+                return __WEBPACK_IMPORTED_MODULE_5__util__._5;
+            });
             __webpack_require__.d(__webpack_exports__, "getOrSet", function() {
                 return __WEBPACK_IMPORTED_MODULE_5__util__.s;
             });
@@ -1961,7 +1974,7 @@
             });
             var __WEBPACK_IMPORTED_MODULE_7__types__ = __webpack_require__("./src/types.js");
             __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__types__);
-            for (var __WEBPACK_IMPORT_KEY__ in __WEBPACK_IMPORTED_MODULE_7__types__) [ "getUserAgent", "isDevice", "isWebView", "isStandAlone", "isFacebookWebView", "isFirefoxIOS", "isEdgeIOS", "isOperaMini", "isAndroid", "isIos", "isGoogleSearchApp", "isQQBrowser", "isIosWebview", "isAndroidWebview", "isIE", "isIECompHeader", "isElectron", "isIEIntranet", "isMacOsCna", "supportsPopups", "isDocumentReady", "urlEncode", "waitForWindowReady", "waitForDocumentReady", "waitForDocumentBody", "parseQuery", "getQueryParam", "urlWillRedirectPage", "formatQuery", "extendQuery", "extendUrl", "redirect", "hasMetaViewPort", "isElementVisible", "enablePerformance", "getPageRenderTime", "htmlEncode", "isBrowser", "querySelectorAll", "onClick", "getScript", "isLocalStorageEnabled", "getBrowserLocales", "appendChild", "isElement", "getElementSafe", "getElement", "elementReady", "PopupOpenError", "popup", "writeToWindow", "writeElementToWindow", "setStyle", "awaitFrameLoad", "awaitFrameWindow", "createElement", "iframe", "addEventListener", "elementStoppedMoving", "getCurrentDimensions", "setOverflow", "trackDimensions", "onDimensionsChange", "dimensionsMatchViewport", "bindEvents", "setVendorCSS", "animate", "makeElementVisible", "makeElementInvisible", "showElement", "hideElement", "destroyElement", "showAndAnimate", "animateAndHide", "addClass", "removeClass", "isElementClosed", "watchElementForClose", "fixScripts", "experiment", "getGlobalNameSpace", "getStorage", "base64encode", "base64decode", "uniqueID", "getGlobal", "getObjectID", "memoize", "promisify", "inlineMemoize", "noop", "once", "hashStr", "strHashStr", "match", "awaitKey", "stringifyError", "stringifyErrorMessage", "stringify", "domainMatches", "patchMethod", "extend", "values", "perc", "min", "max", "regexMap", "svgToBase64", "objFilter", "identity", "regexTokenize", "promiseDebounce", "safeInterval", "isInteger", "isFloat", "serializePrimitive", "deserializePrimitive", "dotify", "undotify", "eventEmitter", "camelToDasherize", "dasherizeToCamel", "capitalizeFirstLetter", "get", "safeTimeout", "defineLazyProp", "isObject", "isObjectObject", "isPlainObject", "replaceObject", "copyProp", "regex", "regexAll", "isDefined", "cycle", "debounce", "isRegex", "weakMapMemoize", "getOrSet", "request", "addHeaderBuilder", "default" ].indexOf(__WEBPACK_IMPORT_KEY__) < 0 && function(key) {
+            for (var __WEBPACK_IMPORT_KEY__ in __WEBPACK_IMPORTED_MODULE_7__types__) [ "getUserAgent", "isDevice", "isWebView", "isStandAlone", "isFacebookWebView", "isFirefoxIOS", "isEdgeIOS", "isOperaMini", "isAndroid", "isIos", "isGoogleSearchApp", "isQQBrowser", "isIosWebview", "isAndroidWebview", "isIE", "isIECompHeader", "isElectron", "isIEIntranet", "isMacOsCna", "supportsPopups", "isDocumentReady", "urlEncode", "waitForWindowReady", "waitForDocumentReady", "waitForDocumentBody", "parseQuery", "getQueryParam", "urlWillRedirectPage", "formatQuery", "extendQuery", "extendUrl", "redirect", "hasMetaViewPort", "isElementVisible", "enablePerformance", "getPageRenderTime", "htmlEncode", "isBrowser", "querySelectorAll", "onClick", "getScript", "isLocalStorageEnabled", "getBrowserLocales", "appendChild", "isElement", "getElementSafe", "getElement", "elementReady", "PopupOpenError", "popup", "writeToWindow", "writeElementToWindow", "setStyle", "awaitFrameLoad", "awaitFrameWindow", "createElement", "iframe", "addEventListener", "elementStoppedMoving", "getCurrentDimensions", "setOverflow", "trackDimensions", "onDimensionsChange", "dimensionsMatchViewport", "bindEvents", "setVendorCSS", "animate", "makeElementVisible", "makeElementInvisible", "showElement", "hideElement", "destroyElement", "showAndAnimate", "animateAndHide", "addClass", "removeClass", "isElementClosed", "watchElementForClose", "fixScripts", "experiment", "getGlobalNameSpace", "getStorage", "base64encode", "base64decode", "uniqueID", "getGlobal", "getObjectID", "memoize", "promisify", "inlineMemoize", "noop", "once", "hashStr", "strHashStr", "match", "awaitKey", "stringifyError", "stringifyErrorMessage", "stringify", "domainMatches", "patchMethod", "extend", "values", "perc", "min", "max", "regexMap", "svgToBase64", "objFilter", "identity", "regexTokenize", "promiseDebounce", "safeInterval", "isInteger", "isFloat", "serializePrimitive", "deserializePrimitive", "dotify", "undotify", "eventEmitter", "camelToDasherize", "dasherizeToCamel", "capitalizeFirstLetter", "get", "safeTimeout", "defineLazyProp", "isObject", "isObjectObject", "isPlainObject", "replaceObject", "copyProp", "regex", "regexAll", "isDefined", "cycle", "debounce", "isRegex", "weakMapMemoize", "weakMapMemoizePromise", "getOrSet", "request", "addHeaderBuilder", "default" ].indexOf(__WEBPACK_IMPORT_KEY__) < 0 && function(key) {
                 __webpack_require__.d(__webpack_exports__, key, function() {
                     return __WEBPACK_IMPORTED_MODULE_7__types__[key];
                 });
@@ -2417,6 +2430,9 @@
             __webpack_require__.d(__webpack_exports__, "_4", function() {
                 return weakMapMemoize;
             });
+            __webpack_require__.d(__webpack_exports__, "_5", function() {
+                return weakMapMemoizePromise;
+            });
             __webpack_exports__.s = function(obj, key, getter) {
                 if (obj.hasOwnProperty(key)) return obj[key];
                 var val = getter();
@@ -2540,10 +2556,20 @@
             var weakMapMemoize = function(method) {
                 var weakmap = new __WEBPACK_IMPORTED_MODULE_1_cross_domain_safe_weakmap_src__.a();
                 return function(arg) {
-                    var result = weakmap.get(arg);
-                    if (void 0 !== result) return result;
-                    void 0 !== (result = method.call(this, arg)) && weakmap.set(arg, result);
-                    return result;
+                    var _this4 = this;
+                    return weakmap.getOrSet(arg, function() {
+                        return method.call(_this4, arg);
+                    });
+                };
+            }, weakMapMemoizePromise = function(method) {
+                var weakmap = new __WEBPACK_IMPORTED_MODULE_1_cross_domain_safe_weakmap_src__.a();
+                return function(arg) {
+                    var _this5 = this;
+                    return weakmap.getOrSet(arg, function() {
+                        return method.call(_this5, arg).finally(function() {
+                            weakmap.delete(arg);
+                        });
+                    });
                 };
             };
         }
