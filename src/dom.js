@@ -511,7 +511,7 @@ export function awaitFrameLoad(frame : HTMLIFrameElement) : ZalgoPromise<HTMLIFr
     return promise;
 }
 
-export function awaitFrameWindow(frame : HTMLIFrameElement) : ZalgoPromise<HTMLIFrameElement> {
+export function awaitFrameWindow(frame : HTMLIFrameElement) : ZalgoPromise<CrossDomainWindowType> {
 
     if (frame.contentWindow) {
         return ZalgoPromise.resolve(frame.contentWindow);
