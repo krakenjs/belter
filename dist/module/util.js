@@ -107,12 +107,8 @@ export function memoize(method) {
             return cache[key].value;
         }
 
-        memoizedFunction.__calling__ = true;
-
         var time = Date.now();
         var value = method.apply(this, arguments);
-
-        memoizedFunction.__calling__ = false;
 
         cache[key] = { time: time, value: value };
 
@@ -128,6 +124,36 @@ export function memoize(method) {
     }
 
     return memoizedFunction;
+}
+
+// eslint-disable-next-line flowtype/no-weak-types
+export function memoizePromise(method) {
+    var cache = {};
+
+    // eslint-disable-next-line flowtype/no-weak-types
+    function memoizedPromiseFunction() {
+        for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+            args[_key2] = arguments[_key2];
+        }
+
+        var key = serializeArgs(args);
+
+        if (cache.hasOwnProperty(key)) {
+            return cache[key];
+        }
+
+        cache[key] = method.apply(this, arguments)['finally'](function () {
+            delete cache[key];
+        });
+
+        return cache[key];
+    }
+
+    memoizedPromiseFunction.reset = function () {
+        cache = {};
+    };
+
+    return memoizedPromiseFunction;
 }
 
 // eslint-disable-next-line flowtype/no-weak-types
