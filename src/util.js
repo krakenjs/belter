@@ -100,12 +100,8 @@ export function memoize<R>(method : (...args : Array<any>) => R, options : { tim
             return cache[key].value;
         }
 
-        memoizedFunction.__calling__ = true;
-
         let time  = Date.now();
         let value = method.apply(this, arguments);
-
-        memoizedFunction.__calling__ = false;
 
         cache[key] = { time, value };
 
@@ -121,6 +117,33 @@ export function memoize<R>(method : (...args : Array<any>) => R, options : { tim
     }
 
     return memoizedFunction;
+}
+
+// eslint-disable-next-line flowtype/no-weak-types
+export function memoizePromise<R>(method : (...args : Array<any>) => ZalgoPromise<R>) : ((...args : Array<any>) => ZalgoPromise<R>) {
+    let cache = {};
+
+    // eslint-disable-next-line flowtype/no-weak-types
+    function memoizedPromiseFunction(...args : Array<any>) : ZalgoPromise<R> {
+        let key : string = serializeArgs(args);
+
+        if (cache.hasOwnProperty(key)) {
+            return cache[key];
+        }
+
+        cache[key] = method.apply(this, arguments)
+            .finally(() => {
+                delete cache[key];
+            });
+
+        return cache[key];
+    }
+
+    memoizedPromiseFunction.reset = () => {
+        cache = {};
+    };
+
+    return memoizedPromiseFunction;
 }
 
 // eslint-disable-next-line flowtype/no-weak-types
