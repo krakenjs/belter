@@ -8,7 +8,7 @@ import { ZalgoPromise } from 'zalgo-promise/src';
 import { linkFrameWindow, isWindowClosed } from 'cross-domain-utils/src';
 import { WeakMap } from 'cross-domain-safe-weakmap/src';
 
-import { inlineMemoize, noop, stringify, capitalizeFirstLetter, once, extend, debounce, safeInterval } from './util';
+import { inlineMemoize, noop, stringify, capitalizeFirstLetter, once, extend, debounce, safeInterval, uniqueID } from './util';
 import { isDevice } from './device';
 import { KEY_CODES } from './constants';
 
@@ -412,8 +412,51 @@ PopupOpenError.prototype = Object.create(Error.prototype);
 
 export function popup(url, options) {
 
+    // $FlowFixMe
+    options = options || {};
+
+    var _options = options,
+        width = _options.width,
+        height = _options.height;
+
+
+    var top = 0;
+    var left = 0;
+
+    if (width) {
+        if (window.outerWidth) {
+            left = Math.round((window.outerWidth - width) / 2) + window.screenX;
+        } else if (window.screen.width) {
+            left = Math.round((window.screen.width - width) / 2);
+        }
+    }
+
+    if (height) {
+        if (window.outerHeight) {
+            top = Math.round((window.outerHeight - height) / 2) + window.screenY;
+        } else if (window.screen.height) {
+            top = Math.round((window.screen.height - height) / 2);
+        }
+    }
+
+    options = _extends({
+        top: top,
+        left: left,
+        width: width,
+        height: height,
+        status: 1,
+        toolbar: 0,
+        menubar: 0,
+        resizable: 1,
+        scrollbars: 1
+    }, options);
+
+    var name = options.name || uniqueID();
+    delete options.name;
+
     // eslint-disable-next-line array-callback-return
     var params = Object.keys(options).map(function (key) {
+        // $FlowFixMe
         if (options[key]) {
             return key + '=' + stringify(options[key]);
         }
@@ -422,7 +465,7 @@ export function popup(url, options) {
     var win = void 0;
 
     try {
-        win = window.open(url, options.name, params, true);
+        win = window.open(url, name, params, true);
     } catch (err) {
         throw new PopupOpenError('Can not open popup window - ' + (err.stack || err.message));
     }

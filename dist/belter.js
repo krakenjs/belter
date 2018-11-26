@@ -940,11 +940,26 @@
             };
             __webpack_exports__.a = PopupOpenError;
             __webpack_exports__.P = function(url, options) {
+                var _options = options = options || {}, width = _options.width, height = _options.height, top = 0, left = 0;
+                width && (window.outerWidth ? left = Math.round((window.outerWidth - width) / 2) + window.screenX : window.screen.width && (left = Math.round((window.screen.width - width) / 2)));
+                height && (window.outerHeight ? top = Math.round((window.outerHeight - height) / 2) + window.screenY : window.screen.height && (top = Math.round((window.screen.height - height) / 2)));
+                var name = (options = _extends({
+                    top: top,
+                    left: left,
+                    width: width,
+                    height: height,
+                    status: 1,
+                    toolbar: 0,
+                    menubar: 0,
+                    resizable: 1,
+                    scrollbars: 1
+                }, options)).name || Object(util._3)();
+                delete options.name;
                 var params = Object.keys(options).map(function(key) {
                     if (options[key]) return key + "=" + Object(util.Y)(options[key]);
                 }).filter(Boolean).join(","), win = void 0;
                 try {
-                    win = window.open(url, options.name, params, !0);
+                    win = window.open(url, name, params, !0);
                 } catch (err) {
                     throw new PopupOpenError("Can not open popup window - " + (err.stack || err.message));
                 }
