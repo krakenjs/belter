@@ -10,3 +10,4 @@ export * from './http';
 export * from './types';
 export * from './decorators';
 export * from './css';
+export * from './test';
