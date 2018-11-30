@@ -2026,6 +2026,10 @@
             __webpack_require__.d(__webpack_exports__, "normalizeDimension", function() {
                 return __WEBPACK_IMPORTED_MODULE_9__css__.c;
             });
+            var __WEBPACK_IMPORTED_MODULE_10__test__ = __webpack_require__("./src/test.js");
+            __webpack_require__.d(__webpack_exports__, "wrapPromise", function() {
+                return __WEBPACK_IMPORTED_MODULE_10__test__.a;
+            });
         },
         "./src/storage.js": function(module, __webpack_exports__, __webpack_require__) {
             "use strict";
@@ -2089,6 +2093,42 @@
                 } ]);
             };
             var __WEBPACK_IMPORTED_MODULE_0__util__ = __webpack_require__("./src/util.js"), __WEBPACK_IMPORTED_MODULE_1__dom__ = __webpack_require__("./src/dom.js");
+        },
+        "./src/test.js": function(module, __webpack_exports__, __webpack_require__) {
+            "use strict";
+            __webpack_exports__.a = function(method) {
+                var _ref$timeout = (arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {}).timeout, timeout = void 0 === _ref$timeout ? 2e3 : _ref$timeout, expected = [], promises = [], timeoutPromise = __WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.delay(timeout), expect = function(fn) {
+                    expected.push(fn);
+                    return function() {
+                        expected.splice(expected.indexOf(fn), 1);
+                        var result = void 0;
+                        try {
+                            for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) args[_key] = arguments[_key];
+                            result = fn.call.apply(fn, [ this ].concat(args));
+                            promises.push(__WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.resolve(result));
+                            return result;
+                        } catch (err) {
+                            promises.push(__WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.reject(err));
+                            throw err;
+                        }
+                    };
+                };
+                promises.push(__WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.try(function() {
+                    return method({
+                        expect: expect
+                    });
+                }));
+                return function awaitPromises() {
+                    return __WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.try(function() {
+                        return promises.length ? promises.pop().then(awaitPromises) : expected.length ? timeoutPromise.then(function() {
+                            if (!expected.length) return awaitPromises();
+                        }) : void 0;
+                    });
+                }().then(function() {
+                    if (expected.length) throw new Error("Expected " + expected[0].toString() + " to be called");
+                });
+            };
+            var __WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__ = __webpack_require__("./node_modules/zalgo-promise/src/index.js");
         },
         "./src/types.js": function(module, exports) {},
         "./src/util.js": function(module, __webpack_exports__, __webpack_require__) {
