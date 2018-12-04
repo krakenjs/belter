@@ -2097,10 +2097,14 @@
         "./src/test.js": function(module, __webpack_exports__, __webpack_require__) {
             "use strict";
             __webpack_exports__.a = function(method) {
-                var _ref$timeout = (arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {}).timeout, timeout = void 0 === _ref$timeout ? 2e3 : _ref$timeout, expected = [], promises = [], timeoutPromise = __WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.delay(timeout), expect = function(fn) {
-                    expected.push(fn);
+                var _ref$timeout = (arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {}).timeout, timeout = void 0 === _ref$timeout ? 2e3 : _ref$timeout, expected = [], promises = [], timeoutPromise = __WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.delay(timeout), expect = function(name) {
+                    var fn = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : __WEBPACK_IMPORTED_MODULE_1__util__.I, obj = {
+                        name: name,
+                        fn: fn
+                    };
+                    expected.push(obj);
                     return function() {
-                        expected.splice(expected.indexOf(fn), 1);
+                        expected.splice(expected.indexOf(obj), 1);
                         var result = void 0;
                         try {
                             for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) args[_key] = arguments[_key];
@@ -2112,10 +2116,21 @@
                             throw err;
                         }
                     };
+                }, error = function(name) {
+                    var fn = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : __WEBPACK_IMPORTED_MODULE_1__util__.I;
+                    return function() {
+                        for (var _this = this, _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) args[_key2] = arguments[_key2];
+                        promises.push(__WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.try(function() {
+                            return fn.call.apply(fn, [ _this ].concat(args));
+                        }).then(function() {
+                            throw new Error("Expected " + name + " to not be called");
+                        }));
+                    };
                 };
                 promises.push(__WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.try(function() {
                     return method({
-                        expect: expect
+                        expect: expect,
+                        error: error
                     });
                 }));
                 return function awaitPromises() {
@@ -2125,10 +2140,10 @@
                         }) : void 0;
                     });
                 }().then(function() {
-                    if (expected.length) throw new Error("Expected " + expected[0].toString() + " to be called");
+                    if (expected.length) throw new Error("Expected " + expected[0].name + " to be called");
                 });
             };
-            var __WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__ = __webpack_require__("./node_modules/zalgo-promise/src/index.js");
+            var __WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__ = __webpack_require__("./node_modules/zalgo-promise/src/index.js"), __WEBPACK_IMPORTED_MODULE_1__util__ = __webpack_require__("./src/util.js");
         },
         "./src/types.js": function(module, exports) {},
         "./src/util.js": function(module, __webpack_exports__, __webpack_require__) {
