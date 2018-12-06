@@ -7,7 +7,7 @@ import { linkFrameWindow, isWindowClosed,
 import { WeakMap } from 'cross-domain-safe-weakmap/src';
 
 import { inlineMemoize, noop, stringify, capitalizeFirstLetter,
-    once, extend, debounce, safeInterval, uniqueID } from './util';
+    once, extend, debounce, safeInterval } from './util';
 import { isDevice } from './device';
 import { KEY_CODES } from './constants';
 import type { CancelableType } from './types';
@@ -454,7 +454,7 @@ export function popup(url : string, options? : PopupOptions) : CrossDomainWindow
         ...options
     };
 
-    let name = options.name || uniqueID();
+    let name = options.name || '';
     delete options.name;
 
     // eslint-disable-next-line array-callback-return
