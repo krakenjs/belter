@@ -985,8 +985,8 @@
                 });
             };
             __webpack_exports__.j = createElement;
-            __webpack_exports__.D = function() {
-                var options = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : {}, el = getElement(arguments[1]), attributes = options.attributes || {}, style = options.style || {}, frame = createElement("iframe", {
+            __webpack_exports__.D = function iframe() {
+                var options = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : {}, container = arguments[1], attempts = arguments.length > 2 && void 0 !== arguments[2] ? arguments[2] : 3, el = getElement(container), attributes = options.attributes || {}, style = options.style || {}, frame = createElement("iframe", {
                     attributes: _extends({
                         frameBorder: "0",
                         allowTransparency: "true"
@@ -999,6 +999,14 @@
                 });
                 awaitFrameLoad(frame);
                 el.appendChild(frame);
+                var win = frame.contentWindow;
+                if (win) try {
+                    Object(util.I)(win.name);
+                } catch (err) {
+                    el.removeChild(frame);
+                    if (!attempts) throw new Error("Frame is cross-domain: " + err.stack);
+                    return iframe(options, container, attempts - 1);
+                }
                 (options.url || window.navigator.userAgent.match(/MSIE|Edge/i)) && frame.setAttribute("src", options.url || "about:blank");
                 return frame;
             };
@@ -2150,7 +2158,9 @@
             "use strict";
             __webpack_exports__.c = base64encode;
             __webpack_exports__.b = function(str) {
-                return window.atob(str);
+                if ("undefined" != typeof window && "function" == typeof window.atob) return window.atob(str);
+                if ("undefined" != typeof Buffer) return Buffer.from(str, "base64").toString("utf8");
+                throw new Error("Can not find window.atob or Buffer");
             };
             __webpack_exports__._3 = uniqueID;
             __webpack_exports__.q = function() {
@@ -2532,7 +2542,9 @@
                 return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
             };
             function base64encode(str) {
-                return window.btoa(str);
+                if ("undefined" != typeof window && "function" == typeof window.btoa) return window.btoa(str);
+                if ("undefined" != typeof Buffer) return Buffer.from(str, "utf8").toString("base64");
+                throw new Error("Can not find window.btoa or Buffer");
             }
             function uniqueID() {
                 var chars = "0123456789abcdef";

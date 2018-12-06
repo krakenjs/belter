@@ -623,6 +623,7 @@ export function createElement() {
 export function iframe() {
     var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     var container = arguments[1];
+    var attempts = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 3;
 
 
     var el = getElement(container);
@@ -646,6 +647,24 @@ export function iframe() {
     awaitFrameLoad(frame);
 
     el.appendChild(frame);
+
+    // $FlowFixMe
+    var win = frame.contentWindow;
+
+    if (win) {
+        try {
+            // $FlowFixMe
+            noop(win.name);
+        } catch (err) {
+            el.removeChild(frame);
+
+            if (!attempts) {
+                throw new Error('Frame is cross-domain: ' + err.stack);
+            }
+
+            return iframe(options, container, attempts - 1);
+        }
+    }
 
     if (options.url || window.navigator.userAgent.match(/MSIE|Edge/i)) {
         frame.setAttribute('src', options.url || 'about:blank');
