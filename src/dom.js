@@ -636,7 +636,7 @@ export type IframeElementOptionsType = {
     url? : ?string
 };
 
-export function iframe(options : IframeElementOptionsType = {}, container : HTMLElement) : HTMLIFrameElement {
+export function iframe(options : IframeElementOptionsType = {}, container : HTMLElement, attempts : number = 3) : HTMLIFrameElement {
 
     let el = getElement(container);
 
@@ -661,6 +661,24 @@ export function iframe(options : IframeElementOptionsType = {}, container : HTML
     awaitFrameLoad(frame);
 
     el.appendChild(frame);
+
+    // $FlowFixMe
+    let win = frame.contentWindow;
+
+    if (win) {
+        try {
+            // $FlowFixMe
+            noop(win.name);
+        } catch (err) {
+            el.removeChild(frame);
+
+            if (!attempts) {
+                throw new Error(`Frame is cross-domain: ${ err.stack }`);
+            }
+
+            return iframe(options, container, attempts - 1);
+        }
+    }
 
     if (options.url || window.navigator.userAgent.match(/MSIE|Edge/i)) {
         frame.setAttribute('src', options.url || 'about:blank');
