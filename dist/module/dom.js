@@ -8,7 +8,7 @@ import { ZalgoPromise } from 'zalgo-promise/src';
 import { linkFrameWindow, isWindowClosed } from 'cross-domain-utils/src';
 import { WeakMap } from 'cross-domain-safe-weakmap/src';
 
-import { inlineMemoize, noop, stringify, capitalizeFirstLetter, once, extend, debounce, safeInterval, uniqueID } from './util';
+import { inlineMemoize, noop, stringify, capitalizeFirstLetter, once, extend, debounce, safeInterval } from './util';
 import { isDevice } from './device';
 import { KEY_CODES } from './constants';
 
@@ -451,7 +451,7 @@ export function popup(url, options) {
         scrollbars: 1
     }, options);
 
-    var name = options.name || uniqueID();
+    var name = options.name || '';
     delete options.name;
 
     // eslint-disable-next-line array-callback-return

@@ -161,7 +161,7 @@
                     if (!key) throw new Error("WeakMap expected key");
                     var weakmap = this.weakmap;
                     if (weakmap) try {
-                        return weakmap.has(key);
+                        if (weakmap.has(key)) return !0;
                     } catch (err) {
                         delete this.weakmap;
                     }
@@ -953,7 +953,7 @@
                     menubar: 0,
                     resizable: 1,
                     scrollbars: 1
-                }, options)).name || Object(util._3)();
+                }, options)).name || "";
                 delete options.name;
                 var params = Object.keys(options).map(function(key) {
                     if (options[key]) return key + "=" + Object(util.Y)(options[key]);
