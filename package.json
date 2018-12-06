@@ -52,7 +52,6 @@
     "mocha": "^4"
   },
   "dependencies": {
-    "Base64": "^1.0.1",
     "cross-domain-safe-weakmap": "^1.0.20",
     "cross-domain-utils": "^2.0.10",
     "zalgo-promise": "^1.0.28"

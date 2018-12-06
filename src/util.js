@@ -7,17 +7,27 @@ import { WeakMap } from 'cross-domain-safe-weakmap/src';
 import type { CancelableType } from './types';
 
 export function base64encode(str : string) : string {
-    if (typeof __WEB__ === 'undefined' || !__WEB__) {
-        return require('Base64').btoa(str);
+    if (typeof window !== 'undefined' && typeof window.btoa === 'function') {
+        return window.btoa(str);
     }
-    return window.btoa(str);
+
+    if (typeof Buffer !== 'undefined') {
+        return Buffer.from(str, 'utf8').toString('base64');
+    }
+
+    throw new Error(`Can not find window.btoa or Buffer`);
 }
 
 export function base64decode(str : string) : string {
-    if (typeof __WEB__ === 'undefined' || !__WEB__) {
-        return require('Base64').atob(str);
+    if (typeof window !== 'undefined' && typeof window.atob === 'function') {
+        return window.atob(str);
     }
-    return window.atob(str);
+
+    if (typeof Buffer !== 'undefined') {
+        return Buffer.from(str, 'base64').toString('utf8');
+    }
+
+    throw new Error(`Can not find window.atob or Buffer`);
 }
 
 export function uniqueID() : string {
