@@ -1120,3 +1120,62 @@ export function fixScripts(el) {
         parentNode.replaceChild(newScript, script);
     }
 }
+
+export function onResize(el, handler) {
+    var _ref6 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {},
+        _ref6$width = _ref6.width,
+        width = _ref6$width === undefined ? true : _ref6$width,
+        _ref6$height = _ref6.height,
+        height = _ref6$height === undefined ? true : _ref6$height,
+        _ref6$interval = _ref6.interval,
+        interval = _ref6$interval === undefined ? 100 : _ref6$interval;
+
+    var currentWidth = el.offsetWidth;
+    var currentHeight = el.offsetHeight;
+
+    handler({ width: currentWidth, height: currentHeight });
+
+    var check = function check() {
+        var newWidth = el.offsetWidth;
+        var newHeight = el.offsetHeight;
+
+        if (width && newWidth !== currentWidth || height && newHeight !== currentHeight) {
+            handler({ width: newWidth, height: newHeight });
+        }
+
+        currentWidth = newWidth;
+        currentHeight = newHeight;
+    };
+
+    var observer = void 0;
+    var timeout = void 0;
+
+    // $FlowFixMe
+    if (typeof ResizeObserver !== 'undefined') {
+        observer = new ResizeObserver(check);
+        observer.observe(el);
+    } else if (typeof MutationObserver !== 'undefined') {
+        observer = new MutationObserver(check);
+        observer.observe(el, {
+            attributes: true,
+            childList: true,
+            subtree: true,
+            characterData: false
+        });
+        window.addEventListener('resize', check);
+    } else {
+        var loop = function loop() {
+            check();
+            timeout = setTimeout(loop, interval);
+        };
+        loop();
+    }
+
+    return {
+        cancel: function cancel() {
+            observer.disconnect();
+            window.removeEventListener('resize', check);
+            clearTimeout(timeout);
+        }
+    };
+}
