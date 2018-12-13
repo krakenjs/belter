@@ -1134,7 +1134,7 @@
                 }
             };
             __webpack_exports__.O = function(el, handler) {
-                var _ref6 = arguments.length > 2 && void 0 !== arguments[2] ? arguments[2] : {}, _ref6$width = _ref6.width, width = void 0 === _ref6$width || _ref6$width, _ref6$height = _ref6.height, height = void 0 === _ref6$height || _ref6$height, _ref6$interval = _ref6.interval, interval = void 0 === _ref6$interval ? 100 : _ref6$interval, currentWidth = el.offsetWidth, currentHeight = el.offsetHeight;
+                var _ref6 = arguments.length > 2 && void 0 !== arguments[2] ? arguments[2] : {}, _ref6$width = _ref6.width, width = void 0 === _ref6$width || _ref6$width, _ref6$height = _ref6.height, height = void 0 === _ref6$height || _ref6$height, _ref6$interval = _ref6.interval, interval = void 0 === _ref6$interval ? 100 : _ref6$interval, _ref6$win = _ref6.win, win = void 0 === _ref6$win ? window : _ref6$win, currentWidth = el.offsetWidth, currentHeight = el.offsetHeight;
                 handler({
                     width: currentWidth,
                     height: currentHeight
@@ -1148,14 +1148,14 @@
                     currentWidth = newWidth;
                     currentHeight = newHeight;
                 }, observer = void 0, timeout = void 0;
-                if ("undefined" != typeof ResizeObserver) (observer = new ResizeObserver(check)).observe(el); else if ("undefined" != typeof MutationObserver) {
-                    (observer = new MutationObserver(check)).observe(el, {
+                if (void 0 !== win.ResizeObserver) (observer = new win.ResizeObserver(check)).observe(el); else if (void 0 !== win.MutationObserver) {
+                    (observer = new win.MutationObserver(check)).observe(el, {
                         attributes: !0,
                         childList: !0,
                         subtree: !0,
                         characterData: !1
                     });
-                    window.addEventListener("resize", check);
+                    win.addEventListener("resize", check);
                 } else !function loop() {
                     check();
                     timeout = setTimeout(loop, interval);

@@ -1128,7 +1128,9 @@ export function onResize(el, handler) {
         _ref6$height = _ref6.height,
         height = _ref6$height === undefined ? true : _ref6$height,
         _ref6$interval = _ref6.interval,
-        interval = _ref6$interval === undefined ? 100 : _ref6$interval;
+        interval = _ref6$interval === undefined ? 100 : _ref6$interval,
+        _ref6$win = _ref6.win,
+        win = _ref6$win === undefined ? window : _ref6$win;
 
     var currentWidth = el.offsetWidth;
     var currentHeight = el.offsetHeight;
@@ -1150,19 +1152,18 @@ export function onResize(el, handler) {
     var observer = void 0;
     var timeout = void 0;
 
-    // $FlowFixMe
-    if (typeof ResizeObserver !== 'undefined') {
-        observer = new ResizeObserver(check);
+    if (typeof win.ResizeObserver !== 'undefined') {
+        observer = new win.ResizeObserver(check);
         observer.observe(el);
-    } else if (typeof MutationObserver !== 'undefined') {
-        observer = new MutationObserver(check);
+    } else if (typeof win.MutationObserver !== 'undefined') {
+        observer = new win.MutationObserver(check);
         observer.observe(el, {
             attributes: true,
             childList: true,
             subtree: true,
             characterData: false
         });
-        window.addEventListener('resize', check);
+        win.addEventListener('resize', check);
     } else {
         var loop = function loop() {
             check();
