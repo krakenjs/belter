@@ -811,7 +811,7 @@
             };
             __webpack_exports__._3 = waitForDocumentReady;
             __webpack_exports__._2 = function() {
-                return waitForDocumentReady.then(function() {
+                return waitForDocumentReady().then(function() {
                     if (document.body) return document.body;
                     throw new Error("Document ready but document.body not present");
                 });

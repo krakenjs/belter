@@ -54,7 +54,7 @@ export function waitForDocumentReady() {
 }
 
 export function waitForDocumentBody() {
-    return waitForDocumentReady.then(function () {
+    return waitForDocumentReady().then(function () {
         if (document.body) {
             return document.body;
         }
