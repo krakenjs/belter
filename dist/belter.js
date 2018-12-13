@@ -1242,13 +1242,7 @@
             }
             function getElementSafe(id) {
                 var doc = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : document;
-                if (isElement(id)) return id;
-                if ("string" == typeof id) {
-                    var element = void 0;
-                    doc.querySelector && (element = doc.querySelector(id));
-                    if (element) return element;
-                    if (element = doc.querySelector("#" + id)) return element;
-                }
+                return isElement(id) ? id : "string" == typeof id ? doc.querySelector(id) : void 0;
             }
             function getElement(id) {
                 var element = getElementSafe(id, arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : document);

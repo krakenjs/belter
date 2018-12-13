@@ -348,21 +348,7 @@ export function getElementSafe(id) {
     }
 
     if (typeof id === 'string') {
-        var element = void 0;
-
-        if (doc.querySelector) {
-            element = doc.querySelector(id);
-        }
-
-        if (element) {
-            return element;
-        }
-
-        element = doc.querySelector('#' + id);
-
-        if (element) {
-            return element;
-        }
+        return doc.querySelector(id);
     }
 }
 
