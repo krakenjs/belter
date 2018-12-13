@@ -1098,10 +1098,11 @@ export function fixScripts(el : HTMLElement, doc : Document = window.document) {
 type OnResizeOptions = {|
     width? : boolean,
     height? : boolean,
-    interval? : number
+    interval? : number,
+    win? : SameDomainWindowType
 |};
 
-export function onResize(el : HTMLElement, handler : ({ width : number, height : number }) => void, { width = true, height = true, interval = 100 } : OnResizeOptions = {}) : {} {
+export function onResize(el : HTMLElement, handler : ({ width : number, height : number }) => void, { width = true, height = true, interval = 100, win = window } : OnResizeOptions = {}) : {} {
     let currentWidth = el.offsetWidth;
     let currentHeight = el.offsetHeight;
 
@@ -1122,20 +1123,19 @@ export function onResize(el : HTMLElement, handler : ({ width : number, height :
     let observer;
     let timeout;
 
-    // $FlowFixMe
-    if (typeof ResizeObserver !== 'undefined') {
-        observer = new ResizeObserver(check);
+    if (typeof win.ResizeObserver !== 'undefined') {
+        observer = new win.ResizeObserver(check);
         observer.observe(el);
 
-    } else if (typeof MutationObserver !== 'undefined') {
-        observer = new MutationObserver(check);
+    } else if (typeof win.MutationObserver !== 'undefined') {
+        observer = new win.MutationObserver(check);
         observer.observe(el, {
             attributes:    true,
             childList:     true,
             subtree:       true,
             characterData: false
         });
-        window.addEventListener('resize', check);
+        win.addEventListener('resize', check);
     } else {
         let loop = () => {
             check();
