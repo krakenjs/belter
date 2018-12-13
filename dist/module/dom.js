@@ -339,6 +339,8 @@ export function isElement(element) {
 }
 
 export function getElementSafe(id) {
+    var doc = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : document;
+
 
     if (isElement(id)) {
         // $FlowFixMe
@@ -346,15 +348,17 @@ export function getElementSafe(id) {
     }
 
     if (typeof id === 'string') {
-        var element = document.getElementById(id);
+        var element = void 0;
+
+        if (doc.querySelector) {
+            element = doc.querySelector(id);
+        }
 
         if (element) {
             return element;
         }
 
-        if (document.querySelector) {
-            element = document.querySelector(id);
-        }
+        element = doc.querySelector('#' + id);
 
         if (element) {
             return element;
@@ -363,8 +367,10 @@ export function getElementSafe(id) {
 }
 
 export function getElement(id) {
+    var doc = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : document;
 
-    var element = getElementSafe(id);
+
+    var element = getElementSafe(id, doc);
 
     if (element) {
         return element;

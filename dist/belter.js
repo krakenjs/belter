@@ -1241,16 +1241,17 @@
                 return element instanceof window.Element || null !== element && "object" === (void 0 === element ? "undefined" : _typeof(element)) && 1 === element.nodeType && "object" === _typeof(element.style) && "object" === _typeof(element.ownerDocument);
             }
             function getElementSafe(id) {
+                var doc = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : document;
                 if (isElement(id)) return id;
                 if ("string" == typeof id) {
-                    var element = document.getElementById(id);
+                    var element = void 0;
+                    doc.querySelector && (element = doc.querySelector(id));
                     if (element) return element;
-                    document.querySelector && (element = document.querySelector(id));
-                    if (element) return element;
+                    if (element = doc.querySelector("#" + id)) return element;
                 }
             }
             function getElement(id) {
-                var element = getElementSafe(id);
+                var element = getElementSafe(id, arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : document);
                 if (element) return element;
                 throw new Error("Can not find element: " + Object(util.Y)(id));
             }
