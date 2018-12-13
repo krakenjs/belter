@@ -330,7 +330,7 @@ export function isElement(element : mixed) : boolean {
     return false;
 }
 
-export function getElementSafe(id : ElementRefType) : ?HTMLElement {
+export function getElementSafe(id : ElementRefType, doc : Document | HTMLElement = document) : ?HTMLElement {
 
     if (isElement(id)) {
         // $FlowFixMe
@@ -338,25 +338,27 @@ export function getElementSafe(id : ElementRefType) : ?HTMLElement {
     }
 
     if (typeof id === 'string') {
-        let element = document.getElementById(id);
+        let element;
+
+        if (doc.querySelector) {
+            element = doc.querySelector(id);
+        }
 
         if (element) {
             return element;
         }
 
-        if (document.querySelector) {
-            element = document.querySelector(id);
-        }
-
+        element = doc.querySelector(`#${ id }`);
+        
         if (element) {
             return element;
         }
     }
 }
 
-export function getElement(id : ElementRefType) : HTMLElement {
+export function getElement(id : ElementRefType, doc : Document | HTMLElement = document) : HTMLElement {
 
-    let element = getElementSafe(id);
+    let element = getElementSafe(id, doc);
 
     if (element) {
         return element;
