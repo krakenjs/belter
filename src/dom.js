@@ -53,7 +53,7 @@ export function waitForDocumentReady() : ZalgoPromise<void> {
 }
 
 export function waitForDocumentBody() : ZalgoPromise<HTMLBodyElement> {
-    return waitForDocumentReady.then(() => {
+    return waitForDocumentReady().then(() => {
         if (document.body) {
             return document.body;
         }
