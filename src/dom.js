@@ -1094,3 +1094,61 @@ export function fixScripts(el : HTMLElement, doc : Document = window.document) {
         parentNode.replaceChild(newScript, script);
     }
 }
+
+type OnResizeOptions = {|
+    width? : boolean,
+    height? : boolean,
+    interval? : number
+|};
+
+export function onResize(el : HTMLElement, handler : ({ width : number, height : number }) => void, { width = true, height = true, interval = 100 } : OnResizeOptions = {}) : {} {
+    let currentWidth = el.offsetWidth;
+    let currentHeight = el.offsetHeight;
+
+    handler({ width: currentWidth, height: currentHeight });
+
+    let check = () => {
+        let newWidth = el.offsetWidth;
+        let newHeight = el.offsetHeight;
+
+        if ((width && newWidth !== currentWidth) || (height && newHeight !== currentHeight)) {
+            handler({ width: newWidth, height: newHeight });
+        }
+
+        currentWidth = newWidth;
+        currentHeight = newHeight;
+    };
+
+    let observer;
+    let timeout;
+
+    // $FlowFixMe
+    if (typeof ResizeObserver !== 'undefined') {
+        observer = new ResizeObserver(check);
+        observer.observe(el);
+
+    } else if (typeof MutationObserver !== 'undefined') {
+        observer = new MutationObserver(check);
+        observer.observe(el, {
+            attributes:    true,
+            childList:     true,
+            subtree:       true,
+            characterData: false
+        });
+        window.addEventListener('resize', check);
+    } else {
+        let loop = () => {
+            check();
+            timeout = setTimeout(loop, interval);
+        };
+        loop();
+    }
+
+    return {
+        cancel: () => {
+            observer.disconnect();
+            window.removeEventListener('resize', check);
+            clearTimeout(timeout);
+        }
+    };
+}
