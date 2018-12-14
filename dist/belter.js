@@ -962,6 +962,9 @@
                     var err;
                     throw new PopupOpenError("Can not open popup window - blocked");
                 }
+                window.addEventListener("unload", function() {
+                    return win.close();
+                });
                 return win;
             };
             __webpack_exports__._7 = writeToWindow;

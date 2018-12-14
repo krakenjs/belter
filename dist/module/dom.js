@@ -467,6 +467,10 @@ export function popup(url, options) {
         throw err;
     }
 
+    window.addEventListener('unload', function () {
+        return win.close();
+    });
+
     return win;
 }
 
