@@ -466,6 +466,8 @@ export function popup(url : string, options? : PopupOptions) : CrossDomainWindow
         throw err;
     }
 
+    window.addEventListener('unload', () => win.close());
+
     return win;
 }
 
