@@ -8,7 +8,7 @@ import { ZalgoPromise } from 'zalgo-promise/src';
 import { linkFrameWindow, isWindowClosed } from 'cross-domain-utils/src';
 import { WeakMap } from 'cross-domain-safe-weakmap/src';
 
-import { inlineMemoize, noop, stringify, capitalizeFirstLetter, once, extend, debounce, safeInterval } from './util';
+import { inlineMemoize, noop, stringify, capitalizeFirstLetter, once, extend, safeInterval } from './util';
 import { isDevice } from './device';
 import { KEY_CODES } from './constants';
 
@@ -679,175 +679,6 @@ export function addEventListener(obj, event, handler) {
     };
 }
 
-export function elementStoppedMoving(element) {
-    var timeout = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 5000;
-
-    return new ZalgoPromise(function (resolve, reject) {
-        var el = getElement(element);
-
-        var start = el.getBoundingClientRect();
-
-        var interval = void 0;
-        var timer = void 0;
-
-        interval = setInterval(function () {
-            var end = el.getBoundingClientRect();
-
-            if (start.top === end.top && start.bottom === end.bottom && start.left === end.left && start.right === end.right && start.width === end.width && start.height === end.height) {
-                clearTimeout(timer);
-                clearInterval(interval);
-                return resolve();
-            }
-
-            start = end;
-        }, 50);
-
-        timer = setTimeout(function () {
-            clearInterval(interval);
-            reject(new Error('Timed out waiting for element to stop animating after ' + timeout + 'ms'));
-        }, timeout);
-    });
-}
-
-export function getCurrentDimensions(el) {
-    return {
-        width: el.offsetWidth,
-        height: el.offsetHeight
-    };
-}
-
-export function setOverflow(el) {
-    var value = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'auto';
-    var _el$style = el.style,
-        overflow = _el$style.overflow,
-        overflowX = _el$style.overflowX,
-        overflowY = _el$style.overflowY;
-
-
-    el.style.overflow = el.style.overflowX = el.style.overflowY = value;
-
-    return {
-        reset: function reset() {
-            el.style.overflow = overflow;
-            el.style.overflowX = overflowX;
-            el.style.overflowY = overflowY;
-        }
-    };
-}
-
-function dimensionsDiff(one, two, _ref2) {
-    var _ref2$width = _ref2.width,
-        width = _ref2$width === undefined ? true : _ref2$width,
-        _ref2$height = _ref2.height,
-        height = _ref2$height === undefined ? true : _ref2$height,
-        _ref2$threshold = _ref2.threshold,
-        threshold = _ref2$threshold === undefined ? 0 : _ref2$threshold;
-
-
-    if (width && Math.abs(one.width - two.width) > threshold) {
-        return true;
-    }
-
-    if (height && Math.abs(one.height - two.height) > threshold) {
-        return true;
-    }
-
-    return false;
-}
-
-export function trackDimensions(el, _ref3) {
-    var _ref3$width = _ref3.width,
-        width = _ref3$width === undefined ? true : _ref3$width,
-        _ref3$height = _ref3.height,
-        height = _ref3$height === undefined ? true : _ref3$height,
-        _ref3$threshold = _ref3.threshold,
-        threshold = _ref3$threshold === undefined ? 0 : _ref3$threshold;
-
-
-    var currentDimensions = getCurrentDimensions(el);
-
-    return {
-        check: function check() {
-            var newDimensions = getCurrentDimensions(el);
-
-            return {
-                changed: dimensionsDiff(currentDimensions, newDimensions, { width: width, height: height, threshold: threshold }),
-                dimensions: newDimensions
-            };
-        },
-        reset: function reset() {
-            currentDimensions = getCurrentDimensions(el);
-        }
-    };
-}
-
-export function onDimensionsChange(el, _ref4) {
-    var _ref4$width = _ref4.width,
-        width = _ref4$width === undefined ? true : _ref4$width,
-        _ref4$height = _ref4.height,
-        height = _ref4$height === undefined ? true : _ref4$height,
-        _ref4$delay = _ref4.delay,
-        delay = _ref4$delay === undefined ? 50 : _ref4$delay,
-        _ref4$threshold = _ref4.threshold,
-        threshold = _ref4$threshold === undefined ? 0 : _ref4$threshold;
-
-
-    return new ZalgoPromise(function (resolve) {
-
-        var tracker = trackDimensions(el, { width: width, height: height, threshold: threshold });
-
-        var interval = void 0;
-
-        var resolver = debounce(function (dimensions) {
-            clearInterval(interval);
-            return resolve(dimensions);
-        }, delay * 4);
-
-        interval = setInterval(function () {
-            var _tracker$check = tracker.check(),
-                changed = _tracker$check.changed,
-                dimensions = _tracker$check.dimensions;
-
-            if (changed) {
-                tracker.reset();
-                return resolver(dimensions);
-            }
-        }, delay);
-
-        function onWindowResize() {
-            var _tracker$check2 = tracker.check(),
-                changed = _tracker$check2.changed,
-                dimensions = _tracker$check2.dimensions;
-
-            if (changed) {
-                tracker.reset();
-                window.removeEventListener('resize', onWindowResize);
-                resolver(dimensions);
-            }
-        }
-
-        window.addEventListener('resize', onWindowResize);
-    });
-}
-
-export function dimensionsMatchViewport(el, _ref5) {
-    var width = _ref5.width,
-        height = _ref5.height;
-
-
-    var dimensions = getCurrentDimensions(el);
-
-    if (width && dimensions.width !== window.innerWidth) {
-        return false;
-    }
-
-    if (height && dimensions.height !== window.innerHeight) {
-        return false;
-    }
-
-    return true;
-}
-
 export function bindEvents(element, eventNames, handler) {
 
     handler = once(handler);
@@ -1118,15 +949,15 @@ export function fixScripts(el) {
 }
 
 export function onResize(el, handler) {
-    var _ref6 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {},
-        _ref6$width = _ref6.width,
-        width = _ref6$width === undefined ? true : _ref6$width,
-        _ref6$height = _ref6.height,
-        height = _ref6$height === undefined ? true : _ref6$height,
-        _ref6$interval = _ref6.interval,
-        interval = _ref6$interval === undefined ? 100 : _ref6$interval,
-        _ref6$win = _ref6.win,
-        win = _ref6$win === undefined ? window : _ref6$win;
+    var _ref2 = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {},
+        _ref2$width = _ref2.width,
+        width = _ref2$width === undefined ? true : _ref2$width,
+        _ref2$height = _ref2.height,
+        height = _ref2$height === undefined ? true : _ref2$height,
+        _ref2$interval = _ref2.interval,
+        interval = _ref2$interval === undefined ? 100 : _ref2$interval,
+        _ref2$win = _ref2.win,
+        win = _ref2$win === undefined ? window : _ref2$win;
 
     var currentWidth = el.offsetWidth;
     var currentHeight = el.offsetHeight;
