@@ -7,7 +7,7 @@ import { linkFrameWindow, isWindowClosed,
 import { WeakMap } from 'cross-domain-safe-weakmap/src';
 
 import { inlineMemoize, noop, stringify, capitalizeFirstLetter,
-    once, extend, debounce, safeInterval } from './util';
+    once, extend, safeInterval } from './util';
 import { isDevice } from './device';
 import { KEY_CODES } from './constants';
 import type { CancelableType } from './types';
@@ -685,139 +685,6 @@ export function addEventListener(obj : HTMLElement, event : string, handler : (e
             obj.removeEventListener(event, handler);
         }
     };
-}
-
-export function elementStoppedMoving(element : ElementRefType, timeout : number = 5000) : ZalgoPromise<void> {
-    return new ZalgoPromise((resolve, reject) => {
-        let el = getElement(element);
-
-        let start = el.getBoundingClientRect();
-
-        let interval;
-        let timer;
-
-        interval = setInterval(() => {
-            let end = el.getBoundingClientRect();
-
-            if (start.top === end.top && start.bottom === end.bottom && start.left === end.left && start.right === end.right && start.width === end.width && start.height === end.height) {
-                clearTimeout(timer);
-                clearInterval(interval);
-                return resolve();
-            }
-
-            start = end;
-
-        }, 50);
-
-        timer = setTimeout(() => {
-            clearInterval(interval);
-            reject(new Error(`Timed out waiting for element to stop animating after ${ timeout }ms`));
-        }, timeout);
-    });
-}
-
-export function getCurrentDimensions(el : HTMLElement) : { width : number, height : number } {
-    return {
-        width:  el.offsetWidth,
-        height: el.offsetHeight
-    };
-}
-
-export function setOverflow(el : HTMLElement, value : string = 'auto') : { reset : () => void } {
-
-    let { overflow, overflowX, overflowY } = el.style;
-
-    el.style.overflow = el.style.overflowX = el.style.overflowY = value;
-
-    return {
-        reset() {
-            el.style.overflow = overflow;
-            el.style.overflowX = overflowX;
-            el.style.overflowY = overflowY;
-        }
-    };
-}
-
-function dimensionsDiff(one : { width : number, height : number }, two : { width : number, height : number }, { width = true, height = true, threshold = 0 } : { width : boolean, height : boolean, threshold : number }) : boolean {
-
-    if (width && Math.abs(one.width - two.width) > threshold) {
-        return true;
-    }
-
-    if (height && Math.abs(one.height - two.height) > threshold) {
-        return true;
-    }
-
-    return false;
-}
-
-export function trackDimensions(el : HTMLElement, { width = true, height = true, threshold = 0 } : { width : boolean, height : boolean, threshold : number }) : { check : () => { changed : boolean, dimensions : { width : number, height : number } }, reset : () => void } {
-
-    let currentDimensions = getCurrentDimensions(el);
-
-    return {
-        check() : { changed : boolean, dimensions : { width : number, height : number } } {
-            let newDimensions = getCurrentDimensions(el);
-
-            return {
-                changed:    dimensionsDiff(currentDimensions, newDimensions, { width, height, threshold }),
-                dimensions: newDimensions
-            };
-        },
-
-        reset() {
-            currentDimensions = getCurrentDimensions(el);
-        }
-    };
-}
-
-export function onDimensionsChange(el : HTMLElement, { width = true, height = true, delay = 50, threshold = 0 } : { width? : boolean, height? : boolean, delay? : number, threshold? : number }) : ZalgoPromise<{ width : number, height : number }> {
-
-    return new ZalgoPromise(resolve => {
-
-        let tracker = trackDimensions(el, { width, height, threshold });
-
-        let interval;
-
-        let resolver = debounce((dimensions) => {
-            clearInterval(interval);
-            return resolve(dimensions);
-        }, delay * 4);
-
-        interval = setInterval(() => {
-            let { changed, dimensions } = tracker.check();
-            if (changed) {
-                tracker.reset();
-                return resolver(dimensions);
-            }
-        }, delay);
-
-        function onWindowResize() {
-            let { changed, dimensions } = tracker.check();
-            if (changed) {
-                tracker.reset();
-                window.removeEventListener('resize', onWindowResize);
-                resolver(dimensions);
-            }
-        }
-
-        window.addEventListener('resize', onWindowResize);
-    });
-}
-
-export function dimensionsMatchViewport(el : HTMLElement, { width, height } : { width : number, height : number }) : boolean {
-
-    let dimensions = getCurrentDimensions(el);
-
-    if (width && dimensions.width !== window.innerWidth) {
-        return false;
-    }
-
-    if (height && dimensions.height !== window.innerHeight) {
-        return false;
-    }
-
-    return true;
 }
 
 export function bindEvents(element : HTMLElement, eventNames : Array<string>, handler : (event : Event) => void) : CancelableType {
