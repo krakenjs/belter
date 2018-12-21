@@ -2468,7 +2468,7 @@
                 return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
             };
             function base64encode(str) {
-                if ("undefined" != typeof window && "function" == typeof window.btoa) return window.btoa(str);
+                if ("function" == typeof btoa) return btoa(str);
                 if ("undefined" != typeof Buffer) return Buffer.from(str, "utf8").toString("base64");
                 throw new Error("Can not find window.btoa or Buffer");
             }

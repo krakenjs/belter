@@ -6,11 +6,9 @@ import { ZalgoPromise } from 'zalgo-promise/src';
 import { WeakMap } from 'cross-domain-safe-weakmap/src';
 
 export function base64encode(str) {
-    if (typeof window !== 'undefined' && typeof window.btoa === 'function') {
-        return window.btoa(str);
-    }
-
-    if (typeof Buffer !== 'undefined') {
+    if (typeof btoa === 'function') {
+        return btoa(str);
+    } else if (typeof Buffer !== 'undefined') {
         return Buffer.from(str, 'utf8').toString('base64');
     }
 
