@@ -7,11 +7,9 @@ import { WeakMap } from 'cross-domain-safe-weakmap/src';
 import type { CancelableType } from './types';
 
 export function base64encode(str : string) : string {
-    if (typeof window !== 'undefined' && typeof window.btoa === 'function') {
-        return window.btoa(str);
-    }
-
-    if (typeof Buffer !== 'undefined') {
+    if (typeof btoa === 'function') {
+        return btoa(str);
+    } else if (typeof Buffer !== 'undefined') {
         return Buffer.from(str, 'utf8').toString('base64');
     }
 
