@@ -1033,7 +1033,7 @@
             __webpack_exports__.T = showElement;
             __webpack_exports__.y = hideElement;
             __webpack_exports__.k = function(element) {
-                element.parentNode && element.parentNode.removeChild(element);
+                element && element.parentNode && element.parentNode.removeChild(element);
             };
             __webpack_exports__.S = function(element, name, clean) {
                 var animation = animate(element, name, clean);

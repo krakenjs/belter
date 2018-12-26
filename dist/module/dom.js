@@ -866,7 +866,7 @@ export function hideElement(element) {
 }
 
 export function destroyElement(element) {
-    if (element.parentNode) {
+    if (element && element.parentNode) {
         element.parentNode.removeChild(element);
     }
 }
