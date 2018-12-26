@@ -7,7 +7,7 @@ import { noop } from './util';
 type ExpectHandler = <T, A : $ReadOnlyArray<mixed>>(name : string, ?(...args : A) => T) => (...args : A) => T; // eslint-disable-line no-undef
 type ErrorHandler = <T, A : $ReadOnlyArray<mixed>>(name : string, ?(...args : A) => T) => (...args : A) => T; // eslint-disable-line no-undef
 
-export function wrapPromise<T>(method : ({ expect : ExpectHandler, error : ErrorHandler }) => ZalgoPromise<T>, { timeout = 2000 } : { timeout? : number } = {}) : ZalgoPromise<void> {
+export function wrapPromise<T>(method : ({ expect : ExpectHandler, error : ErrorHandler }) => void | ZalgoPromise<T>, { timeout = 2000 } : { timeout? : number } = {}) : ZalgoPromise<void> {
     let expected = [];
     let promises = [];
 
