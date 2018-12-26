@@ -970,3 +970,38 @@ export function getOrSet(obj, key, getter) {
     obj[key] = val;
     return val;
 }
+
+export function cleanup(obj) {
+
+    var tasks = [];
+    var cleaned = false;
+
+    return {
+        set: function set(name, item) {
+            if (!cleaned) {
+                obj[name] = item;
+                this.register(function () {
+                    delete obj[name];
+                });
+            }
+            return item;
+        },
+        register: function register(method) {
+            if (cleaned) {
+                method();
+            } else {
+                tasks.push(once(method));
+            }
+        },
+        all: function all() {
+            var results = [];
+            cleaned = true;
+
+            while (tasks.length) {
+                results.push(tasks.pop().run());
+            }
+
+            return ZalgoPromise.all(results).then(noop);
+        }
+    };
+}
