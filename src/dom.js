@@ -873,7 +873,7 @@ export function hideElement(element : HTMLElement) {
 }
 
 export function destroyElement(element : HTMLElement) {
-    if (element.parentNode) {
+    if (element && element.parentNode) {
         element.parentNode.removeChild(element);
     }
 }
