@@ -976,7 +976,8 @@ export function cleanup(obj : Object) : CleanupType {
             cleaned = true;
 
             while (tasks.length) {
-                results.push(tasks.pop().run());
+                const task = tasks.pop();
+                results.push(task());
             }
 
             return ZalgoPromise.all(results).then(noop);
