@@ -2475,7 +2475,10 @@
                     all: function() {
                         var results = [];
                         cleaned = !0;
-                        for (;tasks.length; ) results.push(tasks.pop().run());
+                        for (;tasks.length; ) {
+                            var task = tasks.pop();
+                            results.push(task());
+                        }
                         return __WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.all(results).then(noop);
                     }
                 };

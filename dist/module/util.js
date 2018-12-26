@@ -998,7 +998,8 @@ export function cleanup(obj) {
             cleaned = true;
 
             while (tasks.length) {
-                results.push(tasks.pop().run());
+                var task = tasks.pop();
+                results.push(task());
             }
 
             return ZalgoPromise.all(results).then(noop);
