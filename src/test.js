@@ -55,8 +55,9 @@ export function wrapPromise<T>(method : Wrapper<T>, { timeout = 5000 } : { timeo
                 throw new Error(`Expected ${ name } to throw an error`);
             }));
 
+            // $FlowFixMe
             return result;
-        })();
+        });
     };
 
     let awaitPromises = () : ZalgoPromise<void> => {
