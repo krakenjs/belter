@@ -26,6 +26,8 @@ export function wrapPromise<T>(method : Wrapper<T>, { timeout = 5000 } : { timeo
                 promises.push(ZalgoPromise.resolve(result));
                 return result;
             } catch (err) {
+                const promise = ZalgoPromise.reject(err);
+                promise.catch(noop);
                 promises.push(ZalgoPromise.reject(err));
                 throw err;
             }
@@ -35,7 +37,9 @@ export function wrapPromise<T>(method : Wrapper<T>, { timeout = 5000 } : { timeo
     let avoid : Handler = (name : string, fn = noop) => {
         // $FlowFixMe
         return function avoidWrapper(...args) : * {
-            promises.push(ZalgoPromise.reject(new Error(`Expected ${ name } to not be called`)));
+            const promise = ZalgoPromise.reject(new Error(`Expected ${ name } to not be called`));
+            promise.catch(noop);
+            promises.push(promise);
             // $FlowFixMe
             return fn.call(this, ...args);
         };
