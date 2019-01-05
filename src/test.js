@@ -28,7 +28,7 @@ export function wrapPromise<T>(method : Wrapper<T>, { timeout = 5000 } : { timeo
             } catch (err) {
                 const promise = ZalgoPromise.reject(err);
                 promise.catch(noop);
-                promises.push(ZalgoPromise.reject(err));
+                promises.push(promise);
                 throw err;
             }
         };
