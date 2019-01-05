@@ -2071,7 +2071,7 @@
                         var result = fn.call.apply(fn, [ this ].concat(args));
                         promises.push(__WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.resolve(result).then(function() {
                             throw new Error("Expected " + name + " to throw an error");
-                        }));
+                        }, __WEBPACK_IMPORTED_MODULE_1__util__.J));
                         return result;
                     });
                 };

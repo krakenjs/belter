@@ -72,7 +72,7 @@ export function wrapPromise(method) {
 
             promises.push(ZalgoPromise.resolve(result).then(function () {
                 throw new Error('Expected ' + name + ' to throw an error');
-            }));
+            }, noop));
 
             // $FlowFixMe
             return result;
