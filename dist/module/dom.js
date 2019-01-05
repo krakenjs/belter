@@ -884,19 +884,11 @@ export function animateAndHide(element, name, clean) {
 }
 
 export function addClass(element, name) {
-    if (element.classList) {
-        element.classList.add(name);
-    } else if (element.className.split(/\s+/).indexOf(name) === -1) {
-        element.className += ' ' + name;
-    }
+    element.classList.add(name);
 }
 
 export function removeClass(element, name) {
-    if (element.classList) {
-        element.classList.remove(name);
-    } else if (element.className.split(/\s+/).indexOf(name) !== -1) {
-        element.className = element.className.replace(name, '');
-    }
+    element.classList.remove(name);
 }
 
 export function isElementClosed(el) {

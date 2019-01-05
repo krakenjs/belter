@@ -1046,10 +1046,10 @@
                 });
             };
             __webpack_exports__.b = function(element, name) {
-                element.classList ? element.classList.add(name) : -1 === element.className.split(/\s+/).indexOf(name) && (element.className += " " + name);
+                element.classList.add(name);
             };
             __webpack_exports__.P = function(element, name) {
-                element.classList ? element.classList.remove(name) : -1 !== element.className.split(/\s+/).indexOf(name) && (element.className = element.className.replace(name, ""));
+                element.classList.remove(name);
             };
             __webpack_exports__.E = isElementClosed;
             __webpack_exports__.Z = function(element, handler) {
@@ -2034,7 +2034,7 @@
         "./src/test.js": function(module, __webpack_exports__, __webpack_require__) {
             "use strict";
             __webpack_exports__.a = function(method) {
-                var _ref$timeout = (arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {}).timeout, timeout = void 0 === _ref$timeout ? 2e3 : _ref$timeout, expected = [], promises = [], timeoutPromise = __WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.delay(timeout), expect = function(name) {
+                var _ref$timeout = (arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {}).timeout, timeout = void 0 === _ref$timeout ? 5e3 : _ref$timeout, expected = [], promises = [], timeoutPromise = __WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.delay(timeout), expect = function(name) {
                     var fn = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : __WEBPACK_IMPORTED_MODULE_1__util__.J, obj = {
                         name: name,
                         fn: fn
@@ -2053,21 +2053,30 @@
                             throw err;
                         }
                     };
-                }, error = function(name) {
+                }, avoid = function(name) {
                     var fn = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : __WEBPACK_IMPORTED_MODULE_1__util__.J;
                     return function() {
-                        for (var _this = this, _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) args[_key2] = arguments[_key2];
-                        promises.push(__WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.try(function() {
-                            return fn.call.apply(fn, [ _this ].concat(args));
-                        }).then(function() {
-                            throw new Error("Expected " + name + " to not be called");
-                        }));
+                        promises.push(__WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.reject(new Error("Expected " + name + " to not be called")));
+                        for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) args[_key2] = arguments[_key2];
+                        return fn.call.apply(fn, [ this ].concat(args));
                     };
+                }, expectError = function(name) {
+                    var fn = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : __WEBPACK_IMPORTED_MODULE_1__util__.J;
+                    return expect(name, function() {
+                        for (var _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) args[_key3] = arguments[_key3];
+                        var result = fn.call.apply(fn, [ this ].concat(args));
+                        promises.push(__WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.resolve(result).then(function() {
+                            throw new Error("Expected " + name + " to throw an error");
+                        }));
+                        return result;
+                    })();
                 };
                 promises.push(__WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.try(function() {
                     return method({
                         expect: expect,
-                        error: error
+                        avoid: avoid,
+                        expectError: expectError,
+                        error: avoid
                     });
                 }));
                 return function awaitPromises() {

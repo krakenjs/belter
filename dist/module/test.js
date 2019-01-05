@@ -1,12 +1,12 @@
 import { ZalgoPromise } from 'zalgo-promise/src';
 
 import { noop } from './util'; // eslint-disable-line no-undef
-// eslint-disable-line no-undef
+
 
 export function wrapPromise(method) {
     var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
         _ref$timeout = _ref.timeout,
-        timeout = _ref$timeout === undefined ? 2000 : _ref$timeout;
+        timeout = _ref$timeout === undefined ? 5000 : _ref$timeout;
 
     var expected = [];
     var promises = [];
@@ -38,24 +38,40 @@ export function wrapPromise(method) {
         };
     };
 
-    var error = function error(name) {
+    var avoid = function avoid(name) {
         var fn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : noop;
 
         // $FlowFixMe
-        return function errorWrapper() {
-            var _this = this;
+        return function avoidWrapper() {
+            promises.push(ZalgoPromise.reject(new Error('Expected ' + name + ' to not be called')));
+            // $FlowFixMe
 
             for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
                 args[_key2] = arguments[_key2];
             }
 
-            promises.push(ZalgoPromise['try'](function () {
-                // $FlowFixMe
-                return fn.call.apply(fn, [_this].concat(args));
-            }).then(function () {
-                throw new Error('Expected ' + name + ' to not be called');
-            }));
+            return fn.call.apply(fn, [this].concat(args));
         };
+    };
+
+    var expectError = function expectError(name) {
+        var fn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : noop;
+
+        // $FlowFixMe
+        return expect(name, function expectErrorWrapper() {
+            for (var _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+                args[_key3] = arguments[_key3];
+            }
+
+            // $FlowFixMe
+            var result = fn.call.apply(fn, [this].concat(args));
+
+            promises.push(ZalgoPromise.resolve(result).then(function () {
+                throw new Error('Expected ' + name + ' to throw an error');
+            }));
+
+            return result;
+        })();
     };
 
     var awaitPromises = function awaitPromises() {
@@ -74,7 +90,7 @@ export function wrapPromise(method) {
     };
 
     promises.push(ZalgoPromise['try'](function () {
-        return method({ expect: expect, error: error });
+        return method({ expect: expect, avoid: avoid, expectError: expectError, error: avoid });
     }));
 
     return awaitPromises().then(function () {
