@@ -34,7 +34,7 @@ export function wrapPromise(method) {
             } catch (err) {
                 var promise = ZalgoPromise.reject(err);
                 promise['catch'](noop);
-                promises.push(ZalgoPromise.reject(err));
+                promises.push(promise);
                 throw err;
             }
         };

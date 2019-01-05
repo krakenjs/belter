@@ -2049,8 +2049,9 @@
                             promises.push(__WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.resolve(result));
                             return result;
                         } catch (err) {
-                            __WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.reject(err).catch(__WEBPACK_IMPORTED_MODULE_1__util__.J);
-                            promises.push(__WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.reject(err));
+                            var promise = __WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.reject(err);
+                            promise.catch(__WEBPACK_IMPORTED_MODULE_1__util__.J);
+                            promises.push(promise);
                             throw err;
                         }
                     };
