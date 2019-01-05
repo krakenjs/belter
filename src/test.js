@@ -4,16 +4,16 @@ import { ZalgoPromise } from 'zalgo-promise/src';
 
 import { noop } from './util';
 
-type ExpectHandler = <T, A : $ReadOnlyArray<mixed>>(name : string, ?(...args : A) => T) => (...args : A) => T; // eslint-disable-line no-undef
-type ErrorHandler = <T, A : $ReadOnlyArray<mixed>>(name : string, ?(...args : A) => T) => (...args : A) => T; // eslint-disable-line no-undef
+type Handler = <T, A : $ReadOnlyArray<mixed>>(name : string, fn? : (...args : A) => T) => (...args : A) => T; // eslint-disable-line no-undef
+type Wrapper<T> = ({ expect : Handler, avoid : Handler, expectError : Handler, error : Handler }) => ZalgoPromise<T>;
 
-export function wrapPromise<T>(method : ({ expect : ExpectHandler, error : ErrorHandler }) => void | ZalgoPromise<T>, { timeout = 2000 } : { timeout? : number } = {}) : ZalgoPromise<void> {
+export function wrapPromise<T>(method : Wrapper<T>, { timeout = 5000 } : { timeout? : number } = {}) : ZalgoPromise<void> {
     let expected = [];
     let promises = [];
 
     let timeoutPromise = ZalgoPromise.delay(timeout);
 
-    let expect : ExpectHandler = (name, fn = noop) => {
+    let expect : Handler = (name, fn = noop) => {
         let obj = { name, fn };
         expected.push(obj);
         // $FlowFixMe
@@ -32,16 +32,27 @@ export function wrapPromise<T>(method : ({ expect : ExpectHandler, error : Error
         };
     };
 
-    let error : ErrorHandler = (name : string, fn = noop) => {
+    let avoid : Handler = (name : string, fn = noop) => {
         // $FlowFixMe
-        return function errorWrapper(...args) : * {
-            promises.push(ZalgoPromise.try(() => {
-                // $FlowFixMe
-                return fn.call(this, ...args);
-            }).then(() => {
-                throw new Error(`Expected ${ name } to not be called`);
-            }));
+        return function avoidWrapper(...args) : * {
+            promises.push(ZalgoPromise.reject(new Error(`Expected ${ name } to not be called`)));
+            // $FlowFixMe
+            return fn.call(this, ...args);
         };
+    };
+
+    let expectError : Handler = (name, fn = noop) => {
+        // $FlowFixMe
+        return expect(name, function expectErrorWrapper(...args) : * {
+            // $FlowFixMe
+            const result = fn.call(this, ...args);
+            
+            promises.push(ZalgoPromise.resolve(result).then(() => {
+                throw new Error(`Expected ${ name } to throw an error`);
+            }));
+
+            return result;
+        })();
     };
 
     let awaitPromises = () : ZalgoPromise<void> => {
@@ -59,7 +70,7 @@ export function wrapPromise<T>(method : ({ expect : ExpectHandler, error : Error
         });
     };
 
-    promises.push(ZalgoPromise.try(() => method({ expect, error })));
+    promises.push(ZalgoPromise.try(() => method({ expect, avoid, expectError, error: avoid })));
 
     return awaitPromises().then(() => {
         if (expected.length) {
