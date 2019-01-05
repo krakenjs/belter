@@ -2049,6 +2049,7 @@
                             promises.push(__WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.resolve(result));
                             return result;
                         } catch (err) {
+                            __WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.reject(err).catch(__WEBPACK_IMPORTED_MODULE_1__util__.J);
                             promises.push(__WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.reject(err));
                             throw err;
                         }
@@ -2056,7 +2057,9 @@
                 }, avoid = function(name) {
                     var fn = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : __WEBPACK_IMPORTED_MODULE_1__util__.J;
                     return function() {
-                        promises.push(__WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.reject(new Error("Expected " + name + " to not be called")));
+                        var promise = __WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.reject(new Error("Expected " + name + " to not be called"));
+                        promise.catch(__WEBPACK_IMPORTED_MODULE_1__util__.J);
+                        promises.push(promise);
                         for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) args[_key2] = arguments[_key2];
                         return fn.call.apply(fn, [ this ].concat(args));
                     };

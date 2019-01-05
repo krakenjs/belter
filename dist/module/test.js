@@ -32,6 +32,8 @@ export function wrapPromise(method) {
                 promises.push(ZalgoPromise.resolve(result));
                 return result;
             } catch (err) {
+                var promise = ZalgoPromise.reject(err);
+                promise['catch'](noop);
                 promises.push(ZalgoPromise.reject(err));
                 throw err;
             }
@@ -43,7 +45,9 @@ export function wrapPromise(method) {
 
         // $FlowFixMe
         return function avoidWrapper() {
-            promises.push(ZalgoPromise.reject(new Error('Expected ' + name + ' to not be called')));
+            var promise = ZalgoPromise.reject(new Error('Expected ' + name + ' to not be called'));
+            promise['catch'](noop);
+            promises.push(promise);
             // $FlowFixMe
 
             for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
