@@ -53,7 +53,7 @@ export function wrapPromise<T>(method : Wrapper<T>, { timeout = 5000 } : { timeo
             
             promises.push(ZalgoPromise.resolve(result).then(() => {
                 throw new Error(`Expected ${ name } to throw an error`);
-            }));
+            }, noop));
 
             // $FlowFixMe
             return result;
