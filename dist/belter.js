@@ -2073,7 +2073,7 @@
                             throw new Error("Expected " + name + " to throw an error");
                         }));
                         return result;
-                    })();
+                    });
                 };
                 promises.push(__WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.try(function() {
                     return method({

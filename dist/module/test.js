@@ -74,8 +74,9 @@ export function wrapPromise(method) {
                 throw new Error('Expected ' + name + ' to throw an error');
             }));
 
+            // $FlowFixMe
             return result;
-        })();
+        });
     };
 
     var awaitPromises = function awaitPromises() {
