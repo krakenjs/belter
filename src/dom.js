@@ -891,19 +891,11 @@ export function animateAndHide(element : HTMLElement, name : string, clean : (Fu
 }
 
 export function addClass(element : HTMLElement, name : string) {
-    if (element.classList) {
-        element.classList.add(name);
-    } else if (element.className.split(/\s+/).indexOf(name) === -1) {
-        element.className += ` ${ name }`;
-    }
+    element.classList.add(name);
 }
 
 export function removeClass(element : HTMLElement, name : string) {
-    if (element.classList) {
-        element.classList.remove(name);
-    } else if (element.className.split(/\s+/).indexOf(name) !== -1) {
-        element.className = element.className.replace(name, '');
-    }
+    element.classList.remove(name);
 }
 
 export function isElementClosed(el : HTMLElement) : boolean {
