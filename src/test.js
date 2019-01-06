@@ -5,7 +5,7 @@ import { ZalgoPromise } from 'zalgo-promise/src';
 import { noop, tryCatch } from './util';
 
 type Handler = <T, A : $ReadOnlyArray<mixed>>(name : string, fn? : (...args : A) => T) => (...args : A) => T; // eslint-disable-line no-undef
-type Wrapper<T> = ({ expect : Handler, avoid : Handler, expectError : Handler, error : Handler }) => ZalgoPromise<T>;
+type Wrapper<T> = ({ expect : Handler, avoid : Handler, expectError : Handler, error : Handler }) => ZalgoPromise<T> | void;
 
 export function wrapPromise<T>(method : Wrapper<T>, { timeout = 5000 } : { timeout? : number } = {}) : ZalgoPromise<void> {
     let expected : Array<string> = [];
