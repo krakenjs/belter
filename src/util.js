@@ -984,3 +984,17 @@ export function cleanup(obj : Object) : CleanupType {
         }
     };
 }
+
+export function tryCatch<T>(fn : () => T) : {| result : T, error : void |} | {| result : void, error : mixed |} {
+    let result;
+    let error;
+
+    try {
+        result = fn();
+    } catch (err) {
+        error = err;
+    }
+    
+    // $FlowFixMe
+    return { result, error };
+}
