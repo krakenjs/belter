@@ -561,6 +561,9 @@
                 ZalgoPromise.reject = function(error) {
                     return new ZalgoPromise().reject(error);
                 };
+                ZalgoPromise.asyncReject = function(error) {
+                    return new ZalgoPromise().asyncReject(error);
+                };
                 ZalgoPromise.all = function(promises) {
                     var promise = new ZalgoPromise(), count = promises.length, results = [];
                     if (!count) {
@@ -1747,7 +1750,7 @@
                 return __WEBPACK_IMPORTED_MODULE_5__util__.b;
             });
             __webpack_require__.d(__webpack_exports__, "uniqueID", function() {
-                return __WEBPACK_IMPORTED_MODULE_5__util__._4;
+                return __WEBPACK_IMPORTED_MODULE_5__util__._5;
             });
             __webpack_require__.d(__webpack_exports__, "getGlobal", function() {
                 return __WEBPACK_IMPORTED_MODULE_5__util__.r;
@@ -1804,7 +1807,7 @@
                 return __WEBPACK_IMPORTED_MODULE_5__util__.p;
             });
             __webpack_require__.d(__webpack_exports__, "values", function() {
-                return __WEBPACK_IMPORTED_MODULE_5__util__._5;
+                return __WEBPACK_IMPORTED_MODULE_5__util__._6;
             });
             __webpack_require__.d(__webpack_exports__, "perc", function() {
                 return __WEBPACK_IMPORTED_MODULE_5__util__.N;
@@ -1852,7 +1855,7 @@
                 return __WEBPACK_IMPORTED_MODULE_5__util__.n;
             });
             __webpack_require__.d(__webpack_exports__, "undotify", function() {
-                return __WEBPACK_IMPORTED_MODULE_5__util__._3;
+                return __WEBPACK_IMPORTED_MODULE_5__util__._4;
             });
             __webpack_require__.d(__webpack_exports__, "eventEmitter", function() {
                 return __WEBPACK_IMPORTED_MODULE_5__util__.o;
@@ -1909,16 +1912,19 @@
                 return __WEBPACK_IMPORTED_MODULE_5__util__.D;
             });
             __webpack_require__.d(__webpack_exports__, "weakMapMemoize", function() {
-                return __WEBPACK_IMPORTED_MODULE_5__util__._6;
+                return __WEBPACK_IMPORTED_MODULE_5__util__._7;
             });
             __webpack_require__.d(__webpack_exports__, "weakMapMemoizePromise", function() {
-                return __WEBPACK_IMPORTED_MODULE_5__util__._7;
+                return __WEBPACK_IMPORTED_MODULE_5__util__._8;
             });
             __webpack_require__.d(__webpack_exports__, "getOrSet", function() {
                 return __WEBPACK_IMPORTED_MODULE_5__util__.t;
             });
             __webpack_require__.d(__webpack_exports__, "cleanup", function() {
                 return __WEBPACK_IMPORTED_MODULE_5__util__.f;
+            });
+            __webpack_require__.d(__webpack_exports__, "tryCatch", function() {
+                return __WEBPACK_IMPORTED_MODULE_5__util__._3;
             });
             var __WEBPACK_IMPORTED_MODULE_6__http__ = __webpack_require__("./src/http.js");
             __webpack_require__.d(__webpack_exports__, "request", function() {
@@ -1929,7 +1935,7 @@
             });
             var __WEBPACK_IMPORTED_MODULE_7__types__ = __webpack_require__("./src/types.js");
             __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__types__);
-            for (var __WEBPACK_IMPORT_KEY__ in __WEBPACK_IMPORTED_MODULE_7__types__) [ "getUserAgent", "isDevice", "isWebView", "isStandAlone", "isFacebookWebView", "isFirefoxIOS", "isEdgeIOS", "isOperaMini", "isAndroid", "isIos", "isGoogleSearchApp", "isQQBrowser", "isIosWebview", "isAndroidWebview", "isIE", "isIECompHeader", "isElectron", "isIEIntranet", "isMacOsCna", "supportsPopups", "isDocumentReady", "urlEncode", "waitForWindowReady", "waitForDocumentReady", "waitForDocumentBody", "parseQuery", "getQueryParam", "urlWillRedirectPage", "formatQuery", "extendQuery", "extendUrl", "redirect", "hasMetaViewPort", "isElementVisible", "enablePerformance", "getPageRenderTime", "htmlEncode", "isBrowser", "querySelectorAll", "onClick", "getScript", "isLocalStorageEnabled", "getBrowserLocales", "appendChild", "isElement", "getElementSafe", "getElement", "elementReady", "PopupOpenError", "popup", "writeToWindow", "writeElementToWindow", "setStyle", "awaitFrameLoad", "awaitFrameWindow", "createElement", "iframe", "addEventListener", "bindEvents", "setVendorCSS", "animate", "makeElementVisible", "makeElementInvisible", "showElement", "hideElement", "destroyElement", "showAndAnimate", "animateAndHide", "addClass", "removeClass", "isElementClosed", "watchElementForClose", "fixScripts", "onResize", "experiment", "getGlobalNameSpace", "getStorage", "base64encode", "base64decode", "uniqueID", "getGlobal", "getObjectID", "memoize", "memoizePromise", "promisify", "inlineMemoize", "noop", "once", "hashStr", "strHashStr", "match", "awaitKey", "stringifyError", "stringifyErrorMessage", "stringify", "domainMatches", "patchMethod", "extend", "values", "perc", "min", "max", "regexMap", "svgToBase64", "objFilter", "identity", "regexTokenize", "promiseDebounce", "safeInterval", "isInteger", "isFloat", "serializePrimitive", "deserializePrimitive", "dotify", "undotify", "eventEmitter", "camelToDasherize", "dasherizeToCamel", "capitalizeFirstLetter", "get", "safeTimeout", "defineLazyProp", "isObject", "isObjectObject", "isPlainObject", "replaceObject", "copyProp", "regex", "regexAll", "isDefined", "cycle", "debounce", "isRegex", "weakMapMemoize", "weakMapMemoizePromise", "getOrSet", "cleanup", "request", "addHeaderBuilder", "default" ].indexOf(__WEBPACK_IMPORT_KEY__) < 0 && function(key) {
+            for (var __WEBPACK_IMPORT_KEY__ in __WEBPACK_IMPORTED_MODULE_7__types__) [ "getUserAgent", "isDevice", "isWebView", "isStandAlone", "isFacebookWebView", "isFirefoxIOS", "isEdgeIOS", "isOperaMini", "isAndroid", "isIos", "isGoogleSearchApp", "isQQBrowser", "isIosWebview", "isAndroidWebview", "isIE", "isIECompHeader", "isElectron", "isIEIntranet", "isMacOsCna", "supportsPopups", "isDocumentReady", "urlEncode", "waitForWindowReady", "waitForDocumentReady", "waitForDocumentBody", "parseQuery", "getQueryParam", "urlWillRedirectPage", "formatQuery", "extendQuery", "extendUrl", "redirect", "hasMetaViewPort", "isElementVisible", "enablePerformance", "getPageRenderTime", "htmlEncode", "isBrowser", "querySelectorAll", "onClick", "getScript", "isLocalStorageEnabled", "getBrowserLocales", "appendChild", "isElement", "getElementSafe", "getElement", "elementReady", "PopupOpenError", "popup", "writeToWindow", "writeElementToWindow", "setStyle", "awaitFrameLoad", "awaitFrameWindow", "createElement", "iframe", "addEventListener", "bindEvents", "setVendorCSS", "animate", "makeElementVisible", "makeElementInvisible", "showElement", "hideElement", "destroyElement", "showAndAnimate", "animateAndHide", "addClass", "removeClass", "isElementClosed", "watchElementForClose", "fixScripts", "onResize", "experiment", "getGlobalNameSpace", "getStorage", "base64encode", "base64decode", "uniqueID", "getGlobal", "getObjectID", "memoize", "memoizePromise", "promisify", "inlineMemoize", "noop", "once", "hashStr", "strHashStr", "match", "awaitKey", "stringifyError", "stringifyErrorMessage", "stringify", "domainMatches", "patchMethod", "extend", "values", "perc", "min", "max", "regexMap", "svgToBase64", "objFilter", "identity", "regexTokenize", "promiseDebounce", "safeInterval", "isInteger", "isFloat", "serializePrimitive", "deserializePrimitive", "dotify", "undotify", "eventEmitter", "camelToDasherize", "dasherizeToCamel", "capitalizeFirstLetter", "get", "safeTimeout", "defineLazyProp", "isObject", "isObjectObject", "isPlainObject", "replaceObject", "copyProp", "regex", "regexAll", "isDefined", "cycle", "debounce", "isRegex", "weakMapMemoize", "weakMapMemoizePromise", "getOrSet", "cleanup", "tryCatch", "request", "addHeaderBuilder", "default" ].indexOf(__WEBPACK_IMPORT_KEY__) < 0 && function(key) {
                 __webpack_require__.d(__webpack_exports__, key, function() {
                     return __WEBPACK_IMPORTED_MODULE_7__types__[key];
                 });
@@ -1983,9 +1989,9 @@
                         }
                         storage || (storage = Object(__WEBPACK_IMPORTED_MODULE_0__util__.r)()[STORAGE_KEY]);
                         storage || (storage = {
-                            id: Object(__WEBPACK_IMPORTED_MODULE_0__util__._4)()
+                            id: Object(__WEBPACK_IMPORTED_MODULE_0__util__._5)()
                         });
-                        storage.id || (storage.id = Object(__WEBPACK_IMPORTED_MODULE_0__util__._4)());
+                        storage.id || (storage.id = Object(__WEBPACK_IMPORTED_MODULE_0__util__._5)());
                         accessedStorage = storage;
                         var result = handler(storage);
                         localStorageEnabled ? window.localStorage.setItem(STORAGE_KEY, JSON.stringify(storage)) : Object(__WEBPACK_IMPORTED_MODULE_0__util__.r)()[STORAGE_KEY] = storage;
@@ -1997,7 +2003,7 @@
                             var session = storage.__session__, now = Date.now();
                             session && now - session.created > lifetime && (session = null);
                             session || (session = {
-                                guid: Object(__WEBPACK_IMPORTED_MODULE_0__util__._4)(),
+                                guid: Object(__WEBPACK_IMPORTED_MODULE_0__util__._5)(),
                                 created: now
                             });
                             storage.__session__ = session;
@@ -2035,45 +2041,43 @@
             "use strict";
             __webpack_exports__.a = function(method) {
                 var _ref$timeout = (arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {}).timeout, timeout = void 0 === _ref$timeout ? 5e3 : _ref$timeout, expected = [], promises = [], timeoutPromise = __WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.delay(timeout), expect = function(name) {
-                    var fn = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : __WEBPACK_IMPORTED_MODULE_1__util__.J, obj = {
-                        name: name,
-                        fn: fn
-                    };
-                    expected.push(obj);
+                    var fn = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : __WEBPACK_IMPORTED_MODULE_1__util__.J;
+                    expected.push(name);
                     return function() {
-                        expected.splice(expected.indexOf(obj), 1);
-                        var result = void 0;
-                        try {
-                            for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) args[_key] = arguments[_key];
-                            result = fn.call.apply(fn, [ this ].concat(args));
-                            promises.push(__WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.resolve(result));
-                            return result;
-                        } catch (err) {
-                            var promise = __WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.reject(err);
-                            promise.catch(__WEBPACK_IMPORTED_MODULE_1__util__.J);
-                            promises.push(promise);
-                            throw err;
+                        for (var _this = this, _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) args[_key] = arguments[_key];
+                        expected.splice(expected.indexOf(name), 1);
+                        var _tryCatch = Object(__WEBPACK_IMPORTED_MODULE_1__util__._3)(function() {
+                            return fn.call.apply(fn, [ _this ].concat(args));
+                        }), result = _tryCatch.result, error = _tryCatch.error;
+                        if (error) {
+                            promises.push(__WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.asyncReject(error));
+                            throw error;
                         }
+                        promises.push(__WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.resolve(result));
+                        return result;
                     };
                 }, avoid = function(name) {
                     var fn = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : __WEBPACK_IMPORTED_MODULE_1__util__.J;
                     return function() {
-                        var promise = __WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.reject(new Error("Expected " + name + " to not be called"));
-                        promise.catch(__WEBPACK_IMPORTED_MODULE_1__util__.J);
-                        promises.push(promise);
+                        promises.push(__WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.asyncReject(new Error("Expected " + name + " to not be called")));
                         for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) args[_key2] = arguments[_key2];
                         return fn.call.apply(fn, [ this ].concat(args));
                     };
                 }, expectError = function(name) {
                     var fn = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : __WEBPACK_IMPORTED_MODULE_1__util__.J;
-                    return expect(name, function() {
-                        for (var _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) args[_key3] = arguments[_key3];
-                        var result = fn.call.apply(fn, [ this ].concat(args));
+                    expected.push(name);
+                    return function() {
+                        for (var _this2 = this, _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) args[_key3] = arguments[_key3];
+                        expected.splice(expected.indexOf(name), 1);
+                        var _tryCatch2 = Object(__WEBPACK_IMPORTED_MODULE_1__util__._3)(function() {
+                            return fn.call.apply(fn, [ _this2 ].concat(args));
+                        }), result = _tryCatch2.result, error = _tryCatch2.error;
+                        if (error) throw error;
                         promises.push(__WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.resolve(result).then(function() {
                             throw new Error("Expected " + name + " to throw an error");
                         }, __WEBPACK_IMPORTED_MODULE_1__util__.J));
                         return result;
-                    });
+                    };
                 };
                 promises.push(__WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.try(function() {
                     return method({
@@ -2083,14 +2087,17 @@
                         error: avoid
                     });
                 }));
-                return function awaitPromises() {
+                var drain = function drain() {
                     return __WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.try(function() {
-                        return promises.length ? promises.pop().then(awaitPromises) : expected.length ? timeoutPromise.then(function() {
-                            if (!expected.length) return awaitPromises();
-                        }) : void 0;
+                        if (promises.length) return promises.pop();
+                    }).then(function() {
+                        if (promises.length) return drain();
                     });
-                }().then(function() {
-                    if (expected.length) throw new Error("Expected " + expected[0].name + " to be called");
+                };
+                return drain().then(function() {
+                    if (expected.length) return timeoutPromise.then(drain);
+                }).then(function() {
+                    if (expected.length) throw new Error("Expected " + expected[0] + " to be called");
                 });
             };
             var __WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__ = __webpack_require__("./node_modules/zalgo-promise/src/index.js"), __WEBPACK_IMPORTED_MODULE_1__util__ = __webpack_require__("./src/util.js");
@@ -2104,7 +2111,7 @@
                 if ("undefined" != typeof Buffer) return Buffer.from(str, "base64").toString("utf8");
                 throw new Error("Can not find window.atob or Buffer");
             };
-            __webpack_exports__._4 = uniqueID;
+            __webpack_exports__._5 = uniqueID;
             __webpack_exports__.r = function() {
                 if ("undefined" != typeof window) return window;
                 if ("undefined" != typeof window) return window;
@@ -2241,7 +2248,7 @@
                 for (var key in source) source.hasOwnProperty(key) && (obj[key] = source[key]);
                 return obj;
             };
-            __webpack_exports__._5 = function(obj) {
+            __webpack_exports__._6 = function(obj) {
                 var result = [];
                 for (var key in obj) obj.hasOwnProperty(key) && result.push(obj[key]);
                 return result;
@@ -2311,7 +2318,7 @@
                 }) ? newobj["" + prefix + key + "[]"] = obj[key].join(",") : obj[key] && "object" === _typeof(obj[key]) ? newobj = dotify(obj[key], "" + prefix + key, newobj) : newobj["" + prefix + key] = serializePrimitive(obj[key]));
                 return newobj;
             };
-            __webpack_exports__._3 = function(obj) {
+            __webpack_exports__._4 = function(obj) {
                 var result = {};
                 for (var key in obj) if (obj.hasOwnProperty(key) && "string" == typeof obj[key]) {
                     var value = obj[key];
@@ -2458,10 +2465,10 @@
             __webpack_exports__.D = function(item) {
                 return "[object RegExp]" === Object.prototype.toString.call(item);
             };
-            __webpack_require__.d(__webpack_exports__, "_6", function() {
+            __webpack_require__.d(__webpack_exports__, "_7", function() {
                 return weakMapMemoize;
             });
-            __webpack_require__.d(__webpack_exports__, "_7", function() {
+            __webpack_require__.d(__webpack_exports__, "_8", function() {
                 return weakMapMemoizePromise;
             });
             __webpack_exports__.t = function(obj, key, getter) {
@@ -2494,6 +2501,18 @@
                         }
                         return __WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.all(results).then(noop);
                     }
+                };
+            };
+            __webpack_exports__._3 = function(fn) {
+                var result = void 0, error = void 0;
+                try {
+                    result = fn();
+                } catch (err) {
+                    error = err;
+                }
+                return {
+                    result: result,
+                    error: error
                 };
             };
             var __WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__ = __webpack_require__("./node_modules/zalgo-promise/src/index.js"), __WEBPACK_IMPORTED_MODULE_1_cross_domain_safe_weakmap_src__ = __webpack_require__("./node_modules/cross-domain-safe-weakmap/src/index.js"), _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(obj) {

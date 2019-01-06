@@ -1006,3 +1006,17 @@ export function cleanup(obj) {
         }
     };
 }
+
+export function tryCatch(fn) {
+    var result = void 0;
+    var error = void 0;
+
+    try {
+        result = fn();
+    } catch (err) {
+        error = err;
+    }
+
+    // $FlowFixMe
+    return { result: result, error: error };
+}
