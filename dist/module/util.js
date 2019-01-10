@@ -1020,3 +1020,10 @@ export function tryCatch(fn) {
     // $FlowFixMe
     return { result: result, error: error };
 }
+
+export function removeFromArray(arr, item) {
+    var index = arr.indexOf(item);
+    if (index !== -1) {
+        arr.splice(index, 1);
+    }
+}

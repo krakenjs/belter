@@ -104,7 +104,7 @@ export function isIE() {
         return true;
     }
 
-    return Boolean(window.navigator && window.navigator.userAgent && /Edge|MSIE/i.test(window.navigator.userAgent));
+    return Boolean(window.navigator && window.navigator.userAgent && /Edge|MSIE|rv:11/i.test(window.navigator.userAgent));
 }
 
 export function isIECompHeader() {

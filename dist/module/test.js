@@ -1,6 +1,6 @@
 import { ZalgoPromise } from 'zalgo-promise/src';
 
-import { noop, tryCatch } from './util'; // eslint-disable-line no-undef
+import { noop, tryCatch, removeFromArray } from './util'; // eslint-disable-line no-undef
 
 
 export function wrapPromise(method) {
@@ -26,7 +26,7 @@ export function wrapPromise(method) {
                 args[_key] = arguments[_key];
             }
 
-            expected.splice(expected.indexOf(name), 1);
+            removeFromArray(expected, name);
 
             // $FlowFixMe
 
@@ -76,7 +76,7 @@ export function wrapPromise(method) {
                 args[_key3] = arguments[_key3];
             }
 
-            expected.splice(expected.indexOf(name), 1);
+            removeFromArray(expected, name);
 
             // $FlowFixMe
 

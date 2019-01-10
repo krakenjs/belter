@@ -470,6 +470,7 @@
                 ZalgoPromise.prototype.asyncReject = function(error) {
                     this.errorHandled = !0;
                     this.reject(error);
+                    return this;
                 };
                 ZalgoPromise.prototype.dispatch = function() {
                     var _this3 = this, dispatching = this.dispatching, resolved = this.resolved, rejected = this.rejected, handlers = this.handlers;
@@ -723,7 +724,7 @@
             __webpack_exports__.n = isIosWebview;
             __webpack_exports__.c = isAndroidWebview;
             __webpack_exports__.j = function() {
-                return !!window.document.documentMode || Boolean(window.navigator && window.navigator.userAgent && /Edge|MSIE/i.test(window.navigator.userAgent));
+                return !!window.document.documentMode || Boolean(window.navigator && window.navigator.userAgent && /Edge|MSIE|rv:11/i.test(window.navigator.userAgent));
             };
             __webpack_exports__.k = function() {
                 var mHttp = window.document.querySelector('meta[http-equiv="X-UA-Compatible"]'), mContent = window.document.querySelector('meta[content="IE=edge"]');
@@ -926,7 +927,7 @@
             __webpack_exports__.s = getElement;
             __webpack_exports__.l = function(id) {
                 return new src.a(function(resolve, reject) {
-                    var name = Object(util.Z)(id), el = getElementSafe(id);
+                    var name = Object(util._0)(id), el = getElementSafe(id);
                     if (el) return resolve(el);
                     if (isDocumentReady()) return reject(new Error("Document is ready and element " + name + " does not exist"));
                     var interval = setInterval(function() {
@@ -959,7 +960,7 @@
                 }, options)).name || "";
                 delete options.name;
                 var params = Object.keys(options).map(function(key) {
-                    if (options[key]) return key + "=" + Object(util.Z)(options[key]);
+                    if (options[key]) return key + "=" + Object(util._0)(options[key]);
                 }).filter(Boolean).join(","), win = void 0;
                 try {
                     win = window.open(url, name, params, !0);
@@ -1058,7 +1059,7 @@
             __webpack_exports__.Z = function(element, handler) {
                 handler = Object(util.L)(handler);
                 var interval = void 0;
-                isElementClosed(element) ? handler() : interval = Object(util.V)(function() {
+                isElementClosed(element) ? handler() : interval = Object(util.W)(function() {
                     if (isElementClosed(element)) {
                         interval.cancel();
                         handler();
@@ -1194,7 +1195,7 @@
             function getElement(id) {
                 var element = getElementSafe(id, arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : document);
                 if (element) return element;
-                throw new Error("Can not find element: " + Object(util.Z)(id));
+                throw new Error("Can not find element: " + Object(util._0)(id));
             }
             function PopupOpenError(message) {
                 this.message = message;
@@ -1750,7 +1751,7 @@
                 return __WEBPACK_IMPORTED_MODULE_5__util__.b;
             });
             __webpack_require__.d(__webpack_exports__, "uniqueID", function() {
-                return __WEBPACK_IMPORTED_MODULE_5__util__._5;
+                return __WEBPACK_IMPORTED_MODULE_5__util__._6;
             });
             __webpack_require__.d(__webpack_exports__, "getGlobal", function() {
                 return __WEBPACK_IMPORTED_MODULE_5__util__.r;
@@ -1780,7 +1781,7 @@
                 return __WEBPACK_IMPORTED_MODULE_5__util__.u;
             });
             __webpack_require__.d(__webpack_exports__, "strHashStr", function() {
-                return __WEBPACK_IMPORTED_MODULE_5__util__.Y;
+                return __WEBPACK_IMPORTED_MODULE_5__util__.Z;
             });
             __webpack_require__.d(__webpack_exports__, "match", function() {
                 return __WEBPACK_IMPORTED_MODULE_5__util__.E;
@@ -1789,13 +1790,13 @@
                 return __WEBPACK_IMPORTED_MODULE_5__util__.a;
             });
             __webpack_require__.d(__webpack_exports__, "stringifyError", function() {
-                return __WEBPACK_IMPORTED_MODULE_5__util__._0;
-            });
-            __webpack_require__.d(__webpack_exports__, "stringifyErrorMessage", function() {
                 return __WEBPACK_IMPORTED_MODULE_5__util__._1;
             });
+            __webpack_require__.d(__webpack_exports__, "stringifyErrorMessage", function() {
+                return __WEBPACK_IMPORTED_MODULE_5__util__._2;
+            });
             __webpack_require__.d(__webpack_exports__, "stringify", function() {
-                return __WEBPACK_IMPORTED_MODULE_5__util__.Z;
+                return __WEBPACK_IMPORTED_MODULE_5__util__._0;
             });
             __webpack_require__.d(__webpack_exports__, "domainMatches", function() {
                 return __WEBPACK_IMPORTED_MODULE_5__util__.m;
@@ -1807,7 +1808,7 @@
                 return __WEBPACK_IMPORTED_MODULE_5__util__.p;
             });
             __webpack_require__.d(__webpack_exports__, "values", function() {
-                return __WEBPACK_IMPORTED_MODULE_5__util__._6;
+                return __WEBPACK_IMPORTED_MODULE_5__util__._7;
             });
             __webpack_require__.d(__webpack_exports__, "perc", function() {
                 return __WEBPACK_IMPORTED_MODULE_5__util__.N;
@@ -1822,7 +1823,7 @@
                 return __WEBPACK_IMPORTED_MODULE_5__util__.S;
             });
             __webpack_require__.d(__webpack_exports__, "svgToBase64", function() {
-                return __WEBPACK_IMPORTED_MODULE_5__util__._2;
+                return __WEBPACK_IMPORTED_MODULE_5__util__._3;
             });
             __webpack_require__.d(__webpack_exports__, "objFilter", function() {
                 return __WEBPACK_IMPORTED_MODULE_5__util__.K;
@@ -1837,7 +1838,7 @@
                 return __WEBPACK_IMPORTED_MODULE_5__util__.O;
             });
             __webpack_require__.d(__webpack_exports__, "safeInterval", function() {
-                return __WEBPACK_IMPORTED_MODULE_5__util__.V;
+                return __WEBPACK_IMPORTED_MODULE_5__util__.W;
             });
             __webpack_require__.d(__webpack_exports__, "isInteger", function() {
                 return __WEBPACK_IMPORTED_MODULE_5__util__.z;
@@ -1846,7 +1847,7 @@
                 return __WEBPACK_IMPORTED_MODULE_5__util__.y;
             });
             __webpack_require__.d(__webpack_exports__, "serializePrimitive", function() {
-                return __WEBPACK_IMPORTED_MODULE_5__util__.X;
+                return __WEBPACK_IMPORTED_MODULE_5__util__.Y;
             });
             __webpack_require__.d(__webpack_exports__, "deserializePrimitive", function() {
                 return __WEBPACK_IMPORTED_MODULE_5__util__.l;
@@ -1855,7 +1856,7 @@
                 return __WEBPACK_IMPORTED_MODULE_5__util__.n;
             });
             __webpack_require__.d(__webpack_exports__, "undotify", function() {
-                return __WEBPACK_IMPORTED_MODULE_5__util__._4;
+                return __WEBPACK_IMPORTED_MODULE_5__util__._5;
             });
             __webpack_require__.d(__webpack_exports__, "eventEmitter", function() {
                 return __WEBPACK_IMPORTED_MODULE_5__util__.o;
@@ -1873,7 +1874,7 @@
                 return __WEBPACK_IMPORTED_MODULE_5__util__.q;
             });
             __webpack_require__.d(__webpack_exports__, "safeTimeout", function() {
-                return __WEBPACK_IMPORTED_MODULE_5__util__.W;
+                return __WEBPACK_IMPORTED_MODULE_5__util__.X;
             });
             __webpack_require__.d(__webpack_exports__, "defineLazyProp", function() {
                 return __WEBPACK_IMPORTED_MODULE_5__util__.k;
@@ -1888,7 +1889,7 @@
                 return __WEBPACK_IMPORTED_MODULE_5__util__.C;
             });
             __webpack_require__.d(__webpack_exports__, "replaceObject", function() {
-                return __WEBPACK_IMPORTED_MODULE_5__util__.U;
+                return __WEBPACK_IMPORTED_MODULE_5__util__.V;
             });
             __webpack_require__.d(__webpack_exports__, "copyProp", function() {
                 return __WEBPACK_IMPORTED_MODULE_5__util__.g;
@@ -1912,10 +1913,10 @@
                 return __WEBPACK_IMPORTED_MODULE_5__util__.D;
             });
             __webpack_require__.d(__webpack_exports__, "weakMapMemoize", function() {
-                return __WEBPACK_IMPORTED_MODULE_5__util__._7;
+                return __WEBPACK_IMPORTED_MODULE_5__util__._8;
             });
             __webpack_require__.d(__webpack_exports__, "weakMapMemoizePromise", function() {
-                return __WEBPACK_IMPORTED_MODULE_5__util__._8;
+                return __WEBPACK_IMPORTED_MODULE_5__util__._9;
             });
             __webpack_require__.d(__webpack_exports__, "getOrSet", function() {
                 return __WEBPACK_IMPORTED_MODULE_5__util__.t;
@@ -1924,7 +1925,10 @@
                 return __WEBPACK_IMPORTED_MODULE_5__util__.f;
             });
             __webpack_require__.d(__webpack_exports__, "tryCatch", function() {
-                return __WEBPACK_IMPORTED_MODULE_5__util__._3;
+                return __WEBPACK_IMPORTED_MODULE_5__util__._4;
+            });
+            __webpack_require__.d(__webpack_exports__, "removeFromArray", function() {
+                return __WEBPACK_IMPORTED_MODULE_5__util__.U;
             });
             var __WEBPACK_IMPORTED_MODULE_6__http__ = __webpack_require__("./src/http.js");
             __webpack_require__.d(__webpack_exports__, "request", function() {
@@ -1935,7 +1939,7 @@
             });
             var __WEBPACK_IMPORTED_MODULE_7__types__ = __webpack_require__("./src/types.js");
             __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_7__types__);
-            for (var __WEBPACK_IMPORT_KEY__ in __WEBPACK_IMPORTED_MODULE_7__types__) [ "getUserAgent", "isDevice", "isWebView", "isStandAlone", "isFacebookWebView", "isFirefoxIOS", "isEdgeIOS", "isOperaMini", "isAndroid", "isIos", "isGoogleSearchApp", "isQQBrowser", "isIosWebview", "isAndroidWebview", "isIE", "isIECompHeader", "isElectron", "isIEIntranet", "isMacOsCna", "supportsPopups", "isDocumentReady", "urlEncode", "waitForWindowReady", "waitForDocumentReady", "waitForDocumentBody", "parseQuery", "getQueryParam", "urlWillRedirectPage", "formatQuery", "extendQuery", "extendUrl", "redirect", "hasMetaViewPort", "isElementVisible", "enablePerformance", "getPageRenderTime", "htmlEncode", "isBrowser", "querySelectorAll", "onClick", "getScript", "isLocalStorageEnabled", "getBrowserLocales", "appendChild", "isElement", "getElementSafe", "getElement", "elementReady", "PopupOpenError", "popup", "writeToWindow", "writeElementToWindow", "setStyle", "awaitFrameLoad", "awaitFrameWindow", "createElement", "iframe", "addEventListener", "bindEvents", "setVendorCSS", "animate", "makeElementVisible", "makeElementInvisible", "showElement", "hideElement", "destroyElement", "showAndAnimate", "animateAndHide", "addClass", "removeClass", "isElementClosed", "watchElementForClose", "fixScripts", "onResize", "experiment", "getGlobalNameSpace", "getStorage", "base64encode", "base64decode", "uniqueID", "getGlobal", "getObjectID", "memoize", "memoizePromise", "promisify", "inlineMemoize", "noop", "once", "hashStr", "strHashStr", "match", "awaitKey", "stringifyError", "stringifyErrorMessage", "stringify", "domainMatches", "patchMethod", "extend", "values", "perc", "min", "max", "regexMap", "svgToBase64", "objFilter", "identity", "regexTokenize", "promiseDebounce", "safeInterval", "isInteger", "isFloat", "serializePrimitive", "deserializePrimitive", "dotify", "undotify", "eventEmitter", "camelToDasherize", "dasherizeToCamel", "capitalizeFirstLetter", "get", "safeTimeout", "defineLazyProp", "isObject", "isObjectObject", "isPlainObject", "replaceObject", "copyProp", "regex", "regexAll", "isDefined", "cycle", "debounce", "isRegex", "weakMapMemoize", "weakMapMemoizePromise", "getOrSet", "cleanup", "tryCatch", "request", "addHeaderBuilder", "default" ].indexOf(__WEBPACK_IMPORT_KEY__) < 0 && function(key) {
+            for (var __WEBPACK_IMPORT_KEY__ in __WEBPACK_IMPORTED_MODULE_7__types__) [ "getUserAgent", "isDevice", "isWebView", "isStandAlone", "isFacebookWebView", "isFirefoxIOS", "isEdgeIOS", "isOperaMini", "isAndroid", "isIos", "isGoogleSearchApp", "isQQBrowser", "isIosWebview", "isAndroidWebview", "isIE", "isIECompHeader", "isElectron", "isIEIntranet", "isMacOsCna", "supportsPopups", "isDocumentReady", "urlEncode", "waitForWindowReady", "waitForDocumentReady", "waitForDocumentBody", "parseQuery", "getQueryParam", "urlWillRedirectPage", "formatQuery", "extendQuery", "extendUrl", "redirect", "hasMetaViewPort", "isElementVisible", "enablePerformance", "getPageRenderTime", "htmlEncode", "isBrowser", "querySelectorAll", "onClick", "getScript", "isLocalStorageEnabled", "getBrowserLocales", "appendChild", "isElement", "getElementSafe", "getElement", "elementReady", "PopupOpenError", "popup", "writeToWindow", "writeElementToWindow", "setStyle", "awaitFrameLoad", "awaitFrameWindow", "createElement", "iframe", "addEventListener", "bindEvents", "setVendorCSS", "animate", "makeElementVisible", "makeElementInvisible", "showElement", "hideElement", "destroyElement", "showAndAnimate", "animateAndHide", "addClass", "removeClass", "isElementClosed", "watchElementForClose", "fixScripts", "onResize", "experiment", "getGlobalNameSpace", "getStorage", "base64encode", "base64decode", "uniqueID", "getGlobal", "getObjectID", "memoize", "memoizePromise", "promisify", "inlineMemoize", "noop", "once", "hashStr", "strHashStr", "match", "awaitKey", "stringifyError", "stringifyErrorMessage", "stringify", "domainMatches", "patchMethod", "extend", "values", "perc", "min", "max", "regexMap", "svgToBase64", "objFilter", "identity", "regexTokenize", "promiseDebounce", "safeInterval", "isInteger", "isFloat", "serializePrimitive", "deserializePrimitive", "dotify", "undotify", "eventEmitter", "camelToDasherize", "dasherizeToCamel", "capitalizeFirstLetter", "get", "safeTimeout", "defineLazyProp", "isObject", "isObjectObject", "isPlainObject", "replaceObject", "copyProp", "regex", "regexAll", "isDefined", "cycle", "debounce", "isRegex", "weakMapMemoize", "weakMapMemoizePromise", "getOrSet", "cleanup", "tryCatch", "removeFromArray", "request", "addHeaderBuilder", "default" ].indexOf(__WEBPACK_IMPORT_KEY__) < 0 && function(key) {
                 __webpack_require__.d(__webpack_exports__, key, function() {
                     return __WEBPACK_IMPORTED_MODULE_7__types__[key];
                 });
@@ -1989,9 +1993,9 @@
                         }
                         storage || (storage = Object(__WEBPACK_IMPORTED_MODULE_0__util__.r)()[STORAGE_KEY]);
                         storage || (storage = {
-                            id: Object(__WEBPACK_IMPORTED_MODULE_0__util__._5)()
+                            id: Object(__WEBPACK_IMPORTED_MODULE_0__util__._6)()
                         });
-                        storage.id || (storage.id = Object(__WEBPACK_IMPORTED_MODULE_0__util__._5)());
+                        storage.id || (storage.id = Object(__WEBPACK_IMPORTED_MODULE_0__util__._6)());
                         accessedStorage = storage;
                         var result = handler(storage);
                         localStorageEnabled ? window.localStorage.setItem(STORAGE_KEY, JSON.stringify(storage)) : Object(__WEBPACK_IMPORTED_MODULE_0__util__.r)()[STORAGE_KEY] = storage;
@@ -2003,7 +2007,7 @@
                             var session = storage.__session__, now = Date.now();
                             session && now - session.created > lifetime && (session = null);
                             session || (session = {
-                                guid: Object(__WEBPACK_IMPORTED_MODULE_0__util__._5)(),
+                                guid: Object(__WEBPACK_IMPORTED_MODULE_0__util__._6)(),
                                 created: now
                             });
                             storage.__session__ = session;
@@ -2045,8 +2049,8 @@
                     expected.push(name);
                     return function() {
                         for (var _this = this, _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) args[_key] = arguments[_key];
-                        expected.splice(expected.indexOf(name), 1);
-                        var _tryCatch = Object(__WEBPACK_IMPORTED_MODULE_1__util__._3)(function() {
+                        Object(__WEBPACK_IMPORTED_MODULE_1__util__.U)(expected, name);
+                        var _tryCatch = Object(__WEBPACK_IMPORTED_MODULE_1__util__._4)(function() {
                             return fn.call.apply(fn, [ _this ].concat(args));
                         }), result = _tryCatch.result, error = _tryCatch.error;
                         if (error) {
@@ -2068,8 +2072,8 @@
                     expected.push(name);
                     return function() {
                         for (var _this2 = this, _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) args[_key3] = arguments[_key3];
-                        expected.splice(expected.indexOf(name), 1);
-                        var _tryCatch2 = Object(__WEBPACK_IMPORTED_MODULE_1__util__._3)(function() {
+                        Object(__WEBPACK_IMPORTED_MODULE_1__util__.U)(expected, name);
+                        var _tryCatch2 = Object(__WEBPACK_IMPORTED_MODULE_1__util__._4)(function() {
                             return fn.call.apply(fn, [ _this2 ].concat(args));
                         }), result = _tryCatch2.result, error = _tryCatch2.error;
                         if (error) throw error;
@@ -2111,7 +2115,7 @@
                 if ("undefined" != typeof Buffer) return Buffer.from(str, "base64").toString("utf8");
                 throw new Error("Can not find window.atob or Buffer");
             };
-            __webpack_exports__._5 = uniqueID;
+            __webpack_exports__._6 = uniqueID;
             __webpack_exports__.r = function() {
                 if ("undefined" != typeof window) return window;
                 if ("undefined" != typeof window) return window;
@@ -2175,7 +2179,7 @@
                 for (var hash = 0, i = 0; i < str.length; i++) hash += str[i].charCodeAt(0) * Math.pow(i % 10 + 1, 5);
                 return Math.floor(Math.pow(Math.sqrt(hash), 5));
             };
-            __webpack_exports__.Y = function(str) {
+            __webpack_exports__.Z = function(str) {
                 for (var hash = "", i = 0; i < str.length; i++) {
                     var total = str[i].charCodeAt(0) * i;
                     str[i + 1] && (total += str[i + 1].charCodeAt(0) * (i - 1));
@@ -2200,7 +2204,7 @@
                     });
                 });
             };
-            __webpack_exports__._0 = function stringifyError(err) {
+            __webpack_exports__._1 = function stringifyError(err) {
                 var level = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : 1;
                 if (level >= 3) return "stringifyError stack overflow";
                 try {
@@ -2217,11 +2221,11 @@
                     return "Error while stringifying error: " + stringifyError(newErr, level + 1);
                 }
             };
-            __webpack_exports__._1 = function(err) {
+            __webpack_exports__._2 = function(err) {
                 var defaultMessage = "<unknown error: " + Object.prototype.toString.call(err) + ">";
                 return err ? err instanceof Error ? err.message || defaultMessage : "string" == typeof err.message && err.message || defaultMessage : defaultMessage;
             };
-            __webpack_exports__.Z = function(item) {
+            __webpack_exports__._0 = function(item) {
                 return "string" == typeof item ? item : item && "function" == typeof item.toString ? item.toString() : Object.prototype.toString.call(item);
             };
             __webpack_exports__.m = function(hostname, domain) {
@@ -2248,7 +2252,7 @@
                 for (var key in source) source.hasOwnProperty(key) && (obj[key] = source[key]);
                 return obj;
             };
-            __webpack_exports__._6 = function(obj) {
+            __webpack_exports__._7 = function(obj) {
                 var result = [];
                 for (var key in obj) obj.hasOwnProperty(key) && result.push(obj[key]);
                 return result;
@@ -2269,7 +2273,7 @@
                 });
                 return results;
             };
-            __webpack_exports__._2 = function(svg) {
+            __webpack_exports__._3 = function(svg) {
                 return "data:image/svg+xml;base64," + base64encode(svg);
             };
             __webpack_exports__.K = function(obj) {
@@ -2305,10 +2309,10 @@
                     return localPromise;
                 };
             };
-            __webpack_exports__.V = safeInterval;
+            __webpack_exports__.W = safeInterval;
             __webpack_exports__.z = isInteger;
             __webpack_exports__.y = isFloat;
-            __webpack_exports__.X = serializePrimitive;
+            __webpack_exports__.Y = serializePrimitive;
             __webpack_exports__.l = deserializePrimitive;
             __webpack_exports__.n = function dotify(obj) {
                 var prefix = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : "", newobj = arguments.length > 2 && void 0 !== arguments[2] ? arguments[2] : {};
@@ -2318,7 +2322,7 @@
                 }) ? newobj["" + prefix + key + "[]"] = obj[key].join(",") : obj[key] && "object" === _typeof(obj[key]) ? newobj = dotify(obj[key], "" + prefix + key, newobj) : newobj["" + prefix + key] = serializePrimitive(obj[key]));
                 return newobj;
             };
-            __webpack_exports__._4 = function(obj) {
+            __webpack_exports__._5 = function(obj) {
                 var result = {};
                 for (var key in obj) if (obj.hasOwnProperty(key) && "string" == typeof obj[key]) {
                     var value = obj[key];
@@ -2390,7 +2394,7 @@
                 }
                 return void 0 === item ? def : item;
             };
-            __webpack_exports__.W = function(method, time) {
+            __webpack_exports__.X = function(method, time) {
                 var interval = safeInterval(function() {
                     if ((time -= 100) <= 0) {
                         interval.cancel();
@@ -2402,7 +2406,7 @@
             __webpack_exports__.A = isObject;
             __webpack_exports__.B = isObjectObject;
             __webpack_exports__.C = isPlainObject;
-            __webpack_exports__.U = function replaceObject(item, replacer) {
+            __webpack_exports__.V = function replaceObject(item, replacer) {
                 var fullKey = arguments.length > 2 && void 0 !== arguments[2] ? arguments[2] : "";
                 if (Array.isArray(item)) {
                     for (var _length3 = item.length, result = [], _loop = function(i) {
@@ -2465,10 +2469,10 @@
             __webpack_exports__.D = function(item) {
                 return "[object RegExp]" === Object.prototype.toString.call(item);
             };
-            __webpack_require__.d(__webpack_exports__, "_7", function() {
+            __webpack_require__.d(__webpack_exports__, "_8", function() {
                 return weakMapMemoize;
             });
-            __webpack_require__.d(__webpack_exports__, "_8", function() {
+            __webpack_require__.d(__webpack_exports__, "_9", function() {
                 return weakMapMemoizePromise;
             });
             __webpack_exports__.t = function(obj, key, getter) {
@@ -2503,7 +2507,7 @@
                     }
                 };
             };
-            __webpack_exports__._3 = function(fn) {
+            __webpack_exports__._4 = function(fn) {
                 var result = void 0, error = void 0;
                 try {
                     result = fn();
@@ -2514,6 +2518,10 @@
                     result: result,
                     error: error
                 };
+            };
+            __webpack_exports__.U = function(arr, item) {
+                var index = arr.indexOf(item);
+                -1 !== index && arr.splice(index, 1);
             };
             var __WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__ = __webpack_require__("./node_modules/zalgo-promise/src/index.js"), __WEBPACK_IMPORTED_MODULE_1_cross_domain_safe_weakmap_src__ = __webpack_require__("./node_modules/cross-domain-safe-weakmap/src/index.js"), _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(obj) {
                 return typeof obj;
