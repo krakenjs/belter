@@ -1297,7 +1297,6 @@
                     }(el, name)) return resolve();
                     var hasStarted = !1, startTimeout = void 0, endTimeout = void 0, startEvent = void 0, endEvent = void 0;
                     function cleanUp() {
-                        setVendorCSS(el, "animationName", "");
                         clearTimeout(startTimeout);
                         clearTimeout(endTimeout);
                         startEvent.cancel();

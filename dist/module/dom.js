@@ -775,7 +775,6 @@ export function animate(element, name, clean) {
         var endEvent = void 0;
 
         function cleanUp() {
-            setVendorCSS(el, 'animationName', '');
             clearTimeout(startTimeout);
             clearTimeout(endTimeout);
             startEvent.cancel();
