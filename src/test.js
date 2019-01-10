@@ -2,7 +2,7 @@
 
 import { ZalgoPromise } from 'zalgo-promise/src';
 
-import { noop, tryCatch } from './util';
+import { noop, tryCatch, removeFromArray } from './util';
 
 type Handler = <T, A : $ReadOnlyArray<mixed>>(name : string, fn? : (...args : A) => T) => (...args : A) => T; // eslint-disable-line no-undef
 type Wrapper<T> = ({ expect : Handler, avoid : Handler, expectError : Handler, error : Handler }) => (ZalgoPromise<T> | void);
@@ -18,7 +18,7 @@ export function wrapPromise<T>(method : Wrapper<T>, { timeout = 5000 } : { timeo
         
         // $FlowFixMe
         return function expectWrapper(...args) : * {
-            expected.splice(expected.indexOf(name), 1);
+            removeFromArray(expected, name);
 
             // $FlowFixMe
             let { result, error } = tryCatch(() => fn.call(this, ...args));
@@ -48,7 +48,7 @@ export function wrapPromise<T>(method : Wrapper<T>, { timeout = 5000 } : { timeo
 
         // $FlowFixMe
         return function expectErrorWrapper(...args) : * {
-            expected.splice(expected.indexOf(name), 1);
+            removeFromArray(expected, name);
 
             // $FlowFixMe
             let { result, error } = tryCatch(() => fn.call(this, ...args));

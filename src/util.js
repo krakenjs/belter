@@ -998,3 +998,10 @@ export function tryCatch<T>(fn : () => T) : {| result : T, error : void |} | {| 
     // $FlowFixMe
     return { result, error };
 }
+
+export function removeFromArray<X, T : Array<X>>(arr : T, item : X) {
+    const index = arr.indexOf(item);
+    if (index !== -1) {
+        arr.splice(index, 1);
+    }
+}
