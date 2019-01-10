@@ -82,7 +82,7 @@ export function isIE() : boolean {
     return Boolean(
         window.navigator &&
         window.navigator.userAgent &&
-        (/Edge|MSIE/i).test(window.navigator.userAgent)
+        (/Edge|MSIE|rv:11/i).test(window.navigator.userAgent)
     );
 }
 
