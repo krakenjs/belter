@@ -11,7 +11,11 @@ export function wrapPromise<T>(method : Wrapper<T>, { timeout = 5000 } : { timeo
     let expected : Array<string> = [];
     let promises : Array<ZalgoPromise<*>> = [];
 
-    let timeoutPromise = ZalgoPromise.delay(timeout);
+    let timer = setTimeout(() => {
+        if (expected) {
+            promises.push(ZalgoPromise.asyncReject(new Error(`Expected ${ expected[0] } to be called`)));
+        }
+    }, timeout);
 
     let expect : Handler = (name, fn = noop) => {
         expected.push(name);
@@ -75,16 +79,13 @@ export function wrapPromise<T>(method : Wrapper<T>, { timeout = 5000 } : { timeo
             if (promises.length) {
                 return drain();
             }
+            if (expected.length) {
+                return ZalgoPromise.delay(10).then(drain);
+            }
         });
     };
 
     return drain().then(() => {
-        if (expected.length) {
-            return timeoutPromise.then(drain);
-        }
-    }).then(() => {
-        if (expected.length) {
-            throw new Error(`Expected ${ expected[0] } to be called`);
-        }
+        clearTimeout(timer);
     });
 }
