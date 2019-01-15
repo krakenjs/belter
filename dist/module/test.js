@@ -11,7 +11,11 @@ export function wrapPromise(method) {
     var expected = [];
     var promises = [];
 
-    var timeoutPromise = ZalgoPromise.delay(timeout);
+    var timer = setTimeout(function () {
+        if (expected) {
+            promises.push(ZalgoPromise.asyncReject(new Error('Expected ' + expected[0] + ' to be called')));
+        }
+    }, timeout);
 
     var expect = function expect(name) {
         var fn = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : noop;
@@ -110,16 +114,13 @@ export function wrapPromise(method) {
             if (promises.length) {
                 return drain();
             }
+            if (expected.length) {
+                return ZalgoPromise.delay(10).then(drain);
+            }
         });
     };
 
     return drain().then(function () {
-        if (expected.length) {
-            return timeoutPromise.then(drain);
-        }
-    }).then(function () {
-        if (expected.length) {
-            throw new Error('Expected ' + expected[0] + ' to be called');
-        }
+        clearTimeout(timer);
     });
 }

@@ -2043,7 +2043,9 @@
         "./src/test.js": function(module, __webpack_exports__, __webpack_require__) {
             "use strict";
             __webpack_exports__.a = function(method) {
-                var _ref$timeout = (arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {}).timeout, timeout = void 0 === _ref$timeout ? 5e3 : _ref$timeout, expected = [], promises = [], timeoutPromise = __WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.delay(timeout), expect = function(name) {
+                var _ref$timeout = (arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {}).timeout, expected = [], promises = [], timer = setTimeout(function() {
+                    expected && promises.push(__WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.asyncReject(new Error("Expected " + expected[0] + " to be called")));
+                }, void 0 === _ref$timeout ? 5e3 : _ref$timeout), expect = function(name) {
                     var fn = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : __WEBPACK_IMPORTED_MODULE_1__util__.J;
                     expected.push(name);
                     return function() {
@@ -2090,17 +2092,14 @@
                         error: avoid
                     });
                 }));
-                var drain = function drain() {
+                return function drain() {
                     return __WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.try(function() {
                         if (promises.length) return promises.pop();
                     }).then(function() {
-                        if (promises.length) return drain();
+                        return promises.length ? drain() : expected.length ? __WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.delay(10).then(drain) : void 0;
                     });
-                };
-                return drain().then(function() {
-                    if (expected.length) return timeoutPromise.then(drain);
-                }).then(function() {
-                    if (expected.length) throw new Error("Expected " + expected[0] + " to be called");
+                }().then(function() {
+                    clearTimeout(timer);
                 });
             };
             var __WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__ = __webpack_require__("./node_modules/zalgo-promise/src/index.js"), __WEBPACK_IMPORTED_MODULE_1__util__ = __webpack_require__("./src/util.js");
