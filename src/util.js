@@ -562,19 +562,17 @@ export function undotify(obj : { [string] : string }) : Object {
 export type EventEmitterType = {
     on : (eventName : string, handler : Function) => CancelableType,
     once : (eventName : string, handler : Function) => CancelableType,
-    trigger : (eventName : string) => void,
-    triggerOnce : (eventName : string) => void
+    trigger : (eventName : string) => ZalgoPromise<void>,
+    triggerOnce : (eventName : string) => ZalgoPromise<void>
 };
 
 export function eventEmitter() : EventEmitterType {
-
     let triggered = {};
     let handlers = {};
 
     return {
 
         on(eventName : string, handler : Function) : CancelableType {
-
             let handlerList = handlers[eventName] = handlers[eventName] || [];
 
             handlerList.push(handler);
@@ -602,25 +600,28 @@ export function eventEmitter() : EventEmitterType {
             return listener;
         },
 
-        trigger(eventName : string) {
+        trigger(eventName : string, ...args : $ReadOnlyArray<mixed>) : ZalgoPromise<void> {
 
             let handlerList = handlers[eventName];
+            let promises = [];
 
             if (handlerList) {
                 for (let handler of handlerList) {
-                    handler();
+                    promises.push(ZalgoPromise.try(() => handler(args)));
                 }
             }
+
+            return ZalgoPromise.all(promises).then(noop);
         },
 
-        triggerOnce(eventName : string) {
+        triggerOnce(eventName : string, ...args : $ReadOnlyArray<mixed>) : ZalgoPromise<void> {
 
             if (triggered[eventName]) {
-                return;
+                return ZalgoPromise.resolve();
             }
 
             triggered[eventName] = true;
-            this.trigger(eventName);
+            return this.trigger(eventName, ...args);
         }
     };
 }
