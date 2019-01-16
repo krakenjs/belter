@@ -2359,15 +2359,21 @@
                         return listener;
                     },
                     trigger: function(eventName) {
-                        var handlerList = handlers[eventName];
-                        if (handlerList) for (var _i2 = 0, _length2 = null == handlerList ? 0 : handlerList.length; _i2 < _length2; _i2++) (0, 
-                        handlerList[_i2])();
+                        for (var _len3 = arguments.length, args = Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) args[_key3 - 1] = arguments[_key3];
+                        var handlerList = handlers[eventName], promises = [];
+                        if (handlerList) for (var _loop = function(_i2, _length2) {
+                            var handler = handlerList[_i2];
+                            promises.push(__WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.try(function() {
+                                return handler(args);
+                            }));
+                        }, _i2 = 0, _length2 = null == handlerList ? 0 : handlerList.length; _i2 < _length2; _i2++) _loop(_i2);
+                        return __WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.all(promises).then(noop);
                     },
                     triggerOnce: function(eventName) {
-                        if (!triggered[eventName]) {
-                            triggered[eventName] = !0;
-                            this.trigger(eventName);
-                        }
+                        if (triggered[eventName]) return __WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.resolve();
+                        triggered[eventName] = !0;
+                        for (var _len4 = arguments.length, args = Array(_len4 > 1 ? _len4 - 1 : 0), _key4 = 1; _key4 < _len4; _key4++) args[_key4 - 1] = arguments[_key4];
+                        return this.trigger.apply(this, [ eventName ].concat(args));
                     }
                 };
             };
@@ -2407,17 +2413,17 @@
             __webpack_exports__.V = function replaceObject(item, replacer) {
                 var fullKey = arguments.length > 2 && void 0 !== arguments[2] ? arguments[2] : "";
                 if (Array.isArray(item)) {
-                    for (var _length3 = item.length, result = [], _loop = function(i) {
+                    for (var _length3 = item.length, result = [], _loop2 = function(i) {
                         defineLazyProp(result, i, function() {
                             var itemKey = fullKey ? fullKey + "." + i : "" + i, el = item[i], child = replacer(el, i, itemKey);
                             (isPlainObject(child) || Array.isArray(child)) && (child = replaceObject(child, replacer, itemKey));
                             return child;
                         });
-                    }, i = 0; i < _length3; i++) _loop(i);
+                    }, i = 0; i < _length3; i++) _loop2(i);
                     return result;
                 }
                 if (isPlainObject(item)) {
-                    var _result = {}, _loop2 = function(key) {
+                    var _result = {}, _loop3 = function(key) {
                         if (!item.hasOwnProperty(key)) return "continue";
                         defineLazyProp(_result, key, function() {
                             var itemKey = fullKey ? fullKey + "." + key : "" + key, el = item[key], child = replacer(el, key, itemKey);
@@ -2425,7 +2431,7 @@
                             return child;
                         });
                     };
-                    for (var key in item) _loop2(key);
+                    for (var key in item) _loop3(key);
                     return _result;
                 }
                 throw new Error("Pass an object or array");

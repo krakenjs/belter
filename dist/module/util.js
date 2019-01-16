@@ -590,13 +590,11 @@ export function undotify(obj) {
 }
 
 export function eventEmitter() {
-
     var triggered = {};
     var handlers = {};
 
     return {
         on: function on(eventName, handler) {
-
             var handlerList = handlers[eventName] = handlers[eventName] || [];
 
             handlerList.push(handler);
@@ -622,24 +620,41 @@ export function eventEmitter() {
             return listener;
         },
         trigger: function trigger(eventName) {
+            for (var _len3 = arguments.length, args = Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
+                args[_key3 - 1] = arguments[_key3];
+            }
 
             var handlerList = handlers[eventName];
+            var promises = [];
 
             if (handlerList) {
+                var _loop = function _loop(_i2, _length2) {
+                    var handler = handlerList[_i2];
+                    promises.push(ZalgoPromise['try'](function () {
+                        return handler(args);
+                    }));
+                };
+
                 for (var _i2 = 0, _length2 = handlerList == null ? 0 : handlerList.length; _i2 < _length2; _i2++) {
-                    var _handler = handlerList[_i2];
-                    _handler();
+                    _loop(_i2, _length2);
                 }
             }
+
+            return ZalgoPromise.all(promises).then(noop);
         },
         triggerOnce: function triggerOnce(eventName) {
 
             if (triggered[eventName]) {
-                return;
+                return ZalgoPromise.resolve();
             }
 
             triggered[eventName] = true;
-            this.trigger(eventName);
+
+            for (var _len4 = arguments.length, args = Array(_len4 > 1 ? _len4 - 1 : 0), _key4 = 1; _key4 < _len4; _key4++) {
+                args[_key4 - 1] = arguments[_key4];
+            }
+
+            return this.trigger.apply(this, [eventName].concat(args));
         }
     };
 }
@@ -770,7 +785,7 @@ export function replaceObject(item, replacer) {
         var _length3 = item.length;
         var result = [];
 
-        var _loop = function _loop(i) {
+        var _loop2 = function _loop2(i) {
 
             defineLazyProp(result, i, function () {
                 var itemKey = fullKey ? fullKey + '.' + i : '' + i;
@@ -788,7 +803,7 @@ export function replaceObject(item, replacer) {
         };
 
         for (var i = 0; i < _length3; i++) {
-            _loop(i);
+            _loop2(i);
         }
 
         // $FlowFixMe
@@ -796,7 +811,7 @@ export function replaceObject(item, replacer) {
     } else if (isPlainObject(item)) {
         var _result = {};
 
-        var _loop2 = function _loop2(key) {
+        var _loop3 = function _loop3(key) {
             if (!item.hasOwnProperty(key)) {
                 return 'continue';
             }
@@ -818,9 +833,9 @@ export function replaceObject(item, replacer) {
         };
 
         for (var key in item) {
-            var _ret2 = _loop2(key);
+            var _ret3 = _loop3(key);
 
-            if (_ret2 === 'continue') continue;
+            if (_ret3 === 'continue') continue;
         }
 
         // $FlowFixMe
