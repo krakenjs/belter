@@ -562,8 +562,8 @@ export function undotify(obj : { [string] : string }) : Object {
 export type EventEmitterType = {
     on : (eventName : string, handler : Function) => CancelableType,
     once : (eventName : string, handler : Function) => CancelableType,
-    trigger : (eventName : string) => ZalgoPromise<void>,
-    triggerOnce : (eventName : string) => ZalgoPromise<void>
+    trigger : (eventName : string, ...args : $ReadOnlyArray<mixed>) => ZalgoPromise<void>,
+    triggerOnce : (eventName : string, ...args : $ReadOnlyArray<mixed>) => ZalgoPromise<void>
 };
 
 export function eventEmitter() : EventEmitterType {
