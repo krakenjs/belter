@@ -2364,7 +2364,7 @@
                         if (handlerList) for (var _loop = function(_i2, _length2) {
                             var handler = handlerList[_i2];
                             promises.push(__WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.try(function() {
-                                return handler(args);
+                                return handler.apply(void 0, args);
                             }));
                         }, _i2 = 0, _length2 = null == handlerList ? 0 : handlerList.length; _i2 < _length2; _i2++) _loop(_i2);
                         return __WEBPACK_IMPORTED_MODULE_0_zalgo_promise_src__.a.all(promises).then(noop);

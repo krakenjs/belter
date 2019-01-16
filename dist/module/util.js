@@ -631,7 +631,7 @@ export function eventEmitter() {
                 var _loop = function _loop(_i2, _length2) {
                     var handler = handlerList[_i2];
                     promises.push(ZalgoPromise['try'](function () {
-                        return handler(args);
+                        return handler.apply(undefined, args);
                     }));
                 };
 
