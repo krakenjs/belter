@@ -607,7 +607,7 @@ export function eventEmitter() : EventEmitterType {
 
             if (handlerList) {
                 for (let handler of handlerList) {
-                    promises.push(ZalgoPromise.try(() => handler(args)));
+                    promises.push(ZalgoPromise.try(() => handler(...args)));
                 }
             }
 
