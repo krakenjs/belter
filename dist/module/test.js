@@ -1,6 +1,8 @@
 import { ZalgoPromise } from 'zalgo-promise/src';
 
-import { noop, tryCatch, removeFromArray } from './util'; // eslint-disable-line no-undef
+import { noop, tryCatch, removeFromArray } from './util'; // eslint-disable-line no-restricted-globals, promise/no-native
+
+// eslint-disable-line no-undef
 
 
 export function wrapPromise(method) {
