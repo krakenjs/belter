@@ -7,7 +7,7 @@ type RequestOptionsType = {
     url : string,
     method? : string,
     headers? : { [key : string] : string },
-    json? : Object,
+    json? : $ReadOnlyArray<mixed> | Object,
     data? : { [key : string] : string },
     body? : string,
     win? : SameDomainWindowType,
