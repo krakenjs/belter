@@ -1240,6 +1240,7 @@
                 var element = document.createElement(tag);
                 options.style && Object(util.p)(element.style, options.style);
                 options.class && (element.className = options.class.join(" "));
+                options.id && element.setAttribute("id", options.id);
                 if (options.attributes) for (var _i6 = 0, _Object$keys2 = Object.keys(options.attributes), _length6 = null == _Object$keys2 ? 0 : _Object$keys2.length; _i6 < _length6; _i6++) {
                     var key = _Object$keys2[_i6];
                     element.setAttribute(key, options.attributes[key]);
