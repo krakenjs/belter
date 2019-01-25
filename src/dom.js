@@ -517,6 +517,7 @@ export function setStyle(el : HTMLElement, styleText : string, doc : Document = 
 
 export type ElementOptionsType = {
     style? : { [ string ] : string },
+    id? : string,
     class? : ?Array<string>,
     attributes? : { [ string ] : string },
     styleSheet? : ?string,
@@ -582,6 +583,10 @@ export function createElement(tag : string = 'div', options : ElementOptionsType
 
     if (options.class) {
         element.className = options.class.join(' ');
+    }
+
+    if (options.id) {
+        element.setAttribute('id', options.id);
     }
 
     if (options.attributes) {
