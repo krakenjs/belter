@@ -626,8 +626,6 @@ export function iframe() {
     var attempts = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 3;
 
 
-    var el = getElement(container);
-
     var attributes = options.attributes || {};
     var style = options.style || {};
 
@@ -646,23 +644,26 @@ export function iframe() {
     // $FlowFixMe
     awaitFrameLoad(frame);
 
-    el.appendChild(frame);
+    if (container) {
+        var el = getElement(container);
+        el.appendChild(frame);
 
-    // $FlowFixMe
-    var win = frame.contentWindow;
+        // $FlowFixMe
+        var _win = frame.contentWindow;
 
-    if (win) {
-        try {
-            // $FlowFixMe
-            noop(win.name);
-        } catch (err) {
-            el.removeChild(frame);
+        if (_win) {
+            try {
+                // $FlowFixMe
+                noop(_win.name);
+            } catch (err) {
+                el.removeChild(frame);
 
-            if (!attempts) {
-                throw new Error('Frame is cross-domain: ' + err.stack);
+                if (!attempts) {
+                    throw new Error('Frame is cross-domain: ' + err.stack);
+                }
+
+                return iframe(options, container, attempts - 1);
             }
-
-            return iframe(options, container, attempts - 1);
         }
     }
 

@@ -993,7 +993,7 @@
             };
             __webpack_exports__.j = createElement;
             __webpack_exports__.A = function iframe() {
-                var options = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : {}, container = arguments[1], attempts = arguments.length > 2 && void 0 !== arguments[2] ? arguments[2] : 3, el = getElement(container), attributes = options.attributes || {}, style = options.style || {}, frame = createElement("iframe", {
+                var options = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : {}, container = arguments[1], attempts = arguments.length > 2 && void 0 !== arguments[2] ? arguments[2] : 3, attributes = options.attributes || {}, style = options.style || {}, frame = createElement("iframe", {
                     attributes: _extends({
                         frameBorder: "0",
                         allowTransparency: "true"
@@ -1005,14 +1005,17 @@
                     class: options.class
                 });
                 awaitFrameLoad(frame);
-                el.appendChild(frame);
-                var win = frame.contentWindow;
-                if (win) try {
-                    Object(util.K)(win.name);
-                } catch (err) {
-                    el.removeChild(frame);
-                    if (!attempts) throw new Error("Frame is cross-domain: " + err.stack);
-                    return iframe(options, container, attempts - 1);
+                if (container) {
+                    var el = getElement(container);
+                    el.appendChild(frame);
+                    var _win = frame.contentWindow;
+                    if (_win) try {
+                        Object(util.K)(_win.name);
+                    } catch (err) {
+                        el.removeChild(frame);
+                        if (!attempts) throw new Error("Frame is cross-domain: " + err.stack);
+                        return iframe(options, container, attempts - 1);
+                    }
                 }
                 (options.url || window.navigator.userAgent.match(/MSIE|Edge/i)) && frame.setAttribute("src", options.url || "about:blank");
                 return frame;
