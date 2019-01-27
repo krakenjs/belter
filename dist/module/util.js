@@ -1042,3 +1042,11 @@ export function removeFromArray(arr, item) {
         arr.splice(index, 1);
     }
 }
+
+export function assertExists(name, thing) {
+    if (thing === null || typeof thing === 'undefined') {
+        throw new Error('Expected ' + name + ' to be present');
+    }
+
+    return thing;
+}
