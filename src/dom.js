@@ -631,9 +631,7 @@ export type IframeElementOptionsType = {
     url? : ?string
 };
 
-export function iframe(options : IframeElementOptionsType = {}, container : HTMLElement, attempts : number = 3) : HTMLIFrameElement {
-
-    let el = getElement(container);
+export function iframe(options : IframeElementOptionsType = {}, container : ?HTMLElement, attempts : number = 3) : HTMLIFrameElement {
 
     let attributes = options.attributes || {};
     let style = options.style || {};
@@ -655,23 +653,26 @@ export function iframe(options : IframeElementOptionsType = {}, container : HTML
     // $FlowFixMe
     awaitFrameLoad(frame);
 
-    el.appendChild(frame);
-
-    // $FlowFixMe
-    let win = frame.contentWindow;
-
-    if (win) {
-        try {
-            // $FlowFixMe
-            noop(win.name);
-        } catch (err) {
-            el.removeChild(frame);
-
-            if (!attempts) {
-                throw new Error(`Frame is cross-domain: ${ err.stack }`);
+    if (container) {
+        let el = getElement(container);
+        el.appendChild(frame);
+    
+        // $FlowFixMe
+        let win = frame.contentWindow;
+    
+        if (win) {
+            try {
+                // $FlowFixMe
+                noop(win.name);
+            } catch (err) {
+                el.removeChild(frame);
+    
+                if (!attempts) {
+                    throw new Error(`Frame is cross-domain: ${ err.stack }`);
+                }
+    
+                return iframe(options, container, attempts - 1);
             }
-
-            return iframe(options, container, attempts - 1);
         }
     }
 
