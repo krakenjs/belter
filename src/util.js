@@ -1006,3 +1006,11 @@ export function removeFromArray<X, T : Array<X>>(arr : T, item : X) {
         arr.splice(index, 1);
     }
 }
+
+export function assertExists<T>(name : string, thing : void | null | T) : T {
+    if (thing === null || typeof thing === 'undefined') {
+        throw new Error(`Expected ${ name } to be present`);
+    }
+
+    return thing;
+}
