@@ -725,48 +725,6 @@ export function setVendorCSS(element : HTMLElement, name : string, value : strin
     }
 }
 
-function isValidAnimation(element : HTMLElement, name : string) : boolean {
-
-    let CSSRule = window.CSSRule;
-
-    const KEYFRAMES_RULE = CSSRule.KEYFRAMES_RULE || CSSRule.WEBKIT_KEYFRAMES_RULE || CSSRule.MOZ_KEYFRAMES_RULE ||
-        CSSRule.O_KEYFRAMES_RULE || CSSRule.MS_KEYFRAMES_RULE;
-
-    let stylesheets = element.ownerDocument.styleSheets;
-
-    try {
-        for (let i = 0; i < stylesheets.length; i++) {
-
-            // $FlowFixMe
-            let cssRules = stylesheets[i].cssRules;
-
-            if (!cssRules) {
-                continue;
-            }
-
-            for (let j = 0; j < cssRules.length; j++) {
-
-                let cssRule = cssRules[j];
-
-                if (!cssRule) {
-                    continue;
-                }
-
-                if (cssRule.type === KEYFRAMES_RULE && cssRule.name === name) {
-                    return true;
-                }
-            }
-        }
-    } catch (err) {
-
-        return false;
-    }
-
-
-    return false;
-}
-
-
 const ANIMATION_START_EVENTS = [ 'animationstart', 'webkitAnimationStart', 'oAnimationStart', 'MSAnimationStart' ];
 const ANIMATION_END_EVENTS   = [ 'animationend', 'webkitAnimationEnd', 'oAnimationEnd', 'MSAnimationEnd' ];
 
@@ -775,7 +733,7 @@ export function animate(element : ElementRefType, name : string, clean : (Functi
 
         let el = getElement(element);
 
-        if (!el || !isValidAnimation(el, name)) {
+        if (!el) {
             return resolve();
         }
 
