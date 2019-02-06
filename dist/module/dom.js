@@ -719,45 +719,6 @@ export function setVendorCSS(element, name, value) {
     }
 }
 
-function isValidAnimation(element, name) {
-
-    var CSSRule = window.CSSRule;
-
-    var KEYFRAMES_RULE = CSSRule.KEYFRAMES_RULE || CSSRule.WEBKIT_KEYFRAMES_RULE || CSSRule.MOZ_KEYFRAMES_RULE || CSSRule.O_KEYFRAMES_RULE || CSSRule.MS_KEYFRAMES_RULE;
-
-    var stylesheets = element.ownerDocument.styleSheets;
-
-    try {
-        for (var i = 0; i < stylesheets.length; i++) {
-
-            // $FlowFixMe
-            var cssRules = stylesheets[i].cssRules;
-
-            if (!cssRules) {
-                continue;
-            }
-
-            for (var j = 0; j < cssRules.length; j++) {
-
-                var cssRule = cssRules[j];
-
-                if (!cssRule) {
-                    continue;
-                }
-
-                if (cssRule.type === KEYFRAMES_RULE && cssRule.name === name) {
-                    return true;
-                }
-            }
-        }
-    } catch (err) {
-
-        return false;
-    }
-
-    return false;
-}
-
 var ANIMATION_START_EVENTS = ['animationstart', 'webkitAnimationStart', 'oAnimationStart', 'MSAnimationStart'];
 var ANIMATION_END_EVENTS = ['animationend', 'webkitAnimationEnd', 'oAnimationEnd', 'MSAnimationEnd'];
 
@@ -768,7 +729,7 @@ export function animate(element, name, clean) {
 
         var el = getElement(element);
 
-        if (!el || !isValidAnimation(el, name)) {
+        if (!el) {
             return resolve();
         }
 

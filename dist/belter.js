@@ -1616,21 +1616,7 @@
                 var timeout = arguments.length > 3 && void 0 !== arguments[3] ? arguments[3] : 1e3;
                 return new promise_ZalgoPromise(function(resolve, reject) {
                     var el = getElement(element);
-                    if (!el || !function(element, name) {
-                        var CSSRule = window.CSSRule, KEYFRAMES_RULE = CSSRule.KEYFRAMES_RULE || CSSRule.WEBKIT_KEYFRAMES_RULE || CSSRule.MOZ_KEYFRAMES_RULE || CSSRule.O_KEYFRAMES_RULE || CSSRule.MS_KEYFRAMES_RULE, stylesheets = element.ownerDocument.styleSheets;
-                        try {
-                            for (var i = 0; i < stylesheets.length; i++) {
-                                var cssRules = stylesheets[i].cssRules;
-                                if (cssRules) for (var j = 0; j < cssRules.length; j++) {
-                                    var cssRule = cssRules[j];
-                                    if (cssRule && cssRule.type === KEYFRAMES_RULE && cssRule.name === name) return !0;
-                                }
-                            }
-                        } catch (err) {
-                            return !1;
-                        }
-                        return !1;
-                    }(el, name)) return resolve();
+                    if (!el) return resolve();
                     var hasStarted = !1, startTimeout = void 0, endTimeout = void 0, startEvent = void 0, endEvent = void 0;
                     function cleanUp() {
                         clearTimeout(startTimeout);
