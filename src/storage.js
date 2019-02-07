@@ -12,9 +12,11 @@ export type Storage = {
     getSessionID : () => string
 };
 
-export function getStorage({ name, version = 'latest', lifetime = (5 * 60 * 1000) } : { name : string, version? : string, lifetime? : number }) : Storage {
+const DEFAULT_SESSION_STORAGE = 20 * 60 * 1000;
+
+export function getStorage({ name, lifetime = DEFAULT_SESSION_STORAGE } : { name : string, lifetime? : number }) : Storage {
     return inlineMemoize(getStorage, () => {
-        const STORAGE_KEY = `__${ name }_${ version }_storage__`;
+        const STORAGE_KEY = `__${ name }_storage__`;
 
         let accessedStorage;
 
