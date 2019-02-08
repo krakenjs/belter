@@ -631,11 +631,11 @@ export function iframe() {
 
     var frame = createElement('iframe', {
         attributes: _extends({
-            frameBorder: '0',
             allowTransparency: 'true'
         }, attributes),
         style: _extends({
-            backgroundColor: 'transparent'
+            backgroundColor: 'transparent',
+            border: 'none'
         }, style),
         html: options.html,
         'class': options['class']
