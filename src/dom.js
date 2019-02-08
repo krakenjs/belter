@@ -638,12 +638,12 @@ export function iframe(options : IframeElementOptionsType = {}, container : ?HTM
 
     let frame = createElement('iframe', {
         attributes: {
-            frameBorder:       '0',
             allowTransparency: 'true',
             ...attributes
         },
         style: {
             backgroundColor: 'transparent',
+            border:          'none',
             ...style
         },
         html:  options.html,

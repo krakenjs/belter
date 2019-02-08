@@ -1555,11 +1555,11 @@
             function iframe() {
                 var options = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : {}, container = arguments[1], attempts = arguments.length > 2 && void 0 !== arguments[2] ? arguments[2] : 3, attributes = options.attributes || {}, style = options.style || {}, frame = createElement("iframe", {
                     attributes: _extends({
-                        frameBorder: "0",
                         allowTransparency: "true"
                     }, attributes),
                     style: _extends({
-                        backgroundColor: "transparent"
+                        backgroundColor: "transparent",
+                        border: "none"
                     }, style),
                     html: options.html,
                     class: options.class
