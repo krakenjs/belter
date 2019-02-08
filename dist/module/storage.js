@@ -1,15 +1,15 @@
 import { uniqueID, getGlobal, inlineMemoize } from './util';
 import { isLocalStorageEnabled } from './dom';
 
+var DEFAULT_SESSION_STORAGE = 20 * 60 * 1000;
+
 export function getStorage(_ref) {
     var name = _ref.name,
-        _ref$version = _ref.version,
-        version = _ref$version === undefined ? 'latest' : _ref$version,
         _ref$lifetime = _ref.lifetime,
-        lifetime = _ref$lifetime === undefined ? 5 * 60 * 1000 : _ref$lifetime;
+        lifetime = _ref$lifetime === undefined ? DEFAULT_SESSION_STORAGE : _ref$lifetime;
 
     return inlineMemoize(getStorage, function () {
-        var STORAGE_KEY = '__' + name + '_' + version + '_storage__';
+        var STORAGE_KEY = '__' + name + '_storage__';
 
         var accessedStorage = void 0;
 
@@ -107,5 +107,5 @@ export function getStorage(_ref) {
             getSessionState: getSessionState,
             getSessionID: getSessionID
         };
-    }, [{ name: name, version: version, lifetime: lifetime }]);
+    }, [{ name: name, lifetime: lifetime }]);
 }

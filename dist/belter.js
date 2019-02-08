@@ -1757,10 +1757,11 @@
                     }
                 };
             }
+            var DEFAULT_SESSION_STORAGE = 12e5;
             function getStorage(_ref) {
-                var name = _ref.name, _ref$version = _ref.version, version = void 0 === _ref$version ? "latest" : _ref$version, _ref$lifetime = _ref.lifetime, lifetime = void 0 === _ref$lifetime ? 3e5 : _ref$lifetime;
+                var name = _ref.name, _ref$lifetime = _ref.lifetime, lifetime = void 0 === _ref$lifetime ? DEFAULT_SESSION_STORAGE : _ref$lifetime;
                 return inlineMemoize(getStorage, function() {
-                    var STORAGE_KEY = "__" + name + "_" + version + "_storage__", accessedStorage = void 0;
+                    var STORAGE_KEY = "__" + name + "_storage__", accessedStorage = void 0;
                     function getState(handler) {
                         var localStorageEnabled = isLocalStorageEnabled(), storage = void 0;
                         accessedStorage && (storage = accessedStorage);
@@ -1812,7 +1813,6 @@
                     };
                 }, [ {
                     name: name,
-                    version: version,
                     lifetime: lifetime
                 } ]);
             }
