@@ -110,5 +110,5 @@ export function getStorage({ name, lifetime = DEFAULT_SESSION_STORAGE } : { name
             getSessionState,
             getSessionID
         };
-    }, [ { name, version, lifetime } ]);
+    }, [ { name, lifetime } ]);
 }
