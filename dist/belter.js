@@ -1528,7 +1528,7 @@
                 return promise;
             }
             function awaitFrameWindow(frame) {
-                return frame.contentWindow ? promise_ZalgoPromise.resolve(frame.contentWindow) : awaitFrameLoad(frame).then(function(loadedFrame) {
+                return awaitFrameLoad(frame).then(function(loadedFrame) {
                     if (!loadedFrame.contentWindow) throw new Error("Could not find window in iframe");
                     return loadedFrame.contentWindow;
                 });

@@ -552,11 +552,6 @@ export function awaitFrameLoad(frame) {
 }
 
 export function awaitFrameWindow(frame) {
-
-    if (frame.contentWindow) {
-        return ZalgoPromise.resolve(frame.contentWindow);
-    }
-
     return awaitFrameLoad(frame).then(function (loadedFrame) {
 
         if (!loadedFrame.contentWindow) {
