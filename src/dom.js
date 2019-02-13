@@ -645,20 +645,24 @@ export function iframe(options : IframeElementOptionsType = {}, container : ?HTM
         class: options.class
     });
 
-    // Avoid weird Edge caching issue
-    if (!frame.hasAttribute('id')) {
-        frame.setAttribute('id', uniqueID());
-    }
+    const isIE = window.navigator.userAgent.match(/MSIE|Edge/i);
+    
+    if (isIE) {
+        // Avoid weird Edge caching issue
+        if (!frame.hasAttribute('id')) {
+            frame.setAttribute('id', uniqueID());
+        }
 
-    window.addEventListener('beforeunload', () => {
-        const frameID = frame.getAttribute('id');
-        frame.setAttribute('id', uniqueID());
-        setTimeout(() => {
-            if (typeof frameID === 'string') {
-                frame.setAttribute('id', frameID);
-            }
-        }, 1);
-    });
+        window.addEventListener('beforeunload', () => {
+            const frameID = frame.getAttribute('id');
+            frame.setAttribute('id', uniqueID());
+            setTimeout(() => {
+                if (typeof frameID === 'string') {
+                    frame.setAttribute('id', frameID);
+                }
+            }, 1);
+        });
+    }
 
     // $FlowFixMe
     awaitFrameLoad(frame);
@@ -668,7 +672,7 @@ export function iframe(options : IframeElementOptionsType = {}, container : ?HTM
         el.appendChild(frame);
     }
 
-    if (options.url || window.navigator.userAgent.match(/MSIE|Edge/i)) {
+    if (options.url || isIE) {
         frame.setAttribute('src', options.url || 'about:blank');
     }
 
