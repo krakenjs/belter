@@ -647,21 +647,8 @@ export function iframe(options : IframeElementOptionsType = {}, container : ?HTM
 
     const isIE = window.navigator.userAgent.match(/MSIE|Edge/i);
     
-    if (isIE) {
-        // Avoid weird Edge caching issue
-        if (!frame.hasAttribute('id')) {
-            frame.setAttribute('id', uniqueID());
-        }
-
-        window.addEventListener('beforeunload', () => {
-            const frameID = frame.getAttribute('id');
-            frame.setAttribute('id', uniqueID());
-            setTimeout(() => {
-                if (typeof frameID === 'string') {
-                    frame.setAttribute('id', frameID);
-                }
-            }, 1);
-        });
+    if (!frame.hasAttribute('id')) {
+        frame.setAttribute('id', uniqueID());
     }
 
     // $FlowFixMe
