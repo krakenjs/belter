@@ -8,7 +8,7 @@ import { ZalgoPromise } from 'zalgo-promise/src';
 import { linkFrameWindow, isWindowClosed } from 'cross-domain-utils/src';
 import { WeakMap } from 'cross-domain-safe-weakmap/src';
 
-import { inlineMemoize, noop, stringify, capitalizeFirstLetter, once, extend, safeInterval } from './util';
+import { inlineMemoize, noop, stringify, capitalizeFirstLetter, once, extend, safeInterval, uniqueID } from './util';
 import { isDevice } from './device';
 import { KEY_CODES } from './constants';
 
@@ -618,7 +618,6 @@ export function createElement() {
 export function iframe() {
     var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     var container = arguments[1];
-    var attempts = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 3;
 
 
     var attributes = options.attributes || {};
@@ -636,30 +635,27 @@ export function iframe() {
         'class': options['class']
     });
 
+    // Avoid weird Edge caching issue
+    if (!frame.hasAttribute('id')) {
+        frame.setAttribute('id', uniqueID());
+    }
+
+    window.addEventListener('beforeunload', function () {
+        var frameID = frame.getAttribute('id');
+        frame.setAttribute('id', uniqueID());
+        setTimeout(function () {
+            if (typeof frameID === 'string') {
+                frame.setAttribute('id', frameID);
+            }
+        }, 1);
+    });
+
     // $FlowFixMe
     awaitFrameLoad(frame);
 
     if (container) {
         var el = getElement(container);
         el.appendChild(frame);
-
-        // $FlowFixMe
-        var _win = frame.contentWindow;
-
-        if (_win) {
-            try {
-                // $FlowFixMe
-                noop(_win.name);
-            } catch (err) {
-                el.removeChild(frame);
-
-                if (!attempts) {
-                    throw new Error('Frame is cross-domain: ' + err.stack);
-                }
-
-                return iframe(options, container, attempts - 1);
-            }
-        }
     }
 
     if (options.url || window.navigator.userAgent.match(/MSIE|Edge/i)) {

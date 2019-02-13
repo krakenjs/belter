@@ -1553,7 +1553,7 @@
                 return element;
             }
             function iframe() {
-                var options = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : {}, container = arguments[1], attempts = arguments.length > 2 && void 0 !== arguments[2] ? arguments[2] : 3, attributes = options.attributes || {}, style = options.style || {}, frame = createElement("iframe", {
+                var options = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : {}, container = arguments[1], attributes = options.attributes || {}, style = options.style || {}, frame = createElement("iframe", {
                     attributes: _extends({
                         allowTransparency: "true"
                     }, attributes),
@@ -1564,19 +1564,16 @@
                     html: options.html,
                     class: options.class
                 });
+                frame.hasAttribute("id") || frame.setAttribute("id", uniqueID());
+                window.addEventListener("beforeunload", function() {
+                    var frameID = frame.getAttribute("id");
+                    frame.setAttribute("id", uniqueID());
+                    setTimeout(function() {
+                        "string" == typeof frameID && frame.setAttribute("id", frameID);
+                    }, 1);
+                });
                 awaitFrameLoad(frame);
-                if (container) {
-                    var el = getElement(container);
-                    el.appendChild(frame);
-                    var _win = frame.contentWindow;
-                    if (_win) try {
-                        _win.name;
-                    } catch (err) {
-                        el.removeChild(frame);
-                        if (!attempts) throw new Error("Frame is cross-domain: " + err.stack);
-                        return iframe(options, container, attempts - 1);
-                    }
-                }
+                container && getElement(container).appendChild(frame);
                 (options.url || window.navigator.userAgent.match(/MSIE|Edge/i)) && frame.setAttribute("src", options.url || "about:blank");
                 return frame;
             }
