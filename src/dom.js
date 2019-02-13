@@ -646,18 +646,22 @@ export function iframe(options : IframeElementOptionsType = {}, container : ?HTM
     });
 
     // Avoid weird Edge caching issue
-    const hasID = frame.hasAttribute('id');
-    const frameID = frame.getAttribute('id');
-    frame.setAttribute('id', uniqueID());
+    if (!frame.hasAttribute('id')) {
+        frame.setAttribute('id', uniqueID());
+    }
+
+    window.addEventListener('beforeunload', () => {
+        const frameID = frame.getAttribute('id');
+        frame.setAttribute('id', uniqueID());
+        setTimeout(() => {
+            if (typeof frameID === 'string') {
+                frame.setAttribute('id', frameID);
+            }
+        }, 1);
+    });
 
     // $FlowFixMe
-    awaitFrameLoad(frame).then(() => {
-        if (hasID && frameID) {
-            frame.setAttribute('id', frameID);
-        } else {
-            frame.removeAttribute('id');
-        }
-    });
+    awaitFrameLoad(frame);
 
     if (container) {
         let el = getElement(container);
