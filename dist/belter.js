@@ -98,7 +98,7 @@
                 var ua = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : getUserAgent();
                 return !!isAndroid(ua) && /Version\/[\d.]+/.test(ua) && !isOperaMini(ua);
             }
-            function isIE() {
+            function device_isIE() {
                 return !!window.document.documentMode || Boolean(window.navigator && window.navigator.userAgent && /Edge|MSIE|rv:11/i.test(window.navigator.userAgent));
             }
             function isIECompHeader() {
@@ -1563,18 +1563,11 @@
                     }, style),
                     html: options.html,
                     class: options.class
-                });
+                }), isIE = window.navigator.userAgent.match(/MSIE|Edge/i);
                 frame.hasAttribute("id") || frame.setAttribute("id", uniqueID());
-                window.addEventListener("beforeunload", function() {
-                    var frameID = frame.getAttribute("id");
-                    frame.setAttribute("id", uniqueID());
-                    setTimeout(function() {
-                        "string" == typeof frameID && frame.setAttribute("id", frameID);
-                    }, 1);
-                });
                 awaitFrameLoad(frame);
                 container && getElement(container).appendChild(frame);
-                (options.url || window.navigator.userAgent.match(/MSIE|Edge/i)) && frame.setAttribute("src", options.url || "about:blank");
+                (options.url || isIE) && frame.setAttribute("src", options.url || "about:blank");
                 return frame;
             }
             function addEventListener(obj, event, handler) {
@@ -2092,7 +2085,7 @@
                 return isAndroidWebview;
             });
             __webpack_require__.d(__webpack_exports__, "isIE", function() {
-                return isIE;
+                return device_isIE;
             });
             __webpack_require__.d(__webpack_exports__, "isIECompHeader", function() {
                 return isIECompHeader;

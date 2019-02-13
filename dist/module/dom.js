@@ -635,20 +635,11 @@ export function iframe() {
         'class': options['class']
     });
 
-    // Avoid weird Edge caching issue
+    var isIE = window.navigator.userAgent.match(/MSIE|Edge/i);
+
     if (!frame.hasAttribute('id')) {
         frame.setAttribute('id', uniqueID());
     }
-
-    window.addEventListener('beforeunload', function () {
-        var frameID = frame.getAttribute('id');
-        frame.setAttribute('id', uniqueID());
-        setTimeout(function () {
-            if (typeof frameID === 'string') {
-                frame.setAttribute('id', frameID);
-            }
-        }, 1);
-    });
 
     // $FlowFixMe
     awaitFrameLoad(frame);
@@ -658,7 +649,7 @@ export function iframe() {
         el.appendChild(frame);
     }
 
-    if (options.url || window.navigator.userAgent.match(/MSIE|Edge/i)) {
+    if (options.url || isIE) {
         frame.setAttribute('src', options.url || 'about:blank');
     }
 
