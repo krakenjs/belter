@@ -7,7 +7,7 @@ import { linkFrameWindow, isWindowClosed,
 import { WeakMap } from 'cross-domain-safe-weakmap/src';
 
 import { inlineMemoize, noop, stringify, capitalizeFirstLetter,
-    once, extend, safeInterval } from './util';
+    once, extend, safeInterval, uniqueID } from './util';
 import { isDevice } from './device';
 import { KEY_CODES } from './constants';
 import type { CancelableType } from './types';
@@ -626,7 +626,7 @@ export type IframeElementOptionsType = {
     url? : ?string
 };
 
-export function iframe(options : IframeElementOptionsType = {}, container : ?HTMLElement, attempts : number = 3) : HTMLIFrameElement {
+export function iframe(options : IframeElementOptionsType = {}, container : ?HTMLElement) : HTMLIFrameElement {
 
     let attributes = options.attributes || {};
     let style = options.style || {};
@@ -645,30 +645,23 @@ export function iframe(options : IframeElementOptionsType = {}, container : ?HTM
         class: options.class
     });
 
+    // Avoid weird Edge caching issue
+    const hasID = frame.hasAttribute('id');
+    const frameID = frame.getAttribute('id');
+    frame.setAttribute('id', uniqueID());
+
     // $FlowFixMe
-    awaitFrameLoad(frame);
+    awaitFrameLoad(frame).then(() => {
+        if (hasID && frameID) {
+            frame.setAttribute('id', frameID);
+        } else {
+            frame.removeAttribute('id');
+        }
+    });
 
     if (container) {
         let el = getElement(container);
         el.appendChild(frame);
-    
-        // $FlowFixMe
-        let win = frame.contentWindow;
-    
-        if (win) {
-            try {
-                // $FlowFixMe
-                noop(win.name);
-            } catch (err) {
-                el.removeChild(frame);
-    
-                if (!attempts) {
-                    throw new Error(`Frame is cross-domain: ${ err.stack }`);
-                }
-    
-                return iframe(options, container, attempts - 1);
-            }
-        }
     }
 
     if (options.url || window.navigator.userAgent.match(/MSIE|Edge/i)) {
