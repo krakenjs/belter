@@ -223,11 +223,11 @@ export function isBrowser() : boolean {
     return (typeof window !== 'undefined');
 }
 
-export function querySelectorAll(selector : string, doc : HTMLElement = window.document) : Array<Element> {
+export function querySelectorAll(selector : string, doc : HTMLElement = window.document) : Array<HTMLElement> {
     return Array.prototype.slice.call(doc.querySelectorAll(selector));
 }
 
-export function onClick(element : Element, handler : (Event) => void) {
+export function onClick(element : HTMLElement, handler : (Event) => void) {
     element.addEventListener('touchstart', noop);
     element.addEventListener('click', handler);
     element.addEventListener('keypress', (event : Event) => {
