@@ -498,12 +498,14 @@ export function writeElementToWindow(win, el) {
 
     var documentElement = win.document.documentElement;
 
-    while (documentElement.children && documentElement.children.length) {
-        documentElement.removeChild(documentElement.children[0]);
+    for (var _i6 = 0, _Array$from2 = Array.from(documentElement.children), _length6 = _Array$from2 == null ? 0 : _Array$from2.length; _i6 < _length6; _i6++) {
+        var child = _Array$from2[_i6];
+        documentElement.removeChild(child);
     }
 
-    while (el.children.length) {
-        documentElement.appendChild(el.children[0]);
+    for (var _i8 = 0, _Array$from4 = Array.from(el.children), _length8 = _Array$from4 == null ? 0 : _Array$from4.length; _i8 < _length8; _i8++) {
+        var _child = _Array$from4[_i8];
+        documentElement.appendChild(_child);
     }
 }
 
@@ -584,8 +586,8 @@ export function createElement() {
     }
 
     if (options.attributes) {
-        for (var _i6 = 0, _Object$keys2 = Object.keys(options.attributes), _length6 = _Object$keys2 == null ? 0 : _Object$keys2.length; _i6 < _length6; _i6++) {
-            var key = _Object$keys2[_i6];
+        for (var _i10 = 0, _Object$keys2 = Object.keys(options.attributes), _length10 = _Object$keys2 == null ? 0 : _Object$keys2.length; _i10 < _length10; _i10++) {
+            var key = _Object$keys2[_i10];
             element.setAttribute(key, options.attributes[key]);
         }
     }
@@ -670,15 +672,15 @@ export function bindEvents(element, eventNames, handler) {
 
     handler = once(handler);
 
-    for (var _i8 = 0, _length8 = eventNames == null ? 0 : eventNames.length; _i8 < _length8; _i8++) {
-        var eventName = eventNames[_i8];
+    for (var _i12 = 0, _length12 = eventNames == null ? 0 : eventNames.length; _i12 < _length12; _i12++) {
+        var eventName = eventNames[_i12];
         element.addEventListener(eventName, handler);
     }
 
     return {
         cancel: once(function () {
-            for (var _i10 = 0, _length10 = eventNames == null ? 0 : eventNames.length; _i10 < _length10; _i10++) {
-                var _eventName = eventNames[_i10];
+            for (var _i14 = 0, _length14 = eventNames == null ? 0 : eventNames.length; _i14 < _length14; _i14++) {
+                var _eventName = eventNames[_i14];
                 element.removeEventListener(_eventName, handler);
             }
         })
@@ -694,8 +696,8 @@ export function setVendorCSS(element, name, value) {
 
     var capitalizedName = capitalizeFirstLetter(name);
 
-    for (var _i12 = 0, _length12 = VENDOR_PREFIXES == null ? 0 : VENDOR_PREFIXES.length; _i12 < _length12; _i12++) {
-        var prefix = VENDOR_PREFIXES[_i12];
+    for (var _i16 = 0, _length16 = VENDOR_PREFIXES == null ? 0 : VENDOR_PREFIXES.length; _i16 < _length16; _i16++) {
+        var prefix = VENDOR_PREFIXES[_i16];
         // $FlowFixMe
         element.style['' + prefix + capitalizedName] = value;
     }
@@ -873,8 +875,8 @@ export function watchElementForClose(element, handler) {
 export function fixScripts(el) {
     var doc = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : window.document;
 
-    for (var _i14 = 0, _querySelectorAll2 = querySelectorAll('script', el), _length14 = _querySelectorAll2 == null ? 0 : _querySelectorAll2.length; _i14 < _length14; _i14++) {
-        var script = _querySelectorAll2[_i14];
+    for (var _i18 = 0, _querySelectorAll2 = querySelectorAll('script', el), _length18 = _querySelectorAll2 == null ? 0 : _querySelectorAll2.length; _i18 < _length18; _i18++) {
+        var script = _querySelectorAll2[_i18];
         var parentNode = script.parentNode;
 
         if (!parentNode) {

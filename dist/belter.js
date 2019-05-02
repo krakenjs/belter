@@ -429,7 +429,8 @@
                 if (!protocol) throw new Error("Can not read window protocol");
                 if (protocol === PROTOCOL.FILE) return PROTOCOL.FILE + "//";
                 if (protocol === PROTOCOL.ABOUT) {
-                    var parent = function(win) {
+                    var parent = function() {
+                        var win = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : window;
                         if (win) try {
                             if (win.parent && win.parent !== win) return win.parent;
                         } catch (err) {}
@@ -1485,8 +1486,14 @@
             function writeElementToWindow(win, el) {
                 var tag = el.tagName.toLowerCase();
                 if ("html" !== tag) throw new Error("Expected element to be html, got " + tag);
-                for (var documentElement = win.document.documentElement; documentElement.children && documentElement.children.length; ) documentElement.removeChild(documentElement.children[0]);
-                for (;el.children.length; ) documentElement.appendChild(el.children[0]);
+                for (var documentElement = win.document.documentElement, _i6 = 0, _Array$from2 = Array.from(documentElement.children), _length6 = null == _Array$from2 ? 0 : _Array$from2.length; _i6 < _length6; _i6++) {
+                    var child = _Array$from2[_i6];
+                    documentElement.removeChild(child);
+                }
+                for (var _i8 = 0, _Array$from4 = Array.from(el.children), _length8 = null == _Array$from4 ? 0 : _Array$from4.length; _i8 < _length8; _i8++) {
+                    var _child = _Array$from4[_i8];
+                    documentElement.appendChild(_child);
+                }
             }
             function setStyle(el, styleText) {
                 var doc = arguments.length > 2 && void 0 !== arguments[2] ? arguments[2] : window.document;
@@ -1540,8 +1547,8 @@
                 options.style && extend(element.style, options.style);
                 options.class && (element.className = options.class.join(" "));
                 options.id && element.setAttribute("id", options.id);
-                if (options.attributes) for (var _i6 = 0, _Object$keys2 = Object.keys(options.attributes), _length6 = null == _Object$keys2 ? 0 : _Object$keys2.length; _i6 < _length6; _i6++) {
-                    var key = _Object$keys2[_i6];
+                if (options.attributes) for (var _i10 = 0, _Object$keys2 = Object.keys(options.attributes), _length10 = null == _Object$keys2 ? 0 : _Object$keys2.length; _i10 < _length10; _i10++) {
+                    var key = _Object$keys2[_i10];
                     element.setAttribute(key, options.attributes[key]);
                 }
                 options.styleSheet && setStyle(element, options.styleSheet);
@@ -1580,14 +1587,14 @@
             }
             function bindEvents(element, eventNames, handler) {
                 handler = once(handler);
-                for (var _i8 = 0, _length8 = null == eventNames ? 0 : eventNames.length; _i8 < _length8; _i8++) {
-                    var eventName = eventNames[_i8];
+                for (var _i12 = 0, _length12 = null == eventNames ? 0 : eventNames.length; _i12 < _length12; _i12++) {
+                    var eventName = eventNames[_i12];
                     element.addEventListener(eventName, handler);
                 }
                 return {
                     cancel: once(function() {
-                        for (var _i10 = 0, _length10 = null == eventNames ? 0 : eventNames.length; _i10 < _length10; _i10++) {
-                            var _eventName = eventNames[_i10];
+                        for (var _i14 = 0, _length14 = null == eventNames ? 0 : eventNames.length; _i14 < _length14; _i14++) {
+                            var _eventName = eventNames[_i14];
                             element.removeEventListener(_eventName, handler);
                         }
                     })
@@ -1596,8 +1603,8 @@
             var VENDOR_PREFIXES = [ "webkit", "moz", "ms", "o" ];
             function setVendorCSS(element, name, value) {
                 element.style[name] = value;
-                for (var capitalizedName = capitalizeFirstLetter(name), _i12 = 0, _length12 = null == VENDOR_PREFIXES ? 0 : VENDOR_PREFIXES.length; _i12 < _length12; _i12++) {
-                    var prefix = VENDOR_PREFIXES[_i12];
+                for (var capitalizedName = capitalizeFirstLetter(name), _i16 = 0, _length16 = null == VENDOR_PREFIXES ? 0 : VENDOR_PREFIXES.length; _i16 < _length16; _i16++) {
+                    var prefix = VENDOR_PREFIXES[_i16];
                     element.style["" + prefix + capitalizedName] = value;
                 }
             }
@@ -1703,8 +1710,8 @@
                 };
             }
             function fixScripts(el) {
-                for (var doc = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : window.document, _i14 = 0, _querySelectorAll2 = querySelectorAll("script", el), _length14 = null == _querySelectorAll2 ? 0 : _querySelectorAll2.length; _i14 < _length14; _i14++) {
-                    var script = _querySelectorAll2[_i14], parentNode = script.parentNode;
+                for (var doc = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : window.document, _i18 = 0, _querySelectorAll2 = querySelectorAll("script", el), _length18 = null == _querySelectorAll2 ? 0 : _querySelectorAll2.length; _i18 < _length18; _i18++) {
+                    var script = _querySelectorAll2[_i18], parentNode = script.parentNode;
                     if (parentNode) {
                         var newScript = doc.createElement("script");
                         newScript.text = script.textContent;
