@@ -496,12 +496,12 @@ export function writeElementToWindow(win : SameDomainWindowType, el : HTMLElemen
 
     let documentElement = win.document.documentElement;
 
-    while (documentElement.children && documentElement.children.length) {
-        documentElement.removeChild(documentElement.children[0]);
+    for (const child of Array.from(documentElement.children)) {
+        documentElement.removeChild(child);
     }
 
-    while (el.children.length) {
-        documentElement.appendChild(el.children[0]);
+    for (const child of Array.from(el.children)) {
+        documentElement.appendChild(child);
     }
 }
 
