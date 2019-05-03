@@ -711,6 +711,10 @@ export function defineLazyProp<T>(obj : Object | Array<mixed>, key : string | nu
     });
 }
 
+export function arrayFrom<T>(item : Iterable<T>) : Array<T> { // eslint-disable-line no-undef
+    return Array.prototype.slice.call(item);
+}
+
 export function isObject(item : mixed) : boolean {
     return (typeof item === 'object' && item !== null);
 }

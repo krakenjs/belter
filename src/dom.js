@@ -7,7 +7,7 @@ import { linkFrameWindow, isWindowClosed,
 import { WeakMap } from 'cross-domain-safe-weakmap/src';
 
 import { inlineMemoize, noop, stringify, capitalizeFirstLetter,
-    once, extend, safeInterval, uniqueID } from './util';
+    once, extend, safeInterval, uniqueID, arrayFrom } from './util';
 import { isDevice } from './device';
 import { KEY_CODES } from './constants';
 import type { CancelableType } from './types';
@@ -496,11 +496,11 @@ export function writeElementToWindow(win : SameDomainWindowType, el : HTMLElemen
 
     let documentElement = win.document.documentElement;
 
-    for (const child of Array.from(documentElement.children)) {
+    for (const child of arrayFrom(documentElement.children)) {
         documentElement.removeChild(child);
     }
 
-    for (const child of Array.from(el.children)) {
+    for (const child of arrayFrom(el.children)) {
         documentElement.appendChild(child);
     }
 }
