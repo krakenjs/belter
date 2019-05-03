@@ -8,7 +8,7 @@ import { ZalgoPromise } from 'zalgo-promise/src';
 import { linkFrameWindow, isWindowClosed } from 'cross-domain-utils/src';
 import { WeakMap } from 'cross-domain-safe-weakmap/src';
 
-import { inlineMemoize, noop, stringify, capitalizeFirstLetter, once, extend, safeInterval, uniqueID } from './util';
+import { inlineMemoize, noop, stringify, capitalizeFirstLetter, once, extend, safeInterval, uniqueID, arrayFrom } from './util';
 import { isDevice } from './device';
 import { KEY_CODES } from './constants';
 
@@ -498,13 +498,13 @@ export function writeElementToWindow(win, el) {
 
     var documentElement = win.document.documentElement;
 
-    for (var _i6 = 0, _Array$from2 = Array.from(documentElement.children), _length6 = _Array$from2 == null ? 0 : _Array$from2.length; _i6 < _length6; _i6++) {
-        var child = _Array$from2[_i6];
+    for (var _i6 = 0, _arrayFrom2 = arrayFrom(documentElement.children), _length6 = _arrayFrom2 == null ? 0 : _arrayFrom2.length; _i6 < _length6; _i6++) {
+        var child = _arrayFrom2[_i6];
         documentElement.removeChild(child);
     }
 
-    for (var _i8 = 0, _Array$from4 = Array.from(el.children), _length8 = _Array$from4 == null ? 0 : _Array$from4.length; _i8 < _length8; _i8++) {
-        var _child = _Array$from4[_i8];
+    for (var _i8 = 0, _arrayFrom4 = arrayFrom(el.children), _length8 = _arrayFrom4 == null ? 0 : _arrayFrom4.length; _i8 < _length8; _i8++) {
+        var _child = _arrayFrom4[_i8];
         documentElement.appendChild(_child);
     }
 }

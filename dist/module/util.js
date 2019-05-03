@@ -744,6 +744,11 @@ export function defineLazyProp(obj, key, getter) {
     });
 }
 
+export function arrayFrom(item) {
+    // eslint-disable-line no-undef
+    return Array.prototype.slice.call(item);
+}
+
 export function isObject(item) {
     return (typeof item === 'undefined' ? 'undefined' : _typeof(item)) === 'object' && item !== null;
 }

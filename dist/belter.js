@@ -608,20 +608,20 @@
                     } catch (err) {
                         delete this.weakmap;
                     }
-                    if (this.isSafeToReadWrite(key)) {
+                    if (this.isSafeToReadWrite(key)) try {
                         var name = this.name, entry = key[name];
                         entry && entry[0] === key ? entry[1] = value : defineProperty(key, name, {
                             value: [ key, value ],
                             writable: !0
                         });
-                    } else {
-                        this._cleanupClosedWindows();
-                        var keys = this.keys, values = this.values, index = util_safeIndexOf(keys, key);
-                        if (-1 === index) {
-                            keys.push(key);
-                            values.push(value);
-                        } else values[index] = value;
-                    }
+                        return;
+                    } catch (err) {}
+                    this._cleanupClosedWindows();
+                    var keys = this.keys, values = this.values, index = util_safeIndexOf(keys, key);
+                    if (-1 === index) {
+                        keys.push(key);
+                        values.push(value);
+                    } else values[index] = value;
                 };
                 CrossDomainSafeWeakMap.prototype.get = function(key) {
                     if (!key) throw new Error("WeakMap expected key");
@@ -631,14 +631,13 @@
                     } catch (err) {
                         delete this.weakmap;
                     }
-                    if (!this.isSafeToReadWrite(key)) {
-                        this._cleanupClosedWindows();
-                        var index = util_safeIndexOf(this.keys, key);
-                        if (-1 === index) return;
-                        return this.values[index];
-                    }
-                    var entry = key[this.name];
-                    if (entry && entry[0] === key) return entry[1];
+                    if (this.isSafeToReadWrite(key)) try {
+                        var entry = key[this.name];
+                        return entry && entry[0] === key ? entry[1] : void 0;
+                    } catch (err) {}
+                    this._cleanupClosedWindows();
+                    var index = util_safeIndexOf(this.keys, key);
+                    if (-1 !== index) return this.values[index];
                 };
                 CrossDomainSafeWeakMap.prototype.delete = function(key) {
                     if (!key) throw new Error("WeakMap expected key");
@@ -648,16 +647,15 @@
                     } catch (err) {
                         delete this.weakmap;
                     }
-                    if (this.isSafeToReadWrite(key)) {
+                    if (this.isSafeToReadWrite(key)) try {
                         var entry = key[this.name];
                         entry && entry[0] === key && (entry[0] = entry[1] = void 0);
-                    } else {
-                        this._cleanupClosedWindows();
-                        var keys = this.keys, index = util_safeIndexOf(keys, key);
-                        if (-1 !== index) {
-                            keys.splice(index, 1);
-                            this.values.splice(index, 1);
-                        }
+                    } catch (err) {}
+                    this._cleanupClosedWindows();
+                    var keys = this.keys, index = util_safeIndexOf(keys, key);
+                    if (-1 !== index) {
+                        keys.splice(index, 1);
+                        this.values.splice(index, 1);
                     }
                 };
                 CrossDomainSafeWeakMap.prototype.has = function(key) {
@@ -668,10 +666,10 @@
                     } catch (err) {
                         delete this.weakmap;
                     }
-                    if (this.isSafeToReadWrite(key)) {
+                    if (this.isSafeToReadWrite(key)) try {
                         var entry = key[this.name];
                         return !(!entry || entry[0] !== key);
-                    }
+                    } catch (err) {}
                     this._cleanupClosedWindows();
                     return -1 !== util_safeIndexOf(this.keys, key);
                 };
@@ -1064,6 +1062,9 @@
                         obj[key] = value;
                     }
                 });
+            }
+            function arrayFrom(item) {
+                return Array.prototype.slice.call(item);
             }
             function isObject(item) {
                 return "object" === (void 0 === item ? "undefined" : _typeof(item)) && null !== item;
@@ -1486,12 +1487,12 @@
             function writeElementToWindow(win, el) {
                 var tag = el.tagName.toLowerCase();
                 if ("html" !== tag) throw new Error("Expected element to be html, got " + tag);
-                for (var documentElement = win.document.documentElement, _i6 = 0, _Array$from2 = Array.from(documentElement.children), _length6 = null == _Array$from2 ? 0 : _Array$from2.length; _i6 < _length6; _i6++) {
-                    var child = _Array$from2[_i6];
+                for (var documentElement = win.document.documentElement, _i6 = 0, _arrayFrom2 = arrayFrom(documentElement.children), _length6 = null == _arrayFrom2 ? 0 : _arrayFrom2.length; _i6 < _length6; _i6++) {
+                    var child = _arrayFrom2[_i6];
                     documentElement.removeChild(child);
                 }
-                for (var _i8 = 0, _Array$from4 = Array.from(el.children), _length8 = null == _Array$from4 ? 0 : _Array$from4.length; _i8 < _length8; _i8++) {
-                    var _child = _Array$from4[_i8];
+                for (var _i8 = 0, _arrayFrom4 = arrayFrom(el.children), _length8 = null == _arrayFrom4 ? 0 : _arrayFrom4.length; _i8 < _length8; _i8++) {
+                    var _child = _arrayFrom4[_i8];
                     documentElement.appendChild(_child);
                 }
             }
@@ -2414,6 +2415,9 @@
             });
             __webpack_require__.d(__webpack_exports__, "defineLazyProp", function() {
                 return defineLazyProp;
+            });
+            __webpack_require__.d(__webpack_exports__, "arrayFrom", function() {
+                return arrayFrom;
             });
             __webpack_require__.d(__webpack_exports__, "isObject", function() {
                 return isObject;
