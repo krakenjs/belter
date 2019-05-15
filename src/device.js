@@ -4,7 +4,7 @@ export function getUserAgent() : string {
     return window.navigator.mockUserAgent || window.navigator.userAgent;
 }
 
-export function isDevice(ua) : boolean {
+export function isDevice(userAgent = getUserAgent()) : boolean {
     if (userAgent.match(/Android|webOS|iPhone|iPad|iPod|bada|Symbian|Palm|CriOS|BlackBerry|IEMobile|WindowsMobile|Opera Mini/i)) {
         return true;
     }
