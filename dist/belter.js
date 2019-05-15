@@ -50,7 +50,7 @@
                 return window.navigator.mockUserAgent || window.navigator.userAgent;
             }
             function isDevice() {
-                return !!getUserAgent().match(/Android|webOS|iPhone|iPad|iPod|bada|Symbian|Palm|CriOS|BlackBerry|IEMobile|WindowsMobile|Opera Mini/i);
+                return !!(arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : getUserAgent()).match(/Android|webOS|iPhone|iPad|iPod|bada|Symbian|Palm|CriOS|BlackBerry|IEMobile|WindowsMobile|Opera Mini/i);
             }
             function isWebView() {
                 var userAgent = getUserAgent();
@@ -541,7 +541,7 @@
                     if (err && err.message === IE_WIN_ACCESS_ERROR) return !0;
                 }
                 try {
-                    obj && obj.__cross_domain_utils_window_check__;
+                    if (obj && "__unlikely_value__" === obj.__cross_domain_utils_window_check__) return !1;
                 } catch (err) {
                     return !0;
                 }

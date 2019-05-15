@@ -3,7 +3,8 @@ export function getUserAgent() {
 }
 
 export function isDevice() {
-    var userAgent = getUserAgent();
+    var userAgent = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : getUserAgent();
+
     if (userAgent.match(/Android|webOS|iPhone|iPad|iPod|bada|Symbian|Palm|CriOS|BlackBerry|IEMobile|WindowsMobile|Opera Mini/i)) {
         return true;
     }
