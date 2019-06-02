@@ -183,6 +183,7 @@ export function promisify(method) {
 export function inlineMemoize(method, logic) {
     var args = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
 
+    // $FlowFixMe
     var cache = method.__inline_memoize_cache__ = method.__inline_memoize_cache__ || {};
     var key = serializeArgs(args);
 
@@ -304,7 +305,8 @@ export function stringifyError(err) {
             }
         }
 
-        if (typeof err.toString === 'function') {
+        if (err && err.toString && typeof err.toString === 'function') {
+            // $FlowFixMe
             return err.toString();
         }
 
@@ -339,7 +341,8 @@ export function stringify(item) {
         return item;
     }
 
-    if (item && typeof item.toString === 'function') {
+    if (item && item.toString && typeof item.toString === 'function') {
+        // $FlowFixMe
         return item.toString();
     }
 

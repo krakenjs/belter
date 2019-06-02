@@ -831,7 +831,7 @@
                         if (stack) return stack;
                         if (message) return message;
                     }
-                    return "function" == typeof err.toString ? err.toString() : Object.prototype.toString.call(err);
+                    return err && err.toString && "function" == typeof err.toString ? err.toString() : Object.prototype.toString.call(err);
                 } catch (newErr) {
                     return "Error while stringifying error: " + stringifyError(newErr, level + 1);
                 }
@@ -841,7 +841,7 @@
                 return err ? err instanceof Error ? err.message || defaultMessage : "string" == typeof err.message && err.message || defaultMessage : defaultMessage;
             }
             function stringify(item) {
-                return "string" == typeof item ? item : item && "function" == typeof item.toString ? item.toString() : Object.prototype.toString.call(item);
+                return "string" == typeof item ? item : item && item.toString && "function" == typeof item.toString ? item.toString() : Object.prototype.toString.call(item);
             }
             function domainMatches(hostname, domain) {
                 var index = (hostname = hostname.split("://")[1]).indexOf(domain);
