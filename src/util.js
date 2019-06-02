@@ -169,6 +169,7 @@ export function promisify<R>(method : (...args : Array<any>) => R, options : { n
 
 // eslint-disable-next-line flowtype/no-weak-types
 export function inlineMemoize<R>(method : (...args : Array<any>) => R, logic : (...args : Array<any>) => R, args : Array<any> = []) : R {
+    // $FlowFixMe
     let cache = method.__inline_memoize_cache__ = method.__inline_memoize_cache__ || {};
     let key = serializeArgs(args);
 
@@ -289,7 +290,8 @@ export function stringifyError(err : mixed, level : number = 1) : string {
             }
         }
 
-        if (typeof err.toString === 'function') {
+        if (err && err.toString && typeof err.toString === 'function') {
+            // $FlowFixMe
             return err.toString();
         }
 
@@ -324,7 +326,8 @@ export function stringify(item : mixed) : string {
         return item;
     }
 
-    if (item && typeof item.toString === 'function') {
+    if (item && item.toString && typeof item.toString === 'function') {
+        // $FlowFixMe
         return item.toString();
     }
 
@@ -748,11 +751,11 @@ export function isPlainObject(obj : mixed) : boolean {
     return true;
 }
 
-export function replaceObject<T : Object | Array<mixed>> (item : T, replacer : (mixed, string | number, string) => mixed, fullKey : string = '') : T {
+export function replaceObject<T : Array<mixed> | Object> (item : T, replacer : (mixed, string | number, string) => mixed, fullKey : string = '') : T {
 
     if (Array.isArray(item)) {
         let length = item.length;
-        let result = [];
+        let result : Array<mixed> = [];
 
         for (let i = 0; i < length; i++) {
 
