@@ -1018,6 +1018,15 @@ export function assertExists<T>(name : string, thing : void | null | T) : T {
     if (thing === null || typeof thing === 'undefined') {
         throw new Error(`Expected ${ name } to be present`);
     }
-
+                            
     return thing;
+}
+                            
+export function unique(arr : $ReadOnlyArray<string>) : $ReadOnlyArray<string> {
+    const result = {};
+    for (const item of arr) {
+        // eslint-disable-next-line const-immutable/no-mutation
+        result[item] = true;
+    }
+    return Object.keys(result);
 }
