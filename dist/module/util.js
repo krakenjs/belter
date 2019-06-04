@@ -1058,3 +1058,15 @@ export function assertExists(name, thing) {
 
     return thing;
 }
+
+export function unique(arr) {
+    var result = {};
+
+    for (var _i4 = 0, _length5 = arr == null ? 0 : arr.length; _i4 < _length5; _i4++) {
+        var item = arr[_i4];
+        // eslint-disable-next-line const-immutable/no-mutation
+        result[item] = true;
+    }
+
+    return Object.keys(result);
+}

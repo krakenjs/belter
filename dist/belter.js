@@ -1230,6 +1230,10 @@
                 if (null === thing || void 0 === thing) throw new Error("Expected " + name + " to be present");
                 return thing;
             }
+            function unique(arr) {
+                for (var result = {}, _i4 = 0, _length5 = null == arr ? 0 : arr.length; _i4 < _length5; _i4++) result[arr[_i4]] = !0;
+                return Object.keys(result);
+            }
             var KEY_CODES = {
                 ENTER: 13
             }, dom__typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(obj) {
@@ -2472,6 +2476,9 @@
             });
             __webpack_require__.d(__webpack_exports__, "assertExists", function() {
                 return assertExists;
+            });
+            __webpack_require__.d(__webpack_exports__, "unique", function() {
+                return unique;
             });
             __webpack_require__.d(__webpack_exports__, "request", function() {
                 return request;
