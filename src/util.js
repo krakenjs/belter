@@ -76,7 +76,7 @@ export function getObjectID(obj : Object) : string {
     return uid;
 }
 
-function serializeArgs(args : Array<mixed>) : string {
+function serializeArgs<T>(args : Array<T>) : string {
     try {
         return JSON.stringify(Array.prototype.slice.call(args), (subkey, val) => {
             if (typeof val === 'function') {
@@ -88,13 +88,11 @@ function serializeArgs(args : Array<mixed>) : string {
         throw new Error(`Arguments not serializable -- can not be used to memoize`);
     }
 }
-
-// eslint-disable-next-line flowtype/no-weak-types
-export function memoize<R>(method : (...args : Array<any>) => R, options : { time? : number, name? : string, thisNamespace? : boolean } = {}) : ((...args : Array<any>) => R) {
+export function memoize<A, R, F : (...args : Array<A>) => R, X : { (...args : Array<A>) : R, displayName : string, reset : () => void }>(method : F, options : { time? : number, name? : string, thisNamespace? : boolean } = {}) : X {
     let cacheMap = new WeakMap();
 
-    // eslint-disable-next-line flowtype/no-weak-types
-    function memoizedFunction(...args : Array<any>) : R {
+    // $FlowFixMe
+    let memoizedFunction : X = function memoizedFunction(...args : Array<A>) : R {
         let cache = cacheMap.getOrSet(options.thisNamespace ? this : method, () => ({}));
 
         let key : string = serializeArgs(args);
@@ -114,7 +112,7 @@ export function memoize<R>(method : (...args : Array<any>) => R, options : { tim
         cache[key] = { time, value };
 
         return cache[key].value;
-    }
+    };
 
     memoizedFunction.reset = () => {
         cacheMap.delete(options.thisNamespace ? this : method);
