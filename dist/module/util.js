@@ -85,8 +85,6 @@ function serializeArgs(args) {
         throw new Error('Arguments not serializable -- can not be used to memoize');
     }
 }
-
-// eslint-disable-next-line flowtype/no-weak-types
 export function memoize(method) {
     var _this = this;
 
@@ -94,8 +92,8 @@ export function memoize(method) {
 
     var cacheMap = new WeakMap();
 
-    // eslint-disable-next-line flowtype/no-weak-types
-    function memoizedFunction() {
+    // $FlowFixMe
+    var memoizedFunction = function memoizedFunction() {
         for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
             args[_key] = arguments[_key];
         }
@@ -121,7 +119,7 @@ export function memoize(method) {
         cache[key] = { time: time, value: value };
 
         return cache[key].value;
-    }
+    };
 
     memoizedFunction.reset = function () {
         cacheMap['delete'](options.thisNamespace ? _this : method);

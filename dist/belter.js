@@ -728,8 +728,7 @@
                 }
             }
             function memoize(method) {
-                var _this = this, options = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {}, cacheMap = new weakmap_CrossDomainSafeWeakMap();
-                function memoizedFunction() {
+                var _this = this, options = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {}, cacheMap = new weakmap_CrossDomainSafeWeakMap(), memoizedFunction = function() {
                     for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) args[_key] = arguments[_key];
                     var cache = cacheMap.getOrSet(options.thisNamespace ? this : method, function() {
                         return {};
@@ -742,7 +741,7 @@
                         value: value
                     };
                     return cache[key].value;
-                }
+                };
                 memoizedFunction.reset = function() {
                     cacheMap.delete(options.thisNamespace ? _this : method);
                 };
