@@ -547,6 +547,10 @@ export function undotify(obj : { [string] : string }) : Object {
             let isLast = (i + 1 === parts.length);
             let isIndex = !isLast && isInteger(parts[i + 1]);
 
+            if (part === 'constructor' || part === 'prototype') {
+                throw new Error(`Disallowed key: ${ part }`);
+            }
+
             if (isLast) {
                 // $FlowFixMe
                 keyResult[part] = value;
