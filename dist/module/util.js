@@ -577,6 +577,10 @@ export function undotify(obj) {
             var isLast = i + 1 === parts.length;
             var isIndex = !isLast && isInteger(parts[i + 1]);
 
+            if (part === 'constructor' || part === 'prototype') {
+                throw new Error('Disallowed key: ' + part);
+            }
+
             if (isLast) {
                 // $FlowFixMe
                 keyResult[part] = value;

@@ -43,9 +43,6 @@
             Object.defineProperty(__webpack_exports__, "__esModule", {
                 value: !0
             });
-            __webpack_require__.d({}, "WeakMap", function() {
-                return weakmap_CrossDomainSafeWeakMap;
-            });
             function getUserAgent() {
                 return window.navigator.mockUserAgent || window.navigator.userAgent;
             }
@@ -553,13 +550,12 @@
                 } catch (err) {}
                 return -1;
             }
-            var defineProperty = Object.defineProperty, counter = Date.now() % 1e9, weakmap_CrossDomainSafeWeakMap = function() {
+            var weakmap_CrossDomainSafeWeakMap = function() {
                 function CrossDomainSafeWeakMap() {
                     !function(instance, Constructor) {
                         if (!(instance instanceof CrossDomainSafeWeakMap)) throw new TypeError("Cannot call a class as a function");
                     }(this);
-                    counter += 1;
-                    this.name = "__weakmap_" + (1e9 * Math.random() >>> 0) + "__" + counter;
+                    this.name = "__weakmap_" + (1e9 * Math.random() >>> 0) + "__";
                     if (function() {
                         if ("undefined" == typeof WeakMap) return !1;
                         if (void 0 === Object.freeze) return !1;
@@ -610,7 +606,7 @@
                     }
                     if (this.isSafeToReadWrite(key)) try {
                         var name = this.name, entry = key[name];
-                        entry && entry[0] === key ? entry[1] = value : defineProperty(key, name, {
+                        entry && entry[0] === key ? entry[1] = value : Object.defineProperty(key, name, {
                             value: [ key, value ],
                             writable: !0
                         });
@@ -967,6 +963,7 @@
                     } else value = deserializePrimitive(value);
                     for (var keyResult = result, parts = key.split("."), i = 0; i < parts.length; i++) {
                         var part = parts[i], isLast = i + 1 === parts.length, isIndex = !isLast && isInteger(parts[i + 1]);
+                        if ("constructor" === part || "prototype" === part) throw new Error("Disallowed key: " + part);
                         isLast ? keyResult[part] = value : keyResult = keyResult[part] = keyResult[part] || (isIndex ? [] : {});
                     }
                 }
