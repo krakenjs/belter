@@ -947,3 +947,24 @@ export function onResize(el : HTMLElement, handler : ({ width : number, height :
         }
     };
 }
+
+export function getResourceLoadTime(url : string) : ?number {
+
+    if (!enablePerformance()) {
+        return;
+    }
+
+    if (!window.performance || typeof window.performance.getEntries !== 'function') {
+        return;
+    }
+
+    const entries = window.performance.getEntries();
+
+    for (let i = 0; i < entries.length; i++) {
+        const entry = entries[i];
+
+        if (entry && entry.name && entry.name.indexOf(url) === 0 && typeof entry.duration === 'number') {
+            return Math.floor(entry.duration);
+        }
+    }
+}
