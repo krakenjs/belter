@@ -747,10 +747,12 @@
             function memoizePromise(method) {
                 var cache = {};
                 function memoizedPromiseFunction() {
-                    for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) args[_key2] = arguments[_key2];
+                    for (var _this2 = this, _arguments = arguments, _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) args[_key2] = arguments[_key2];
                     var key = serializeArgs(args);
                     if (cache.hasOwnProperty(key)) return cache[key];
-                    cache[key] = method.apply(this, arguments).finally(function() {
+                    cache[key] = promise_ZalgoPromise.try(function() {
+                        return method.apply(_this2, _arguments);
+                    }).finally(function() {
                         delete cache[key];
                     });
                     return cache[key];
@@ -845,13 +847,13 @@
             function patchMethod(obj, name, handler) {
                 var original = obj[name];
                 obj[name] = function() {
-                    var _this2 = this, _arguments = arguments;
+                    var _this3 = this, _arguments2 = arguments;
                     return handler({
                         context: this,
                         args: Array.prototype.slice.call(arguments),
                         original: original,
                         callOriginal: function() {
-                            return original.apply(_this2, _arguments);
+                            return original.apply(_this3, _arguments2);
                         }
                     });
                 };
@@ -1145,10 +1147,10 @@
             function debounce(method) {
                 var time = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : 100, timeout = void 0;
                 return function() {
-                    var _this3 = this, _arguments2 = arguments;
+                    var _this4 = this, _arguments3 = arguments;
                     clearTimeout(timeout);
                     timeout = setTimeout(function() {
-                        return method.apply(_this3, _arguments2);
+                        return method.apply(_this4, _arguments3);
                     }, time);
                 };
             }
@@ -1158,17 +1160,17 @@
             var util_weakMapMemoize = function(method) {
                 var weakmap = new weakmap_CrossDomainSafeWeakMap();
                 return function(arg) {
-                    var _this4 = this;
+                    var _this5 = this;
                     return weakmap.getOrSet(arg, function() {
-                        return method.call(_this4, arg);
+                        return method.call(_this5, arg);
                     });
                 };
             }, util_weakMapMemoizePromise = function(method) {
                 var weakmap = new weakmap_CrossDomainSafeWeakMap();
                 return function(arg) {
-                    var _this5 = this;
+                    var _this6 = this;
                     return weakmap.getOrSet(arg, function() {
-                        return method.call(_this5, arg).finally(function() {
+                        return method.call(_this6, arg).finally(function() {
                             weakmap.delete(arg);
                         });
                     });

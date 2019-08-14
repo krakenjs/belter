@@ -138,6 +138,9 @@ export function memoizePromise(method) {
 
     // eslint-disable-next-line flowtype/no-weak-types
     function memoizedPromiseFunction() {
+        var _this2 = this,
+            _arguments = arguments;
+
         for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
             args[_key2] = arguments[_key2];
         }
@@ -148,7 +151,9 @@ export function memoizePromise(method) {
             return cache[key];
         }
 
-        cache[key] = method.apply(this, arguments)['finally'](function () {
+        cache[key] = ZalgoPromise['try'](function () {
+            return method.apply(_this2, _arguments);
+        })['finally'](function () {
             delete cache[key];
         });
 
@@ -357,15 +362,15 @@ export function patchMethod(obj, name, handler) {
     var original = obj[name];
 
     obj[name] = function patchedMethod() {
-        var _this2 = this,
-            _arguments = arguments;
+        var _this3 = this,
+            _arguments2 = arguments;
 
         return handler({
             context: this,
             args: Array.prototype.slice.call(arguments),
             original: original,
             callOriginal: function callOriginal() {
-                return original.apply(_this2, _arguments);
+                return original.apply(_this3, _arguments2);
             }
         });
     };
@@ -939,13 +944,13 @@ export function debounce(method) {
     var timeout = void 0;
 
     return function debounceWrapper() {
-        var _this3 = this,
-            _arguments2 = arguments;
+        var _this4 = this,
+            _arguments3 = arguments;
 
         clearTimeout(timeout);
 
         timeout = setTimeout(function () {
-            return method.apply(_this3, _arguments2);
+            return method.apply(_this4, _arguments3);
         }, time);
     };
 }
@@ -961,10 +966,10 @@ export var weakMapMemoize = function weakMapMemoize(method) {
 
     // eslint-disable-next-line flowtype/no-weak-types
     return function weakmapMemoized(arg) {
-        var _this4 = this;
+        var _this5 = this;
 
         return weakmap.getOrSet(arg, function () {
-            return method.call(_this4, arg);
+            return method.call(_this5, arg);
         });
     };
 };
@@ -976,10 +981,10 @@ export var weakMapMemoizePromise = function weakMapMemoizePromise(method) {
 
     // eslint-disable-next-line flowtype/no-weak-types
     return function weakmapMemoizedPromise(arg) {
-        var _this5 = this;
+        var _this6 = this;
 
         return weakmap.getOrSet(arg, function () {
-            return method.call(_this5, arg)['finally'](function () {
+            return method.call(_this6, arg)['finally'](function () {
                 weakmap['delete'](arg);
             });
         });
