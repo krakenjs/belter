@@ -948,3 +948,24 @@ export function onResize(el, handler) {
         }
     };
 }
+
+export function getResourceLoadTime(url) {
+
+    if (!enablePerformance()) {
+        return;
+    }
+
+    if (!window.performance || typeof window.performance.getEntries !== 'function') {
+        return;
+    }
+
+    var entries = window.performance.getEntries();
+
+    for (var i = 0; i < entries.length; i++) {
+        var entry = entries[i];
+
+        if (entry && entry.name && entry.name.indexOf(url) === 0 && typeof entry.duration === 'number') {
+            return Math.floor(entry.duration);
+        }
+    }
+}

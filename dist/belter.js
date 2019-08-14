@@ -1757,6 +1757,12 @@
                     }
                 };
             }
+            function getResourceLoadTime(url) {
+                if (enablePerformance() && window.performance && "function" == typeof window.performance.getEntries) for (var entries = window.performance.getEntries(), i = 0; i < entries.length; i++) {
+                    var entry = entries[i];
+                    if (entry && entry.name && 0 === entry.name.indexOf(url) && "number" == typeof entry.duration) return Math.floor(entry.duration);
+                }
+            }
             var DEFAULT_SESSION_STORAGE = 12e5;
             function getStorage(_ref) {
                 var name = _ref.name, _ref$lifetime = _ref.lifetime, lifetime = void 0 === _ref$lifetime ? DEFAULT_SESSION_STORAGE : _ref$lifetime;
@@ -2273,6 +2279,9 @@
             });
             __webpack_require__.d(__webpack_exports__, "onResize", function() {
                 return onResize;
+            });
+            __webpack_require__.d(__webpack_exports__, "getResourceLoadTime", function() {
+                return getResourceLoadTime;
             });
             __webpack_require__.d(__webpack_exports__, "experiment", function() {
                 return experiment;
