@@ -137,7 +137,7 @@ export function memoizePromise<R>(method : (...args : Array<any>) => ZalgoPromis
             return cache[key];
         }
 
-        cache[key] = method.apply(this, arguments)
+        cache[key] = ZalgoPromise.try(() => method.apply(this, arguments))
             .finally(() => {
                 delete cache[key];
             });
