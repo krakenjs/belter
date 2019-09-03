@@ -8,8 +8,12 @@ import type { CancelableType } from './types';
 
 export function base64encode(str : string) : string {
     if (typeof btoa === 'function') {
-        return btoa(str);
-    } else if (typeof Buffer !== 'undefined') {
+        return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (m, p1) => {
+            return String.fromCharCode(parseInt(p1, 16));
+        }));
+    }
+
+    if (typeof Buffer !== 'undefined') {
         return Buffer.from(str, 'utf8').toString('base64');
     }
 
@@ -17,8 +21,11 @@ export function base64encode(str : string) : string {
 }
 
 export function base64decode(str : string) : string {
-    if (typeof window !== 'undefined' && typeof window.atob === 'function') {
-        return window.atob(str);
+    if (typeof atob === 'function') {
+        return decodeURIComponent(Array.prototype.map.call(atob(str), c => {
+            // eslint-disable-next-line prefer-template
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
     }
 
     if (typeof Buffer !== 'undefined') {
