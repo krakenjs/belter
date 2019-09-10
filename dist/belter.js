@@ -682,12 +682,16 @@
                 return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
             };
             function base64encode(str) {
-                if ("function" == typeof btoa) return btoa(str);
+                if ("function" == typeof btoa) return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(m, p1) {
+                    return String.fromCharCode(parseInt(p1, 16));
+                }));
                 if ("undefined" != typeof Buffer) return Buffer.from(str, "utf8").toString("base64");
                 throw new Error("Can not find window.btoa or Buffer");
             }
             function base64decode(str) {
-                if ("undefined" != typeof window && "function" == typeof window.atob) return window.atob(str);
+                if ("function" == typeof atob) return decodeURIComponent(Array.prototype.map.call(atob(str), function(c) {
+                    return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+                }).join(""));
                 if ("undefined" != typeof Buffer) return Buffer.from(str, "base64").toString("utf8");
                 throw new Error("Can not find window.atob or Buffer");
             }
@@ -965,7 +969,7 @@
                     } else value = deserializePrimitive(value);
                     for (var keyResult = result, parts = key.split("."), i = 0; i < parts.length; i++) {
                         var part = parts[i], isLast = i + 1 === parts.length, isIndex = !isLast && isInteger(parts[i + 1]);
-                        if ("constructor" === part || "prototype" === part) throw new Error("Disallowed key: " + part);
+                        if ("constructor" === part || "prototype" === part || "__proto__" === part) throw new Error("Disallowed key: " + part);
                         isLast ? keyResult[part] = value : keyResult = keyResult[part] = keyResult[part] || (isIndex ? [] : {});
                     }
                 }

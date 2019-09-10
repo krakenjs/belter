@@ -7,8 +7,12 @@ import { WeakMap } from 'cross-domain-safe-weakmap/src';
 
 export function base64encode(str) {
     if (typeof btoa === 'function') {
-        return btoa(str);
-    } else if (typeof Buffer !== 'undefined') {
+        return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function (m, p1) {
+            return String.fromCharCode(parseInt(p1, 16));
+        }));
+    }
+
+    if (typeof Buffer !== 'undefined') {
         return Buffer.from(str, 'utf8').toString('base64');
     }
 
@@ -16,8 +20,11 @@ export function base64encode(str) {
 }
 
 export function base64decode(str) {
-    if (typeof window !== 'undefined' && typeof window.atob === 'function') {
-        return window.atob(str);
+    if (typeof atob === 'function') {
+        return decodeURIComponent(Array.prototype.map.call(atob(str), function (c) {
+            // eslint-disable-next-line prefer-template
+            return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
     }
 
     if (typeof Buffer !== 'undefined') {
@@ -582,7 +589,7 @@ export function undotify(obj) {
             var isLast = i + 1 === parts.length;
             var isIndex = !isLast && isInteger(parts[i + 1]);
 
-            if (part === 'constructor' || part === 'prototype') {
+            if (part === 'constructor' || part === 'prototype' || part === '__proto__') {
                 throw new Error('Disallowed key: ' + part);
             }
 
