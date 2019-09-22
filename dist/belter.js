@@ -131,8 +131,8 @@
                 try {
                     if (!item) return !1;
                     if ("undefined" != typeof Promise && item instanceof Promise) return !0;
-                    if ("undefined" != typeof window && window.Window && item instanceof window.Window) return !1;
-                    if ("undefined" != typeof window && window.constructor && item instanceof window.constructor) return !1;
+                    if ("undefined" != typeof window && "function" == typeof window.Window && item instanceof window.Window) return !1;
+                    if ("undefined" != typeof window && "function" == typeof window.constructor && item instanceof window.constructor) return !1;
                     var _toString = {}.toString;
                     if (_toString) {
                         var name = _toString.call(item);
@@ -681,6 +681,17 @@
             } : function(obj) {
                 return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
             };
+            function getFunctionName(fn) {
+                return fn.name || fn.__name__ || fn.displayName || "anonymous";
+            }
+            function setFunctionName(fn, name) {
+                try {
+                    delete fn.name;
+                    fn.name = name;
+                } catch (err) {}
+                fn.__name__ = fn.displayName = name;
+                return fn;
+            }
             function base64encode(str) {
                 if ("function" == typeof btoa) return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(m, p1) {
                     return String.fromCharCode(parseInt(p1, 16));
@@ -745,8 +756,7 @@
                 memoizedFunction.reset = function() {
                     cacheMap.delete(options.thisNamespace ? _this : method);
                 };
-                options.name && (memoizedFunction.displayName = options.name + ":memoized");
-                return memoizedFunction;
+                return setFunctionName(memoizedFunction, getFunctionName(method) + "::memoized");
             }
             function memoizePromise(method) {
                 var cache = {};
@@ -764,7 +774,7 @@
                 memoizedPromiseFunction.reset = function() {
                     cache = {};
                 };
-                return memoizedPromiseFunction;
+                return setFunctionName(memoizedPromiseFunction, getFunctionName(method) + "::promiseMemoized");
             }
             function promisify(method) {
                 var options = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {};
@@ -772,7 +782,7 @@
                     return promise_ZalgoPromise.try(method, this, arguments);
                 }
                 options.name && (promisifiedFunction.displayName = options.name + ":promisified");
-                return promisifiedFunction;
+                return setFunctionName(promisifiedFunction, getFunctionName(method) + "::promisified");
             }
             function inlineMemoize(method, logic) {
                 var args = arguments.length > 2 && void 0 !== arguments[2] ? arguments[2] : [], cache = method.__inline_memoize_cache__ = method.__inline_memoize_cache__ || {}, key = serializeArgs(args);
@@ -781,12 +791,12 @@
             function src_util_noop() {}
             function once(method) {
                 var called = !1;
-                return function() {
+                return setFunctionName(function() {
                     if (!called) {
                         called = !0;
                         return method.apply(this, arguments);
                     }
-                };
+                }, getFunctionName(method) + "::once");
             }
             function hashStr(str) {
                 for (var hash = 0, i = 0; i < str.length; i++) hash += str[i].charCodeAt(0) * Math.pow(i % 10 + 1, 5);
@@ -910,7 +920,7 @@
             }
             function promiseDebounce(method) {
                 var delay = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : 50, promise = void 0, timeout = void 0;
-                return function() {
+                return setFunctionName(function() {
                     timeout && clearTimeout(timeout);
                     var localPromise = promise = promise || new promise_ZalgoPromise();
                     timeout = setTimeout(function() {
@@ -923,7 +933,7 @@
                         });
                     }, delay);
                     return localPromise;
-                };
+                }, getFunctionName(method) + "::promiseDebounced");
             }
             function safeInterval(method, time) {
                 var timeout = void 0;
@@ -1150,13 +1160,13 @@
             }
             function debounce(method) {
                 var time = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : 100, timeout = void 0;
-                return function() {
+                return setFunctionName(function() {
                     var _this4 = this, _arguments3 = arguments;
                     clearTimeout(timeout);
                     timeout = setTimeout(function() {
                         return method.apply(_this4, _arguments3);
                     }, time);
-                };
+                }, getFunctionName(method) + "::debounced");
             }
             function util_isRegex(item) {
                 return "[object RegExp]" === Object.prototype.toString.call(item);
@@ -2295,6 +2305,12 @@
             });
             __webpack_require__.d(__webpack_exports__, "getStorage", function() {
                 return getStorage;
+            });
+            __webpack_require__.d(__webpack_exports__, "getFunctionName", function() {
+                return getFunctionName;
+            });
+            __webpack_require__.d(__webpack_exports__, "setFunctionName", function() {
+                return setFunctionName;
             });
             __webpack_require__.d(__webpack_exports__, "base64encode", function() {
                 return base64encode;

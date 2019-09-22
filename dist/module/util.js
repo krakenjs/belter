@@ -5,6 +5,22 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 import { ZalgoPromise } from 'zalgo-promise/src';
 import { WeakMap } from 'cross-domain-safe-weakmap/src';
 
+export function getFunctionName(fn) {
+    return fn.name || fn.__name__ || fn.displayName || 'anonymous';
+}
+
+export function setFunctionName(fn, name) {
+    try {
+        delete fn.name;
+        fn.name = name;
+    } catch (err) {
+        // pass
+    }
+
+    fn.__name__ = fn.displayName = name;
+    return fn;
+}
+
 export function base64encode(str) {
     if (typeof btoa === 'function') {
         return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function (m, p1) {
@@ -132,11 +148,7 @@ export function memoize(method) {
         cacheMap['delete'](options.thisNamespace ? _this : method);
     };
 
-    if (options.name) {
-        memoizedFunction.displayName = options.name + ':memoized';
-    }
-
-    return memoizedFunction;
+    return setFunctionName(memoizedFunction, getFunctionName(method) + '::memoized');
 }
 
 // eslint-disable-next-line flowtype/no-weak-types
@@ -171,7 +183,7 @@ export function memoizePromise(method) {
         cache = {};
     };
 
-    return memoizedPromiseFunction;
+    return setFunctionName(memoizedPromiseFunction, getFunctionName(method) + '::promiseMemoized');
 }
 
 // eslint-disable-next-line flowtype/no-weak-types
@@ -186,7 +198,7 @@ export function promisify(method) {
         promisifiedFunction.displayName = options.name + ':promisified';
     }
 
-    return promisifiedFunction;
+    return setFunctionName(promisifiedFunction, getFunctionName(method) + '::promisified');
 }
 
 // eslint-disable-next-line flowtype/no-weak-types
@@ -202,6 +214,7 @@ export function inlineMemoize(method, logic) {
     }
 
     var result = cache[key] = logic.apply(undefined, args);
+
     return result;
 }
 
@@ -213,12 +226,14 @@ export function noop() {
 export function once(method) {
     var called = false;
 
-    return function onceFunction() {
+    var onceFunction = function onceFunction() {
         if (!called) {
             called = true;
             return method.apply(this, arguments);
         }
     };
+
+    return setFunctionName(onceFunction, getFunctionName(method) + '::once');
 }
 
 export function hashStr(str) {
@@ -475,7 +490,7 @@ export function promiseDebounce(method) {
     var promise = void 0;
     var timeout = void 0;
 
-    return function promiseDebouncedMethod() {
+    var promiseDebounced = function promiseDebounced() {
         if (timeout) {
             clearTimeout(timeout);
         }
@@ -495,6 +510,8 @@ export function promiseDebounce(method) {
 
         return localPromise;
     };
+
+    return setFunctionName(promiseDebounced, getFunctionName(method) + '::promiseDebounced');
 }
 
 export function safeInterval(method, time) {
@@ -950,7 +967,7 @@ export function debounce(method) {
 
     var timeout = void 0;
 
-    return function debounceWrapper() {
+    var debounceWrapper = function debounceWrapper() {
         var _this4 = this,
             _arguments3 = arguments;
 
@@ -960,6 +977,8 @@ export function debounce(method) {
             return method.apply(_this4, _arguments3);
         }, time);
     };
+
+    return setFunctionName(debounceWrapper, getFunctionName(method) + '::debounced');
 }
 
 export function isRegex(item) {
