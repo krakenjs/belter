@@ -6,6 +6,22 @@ import { WeakMap } from 'cross-domain-safe-weakmap/src';
 
 import type { CancelableType } from './types';
 
+export function getFunctionName <T : Function>(fn : T) : string {
+    return fn.name || fn.__name__ || fn.displayName || 'anonymous';
+}
+
+export function setFunctionName <T : Function>(fn : T, name : string) : T {
+    try {
+        delete fn.name;
+        fn.name = name;
+    } catch (err) {
+        // pass
+    }
+
+    fn.__name__ = fn.displayName = name;
+    return fn;
+}
+
 export function base64encode(str : string) : string {
     if (typeof btoa === 'function') {
         return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (m, p1) => {
@@ -95,7 +111,7 @@ function serializeArgs<T>(args : Array<T>) : string {
         throw new Error(`Arguments not serializable -- can not be used to memoize`);
     }
 }
-export function memoize<A, R, F : (...args : Array<A>) => R, X : { (...args : Array<A>) : R, displayName : string, reset : () => void }>(method : F, options : { time? : number, name? : string, thisNamespace? : boolean } = {}) : X {
+export function memoize<A, R, F : (...args : Array<A>) => R, X : { (...args : Array<A>) : R, displayName : string, reset : () => void }>(method : F, options : { time? : number, thisNamespace? : boolean } = {}) : X {
     let cacheMap = new WeakMap();
 
     // $FlowFixMe
@@ -125,11 +141,7 @@ export function memoize<A, R, F : (...args : Array<A>) => R, X : { (...args : Ar
         cacheMap.delete(options.thisNamespace ? this : method);
     };
 
-    if (options.name) {
-        memoizedFunction.displayName = `${ options.name }:memoized`;
-    }
-
-    return memoizedFunction;
+    return setFunctionName(memoizedFunction, `${ getFunctionName(method) }::memoized`);
 }
 
 // eslint-disable-next-line flowtype/no-weak-types
@@ -156,7 +168,7 @@ export function memoizePromise<R>(method : (...args : Array<any>) => ZalgoPromis
         cache = {};
     };
 
-    return memoizedPromiseFunction;
+    return setFunctionName(memoizedPromiseFunction, `${ getFunctionName(method) }::promiseMemoized`);
 }
 
 // eslint-disable-next-line flowtype/no-weak-types
@@ -169,7 +181,7 @@ export function promisify<R>(method : (...args : Array<any>) => R, options : { n
         promisifiedFunction.displayName = `${ options.name }:promisified`;
     }
 
-    return promisifiedFunction;
+    return setFunctionName(promisifiedFunction, `${ getFunctionName(method) }::promisified`);
 }
 
 // eslint-disable-next-line flowtype/no-weak-types
@@ -183,6 +195,7 @@ export function inlineMemoize<R>(method : (...args : Array<any>) => R, logic : (
     }
     
     let result = cache[key] = logic(...args);
+
     return result;
 }
 
@@ -194,12 +207,14 @@ export function noop(...args : Array<mixed>) {
 export function once(method : Function) : Function {
     let called = false;
 
-    return function onceFunction() : mixed {
+    const onceFunction = function() : mixed {
         if (!called) {
             called = true;
             return method.apply(this, arguments);
         }
     };
+
+    return setFunctionName(onceFunction, `${ getFunctionName(method) }::once`);
 }
 
 export function hashStr(str : string) : number {
@@ -446,7 +461,7 @@ export function promiseDebounce<T>(method : () => ZalgoPromise<T> | T, delay : n
     let promise;
     let timeout;
 
-    return function promiseDebouncedMethod() : ZalgoPromise<T> {
+    const promiseDebounced = function() : ZalgoPromise<T> {
         if (timeout) {
             clearTimeout(timeout);
         }
@@ -465,6 +480,8 @@ export function promiseDebounce<T>(method : () => ZalgoPromise<T> | T, delay : n
 
         return localPromise;
     };
+
+    return setFunctionName(promiseDebounced, `${ getFunctionName(method) }::promiseDebounced`);
 }
 
 export function safeInterval(method : Function, time : number) : { cancel : () => void } {
@@ -905,13 +922,15 @@ export function debounce<T>(method : (...args : Array<mixed>) => T, time : numbe
 
     let timeout;
 
-    return function debounceWrapper() {
+    const debounceWrapper = function() {
         clearTimeout(timeout);
 
         timeout = setTimeout(() => {
             return method.apply(this, arguments);
         }, time);
     };
+
+    return setFunctionName(debounceWrapper, `${ getFunctionName(method) }::debounced`);
 }
 
 export function isRegex(item : mixed) : boolean {
