@@ -232,38 +232,40 @@
                     return this;
                 };
                 ZalgoPromise.prototype.dispatch = function() {
-                    var _this3 = this, dispatching = this.dispatching, resolved = this.resolved, rejected = this.rejected, handlers = this.handlers;
+                    var dispatching = this.dispatching, resolved = this.resolved, rejected = this.rejected, handlers = this.handlers;
                     if (!dispatching && (resolved || rejected)) {
                         this.dispatching = !0;
                         startActive();
-                        for (var _loop = function(i) {
-                            var _handlers$i = handlers[i], onSuccess = _handlers$i.onSuccess, onError = _handlers$i.onError, promise = _handlers$i.promise, result = void 0;
+                        for (var chain = function(firstPromise, secondPromise) {
+                            return firstPromise.then(function(res) {
+                                secondPromise.resolve(res);
+                            }, function(err) {
+                                secondPromise.reject(err);
+                            });
+                        }, i = 0; i < handlers.length; i++) {
+                            var _handlers$i = handlers[i], _onSuccess = _handlers$i.onSuccess, _onError = _handlers$i.onError, _promise = _handlers$i.promise, _result2 = void 0;
                             if (resolved) try {
-                                result = onSuccess ? onSuccess(_this3.value) : _this3.value;
+                                _result2 = _onSuccess ? _onSuccess(this.value) : this.value;
                             } catch (err) {
-                                promise.reject(err);
-                                return "continue";
+                                _promise.reject(err);
+                                continue;
                             } else if (rejected) {
-                                if (!onError) {
-                                    promise.reject(_this3.error);
-                                    return "continue";
+                                if (!_onError) {
+                                    _promise.reject(this.error);
+                                    continue;
                                 }
                                 try {
-                                    result = onError(_this3.error);
+                                    _result2 = _onError(this.error);
                                 } catch (err) {
-                                    promise.reject(err);
-                                    return "continue";
+                                    _promise.reject(err);
+                                    continue;
                                 }
                             }
-                            if (result instanceof ZalgoPromise && (result.resolved || result.rejected)) {
-                                result.resolved ? promise.resolve(result.value) : promise.reject(result.error);
-                                result.errorHandled = !0;
-                            } else utils_isPromise(result) ? result instanceof ZalgoPromise && (result.resolved || result.rejected) ? result.resolved ? promise.resolve(result.value) : promise.reject(result.error) : result.then(function(res) {
-                                promise.resolve(res);
-                            }, function(err) {
-                                promise.reject(err);
-                            }) : promise.resolve(result);
-                        }, i = 0; i < handlers.length; i++) _loop(i);
+                            if (_result2 instanceof ZalgoPromise && (_result2.resolved || _result2.rejected)) {
+                                _result2.resolved ? _promise.resolve(_result2.value) : _promise.reject(_result2.error);
+                                _result2.errorHandled = !0;
+                            } else utils_isPromise(_result2) ? _result2 instanceof ZalgoPromise && (_result2.resolved || _result2.rejected) ? _result2.resolved ? _promise.resolve(_result2.value) : _promise.reject(_result2.error) : chain(_result2, _promise) : _promise.resolve(_result2);
+                        }
                         handlers.length = 0;
                         this.dispatching = !1;
                         endActive();
@@ -298,10 +300,10 @@
                     });
                 };
                 ZalgoPromise.prototype.timeout = function(time, err) {
-                    var _this4 = this;
+                    var _this3 = this;
                     if (this.resolved || this.rejected) return this;
                     var timeout = setTimeout(function() {
-                        _this4.resolved || _this4.rejected || _this4.reject(err || new Error("Promise timed out after " + time + "ms"));
+                        _this3.resolved || _this3.rejected || _this3.reject(err || new Error("Promise timed out after " + time + "ms"));
                     }, time);
                     return this.then(function(result) {
                         clearTimeout(timeout);
@@ -329,26 +331,28 @@
                         promise.resolve(results);
                         return promise;
                     }
-                    for (var _loop2 = function(i) {
+                    for (var chain = function(i, firstPromise, secondPromise) {
+                        return firstPromise.then(function(res) {
+                            results[i] = res;
+                            0 == (count -= 1) && promise.resolve(results);
+                        }, function(err) {
+                            secondPromise.reject(err);
+                        });
+                    }, i = 0; i < promises.length; i++) {
                         var prom = promises[i];
                         if (prom instanceof ZalgoPromise) {
                             if (prom.resolved) {
                                 results[i] = prom.value;
                                 count -= 1;
-                                return "continue";
+                                continue;
                             }
                         } else if (!utils_isPromise(prom)) {
                             results[i] = prom;
                             count -= 1;
-                            return "continue";
+                            continue;
                         }
-                        ZalgoPromise.resolve(prom).then(function(result) {
-                            results[i] = result;
-                            0 == (count -= 1) && promise.resolve(results);
-                        }, function(err) {
-                            promise.reject(err);
-                        });
-                    }, i = 0; i < promises.length; i++) _loop2(i);
+                        chain(i, ZalgoPromise.resolve(prom), promise);
+                    }
                     0 === count && promise.resolve(results);
                     return promise;
                 };
@@ -419,8 +423,8 @@
                 } catch (err) {}
                 return !1;
             }
-            function getActualDomain(win) {
-                var location = (win = win || window).location;
+            function getActualDomain() {
+                var win = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : window, location = win.location;
                 if (!location) throw new Error("Can not read window location");
                 var protocol = location.protocol;
                 if (!protocol) throw new Error("Can not read window protocol");
@@ -438,8 +442,8 @@
                 if (!host) throw new Error("Can not read window host");
                 return protocol + "//" + host;
             }
-            function getDomain(win) {
-                var domain = getActualDomain(win = win || window);
+            function getDomain() {
+                var win = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : window, domain = getActualDomain(win);
                 return domain && win.mockDomain && 0 === win.mockDomain.indexOf(PROTOCOL.MOCK) ? win.mockDomain : domain;
             }
             var iframeWindows = [], iframeFrames = [];
@@ -1460,7 +1464,7 @@
                 var _options = options = options || {}, width = _options.width, height = _options.height, top = 0, left = 0;
                 width && (window.outerWidth ? left = Math.round((window.outerWidth - width) / 2) + window.screenX : window.screen.width && (left = Math.round((window.screen.width - width) / 2)));
                 height && (window.outerHeight ? top = Math.round((window.outerHeight - height) / 2) + window.screenY : window.screen.height && (top = Math.round((window.screen.height - height) / 2)));
-                var name = (options = _extends({
+                width && height && (options = _extends({
                     top: top,
                     left: left,
                     width: width,
@@ -1470,10 +1474,11 @@
                     menubar: 0,
                     resizable: 1,
                     scrollbars: 1
-                }, options)).name || "";
+                }, options));
+                var name = options.name || "";
                 delete options.name;
                 var params = Object.keys(options).map(function(key) {
-                    if (options[key]) return key + "=" + stringify(options[key]);
+                    if (null !== options[key] && void 0 !== options[key]) return key + "=" + stringify(options[key]);
                 }).filter(Boolean).join(","), win = void 0;
                 try {
                     win = window.open(url, name, params, !0);

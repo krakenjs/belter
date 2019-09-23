@@ -431,17 +431,19 @@ export function popup(url, options) {
         }
     }
 
-    options = _extends({
-        top: top,
-        left: left,
-        width: width,
-        height: height,
-        status: 1,
-        toolbar: 0,
-        menubar: 0,
-        resizable: 1,
-        scrollbars: 1
-    }, options);
+    if (width && height) {
+        options = _extends({
+            top: top,
+            left: left,
+            width: width,
+            height: height,
+            status: 1,
+            toolbar: 0,
+            menubar: 0,
+            resizable: 1,
+            scrollbars: 1
+        }, options);
+    }
 
     var name = options.name || '';
     delete options.name;
@@ -449,7 +451,7 @@ export function popup(url, options) {
     // eslint-disable-next-line array-callback-return
     var params = Object.keys(options).map(function (key) {
         // $FlowFixMe
-        if (options[key]) {
+        if (options[key] !== null && options[key] !== undefined) {
             return key + '=' + stringify(options[key]);
         }
     }).filter(Boolean).join(',');
