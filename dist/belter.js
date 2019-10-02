@@ -2019,7 +2019,7 @@
             }
             function wrapPromise(method) {
                 var _ref$timeout = (arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {}).timeout, expected = [], promises = [], timer = setTimeout(function() {
-                    expected && promises.push(promise_ZalgoPromise.asyncReject(new Error("Expected " + expected[0] + " to be called")));
+                    expected.length && promises.push(promise_ZalgoPromise.asyncReject(new Error("Expected " + expected[0] + " to be called")));
                 }, void 0 === _ref$timeout ? 5e3 : _ref$timeout), expect = function(name) {
                     var fn = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : src_util_noop;
                     expected.push(name);

@@ -14,7 +14,7 @@ export function wrapPromise(method) {
     var promises = [];
 
     var timer = setTimeout(function () {
-        if (expected) {
+        if (expected.length) {
             promises.push(ZalgoPromise.asyncReject(new Error('Expected ' + expected[0] + ' to be called')));
         }
     }, timeout);
