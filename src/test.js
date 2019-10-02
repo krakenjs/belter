@@ -14,7 +14,7 @@ export function wrapPromise<T>(method : Wrapper<T>, { timeout = 5000 } : { timeo
     let promises : Array<ZalgoPromise<*>> = [];
 
     let timer = setTimeout(() => {
-        if (expected) {
+        if (expected.length) {
             promises.push(ZalgoPromise.asyncReject(new Error(`Expected ${ expected[0] } to be called`)));
         }
     }, timeout);
