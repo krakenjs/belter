@@ -762,6 +762,9 @@
                 };
                 return setFunctionName(memoizedFunction, getFunctionName(method) + "::memoized");
             }
+            function promiseIdentity(item) {
+                return promise_ZalgoPromise.resolve(item);
+            }
             function memoizePromise(method) {
                 var cache = {};
                 function memoizedPromiseFunction() {
@@ -2334,6 +2337,9 @@
             });
             __webpack_require__.d(__webpack_exports__, "memoize", function() {
                 return memoize;
+            });
+            __webpack_require__.d(__webpack_exports__, "promiseIdentity", function() {
+                return promiseIdentity;
             });
             __webpack_require__.d(__webpack_exports__, "memoizePromise", function() {
                 return memoizePromise;

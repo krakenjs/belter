@@ -151,6 +151,11 @@ export function memoize(method) {
     return setFunctionName(memoizedFunction, getFunctionName(method) + '::memoized');
 }
 
+export function promiseIdentity(item) {
+    // $FlowFixMe
+    return ZalgoPromise.resolve(item);
+}
+
 // eslint-disable-next-line flowtype/no-weak-types
 export function memoizePromise(method) {
     var cache = {};
