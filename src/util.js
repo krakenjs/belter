@@ -144,6 +144,11 @@ export function memoize<A, R, F : (...args : Array<A>) => R, X : { (...args : Ar
     return setFunctionName(memoizedFunction, `${ getFunctionName(method) }::memoized`);
 }
 
+export function promiseIdentity<T : mixed>(item : ZalgoPromise<T> | T) : ZalgoPromise<T> {
+    // $FlowFixMe
+    return ZalgoPromise.resolve(item);
+}
+
 // eslint-disable-next-line flowtype/no-weak-types
 export function memoizePromise<R>(method : (...args : Array<any>) => ZalgoPromise<R>) : ((...args : Array<any>) => ZalgoPromise<R>) {
     let cache = {};
