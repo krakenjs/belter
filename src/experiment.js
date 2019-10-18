@@ -46,8 +46,8 @@ const THROTTLE_GROUP = {
 type ExperimentOptions = {
     name : string,
     sample? : number,
-    logTreatment? : ({ name : string, treatment : string }) => void,
-    logCheckpoint? : ({ name : string, treatment : string, checkpoint : string, payload? : { [string] : ?string } }) => void
+    logTreatment? : ({ name : string, treatment : string, payload : { [string] : ?string } }) => void,
+    logCheckpoint? : ({ name : string, treatment : string, checkpoint : string, payload : { [string] : ?string } }) => void
 };
 
 export function experiment({ name, sample = 50, logTreatment = noop, logCheckpoint = noop } : ExperimentOptions) : Experiment {
