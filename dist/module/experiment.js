@@ -85,7 +85,7 @@ export function experiment(_ref) {
             }
 
             if (isEventUnique(name + '_' + treatment)) {
-                logTreatment({ name: name, treatment: treatment });
+                logTreatment({ name: name, treatment: treatment, payload: payload });
             }
 
             if (isEventUnique(name + '_' + treatment + '_' + checkpoint)) {

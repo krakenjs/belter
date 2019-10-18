@@ -1892,7 +1892,8 @@
                         if (!started) return this;
                         isEventUnique(name + "_" + treatment) && logTreatment({
                             name: name,
-                            treatment: treatment
+                            treatment: treatment,
+                            payload: payload
                         });
                         isEventUnique(name + "_" + treatment + "_" + checkpoint) && logCheckpoint({
                             name: name,
