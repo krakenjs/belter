@@ -97,7 +97,7 @@ export function experiment({ name, sample = 50, logTreatment = noop, logCheckpoi
             }
 
             if (isEventUnique(`${ name }_${ treatment }`)) {
-                logTreatment({ name, treatment });
+                logTreatment({ name, treatment, payload });
             }
 
             if (isEventUnique(`${ name }_${ treatment }_${ checkpoint }`)) {
