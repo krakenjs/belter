@@ -1890,12 +1890,12 @@
                     log: function(checkpoint) {
                         var payload = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {};
                         if (!started) return this;
-                        isEventUnique(name + "_" + treatment) && logTreatment({
+                        isEventUnique(name + "_" + treatment + "_" + JSON.stringify(payload)) && logTreatment({
                             name: name,
                             treatment: treatment,
                             payload: payload
                         });
-                        isEventUnique(name + "_" + treatment + "_" + checkpoint) && logCheckpoint({
+                        isEventUnique(name + "_" + treatment + "_" + checkpoint + "_" + JSON.stringify(payload)) && logCheckpoint({
                             name: name,
                             treatment: treatment,
                             checkpoint: checkpoint,

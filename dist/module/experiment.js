@@ -84,11 +84,11 @@ export function experiment(_ref) {
                 return this;
             }
 
-            if (isEventUnique(name + '_' + treatment)) {
+            if (isEventUnique(name + '_' + treatment + '_' + JSON.stringify(payload))) {
                 logTreatment({ name: name, treatment: treatment, payload: payload });
             }
 
-            if (isEventUnique(name + '_' + treatment + '_' + checkpoint)) {
+            if (isEventUnique(name + '_' + treatment + '_' + checkpoint + '_' + JSON.stringify(payload))) {
                 logCheckpoint({ name: name, treatment: treatment, checkpoint: checkpoint, payload: payload });
             }
 
