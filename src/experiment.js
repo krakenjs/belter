@@ -96,11 +96,11 @@ export function experiment({ name, sample = 50, logTreatment = noop, logCheckpoi
                 return this;
             }
 
-            if (isEventUnique(`${ name }_${ treatment }`)) {
+            if (isEventUnique(`${ name }_${ treatment }_${ JSON.stringify(payload) }`)) {
                 logTreatment({ name, treatment, payload });
             }
 
-            if (isEventUnique(`${ name }_${ treatment }_${ checkpoint }`)) {
+            if (isEventUnique(`${ name }_${ treatment }_${ checkpoint }_${ JSON.stringify(payload) }`)) {
                 logCheckpoint({ name, treatment, checkpoint, payload });
             }
 
