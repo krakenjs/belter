@@ -161,3 +161,17 @@ export function supportsPopups() {
 
     return !(isIosWebview(ua) || isAndroidWebview(ua) || isOperaMini(ua) || isFirefoxIOS(ua) || isEdgeIOS(ua) || isFacebookWebView(ua) || isQQBrowser(ua) || isElectron() || isMacOsCna() || isStandAlone());
 }
+
+export function isChrome() {
+    var ua = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : getUserAgent();
+
+    return (/Chrome|Chromium|CriOS/.test(ua)
+    );
+}
+
+export function isSafari() {
+    var ua = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : getUserAgent();
+
+    return (/Safari/.test(ua) && !isChrome(ua)
+    );
+}

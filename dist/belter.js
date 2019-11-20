@@ -127,6 +127,14 @@
                 var ua = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : getUserAgent();
                 return !(isIosWebview(ua) || isAndroidWebview(ua) || isOperaMini(ua) || isFirefoxIOS(ua) || isEdgeIOS(ua) || isFacebookWebView(ua) || isQQBrowser(ua) || isElectron() || isMacOsCna() || isStandAlone());
             }
+            function isChrome() {
+                var ua = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : getUserAgent();
+                return /Chrome|Chromium|CriOS/.test(ua);
+            }
+            function isSafari() {
+                var ua = arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : getUserAgent();
+                return /Safari/.test(ua) && !isChrome(ua);
+            }
             function utils_isPromise(item) {
                 try {
                     if (!item) return !1;
@@ -2140,6 +2148,12 @@
             });
             __webpack_require__.d(__webpack_exports__, "supportsPopups", function() {
                 return supportsPopups;
+            });
+            __webpack_require__.d(__webpack_exports__, "isChrome", function() {
+                return isChrome;
+            });
+            __webpack_require__.d(__webpack_exports__, "isSafari", function() {
+                return isSafari;
             });
             __webpack_require__.d(__webpack_exports__, "isDocumentReady", function() {
                 return isDocumentReady;
