@@ -137,3 +137,11 @@ export function supportsPopups(ua? : string = getUserAgent()) : boolean {
     return !(isIosWebview(ua) || isAndroidWebview(ua) || isOperaMini(ua) ||
         isFirefoxIOS(ua) || isEdgeIOS(ua) || isFacebookWebView(ua) || isQQBrowser(ua) || isElectron() || isMacOsCna() || isStandAlone());
 }
+
+export function isChrome(ua? : string = getUserAgent()) : boolean {
+    return (/Chrome|Chromium|CriOS/).test(ua);
+}
+
+export function isSafari(ua? : string = getUserAgent()) : boolean {
+    return (/Safari/).test(ua) && !isChrome(ua);
+}
