@@ -597,7 +597,8 @@ export type EventEmitterType = {
     on : (eventName : string, handler : Function) => CancelableType,
     once : (eventName : string, handler : Function) => CancelableType,
     trigger : (eventName : string, ...args : $ReadOnlyArray<mixed>) => ZalgoPromise<void>,
-    triggerOnce : (eventName : string, ...args : $ReadOnlyArray<mixed>) => ZalgoPromise<void>
+    triggerOnce : (eventName : string, ...args : $ReadOnlyArray<mixed>) => ZalgoPromise<void>,
+    reset : () => void
 };
 
 export function eventEmitter() : EventEmitterType {
@@ -656,6 +657,10 @@ export function eventEmitter() : EventEmitterType {
 
             triggered[eventName] = true;
             return this.trigger(eventName, ...args);
+        },
+
+        reset() {
+            handlers = {};
         }
     };
 }
