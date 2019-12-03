@@ -1039,6 +1039,9 @@
                         triggered[eventName] = !0;
                         for (var _len4 = arguments.length, args = Array(_len4 > 1 ? _len4 - 1 : 0), _key4 = 1; _key4 < _len4; _key4++) args[_key4 - 1] = arguments[_key4];
                         return this.trigger.apply(this, [ eventName ].concat(args));
+                    },
+                    reset: function() {
+                        handlers = {};
                     }
                 };
             }

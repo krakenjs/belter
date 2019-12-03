@@ -694,6 +694,9 @@ export function eventEmitter() {
             }
 
             return this.trigger.apply(this, [eventName].concat(args));
+        },
+        reset: function reset() {
+            handlers = {};
         }
     };
 }
