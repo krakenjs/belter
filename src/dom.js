@@ -232,7 +232,7 @@ export function onClick(element : HTMLElement, handler : (Event) => void) {
     element.addEventListener('click', handler);
     element.addEventListener('keypress', (event : Event) => {
         // $FlowFixMe
-        if (event.keyCode === KEY_CODES.ENTER) {
+        if (event.keyCode === KEY_CODES.ENTER || event.keyCode === KEY_CODES.SPACE) {
             return handler(event);
         }
     });
@@ -648,7 +648,7 @@ export function iframe(options : IframeElementOptionsType = {}, container : ?HTM
     });
 
     const isIE = window.navigator.userAgent.match(/MSIE|Edge/i);
-    
+
     if (!frame.hasAttribute('id')) {
         frame.setAttribute('id', uniqueID());
     }
