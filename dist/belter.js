@@ -1265,7 +1265,8 @@
                 return Object.keys(result);
             }
             var KEY_CODES = {
-                ENTER: 13
+                ENTER: 13,
+                SPACE: 32
             }, dom__typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(obj) {
                 return typeof obj;
             } : function(obj) {
@@ -1394,7 +1395,7 @@
                 element.addEventListener("touchstart", src_util_noop);
                 element.addEventListener("click", handler);
                 element.addEventListener("keypress", function(event) {
-                    if (event.keyCode === KEY_CODES.ENTER) return handler(event);
+                    if (event.keyCode === KEY_CODES.ENTER || event.keyCode === KEY_CODES.SPACE) return handler(event);
                 });
             }
             function getScript(_ref) {

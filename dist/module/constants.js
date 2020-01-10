@@ -1,3 +1,4 @@
 export var KEY_CODES = {
-    ENTER: 13
+    ENTER: 13,
+    SPACE: 32
 };
