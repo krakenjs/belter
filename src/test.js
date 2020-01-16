@@ -7,7 +7,7 @@ import { noop, tryCatch, removeFromArray } from './util';
 type Prom<X> = Promise<X> | ZalgoPromise<X>; // eslint-disable-line no-restricted-globals, promise/no-native
 
 type Handler = <T, A : $ReadOnlyArray<mixed>>(name : string, fn? : (...args : A) => T) => (...args : A) => T; // eslint-disable-line no-undef
-type Wrapper<T> = ({ expect : Handler, avoid : Handler, expectError : Handler, error : Handler }) => (Prom<T> | void);
+type Wrapper<T> = ({ expect : Handler, avoid : Handler, expectError : Handler, error : Handler, wait : () => Prom<void> }) => (Prom<T> | void);
 
 export function wrapPromise<T>(method : Wrapper<T>, { timeout = 5000 } : { timeout? : number } = {}) : ZalgoPromise<void> {
     let expected : Array<string> = [];
@@ -70,24 +70,24 @@ export function wrapPromise<T>(method : Wrapper<T>, { timeout = 5000 } : { timeo
         };
     };
 
-    promises.push(ZalgoPromise.try(() => method({ expect, avoid, expectError, error: avoid })));
-
-    let drain = () => {
+    let wait = () => {
         return ZalgoPromise.try(() => {
             if (promises.length) {
                 return promises.pop();
             }
         }).then(() => {
             if (promises.length) {
-                return drain();
+                return wait();
             }
             if (expected.length) {
-                return ZalgoPromise.delay(10).then(drain);
+                return ZalgoPromise.delay(10).then(wait);
             }
         });
     };
 
-    return drain().then(() => {
+    promises.push(ZalgoPromise.try(() => method({ expect, avoid, expectError, error: avoid, wait })));
+
+    return wait().then(() => {
         clearTimeout(timer);
     });
 }
