@@ -2074,22 +2074,23 @@
                         }, src_util_noop));
                         return result;
                     };
+                }, wait = function wait() {
+                    return promise_ZalgoPromise.try(function() {
+                        if (promises.length) return promises.pop();
+                    }).then(function() {
+                        return promises.length ? wait() : expected.length ? promise_ZalgoPromise.delay(10).then(wait) : void 0;
+                    });
                 };
                 promises.push(promise_ZalgoPromise.try(function() {
                     return method({
                         expect: expect,
                         avoid: avoid,
                         expectError: expectError,
-                        error: avoid
+                        error: avoid,
+                        wait: wait
                     });
                 }));
-                return function drain() {
-                    return promise_ZalgoPromise.try(function() {
-                        if (promises.length) return promises.pop();
-                    }).then(function() {
-                        return promises.length ? drain() : expected.length ? promise_ZalgoPromise.delay(10).then(drain) : void 0;
-                    });
-                }().then(function() {
+                return wait().then(function() {
                     clearTimeout(timer);
                 });
             }

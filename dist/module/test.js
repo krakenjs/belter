@@ -103,26 +103,26 @@ export function wrapPromise(method) {
         };
     };
 
-    promises.push(ZalgoPromise['try'](function () {
-        return method({ expect: expect, avoid: avoid, expectError: expectError, error: avoid });
-    }));
-
-    var drain = function drain() {
+    var wait = function wait() {
         return ZalgoPromise['try'](function () {
             if (promises.length) {
                 return promises.pop();
             }
         }).then(function () {
             if (promises.length) {
-                return drain();
+                return wait();
             }
             if (expected.length) {
-                return ZalgoPromise.delay(10).then(drain);
+                return ZalgoPromise.delay(10).then(wait);
             }
         });
     };
 
-    return drain().then(function () {
+    promises.push(ZalgoPromise['try'](function () {
+        return method({ expect: expect, avoid: avoid, expectError: expectError, error: avoid, wait: wait });
+    }));
+
+    return wait().then(function () {
         clearTimeout(timer);
     });
 }
