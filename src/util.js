@@ -1022,7 +1022,7 @@ export function cleanup(obj : Object) : CleanupType {
             cleaned = true;
 
             while (tasks.length) {
-                const task = tasks.pop();
+                const task = tasks.shift();
                 results.push(task());
             }
 
