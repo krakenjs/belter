@@ -1233,7 +1233,7 @@
                         var results = [];
                         cleaned = !0;
                         for (;tasks.length; ) {
-                            var task = tasks.pop();
+                            var task = tasks.shift();
                             results.push(task());
                         }
                         return promise_ZalgoPromise.all(results).then(src_util_noop);

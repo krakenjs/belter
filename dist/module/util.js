@@ -1062,7 +1062,7 @@ export function cleanup(obj) {
             cleaned = true;
 
             while (tasks.length) {
-                var task = tasks.pop();
+                var task = tasks.shift();
                 results.push(task());
             }
 
