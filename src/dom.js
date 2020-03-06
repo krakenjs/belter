@@ -970,3 +970,31 @@ export function getResourceLoadTime(url : string) : ?number {
         }
     }
 }
+
+export function isShadowElement(element : Node) : boolean {
+    while (element.parentNode) {
+        element = element.parentNode;
+    }
+
+    return element.toString() === '[object ShadowRoot]';
+}
+
+export function getShadowRoot(element : Node) : ?Node {
+    while (element.parentNode) {
+        element = element.parentNode;
+    }
+
+    if (isShadowElement(element)) {
+        return element;
+    }
+}
+
+export function getShadowHost(element : Node) : ?HTMLElement {
+    const shadowRoot = getShadowRoot(element);
+
+    // $FlowFixMe
+    if (shadowRoot.host) {
+        // $FlowFixMe
+        return shadowRoot.host;
+    }
+}
