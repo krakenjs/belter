@@ -999,3 +999,27 @@ export function getShadowHost(element) {
         return shadowRoot.host;
     }
 }
+
+export function insertShadowSlot(element) {
+    var shadowHost = getShadowHost(element);
+
+    if (!shadowHost) {
+        throw new Error('Element is not in shadow dom');
+    }
+
+    if (isShadowElement(shadowHost)) {
+        throw new Error('Host element is also in shadow dom');
+    }
+
+    var slotName = 'shadow-slot-' + uniqueID();
+
+    var slot = document.createElement('slot');
+    slot.setAttribute('name', slotName);
+    element.appendChild(slot);
+
+    var slotProvider = document.createElement('div');
+    slotProvider.setAttribute('slot', slotName);
+    shadowHost.appendChild(slotProvider);
+
+    return slotProvider;
+}

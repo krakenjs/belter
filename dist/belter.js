@@ -1813,6 +1813,18 @@
                 var shadowRoot = getShadowRoot(element);
                 if (shadowRoot.host) return shadowRoot.host;
             }
+            function insertShadowSlot(element) {
+                var shadowHost = getShadowHost(element);
+                if (!shadowHost) throw new Error("Element is not in shadow dom");
+                if (isShadowElement(shadowHost)) throw new Error("Host element is also in shadow dom");
+                var slotName = "shadow-slot-" + uniqueID(), slot = document.createElement("slot");
+                slot.setAttribute("name", slotName);
+                element.appendChild(slot);
+                var slotProvider = document.createElement("div");
+                slotProvider.setAttribute("slot", slotName);
+                shadowHost.appendChild(slotProvider);
+                return slotProvider;
+            }
             var DEFAULT_SESSION_STORAGE = 12e5;
             function getStorage(_ref) {
                 var name = _ref.name, _ref$lifetime = _ref.lifetime, lifetime = void 0 === _ref$lifetime ? DEFAULT_SESSION_STORAGE : _ref$lifetime;
@@ -2349,6 +2361,9 @@
             });
             __webpack_require__.d(__webpack_exports__, "getShadowHost", function() {
                 return getShadowHost;
+            });
+            __webpack_require__.d(__webpack_exports__, "insertShadowSlot", function() {
+                return insertShadowSlot;
             });
             __webpack_require__.d(__webpack_exports__, "experiment", function() {
                 return experiment;
