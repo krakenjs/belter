@@ -513,7 +513,11 @@
                         if (!frame.contentWindow) return !0;
                         if (!frame.parentNode) return !0;
                         var doc = frame.ownerDocument;
-                        return !(!doc || !doc.documentElement || doc.documentElement.contains(frame));
+                        if (doc && doc.documentElement && !doc.documentElement.contains(frame)) {
+                            for (var parent = frame; parent.parentNode && parent.parentNode !== parent; ) parent = parent.parentNode;
+                            if (!parent.host || !doc.documentElement.contains(parent.host)) return !0;
+                        }
+                        return !1;
                     }(frame)) return !0;
                 }
                 return !1;
@@ -1797,6 +1801,18 @@
                     if (entry && entry.name && 0 === entry.name.indexOf(url) && "number" == typeof entry.duration) return Math.floor(entry.duration);
                 }
             }
+            function isShadowElement(element) {
+                for (;element.parentNode; ) element = element.parentNode;
+                return "[object ShadowRoot]" === element.toString();
+            }
+            function getShadowRoot(element) {
+                for (;element.parentNode; ) element = element.parentNode;
+                if (isShadowElement(element)) return element;
+            }
+            function getShadowHost(element) {
+                var shadowRoot = getShadowRoot(element);
+                if (shadowRoot.host) return shadowRoot.host;
+            }
             var DEFAULT_SESSION_STORAGE = 12e5;
             function getStorage(_ref) {
                 var name = _ref.name, _ref$lifetime = _ref.lifetime, lifetime = void 0 === _ref$lifetime ? DEFAULT_SESSION_STORAGE : _ref$lifetime;
@@ -2324,6 +2340,15 @@
             });
             __webpack_require__.d(__webpack_exports__, "getResourceLoadTime", function() {
                 return getResourceLoadTime;
+            });
+            __webpack_require__.d(__webpack_exports__, "isShadowElement", function() {
+                return isShadowElement;
+            });
+            __webpack_require__.d(__webpack_exports__, "getShadowRoot", function() {
+                return getShadowRoot;
+            });
+            __webpack_require__.d(__webpack_exports__, "getShadowHost", function() {
+                return getShadowHost;
             });
             __webpack_require__.d(__webpack_exports__, "experiment", function() {
                 return experiment;
