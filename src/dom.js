@@ -353,7 +353,7 @@ export function getElement(id : ElementRefType, doc : Document | HTMLElement = d
     throw new Error(`Can not find element: ${ stringify(id) }`);
 }
 
-export function elementReady(id : ElementRefType) : ZalgoPromise<window.HTMLElement> {
+export function elementReady(id : ElementRefType) : ZalgoPromise<HTMLElement> {
     return new ZalgoPromise((resolve, reject) => {
 
         let name = stringify(id);
@@ -997,4 +997,28 @@ export function getShadowHost(element : Node) : ?HTMLElement {
         // $FlowFixMe
         return shadowRoot.host;
     }
+}
+
+export function insertShadowSlot(element : HTMLElement) : HTMLElement {
+    const shadowHost = getShadowHost(element);
+
+    if (!shadowHost) {
+        throw new Error(`Element is not in shadow dom`);
+    }
+
+    if (isShadowElement(shadowHost)) {
+        throw new Error(`Host element is also in shadow dom`);
+    }
+
+    const slotName = `shadow-slot-${ uniqueID() }`;
+
+    const slot = document.createElement('slot');
+    slot.setAttribute('name', slotName);
+    element.appendChild(slot);
+    
+    const slotProvider = document.createElement('div');
+    slotProvider.setAttribute('slot', slotName);
+    shadowHost.appendChild(slotProvider);
+
+    return slotProvider;
 }
