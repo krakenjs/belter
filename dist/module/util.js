@@ -108,14 +108,20 @@ function serializeArgs(args) {
         throw new Error('Arguments not serializable -- can not be used to memoize');
     }
 }
+
+
+var getDefaultMemoizeOptions = function getDefaultMemoizeOptions() {
+    // $FlowFixMe
+    return {};
+};
+
 export function memoize(method) {
     var _this = this;
 
-    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+    var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : getDefaultMemoizeOptions();
 
     var cacheMap = new WeakMap();
 
-    // $FlowFixMe
     var memoizedFunction = function memoizedFunction() {
         for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
             args[_key] = arguments[_key];
@@ -148,7 +154,10 @@ export function memoize(method) {
         cacheMap['delete'](options.thisNamespace ? _this : method);
     };
 
-    return setFunctionName(memoizedFunction, getFunctionName(method) + '::memoized');
+    // $FlowFixMe
+    var result = memoizedFunction;
+
+    return setFunctionName(result, (options.name || getFunctionName(method)) + '::memoized');
 }
 
 export function promiseIdentity(item) {

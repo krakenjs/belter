@@ -754,8 +754,11 @@
                     throw new Error("Arguments not serializable -- can not be used to memoize");
                 }
             }
+            var getDefaultMemoizeOptions = function() {
+                return {};
+            };
             function memoize(method) {
-                var _this = this, options = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {}, cacheMap = new weakmap_CrossDomainSafeWeakMap(), memoizedFunction = function() {
+                var _this = this, options = arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : getDefaultMemoizeOptions(), cacheMap = new weakmap_CrossDomainSafeWeakMap(), memoizedFunction = function() {
                     for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) args[_key] = arguments[_key];
                     var cache = cacheMap.getOrSet(options.thisNamespace ? this : method, function() {
                         return {};
@@ -772,7 +775,7 @@
                 memoizedFunction.reset = function() {
                     cacheMap.delete(options.thisNamespace ? _this : method);
                 };
-                return setFunctionName(memoizedFunction, getFunctionName(method) + "::memoized");
+                return setFunctionName(memoizedFunction, (options.name || getFunctionName(method)) + "::memoized");
             }
             function promiseIdentity(item) {
                 return promise_ZalgoPromise.resolve(item);
