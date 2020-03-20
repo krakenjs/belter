@@ -111,11 +111,21 @@ function serializeArgs<T>(args : Array<T>) : string {
         throw new Error(`Arguments not serializable -- can not be used to memoize`);
     }
 }
-export function memoize<A, R, F : (...args : Array<A>) => R, X : { (...args : Array<A>) : R, displayName : string, reset : () => void }>(method : F, options : { time? : number, thisNamespace? : boolean } = {}) : X {
+type MemoizeOptions = {|
+    name? : string,
+    time? : number,
+    thisNamespace? : boolean
+|};
+
+const getDefaultMemoizeOptions = () : MemoizeOptions => {
+    // $FlowFixMe
+    return {};
+};
+
+export function memoize<F : Function>(method : F, options? : MemoizeOptions = getDefaultMemoizeOptions()) : F & {| reset : () => void |} {
     let cacheMap = new WeakMap();
 
-    // $FlowFixMe
-    let memoizedFunction : X = function memoizedFunction(...args : Array<A>) : R {
+    let memoizedFunction = function memoizedFunction(...args) : mixed {
         let cache = cacheMap.getOrSet(options.thisNamespace ? this : method, () => ({}));
 
         let key : string = serializeArgs(args);
@@ -141,7 +151,10 @@ export function memoize<A, R, F : (...args : Array<A>) => R, X : { (...args : Ar
         cacheMap.delete(options.thisNamespace ? this : method);
     };
 
-    return setFunctionName(memoizedFunction, `${ getFunctionName(method) }::memoized`);
+    // $FlowFixMe
+    const result : F = memoizedFunction;
+
+    return setFunctionName(result, `${ options.name || getFunctionName(method) }::memoized`);
 }
 
 export function promiseIdentity<T : mixed>(item : ZalgoPromise<T> | T) : ZalgoPromise<T> {
