@@ -122,6 +122,8 @@ const getDefaultMemoizeOptions = () : MemoizeOptions => {
     return {};
 };
 
+const memoizedFunctions = [];
+
 export function memoize<F : Function>(method : F, options? : MemoizeOptions = getDefaultMemoizeOptions()) : F & {| reset : () => void |} {
     let cacheMap = new WeakMap();
 
@@ -151,11 +153,19 @@ export function memoize<F : Function>(method : F, options? : MemoizeOptions = ge
         cacheMap.delete(options.thisNamespace ? this : method);
     };
 
+    memoizedFunctions.push(memoizedFunction);
+
     // $FlowFixMe
     const result : F = memoizedFunction;
 
     return setFunctionName(result, `${ options.name || getFunctionName(method) }::memoized`);
 }
+
+memoize.clear = () => {
+    for (const memoizedFunction of memoizedFunctions) {
+        memoizedFunction.clear();
+    }
+};
 
 export function promiseIdentity<T : mixed>(item : ZalgoPromise<T> | T) : ZalgoPromise<T> {
     // $FlowFixMe
