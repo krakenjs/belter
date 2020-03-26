@@ -152,7 +152,7 @@ export function memoize(method, options) {
 memoize.clear = function () {
   for (var _i2 = 0; _i2 < memoizedFunctions.length; _i2++) {
     var memoizedFunction = memoizedFunctions[_i2];
-    memoizedFunction.clear();
+    memoizedFunction.reset();
   }
 };
 
