@@ -7,19 +7,19 @@ import { noop, tryCatch, removeFromArray } from './util';
 type Prom<X> = Promise<X> | ZalgoPromise<X>; // eslint-disable-line no-restricted-globals, promise/no-native
 
 type Handler = <T, A : $ReadOnlyArray<mixed>>(name : string, fn? : (...args : A) => T) => (...args : A) => T; // eslint-disable-line no-undef
-type Wrapper<T> = ({ expect : Handler, avoid : Handler, expectError : Handler, error : Handler, wait : () => Prom<void> }) => (Prom<T> | void);
+type Wrapper<T> = ({| expect : Handler, avoid : Handler, expectError : Handler, error : Handler, wait : () => Prom<void> |}) => (Prom<T> | void);
 
-export function wrapPromise<T>(method : Wrapper<T>, { timeout = 5000 } : { timeout? : number } = {}) : ZalgoPromise<void> {
-    let expected : Array<string> = [];
-    let promises : Array<ZalgoPromise<*>> = [];
+export function wrapPromise<T>(method : Wrapper<T>, { timeout = 5000 } : {| timeout? : number |} = {}) : ZalgoPromise<void> {
+    const expected : Array<string> = [];
+    const promises : Array<ZalgoPromise<*>> = [];
 
-    let timer = setTimeout(() => {
+    const timer = setTimeout(() => {
         if (expected.length) {
             promises.push(ZalgoPromise.asyncReject(new Error(`Expected ${ expected[0] } to be called`)));
         }
     }, timeout);
 
-    let expect : Handler = (name, fn = noop) => {
+    const expect : Handler = (name, fn = noop) => {
         expected.push(name);
         
         // $FlowFixMe
@@ -27,7 +27,7 @@ export function wrapPromise<T>(method : Wrapper<T>, { timeout = 5000 } : { timeo
             removeFromArray(expected, name);
 
             // $FlowFixMe
-            let { result, error } = tryCatch(() => fn.call(this, ...args));
+            const { result, error } = tryCatch(() => fn.call(this, ...args));
 
             if (error) {
                 promises.push(ZalgoPromise.asyncReject(error));
@@ -39,7 +39,7 @@ export function wrapPromise<T>(method : Wrapper<T>, { timeout = 5000 } : { timeo
         };
     };
 
-    let avoid : Handler = (name : string, fn = noop) => {
+    const avoid : Handler = (name : string, fn = noop) => {
 
         // $FlowFixMe
         return function avoidWrapper(...args) : * {
@@ -49,7 +49,7 @@ export function wrapPromise<T>(method : Wrapper<T>, { timeout = 5000 } : { timeo
         };
     };
 
-    let expectError : Handler = (name, fn = noop) => {
+    const expectError : Handler = (name, fn = noop) => {
         expected.push(name);
 
         // $FlowFixMe
@@ -57,7 +57,7 @@ export function wrapPromise<T>(method : Wrapper<T>, { timeout = 5000 } : { timeo
             removeFromArray(expected, name);
 
             // $FlowFixMe
-            let { result, error } = tryCatch(() => fn.call(this, ...args));
+            const { result, error } = tryCatch(() => fn.call(this, ...args));
 
             if (error) {
                 throw error;
@@ -70,7 +70,7 @@ export function wrapPromise<T>(method : Wrapper<T>, { timeout = 5000 } : { timeo
         };
     };
 
-    let wait = () => {
+    const wait = () => {
         return ZalgoPromise.try(() => {
             if (promises.length) {
                 return promises.pop();

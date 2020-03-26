@@ -20,14 +20,14 @@ function isEventUnique(name : string) : boolean {
     });
 }
 
-export type Experiment = {
+export type Experiment = {|
     isEnabled : () => boolean,
     isDisabled : () => boolean,
     getTreatment : () => string,
     log : (string, payload? : { [string] : ?string }) => Experiment,
     logStart : (payload? : { [string] : ?string }) => Experiment,
     logComplete : (payload? : { [string] : ?string }) => Experiment
-};
+|};
 
 function getThrottlePercentile(name : string) : number {
     return getBelterExperimentStorage().getState(state => {
@@ -43,16 +43,16 @@ const THROTTLE_GROUP = {
     THROTTLE: 'throttle'
 };
 
-type ExperimentOptions = {
+type ExperimentOptions = {|
     name : string,
     sample? : number,
-    logTreatment? : ({ name : string, treatment : string, payload : { [string] : ?string } }) => void,
-    logCheckpoint? : ({ name : string, treatment : string, checkpoint : string, payload : { [string] : ?string } }) => void
-};
+    logTreatment? : ({| name : string, treatment : string, payload : { [string] : ?string } |}) => void,
+    logCheckpoint? : ({| name : string, treatment : string, checkpoint : string, payload : { [string] : ?string } |}) => void
+|};
 
 export function experiment({ name, sample = 50, logTreatment = noop, logCheckpoint = noop } : ExperimentOptions) : Experiment {
 
-    let throttle = getThrottlePercentile(name);
+    const throttle = getThrottlePercentile(name);
 
     let group;
 
@@ -64,7 +64,7 @@ export function experiment({ name, sample = 50, logTreatment = noop, logCheckpoi
         group = THROTTLE_GROUP.THROTTLE;
     }
 
-    let treatment = `${ name }_${ group }`;
+    const treatment = `${ name }_${ group }`;
 
     let started = false;
     let forced = false;

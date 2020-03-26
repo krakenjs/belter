@@ -26,10 +26,10 @@
     "src/"
   ],
   "browserslist": [
-    "IE >= 9",
+    "IE >= 11",
     "chrome >= 27",
     "firefox >= 30",
-    "safari >= 5",
+    "safari >= 7",
     "opera >= 23"
   ],
   "repository": {
@@ -47,8 +47,8 @@
   ],
   "readmeFilename": "README.md",
   "devDependencies": {
-    "flow-bin": "^0.100.0",
-    "grumbler-scripts": "^2.0.41",
+    "flow-bin": "^0.112.0",
+    "grumbler-scripts": "^3",
     "mocha": "^4"
   },
   "dependencies": {

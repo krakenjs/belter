@@ -8,7 +8,7 @@ describe('once cases', () => {
 
         let counter = 0;
 
-        let add = once(() => {
+        const add = once(() => {
             counter += 1;
         });
 

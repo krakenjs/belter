@@ -5,13 +5,13 @@ import { extend } from '../../../src';
 describe('extend cases', () => {
 
     it('should add keys from one object to another', () => {
-        let obj1 : Object = {
+        const obj1 : Object = {
             'foo': 1,
             'bar': 2,
             'baz': 3
         };
 
-        let obj2 : Object = {
+        const obj2 : Object = {
             'blep':  4,
             'blop':  5,
             'bloop': 6

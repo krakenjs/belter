@@ -13,7 +13,7 @@ export function isDevice(userAgent? : string = getUserAgent()) : boolean {
 }
 
 export function isWebView() : boolean {
-    let userAgent = getUserAgent();
+    const userAgent = getUserAgent();
     return (/(iPhone|iPod|iPad|Macintosh).*AppleWebKit(?!.*Safari)/i).test(userAgent) ||
         (/\bwv\b/).test(userAgent) ||
     (/Android.*Version\/(\d)\.(\d)/i).test(userAgent);
@@ -86,8 +86,8 @@ export function isIE() : boolean {
 }
 
 export function isIECompHeader() : boolean {
-    let mHttp = window.document.querySelector('meta[http-equiv="X-UA-Compatible"]');
-    let mContent = window.document.querySelector('meta[content="IE=edge"]');
+    const mHttp = window.document.querySelector('meta[http-equiv="X-UA-Compatible"]');
+    const mContent = window.document.querySelector('meta[content="IE=edge"]');
     if (mHttp && mContent) {
         return true;
     }
@@ -107,7 +107,7 @@ export function isIEIntranet() : boolean {
 
     if (window.document.documentMode) {
         try {
-            let status = window.status;
+            const status = window.status;
 
             window.status = 'testIntranetMode';
 
@@ -129,7 +129,7 @@ export function isIEIntranet() : boolean {
 }
 
 export function isMacOsCna() : boolean {
-    let userAgent = getUserAgent();
+    const userAgent = getUserAgent();
     return (/Macintosh.*AppleWebKit(?!.*Safari)/i).test(userAgent);
 }
 

@@ -5,16 +5,16 @@ import { isLocalStorageEnabled } from './dom';
 
 type Getter<T> = <T>(handler : (Object) => T) => T;
 
-export type Storage = {
+export type Storage = {|
     getState : Getter<*>,
     getID : () => string,
     getSessionState : Getter<*>,
     getSessionID : () => string
-};
+|};
 
 const DEFAULT_SESSION_STORAGE = 20 * 60 * 1000;
 
-export function getStorage({ name, lifetime = DEFAULT_SESSION_STORAGE } : { name : string, lifetime? : number }) : Storage {
+export function getStorage({ name, lifetime = DEFAULT_SESSION_STORAGE } : {| name : string, lifetime? : number |}) : Storage {
     return inlineMemoize(getStorage, () => {
         const STORAGE_KEY = `__${ name }_storage__`;
 
@@ -22,7 +22,7 @@ export function getStorage({ name, lifetime = DEFAULT_SESSION_STORAGE } : { name
 
         function getState<T>(handler : (storage : Object) => T) : T {
 
-            let localStorageEnabled = isLocalStorageEnabled();
+            const localStorageEnabled = isLocalStorageEnabled();
             let storage;
 
             if (accessedStorage) {
@@ -30,7 +30,7 @@ export function getStorage({ name, lifetime = DEFAULT_SESSION_STORAGE } : { name
             }
 
             if (!storage && localStorageEnabled) {
-                let rawStorage = window.localStorage.getItem(STORAGE_KEY);
+                const rawStorage = window.localStorage.getItem(STORAGE_KEY);
 
                 if (rawStorage) {
                     storage = JSON.parse(rawStorage);
@@ -53,7 +53,7 @@ export function getStorage({ name, lifetime = DEFAULT_SESSION_STORAGE } : { name
 
             accessedStorage = storage;
 
-            let result = handler(storage);
+            const result = handler(storage);
 
             if (localStorageEnabled) {
                 window.localStorage.setItem(STORAGE_KEY, JSON.stringify(storage));
@@ -74,7 +74,7 @@ export function getStorage({ name, lifetime = DEFAULT_SESSION_STORAGE } : { name
             return getState(storage => {
 
                 let session = storage.__session__;
-                let now = Date.now();
+                const now = Date.now();
 
                 if (session && ((now - session.created) > lifetime)) {
                     session = null;

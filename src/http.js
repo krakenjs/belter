@@ -3,7 +3,7 @@
 import { ZalgoPromise } from 'zalgo-promise/src';
 import { type SameDomainWindowType } from 'cross-domain-utils/src';
 
-type RequestOptionsType = {
+type RequestOptionsType = {|
     url : string,
     method? : string,
     headers? : { [key : string] : string },
@@ -12,25 +12,25 @@ type RequestOptionsType = {
     body? : string,
     win? : SameDomainWindowType,
     timeout? : number
-};
+|};
 
-type ResponseType = {
+type ResponseType = {|
     status : number,
     headers : { [string] : string },
     body : Object
-};
+|};
 
 const HEADERS = {
     CONTENT_TYPE: 'content-type',
     ACCEPT:       'accept'
 };
 
-let headerBuilders = [];
+const headerBuilders = [];
 
 function parseHeaders(rawHeaders : string = '') : { [string] : string } {
-    let result = {};
-    for (let line of rawHeaders.trim().split('\n')) {
-        let [ key, ...values ] = line.split(':');
+    const result = {};
+    for (const line of rawHeaders.trim().split('\n')) {
+        const [ key, ...values ] = line.split(':');
         result[key.toLowerCase()] = values.join(':').trim();
     }
     return result;
@@ -43,9 +43,9 @@ export function request({ url, method = 'get', headers = {}, json, data, body, w
             throw new Error(`Only options.json or options.data or options.body should be passed`);
         }
 
-        let normalizedHeaders = {};
+        const normalizedHeaders = {};
 
-        for (let key of Object.keys(headers)) {
+        for (const key of Object.keys(headers)) {
             normalizedHeaders[key.toLowerCase()] = headers[key];
         }
 
@@ -57,26 +57,26 @@ export function request({ url, method = 'get', headers = {}, json, data, body, w
 
         normalizedHeaders[HEADERS.ACCEPT] = normalizedHeaders[HEADERS.ACCEPT] || 'application/json';
 
-        for (let headerBuilder of headerBuilders) {
-            let builtHeaders = headerBuilder();
+        for (const headerBuilder of headerBuilders) {
+            const builtHeaders = headerBuilder();
 
-            for (let key of Object.keys(builtHeaders)) {
+            for (const key of Object.keys(builtHeaders)) {
                 normalizedHeaders[key.toLowerCase()] = builtHeaders[key];
             }
         }
 
-        let xhr = new win.XMLHttpRequest();
+        const xhr = new win.XMLHttpRequest();
 
         xhr.addEventListener('load', function xhrLoad() : void {
 
-            let responseHeaders = parseHeaders(this.getAllResponseHeaders());
+            const responseHeaders = parseHeaders(this.getAllResponseHeaders());
 
             if (!this.status) {
                 return reject(new Error(`Request to ${ method.toLowerCase() } ${ url } failed: no response status code.`));
             }
             
-            let contentType = responseHeaders['content-type'];
-            let isJSON = contentType && (contentType.indexOf('application/json') === 0 || contentType.indexOf('text/json') === 0);
+            const contentType = responseHeaders['content-type'];
+            const isJSON = contentType && (contentType.indexOf('application/json') === 0 || contentType.indexOf('text/json') === 0);
             let responseBody = this.responseText;
 
             try {
@@ -87,7 +87,7 @@ export function request({ url, method = 'get', headers = {}, json, data, body, w
                 }
             }
 
-            let res = {
+            const res = {
                 status:  this.status,
                 headers: responseHeaders,
                 body:    responseBody
@@ -103,7 +103,7 @@ export function request({ url, method = 'get', headers = {}, json, data, body, w
 
         xhr.open(method, url, true);
 
-        for (let key in normalizedHeaders) {
+        for (const key in normalizedHeaders) {
             if (normalizedHeaders.hasOwnProperty(key)) {
                 xhr.setRequestHeader(key, normalizedHeaders[key]);
             }

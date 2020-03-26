@@ -8,7 +8,7 @@ describe('memoize cases', () => {
 
         let counter = 0;
 
-        let add = memoize(() => {
+        const add = memoize(() => {
             counter += 1;
         });
 
@@ -27,7 +27,7 @@ describe('memoize cases', () => {
 
         let counter = 0;
 
-        let add = memoize((number) => {
+        const add = memoize((number) => {
             counter += number;
         });
 
@@ -47,7 +47,7 @@ describe('memoize cases', () => {
 
         let counter = 0;
 
-        let add = () => {
+        const add = () => {
             return inlineMemoize(add, () => {
                 counter += 1;
             });
@@ -68,7 +68,7 @@ describe('memoize cases', () => {
 
         let counter = 0;
 
-        let add = (number) => {
+        const add = (number) => {
             return inlineMemoize(add, () => {
                 counter += number;
             }, [ number ]);
@@ -90,7 +90,7 @@ describe('memoize cases', () => {
 
         let counter = 0;
 
-        let add = () => {
+        const add = () => {
             return inlineMemoize(add, () => {
                 counter += 1;
                 if (counter === 1) {
@@ -110,12 +110,12 @@ describe('memoize cases', () => {
 
         let counter = 0;
 
-        let add = memoize(() => {
+        const add = memoize(() => {
             counter += 1;
         }, { thisNamespace: true });
 
-        let obj1 = {};
-        let obj2 = {};
+        const obj1 = {};
+        const obj2 = {};
 
         add.call(obj1);
         add.call(obj1);
@@ -136,12 +136,12 @@ describe('memoize cases', () => {
 
         let counter = 0;
 
-        let add = memoize((number) => {
+        const add = memoize((number) => {
             counter += number;
         }, { thisNamespace: true });
 
-        let obj1 = {};
-        let obj2 = {};
+        const obj1 = {};
+        const obj2 = {};
 
         add.call(obj1, 1);
         add.call(obj1, 2);

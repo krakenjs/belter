@@ -53,13 +53,13 @@ export function base64decode(str : string) : string {
 
 export function uniqueID() : string {
 
-    let chars = '0123456789abcdef';
+    const chars = '0123456789abcdef';
 
-    let randomID = 'xxxxxxxxxx'.replace(/./g, () => {
+    const randomID = 'xxxxxxxxxx'.replace(/./g, () => {
         return chars.charAt(Math.floor(Math.random() * chars.length));
     });
 
-    let timeID = base64encode(
+    const timeID = base64encode(
         new Date().toISOString().slice(11, 19).replace('T', '.')
     ).replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
 
@@ -99,7 +99,7 @@ export function getObjectID(obj : Object) : string {
     return uid;
 }
 
-function serializeArgs<T>(args : Array<T>) : string {
+function serializeArgs<T>(args : $ReadOnlyArray<T>) : string {
     try {
         return JSON.stringify(Array.prototype.slice.call(args), (subkey, val) => {
             if (typeof val === 'function') {
@@ -125,14 +125,14 @@ const getDefaultMemoizeOptions = () : MemoizeOptions => {
 const memoizedFunctions = [];
 
 export function memoize<F : Function>(method : F, options? : MemoizeOptions = getDefaultMemoizeOptions()) : F & {| reset : () => void |} {
-    let cacheMap = new WeakMap();
+    const cacheMap = new WeakMap();
 
-    let memoizedFunction = function memoizedFunction(...args) : mixed {
-        let cache = cacheMap.getOrSet(options.thisNamespace ? this : method, () => ({}));
+    const memoizedFunction = function memoizedFunction(...args) : mixed {
+        const cache = cacheMap.getOrSet(options.thisNamespace ? this : method, () => ({}));
 
-        let key : string = serializeArgs(args);
+        const key : string = serializeArgs(args);
 
-        let cacheTime = options.time;
+        const cacheTime = options.time;
         if (cache[key] && cacheTime && (Date.now() - cache[key].time) < cacheTime) {
             delete cache[key];
         }
@@ -141,8 +141,8 @@ export function memoize<F : Function>(method : F, options? : MemoizeOptions = ge
             return cache[key].value;
         }
 
-        let time  = Date.now();
-        let value = method.apply(this, arguments);
+        const time  = Date.now();
+        const value = method.apply(this, arguments);
 
         cache[key] = { time, value };
 
@@ -173,12 +173,12 @@ export function promiseIdentity<T : mixed>(item : ZalgoPromise<T> | T) : ZalgoPr
 }
 
 // eslint-disable-next-line flowtype/no-weak-types
-export function memoizePromise<R>(method : (...args : Array<any>) => ZalgoPromise<R>) : ((...args : Array<any>) => ZalgoPromise<R>) {
+export function memoizePromise<R>(method : (...args : $ReadOnlyArray<any>) => ZalgoPromise<R>) : ((...args : $ReadOnlyArray<any>) => ZalgoPromise<R>) {
     let cache = {};
 
     // eslint-disable-next-line flowtype/no-weak-types
-    function memoizedPromiseFunction(...args : Array<any>) : ZalgoPromise<R> {
-        let key : string = serializeArgs(args);
+    function memoizedPromiseFunction(...args : $ReadOnlyArray<any>) : ZalgoPromise<R> {
+        const key : string = serializeArgs(args);
 
         if (cache.hasOwnProperty(key)) {
             return cache[key];
@@ -199,8 +199,17 @@ export function memoizePromise<R>(method : (...args : Array<any>) => ZalgoPromis
     return setFunctionName(memoizedPromiseFunction, `${ getFunctionName(method) }::promiseMemoized`);
 }
 
+type PromisifyOptions = {|
+    name ? : string
+|};
+
+const getDefaultPromisifyOptions = () : PromisifyOptions => {
+    // $FlowFixMe
+    return {};
+};
+
 // eslint-disable-next-line flowtype/no-weak-types
-export function promisify<R>(method : (...args : Array<any>) => R, options : { name? : string } = {}) : ((...args : Array<any>) => ZalgoPromise<R>) {
+export function promisify<R>(method : (...args : $ReadOnlyArray<any>) => R, options : PromisifyOptions = getDefaultPromisifyOptions()) : ((...args : $ReadOnlyArray<any>) => ZalgoPromise<R>) {
     function promisifiedFunction() : ZalgoPromise<R> {
         return ZalgoPromise.try(method, this, arguments);
     }
@@ -213,22 +222,22 @@ export function promisify<R>(method : (...args : Array<any>) => R, options : { n
 }
 
 // eslint-disable-next-line flowtype/no-weak-types
-export function inlineMemoize<R>(method : (...args : Array<any>) => R, logic : (...args : Array<any>) => R, args : Array<any> = []) : R {
+export function inlineMemoize<R>(method : (...args : $ReadOnlyArray<any>) => R, logic : (...args : $ReadOnlyArray<any>) => R, args : $ReadOnlyArray<any> = []) : R {
     // $FlowFixMe
-    let cache = method.__inline_memoize_cache__ = method.__inline_memoize_cache__ || {};
-    let key = serializeArgs(args);
+    const cache = method.__inline_memoize_cache__ = method.__inline_memoize_cache__ || {};
+    const key = serializeArgs(args);
 
     if (cache.hasOwnProperty(key)) {
         return cache[key];
     }
     
-    let result = cache[key] = logic(...args);
+    const result = cache[key] = logic(...args);
 
     return result;
 }
 
 // eslint-disable-next-line no-unused-vars
-export function noop(...args : Array<mixed>) {
+export function noop(...args : $ReadOnlyArray<mixed>) {
     // pass
 }
 
@@ -270,7 +279,7 @@ export function strHashStr(str : string) : string {
 }
 
 export function match(str : string, pattern : RegExp) : ?string {
-    let regmatch = str.match(pattern);
+    const regmatch = str.match(pattern);
     if (regmatch) {
         return regmatch[1];
     }
@@ -322,8 +331,8 @@ export function stringifyError(err : mixed, level : number = 1) : string {
         }
 
         if (err instanceof Error) {
-            let stack = err && err.stack;
-            let message = err && err.message;
+            const stack = err && err.stack;
+            const message = err && err.message;
 
             if (stack && message) {
                 if (stack.indexOf(message) !== -1) {
@@ -345,14 +354,14 @@ export function stringifyError(err : mixed, level : number = 1) : string {
 
         return Object.prototype.toString.call(err);
 
-    } catch (newErr) { // eslint-disable-line unicorn/catch-error-name
+    } catch (newErr) {
         return `Error while stringifying error: ${ stringifyError(newErr, level + 1) }`;
     }
 }
 
 export function stringifyErrorMessage(err : mixed) : string {
 
-    let defaultMessage = `<unknown error: ${ Object.prototype.toString.call(err) }>`;
+    const defaultMessage = `<unknown error: ${ Object.prototype.toString.call(err) }>`;
 
     if (!err) {
         return defaultMessage;
@@ -384,12 +393,12 @@ export function stringify(item : mixed) : string {
 
 export function domainMatches(hostname : string, domain : string) : boolean {
     hostname = hostname.split('://')[1];
-    let index = hostname.indexOf(domain);
+    const index = hostname.indexOf(domain);
     return (index !== -1 && hostname.slice(index) === domain);
 }
 
 export function patchMethod(obj : Object, name : string, handler : Function) {
-    let original = obj[name];
+    const original = obj[name];
 
     obj[name] = function patchedMethod() : mixed {
         return handler({
@@ -406,11 +415,13 @@ export function extend<T : Object | Function>(obj : T, source : Object) : T {
         return obj;
     }
 
+    // eslint-disable-next-line compat/compat
     if (Object.assign) {
+        // eslint-disable-next-line compat/compat
         return Object.assign(obj, source);
     }
 
-    for (let key in source) {
+    for (const key in source) {
         if (source.hasOwnProperty(key)) {
             obj[key] = source[key];
         }
@@ -419,9 +430,9 @@ export function extend<T : Object | Function>(obj : T, source : Object) : T {
     return obj;
 }
 
-export function values<T>(obj : { [string] : T }) : Array<T> {
-    let result = [];
-    for (let key in obj) {
+export function values<T>(obj : { [string] : T }) : $ReadOnlyArray<T> {
+    const result = [];
+    for (const key in obj) {
         if (obj.hasOwnProperty(key)) {
             result.push(obj[key]);
         }
@@ -433,16 +444,16 @@ export function perc(pixels : number, percentage : number) : number {
     return Math.round((pixels * percentage) / 100);
 }
 
-export function min(...args : Array<number>) : number {
+export function min(...args : $ReadOnlyArray<number>) : number {
     return Math.min(...args);
 }
 
-export function max(...args : Array<number>) : number {
+export function max(...args : $ReadOnlyArray<number>) : number {
     return Math.max(...args);
 }
 
-export function regexMap<T>(str : string, regexp : RegExp, handler : () => T) : Array<T> {
-    let results = [];
+export function regexMap<T>(str : string, regexp : RegExp, handler : () => T) : $ReadOnlyArray<T> {
+    const results = [];
 
     // $FlowFixMe
     str.replace(regexp, function regexMapMatcher(item) {
@@ -458,9 +469,9 @@ export function svgToBase64(svg : string) : string {
 }
 
 export function objFilter<T, R>(obj : { [string] : T }, filter? : (T, ?string) => mixed = Boolean) : { [string] : R } {
-    let result = {};
+    const result = {};
 
-    for (let key in obj) {
+    for (const key in obj) {
         if (!obj.hasOwnProperty(key) || !filter(obj[key], key)) {
             continue;
         }
@@ -475,8 +486,8 @@ export function identity <T>(item : T) : T {
     return item;
 }
 
-export function regexTokenize(text : string, regexp : RegExp) : Array<string> {
-    let result = [];
+export function regexTokenize(text : string, regexp : RegExp) : $ReadOnlyArray<string> {
+    const result = [];
     text.replace(regexp, token => {
         result.push(token);
         return '';
@@ -494,7 +505,7 @@ export function promiseDebounce<T>(method : () => ZalgoPromise<T> | T, delay : n
             clearTimeout(timeout);
         }
 
-        let localPromise = promise = promise || new ZalgoPromise();
+        const localPromise = promise = promise || new ZalgoPromise();
 
         timeout = setTimeout(() => {
             promise = null;
@@ -512,7 +523,7 @@ export function promiseDebounce<T>(method : () => ZalgoPromise<T> | T, delay : n
     return setFunctionName(promiseDebounced, `${ getFunctionName(method) }::promiseDebounced`);
 }
 
-export function safeInterval(method : Function, time : number) : { cancel : () => void } {
+export function safeInterval(method : Function, time : number) : {| cancel : () => void |} {
 
     let timeout;
 
@@ -560,7 +571,7 @@ export function deserializePrimitive(value : string) : string | number | boolean
 
 export function dotify(obj : Object, prefix : string = '', newobj : Object = {}) : { [string] : string } {
     prefix = prefix ? `${ prefix }.` : prefix;
-    for (let key in obj) {
+    for (const key in obj) {
         if (!obj.hasOwnProperty(key) || obj[key] === undefined || obj[key] === null || typeof obj[key] === 'function') {
             continue;
         } else if (obj[key] && Array.isArray(obj[key]) && obj[key].length && obj[key].every(val => typeof val !== 'object')) {
@@ -576,7 +587,7 @@ export function dotify(obj : Object, prefix : string = '', newobj : Object = {})
 
 export function undotify(obj : { [string] : string }) : Object {
     
-    let result = {};
+    const result = {};
 
     for (let key in obj) {
         if (!obj.hasOwnProperty(key) || typeof obj[key] !== 'string') {
@@ -586,18 +597,18 @@ export function undotify(obj : { [string] : string }) : Object {
         let value = obj[key];
 
         if (key.match(/^.+\[\]$/)) {
-            key = key.slice(0, key.length - 2);
+            key = key.slice(0, -2);
             value = value.split(',').map(deserializePrimitive);
         } else {
             value = deserializePrimitive(value);
         }
 
         let keyResult = result;
-        let parts = key.split('.');
+        const parts = key.split('.');
         for (let i = 0; i < parts.length; i++) {
-            let part = parts[i];
-            let isLast = (i + 1 === parts.length);
-            let isIndex = !isLast && isInteger(parts[i + 1]);
+            const part = parts[i];
+            const isLast = (i + 1 === parts.length);
+            const isIndex = !isLast && isInteger(parts[i + 1]);
 
             if (part === 'constructor' || part === 'prototype' || part === '__proto__') {
                 throw new Error(`Disallowed key: ${ part }`);
@@ -616,22 +627,22 @@ export function undotify(obj : { [string] : string }) : Object {
     return result;
 }
 
-export type EventEmitterType = {
+export type EventEmitterType = {|
     on : (eventName : string, handler : Function) => CancelableType,
     once : (eventName : string, handler : Function) => CancelableType,
     trigger : (eventName : string, ...args : $ReadOnlyArray<mixed>) => ZalgoPromise<void>,
     triggerOnce : (eventName : string, ...args : $ReadOnlyArray<mixed>) => ZalgoPromise<void>,
     reset : () => void
-};
+|};
 
 export function eventEmitter() : EventEmitterType {
-    let triggered = {};
+    const triggered = {};
     let handlers = {};
 
     return {
 
         on(eventName : string, handler : Function) : CancelableType {
-            let handlerList = handlers[eventName] = handlers[eventName] || [];
+            const handlerList = handlers[eventName] = handlers[eventName] || [];
 
             handlerList.push(handler);
 
@@ -650,7 +661,7 @@ export function eventEmitter() : EventEmitterType {
 
         once(eventName : string, handler : Function) : CancelableType {
 
-            let listener = this.on(eventName, () => {
+            const listener = this.on(eventName, () => {
                 listener.cancel();
                 handler();
             });
@@ -660,11 +671,11 @@ export function eventEmitter() : EventEmitterType {
 
         trigger(eventName : string, ...args : $ReadOnlyArray<mixed>) : ZalgoPromise<void> {
 
-            let handlerList = handlers[eventName];
-            let promises = [];
+            const handlerList = handlers[eventName];
+            const promises = [];
 
             if (handlerList) {
-                for (let handler of handlerList) {
+                for (const handler of handlerList) {
                     promises.push(ZalgoPromise.try(() => handler(...args)));
                 }
             }
@@ -710,7 +721,7 @@ export function get(item : Object, path : string, def : mixed) : mixed {
         return def;
     }
 
-    let pathParts = path.split('.');
+    const pathParts = path.split('.');
 
     // Loop through each section of our key path
 
@@ -733,7 +744,7 @@ export function get(item : Object, path : string, def : mixed) : mixed {
 
 export function safeTimeout(method : Function, time : number) {
 
-    let interval = safeInterval(() => {
+    const interval = safeInterval(() => {
         time -= 100;
         if (time <= 0) {
             interval.cancel();
@@ -742,7 +753,7 @@ export function safeTimeout(method : Function, time : number) {
     }, 100);
 }
 
-export function defineLazyProp<T>(obj : Object | Array<mixed>, key : string | number, getter : () => T) {
+export function defineLazyProp<T>(obj : Object | $ReadOnlyArray<mixed>, key : string | number, getter : () => T) {
     if (Array.isArray(obj)) {
         if (typeof key !== 'number') {
             throw new TypeError(`Array key must be number`);
@@ -759,7 +770,7 @@ export function defineLazyProp<T>(obj : Object | Array<mixed>, key : string | nu
         get:          () => {
             // $FlowFixMe
             delete obj[key];
-            let value = getter();
+            const value = getter();
             // $FlowFixMe
             obj[key] = value;
             return value;
@@ -773,7 +784,7 @@ export function defineLazyProp<T>(obj : Object | Array<mixed>, key : string | nu
     });
 }
 
-export function arrayFrom<T>(item : Iterable<T>) : Array<T> { // eslint-disable-line no-undef
+export function arrayFrom<T>(item : Iterable<T>) : $ReadOnlyArray<T> { // eslint-disable-line no-undef
     return Array.prototype.slice.call(item);
 }
 
@@ -791,13 +802,13 @@ export function isPlainObject(obj : mixed) : boolean {
     }
 
     // $FlowFixMe
-    let constructor = obj.constructor;
+    const constructor = obj.constructor;
 
     if (typeof constructor !== 'function') {
         return false;
     }
 
-    let prototype = constructor.prototype;
+    const prototype = constructor.prototype;
 
     if (!isObjectObject(prototype)) {
         return false;
@@ -810,18 +821,18 @@ export function isPlainObject(obj : mixed) : boolean {
     return true;
 }
 
-export function replaceObject<T : Array<mixed> | Object> (item : T, replacer : (mixed, string | number, string) => mixed, fullKey : string = '') : T {
+export function replaceObject<T : $ReadOnlyArray<mixed> | Object> (item : T, replacer : (mixed, string | number, string) => mixed, fullKey : string = '') : T {
 
     if (Array.isArray(item)) {
-        let length = item.length;
-        let result : Array<mixed> = [];
+        const length = item.length;
+        const result : Array<mixed> = [];
 
         for (let i = 0; i < length; i++) {
 
             
             defineLazyProp(result, i, () => {
-                let itemKey = fullKey ? `${ fullKey }.${ i }` : `${ i }`;
-                let el = item[i];
+                const itemKey = fullKey ? `${ fullKey }.${ i }` : `${ i }`;
+                const el = item[i];
 
                 let child = replacer(el, i, itemKey);
 
@@ -837,17 +848,17 @@ export function replaceObject<T : Array<mixed> | Object> (item : T, replacer : (
         // $FlowFixMe
         return result;
     } else if (isPlainObject(item)) {
-        let result = {};
+        const result = {};
 
-        for (let key in item) {
+        for (const key in item) {
             if (!item.hasOwnProperty(key)) {
                 continue;
             }
 
             defineLazyProp(result, key, () => {
-                let itemKey = fullKey ? `${ fullKey }.${ key }` : `${ key }`;
+                const itemKey = fullKey ? `${ fullKey }.${ key }` : `${ key }`;
                 // $FlowFixMe
-                let el = item[key];
+                const el = item[key];
 
                 let child = replacer(el, key, itemKey);
 
@@ -870,7 +881,7 @@ export function replaceObject<T : Array<mixed> | Object> (item : T, replacer : (
 
 export function copyProp(source : Object, target : Object, name : string, def : mixed) {
     if (source.hasOwnProperty(name)) {
-        let descriptor = Object.getOwnPropertyDescriptor(source, name);
+        const descriptor = Object.getOwnPropertyDescriptor(source, name);
         // $FlowFixMe
         Object.defineProperty(target, name, descriptor);
 
@@ -879,14 +890,14 @@ export function copyProp(source : Object, target : Object, name : string, def : 
     }
 }
 
-type RegexResultType = {
+type RegexResultType = {|
     text : string,
-    groups : Array<string>,
+    groups : $ReadOnlyArray<string>,
     start : number,
     end : number,
     length : number,
     replace : (text : string) => string
-};
+|};
 
 export function regex(pattern : string | RegExp, string : string, start : number = 0) : ?RegexResultType {
 
@@ -895,15 +906,15 @@ export function regex(pattern : string | RegExp, string : string, start : number
         pattern = new RegExp(pattern);
     }
 
-    let result = string.slice(start).match(pattern);
+    const result = string.slice(start).match(pattern);
 
     if (!result) {
         return;
     }
 
     // $FlowFixMe
-    let index : number = result.index;
-    let regmatch = result[0];
+    const index : number = result.index;
+    const regmatch = result[0];
 
     return {
         text:   regmatch,
@@ -923,14 +934,14 @@ export function regex(pattern : string | RegExp, string : string, start : number
     };
 }
 
-export function regexAll(pattern : string | RegExp, string : string) : Array<RegexResultType> {
+export function regexAll(pattern : string | RegExp, string : string) : $ReadOnlyArray<RegexResultType> {
 
-    let matches = [];
+    const matches = [];
     let start = 0;
 
     // eslint-disable-next-line no-constant-condition
     while (true) {
-        let regmatch = regex(pattern, string, start);
+        const regmatch = regex(pattern, string, start);
 
         if (!regmatch) {
             break;
@@ -951,7 +962,7 @@ export function cycle(method : Function) : ZalgoPromise<void> {
     return ZalgoPromise.try(method).then(() => cycle(method));
 }
 
-export function debounce<T>(method : (...args : Array<mixed>) => T, time : number = 100) : (...args : Array<mixed>) => void {
+export function debounce<T>(method : (...args : $ReadOnlyArray<mixed>) => T, time : number = 100) : (...args : $ReadOnlyArray<mixed>) => void {
 
     let timeout;
 
@@ -973,9 +984,9 @@ export function isRegex(item : mixed) : boolean {
 type FunctionProxy<T : Function> = (method : T) => T;
 
 // eslint-disable-next-line flowtype/no-weak-types
-export let weakMapMemoize : FunctionProxy<*> = <R : mixed>(method : (arg : any) => R) : ((...args : Array<any>) => R) => {
+export const weakMapMemoize : FunctionProxy<*> = <R : mixed>(method : (arg : any) => R) : ((...args : $ReadOnlyArray<any>) => R) => {
 
-    let weakmap = new WeakMap();
+    const weakmap = new WeakMap();
 
     // eslint-disable-next-line flowtype/no-weak-types
     return function weakmapMemoized(arg : any) : R {
@@ -986,17 +997,16 @@ export let weakMapMemoize : FunctionProxy<*> = <R : mixed>(method : (arg : any) 
 type FunctionPromiseProxy<R : mixed, T : (...args : $ReadOnlyArray<mixed>) => ZalgoPromise<R>> = (T) => T;
 
 // eslint-disable-next-line flowtype/no-weak-types
-export let weakMapMemoizePromise : FunctionPromiseProxy<*, *> = <R : mixed>(method : (arg : any) => ZalgoPromise<R>) : ((...args : Array<any>) => ZalgoPromise<R>) => {
+export const weakMapMemoizePromise : FunctionPromiseProxy<*, *> = <R : mixed>(method : (arg : any) => ZalgoPromise<R>) : ((...args : $ReadOnlyArray<any>) => ZalgoPromise<R>) => {
 
-    let weakmap = new WeakMap();
+    const weakmap = new WeakMap();
 
     // eslint-disable-next-line flowtype/no-weak-types
     return function weakmapMemoizedPromise(arg : any) : ZalgoPromise<R> {
         return weakmap.getOrSet(arg, () =>
             method.call(this, arg).finally(() => {
                 weakmap.delete(arg);
-            })
-        );
+            }));
     };
 };
 
@@ -1068,6 +1078,7 @@ export function tryCatch<T>(fn : () => T) : {| result : T, error : void |} | {| 
     return { result, error };
 }
 
+// eslint-disable-next-line flowtype/no-mutable-array
 export function removeFromArray<X, T : Array<X>>(arr : T, item : X) {
     const index = arr.indexOf(item);
     if (index !== -1) {
@@ -1082,11 +1093,10 @@ export function assertExists<T>(name : string, thing : void | null | T) : T {
                             
     return thing;
 }
-                            
+
 export function unique(arr : $ReadOnlyArray<string>) : $ReadOnlyArray<string> {
     const result = {};
     for (const item of arr) {
-        // eslint-disable-next-line const-immutable/no-mutation
         result[item] = true;
     }
     return Object.keys(result);

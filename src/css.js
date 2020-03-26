@@ -14,7 +14,7 @@ export function toNum(val : string | number) : number {
         return val;
     }
 
-    let match = val.match(/^([0-9]+)(px|%)$/);
+    const match = val.match(/^([0-9]+)(px|%)$/);
 
     if (!match) {
         throw new Error(`Could not match css value from ${ val }`);
