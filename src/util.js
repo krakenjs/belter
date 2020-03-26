@@ -163,7 +163,7 @@ export function memoize<F : Function>(method : F, options? : MemoizeOptions = ge
 
 memoize.clear = () => {
     for (const memoizedFunction of memoizedFunctions) {
-        memoizedFunction.clear();
+        memoizedFunction.reset();
     }
 };
 
