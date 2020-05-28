@@ -1030,3 +1030,19 @@ export function insertShadowSlot(element : HTMLElement) : HTMLElement {
 
     return slotProvider;
 }
+
+export function preventClickFocus(el : HTMLElement) {
+    const onFocus = (event : Event) => {
+        el.removeEventListener('focus', onFocus);
+        event.preventDefault();
+        el.blur();
+        return false;
+    };
+
+    el.addEventListener('mousedown', () => {
+        el.addEventListener('focus', onFocus);
+        setTimeout(() => {
+            el.removeEventListener('focus', onFocus);
+        }, 1);
+    });
+}
