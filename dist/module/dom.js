@@ -113,7 +113,7 @@ export function extendQuery(originalQuery, props) {
     return originalQuery;
   }
 
-  return formatQuery(_extends({}, parseQuery(originalQuery), {}, props));
+  return formatQuery(_extends({}, parseQuery(originalQuery), props));
 }
 export function extendUrl(url, options) {
   var query = options.query || {};
@@ -950,4 +950,19 @@ export function insertShadowSlot(element) {
   slotProvider.setAttribute('slot', slotName);
   shadowHost.appendChild(slotProvider);
   return slotProvider;
+}
+export function preventClickFocus(el) {
+  var onFocus = function onFocus(event) {
+    el.removeEventListener('focus', onFocus);
+    event.preventDefault();
+    el.blur();
+    return false;
+  };
+
+  el.addEventListener('mousedown', function () {
+    el.addEventListener('focus', onFocus);
+    setTimeout(function () {
+      el.removeEventListener('focus', onFocus);
+    }, 1);
+  });
 }

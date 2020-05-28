@@ -308,6 +308,9 @@
         __webpack_require__.d(__webpack_exports__, "insertShadowSlot", (function() {
             return insertShadowSlot;
         }));
+        __webpack_require__.d(__webpack_exports__, "preventClickFocus", (function() {
+            return preventClickFocus;
+        }));
         __webpack_require__.d(__webpack_exports__, "experiment", (function() {
             return experiment;
         }));
@@ -1922,7 +1925,7 @@
         }
         function extendQuery(originalQuery, props) {
             void 0 === props && (props = {});
-            return props && Object.keys(props).length ? formatQuery(_extends({}, parseQuery(originalQuery), {}, props)) : originalQuery;
+            return props && Object.keys(props).length ? formatQuery(_extends({}, parseQuery(originalQuery), props)) : originalQuery;
         }
         function extendUrl(url, options) {
             var query = options.query || {};
@@ -2417,6 +2420,20 @@
             shadowHost.appendChild(slotProvider);
             return slotProvider;
         }
+        function preventClickFocus(el) {
+            var onFocus = function onFocus(event) {
+                el.removeEventListener("focus", onFocus);
+                event.preventDefault();
+                el.blur();
+                return !1;
+            };
+            el.addEventListener("mousedown", (function() {
+                el.addEventListener("focus", onFocus);
+                setTimeout((function() {
+                    el.removeEventListener("focus", onFocus);
+                }), 1);
+            }));
+        }
         function getStorage(_ref) {
             var name = _ref.name, _ref$lifetime = _ref.lifetime, lifetime = void 0 === _ref$lifetime ? 12e5 : _ref$lifetime;
             return inlineMemoize(getStorage, (function() {
@@ -2735,4 +2752,3 @@
         }
     } ]);
 }));
-//# sourceMappingURL=belter.js.map
