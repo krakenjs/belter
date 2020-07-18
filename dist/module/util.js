@@ -400,11 +400,9 @@ export function patchMethod(obj, name, handler) {
 export function extend(obj, source) {
   if (!source) {
     return obj;
-  } // eslint-disable-next-line compat/compat
-
+  }
 
   if (Object.assign) {
-    // eslint-disable-next-line compat/compat
     return Object.assign(obj, source);
   }
 

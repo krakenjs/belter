@@ -171,7 +171,6 @@ export function isElementVisible(el) {
 }
 export function getPerformance() {
   return inlineMemoize(getPerformance, function () {
-    // eslint-disable-next-line compat/compat
     var performance = window.performance;
 
     if (performance && performance.now && performance.timing && performance.timing.connectEnd && performance.timing.navigationStart && Math.abs(performance.now() - Date.now()) > 1000 && performance.now() - (performance.timing.connectEnd - performance.timing.navigationStart) > 0) {
@@ -272,7 +271,8 @@ export function isLocalStorageEnabled() {
   });
 }
 export function getBrowserLocales() {
-  var nav = window.navigator;
+  var nav = window.navigator; // eslint-disable-line compat/compat
+
   var locales = nav.languages ? [].concat(nav.languages) : [];
 
   if (nav.language) {
@@ -610,7 +610,7 @@ export function iframe(options, container) {
     html: options.html,
     class: options.class
   });
-  var isIE = window.navigator.userAgent.match(/MSIE|Edge/i);
+  var isIE = window.navigator.userAgent.match(/MSIE|Edge/i); // eslint-disable-line compat/compat
 
   if (!frame.hasAttribute('id')) {
     frame.setAttribute('id', uniqueID());
