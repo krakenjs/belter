@@ -180,7 +180,6 @@ export function isElementVisible(el : HTMLElement) : boolean {
 
 export function getPerformance() : ?Performance {
     return inlineMemoize(getPerformance, () : ?Performance => {
-        // eslint-disable-next-line compat/compat
         const performance = window.performance;
 
         if (
@@ -290,7 +289,7 @@ export function isLocalStorageEnabled() : boolean {
 }
 
 export function getBrowserLocales() : $ReadOnlyArray<{| country? : string, lang : string |}> {
-    const nav = window.navigator;
+    const nav = window.navigator; // eslint-disable-line compat/compat
 
     const locales = nav.languages
         ? [ ...nav.languages ]
@@ -666,7 +665,7 @@ export function iframe(options : IframeElementOptionsType = getDefaultIframeOpti
         class: options.class
     });
 
-    const isIE = window.navigator.userAgent.match(/MSIE|Edge/i);
+    const isIE = window.navigator.userAgent.match(/MSIE|Edge/i); // eslint-disable-line compat/compat
 
     if (!frame.hasAttribute('id')) {
         frame.setAttribute('id', uniqueID());

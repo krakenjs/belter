@@ -1,7 +1,7 @@
 /* @flow */
 
 export function getUserAgent() : string {
-    return window.navigator.mockUserAgent || window.navigator.userAgent;
+    return window.navigator.mockUserAgent || window.navigator.userAgent; // eslint-disable-line compat/compat
 }
 
 export function isDevice(userAgent? : string = getUserAgent()) : boolean {
@@ -20,7 +20,7 @@ export function isWebView() : boolean {
 }
 
 export function isStandAlone() : boolean {
-    return (window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches);
+    return (window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches); // eslint-disable-line compat/compat
 }
 
 export function isFacebookWebView(ua? : string = getUserAgent()) : boolean {
@@ -79,9 +79,9 @@ export function isIE() : boolean {
     }
 
     return Boolean(
-        window.navigator &&
-        window.navigator.userAgent &&
-        (/Edge|MSIE|rv:11/i).test(window.navigator.userAgent)
+        window.navigator && // eslint-disable-line compat/compat
+        window.navigator.userAgent && // eslint-disable-line compat/compat
+        (/Edge|MSIE|rv:11/i).test(window.navigator.userAgent) // eslint-disable-line compat/compat
     );
 }
 

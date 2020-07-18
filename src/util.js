@@ -415,9 +415,7 @@ export function extend<T : Object | Function>(obj : T, source : Object) : T {
         return obj;
     }
 
-    // eslint-disable-next-line compat/compat
     if (Object.assign) {
-        // eslint-disable-next-line compat/compat
         return Object.assign(obj, source);
     }
 
