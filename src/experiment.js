@@ -20,13 +20,17 @@ function isEventUnique(name : string) : boolean {
     });
 }
 
+type Payload = {
+    [string] : ?(string | boolean)
+};
+
 export type Experiment = {|
     isEnabled : () => boolean,
     isDisabled : () => boolean,
     getTreatment : () => string,
-    log : (string, payload? : { [string] : ?string }) => Experiment,
-    logStart : (payload? : { [string] : ?string }) => Experiment,
-    logComplete : (payload? : { [string] : ?string }) => Experiment
+    log : (string, payload? : Payload) => Experiment,
+    logStart : (payload? : Payload) => Experiment,
+    logComplete : (payload? : Payload) => Experiment
 |};
 
 function getThrottlePercentile(name : string) : number {
@@ -46,8 +50,8 @@ const THROTTLE_GROUP = {
 type ExperimentOptions = {|
     name : string,
     sample? : number,
-    logTreatment? : ({| name : string, treatment : string, payload : { [string] : ?string } |}) => void,
-    logCheckpoint? : ({| name : string, treatment : string, checkpoint : string, payload : { [string] : ?string } |}) => void
+    logTreatment? : ({| name : string, treatment : string, payload : Payload |}) => void,
+    logCheckpoint? : ({| name : string, treatment : string, checkpoint : string, payload : Payload |}) => void
 |};
 
 export function experiment({ name, sample = 50, logTreatment = noop, logCheckpoint = noop } : ExperimentOptions) : Experiment {
@@ -91,7 +95,7 @@ export function experiment({ name, sample = 50, logTreatment = noop, logCheckpoi
             return treatment;
         },
 
-        log(checkpoint : string, payload? : { [string] : ?string } = {}) : Experiment {
+        log(checkpoint : string, payload? : Payload = {}) : Experiment {
             if (!started) {
                 return this;
             }
@@ -107,12 +111,12 @@ export function experiment({ name, sample = 50, logTreatment = noop, logCheckpoi
             return this;
         },
 
-        logStart(payload? : { [string] : ?string } = {}) : Experiment {
+        logStart(payload? : Payload = {}) : Experiment {
             started = true;
             return this.log(`start`, payload);
         },
 
-        logComplete(payload? : { [string] : ?string } = {}) : Experiment {
+        logComplete(payload? : Payload = {}) : Experiment {
             return this.log(`complete`, payload);
         }
     };
