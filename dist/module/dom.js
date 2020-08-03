@@ -592,21 +592,32 @@ var getDefaultIframeOptions = function getDefaultIframeOptions() {
   return {};
 };
 
+var getDefaultStringMap = function getDefaultStringMap() {
+  // $FlowFixMe
+  return {};
+};
+
 export function iframe(options, container) {
   if (options === void 0) {
     options = getDefaultIframeOptions();
   }
 
-  var attributes = options.attributes || {};
-  var style = options.style || {};
+  var attributes = options.attributes || getDefaultStringMap();
+  var style = options.style || getDefaultStringMap(); // $FlowFixMe
+
+  var newAttributes = _extends({
+    allowTransparency: 'true'
+  }, attributes); // $FlowFixMe
+
+
+  var newStyle = _extends({
+    backgroundColor: 'transparent',
+    border: 'none'
+  }, style);
+
   var frame = createElement('iframe', {
-    attributes: _extends({
-      allowTransparency: 'true'
-    }, attributes),
-    style: _extends({
-      backgroundColor: 'transparent',
-      border: 'none'
-    }, style),
+    attributes: newAttributes,
+    style: newStyle,
     html: options.html,
     class: options.class
   });
