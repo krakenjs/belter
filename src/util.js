@@ -224,7 +224,7 @@ export function promisify<R>(method : (...args : $ReadOnlyArray<any>) => R, opti
 // eslint-disable-next-line flowtype/no-weak-types
 export function inlineMemoize<R>(method : (...args : $ReadOnlyArray<any>) => R, logic : (...args : $ReadOnlyArray<any>) => R, args : $ReadOnlyArray<any> = []) : R {
     // $FlowFixMe
-    const cache = method.__inline_memoize_cache__ = method.__inline_memoize_cache__ || {};
+    const cache : {| [string] : R |} = method.__inline_memoize_cache__ = method.__inline_memoize_cache__ || {};
     const key = serializeArgs(args);
 
     if (cache.hasOwnProperty(key)) {

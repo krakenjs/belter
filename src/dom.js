@@ -631,11 +631,14 @@ export function createElement(tag : string = 'div', options : ElementOptionsType
     return element;
 }
 
+type StringMap = {|
+    [ string ] : string
+|};
 
 export type IframeElementOptionsType = {|
-    style? : {| [ string ] : string |},
+    style? : StringMap,
     class? : ?$ReadOnlyArray<string>,
-    attributes? : {| [ string ] : string |},
+    attributes? : StringMap,
     styleSheet? : ?string,
     html? : ?string,
     url? : ?string
@@ -646,23 +649,34 @@ const getDefaultIframeOptions = () : IframeElementOptionsType => {
     return {};
 };
 
+const getDefaultStringMap = () : StringMap => {
+    // $FlowFixMe
+    return {};
+};
+
 export function iframe(options : IframeElementOptionsType = getDefaultIframeOptions(), container : ?HTMLElement) : HTMLIFrameElement {
 
-    const attributes = options.attributes || {};
-    const style = options.style || {};
+    const attributes = options.attributes || getDefaultStringMap();
+    const style = options.style || getDefaultStringMap();
+
+    // $FlowFixMe
+    const newAttributes = {
+        allowTransparency: 'true',
+        ...attributes
+    };
+
+    // $FlowFixMe
+    const newStyle = {
+        backgroundColor: 'transparent',
+        border:          'none',
+        ...style
+    };
 
     const frame = createElement('iframe', {
-        attributes: {
-            allowTransparency: 'true',
-            ...attributes
-        },
-        style: {
-            backgroundColor: 'transparent',
-            border:          'none',
-            ...style
-        },
-        html:  options.html,
-        class: options.class
+        attributes: newAttributes,
+        style:      newStyle,
+        html:       options.html,
+        class:      options.class
     });
 
     const isIE = window.navigator.userAgent.match(/MSIE|Edge/i); // eslint-disable-line compat/compat
