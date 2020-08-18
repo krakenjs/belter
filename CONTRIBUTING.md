@@ -9,13 +9,13 @@ your changes into our code. Ideas and other comments are also welcome.
 1. Create your own [fork](https://help.github.com/articles/fork-a-repo) of this [repository](../../fork).
 ```bash
 # Clone it
-$ git clone git@github.com:me/mylibrary.git
+$ git clone git@github.com:me/belter.git
 
 # Change directory
 $ cd mylibrary
 
 # Add the upstream repo
-$ git remote add upstream git://github.com/krakenjs/mylibrary.git
+$ git remote add upstream git://github.com/krakenjs/belter.git
 
 # Get the latest upstream changes
 $ git pull upstream
