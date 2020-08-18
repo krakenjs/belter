@@ -10,6 +10,7 @@ type RequestOptionsType = {|
     json? : $ReadOnlyArray<mixed> | Object,
     data? : { [key : string] : string },
     body? : string,
+    async? : boolean,
     win? : SameDomainWindowType,
     timeout? : number
 |};
@@ -36,7 +37,7 @@ function parseHeaders(rawHeaders : string = '') : { [string] : string } {
     return result;
 }
 
-export function request({ url, method = 'get', headers = {}, json, data, body, win = window, timeout = 0 } : RequestOptionsType) : ZalgoPromise<ResponseType> {
+export function request({ url, method = 'get', headers = {}, json, data, body, async = true, win = window, timeout = 0 } : RequestOptionsType) : ZalgoPromise<ResponseType> {
     return new ZalgoPromise((resolve, reject) => {
 
         if ((json && data) || (json && body) || (data && json)) {
@@ -101,7 +102,7 @@ export function request({ url, method = 'get', headers = {}, json, data, body, w
             reject(new Error(`Request to ${ method.toLowerCase() } ${ url } failed: ${ evt.toString() }.`));
         }, false);
 
-        xhr.open(method, url, true);
+        xhr.open(method, url, async);
 
         for (const key in normalizedHeaders) {
             if (normalizedHeaders.hasOwnProperty(key)) {
