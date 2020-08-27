@@ -1045,3 +1045,7 @@ export function unique(arr) {
 
   return Object.keys(result);
 }
+export var memoizedValues = memoize(values);
+export var constHas = function constHas(constant, value) {
+  return memoizedValues(constant).indexOf(value) !== -1;
+};

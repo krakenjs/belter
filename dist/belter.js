@@ -524,6 +524,12 @@
         __webpack_require__.d(__webpack_exports__, "unique", (function() {
             return unique;
         }));
+        __webpack_require__.d(__webpack_exports__, "memoizedValues", (function() {
+            return memoizedValues;
+        }));
+        __webpack_require__.d(__webpack_exports__, "constHas", (function() {
+            return constHas;
+        }));
         __webpack_require__.d(__webpack_exports__, "request", (function() {
             return request;
         }));
@@ -916,11 +922,17 @@
             };
             ZalgoPromise.hash = function(promises) {
                 var result = {};
-                return ZalgoPromise.all(Object.keys(promises).map((function(key) {
-                    return ZalgoPromise.resolve(promises[key]).then((function(value) {
-                        result[key] = value;
-                    }));
-                }))).then((function() {
+                var awaitPromises = [];
+                var _loop = function(key) {
+                    if (promises.hasOwnProperty(key)) {
+                        var value = promises[key];
+                        utils_isPromise(value) ? awaitPromises.push(value.then((function(res) {
+                            result[key] = res;
+                        }))) : result[key] = value;
+                    }
+                };
+                for (var key in promises) _loop(key);
+                return ZalgoPromise.all(awaitPromises).then((function() {
                     return result;
                 }));
             };
@@ -1865,6 +1877,10 @@
             for (var _i6 = 0; _i6 < arr.length; _i6++) result[arr[_i6]] = !0;
             return Object.keys(result);
         }
+        var memoizedValues = memoize(util_values);
+        var constHas = function(constant, value) {
+            return -1 !== memoizedValues(constant).indexOf(value);
+        };
         function isDocumentReady() {
             return Boolean(document.body) && "complete" === document.readyState;
         }
