@@ -1099,3 +1099,9 @@ export function unique(arr : $ReadOnlyArray<string>) : $ReadOnlyArray<string> {
     }
     return Object.keys(result);
 }
+
+export const memoizedValues = memoize(values);
+
+export const constHas = <X : (string | boolean | number), T : { [string] : X }>(constant : T, value : X) : boolean => {
+    return memoizedValues(constant).indexOf(value) !== -1;
+};
