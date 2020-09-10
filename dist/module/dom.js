@@ -867,10 +867,12 @@ export function onResize(el, handler, _temp) {
 
   var observer;
   var timeout;
+  win.addEventListener('resize', check);
 
   if (typeof win.ResizeObserver !== 'undefined') {
     observer = new win.ResizeObserver(check);
     observer.observe(el);
+    safeInterval(check, interval * 10);
   } else if (typeof win.MutationObserver !== 'undefined') {
     observer = new win.MutationObserver(check);
     observer.observe(el, {
@@ -879,14 +881,9 @@ export function onResize(el, handler, _temp) {
       subtree: true,
       characterData: false
     });
-    win.addEventListener('resize', check);
+    safeInterval(check, interval * 10);
   } else {
-    var loop = function loop() {
-      check();
-      timeout = setTimeout(loop, interval);
-    };
-
-    loop();
+    safeInterval(check, interval);
   }
 
   return {

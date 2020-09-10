@@ -2383,24 +2383,24 @@
                 currentHeight = newHeight;
             };
             var observer;
-            var timeout;
-            if (void 0 !== win.ResizeObserver) (observer = new win.ResizeObserver(check)).observe(el); else if (void 0 !== win.MutationObserver) {
+            win.addEventListener("resize", check);
+            if (void 0 !== win.ResizeObserver) {
+                (observer = new win.ResizeObserver(check)).observe(el);
+                safeInterval(check, 10 * interval);
+            } else if (void 0 !== win.MutationObserver) {
                 (observer = new win.MutationObserver(check)).observe(el, {
                     attributes: !0,
                     childList: !0,
                     subtree: !0,
                     characterData: !1
                 });
-                win.addEventListener("resize", check);
-            } else !function loop() {
-                check();
-                timeout = setTimeout(loop, interval);
-            }();
+                safeInterval(check, 10 * interval);
+            } else safeInterval(check, interval);
             return {
                 cancel: function() {
                     observer.disconnect();
                     window.removeEventListener("resize", check);
-                    clearTimeout(timeout);
+                    clearTimeout(void 0);
                 }
             };
         }
