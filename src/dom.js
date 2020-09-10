@@ -940,9 +940,12 @@ export function onResize(el : HTMLElement, handler : ({| width : number, height 
     let observer;
     let timeout;
 
+    win.addEventListener('resize', check);
+    
     if (typeof win.ResizeObserver !== 'undefined') {
         observer = new win.ResizeObserver(check);
         observer.observe(el);
+        safeInterval(check, interval * 10);
 
     } else if (typeof win.MutationObserver !== 'undefined') {
         observer = new win.MutationObserver(check);
@@ -952,13 +955,9 @@ export function onResize(el : HTMLElement, handler : ({| width : number, height 
             subtree:       true,
             characterData: false
         });
-        win.addEventListener('resize', check);
+        safeInterval(check, interval * 10);
     } else {
-        const loop = () => {
-            check();
-            timeout = setTimeout(loop, interval);
-        };
-        loop();
+        safeInterval(check, interval);
     }
 
     return {
