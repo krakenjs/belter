@@ -2383,10 +2383,11 @@
                 currentHeight = newHeight;
             };
             var observer;
+            var timeout;
             win.addEventListener("resize", check);
             if (void 0 !== win.ResizeObserver) {
                 (observer = new win.ResizeObserver(check)).observe(el);
-                safeInterval(check, 10 * interval);
+                timeout = safeInterval(check, 10 * interval);
             } else if (void 0 !== win.MutationObserver) {
                 (observer = new win.MutationObserver(check)).observe(el, {
                     attributes: !0,
@@ -2394,13 +2395,13 @@
                     subtree: !0,
                     characterData: !1
                 });
-                safeInterval(check, 10 * interval);
-            } else safeInterval(check, interval);
+                timeout = safeInterval(check, 10 * interval);
+            } else timeout = safeInterval(check, interval);
             return {
                 cancel: function() {
                     observer.disconnect();
                     window.removeEventListener("resize", check);
-                    clearTimeout(void 0);
+                    timeout.cancel();
                 }
             };
         }

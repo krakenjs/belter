@@ -872,7 +872,7 @@ export function onResize(el, handler, _temp) {
   if (typeof win.ResizeObserver !== 'undefined') {
     observer = new win.ResizeObserver(check);
     observer.observe(el);
-    safeInterval(check, interval * 10);
+    timeout = safeInterval(check, interval * 10);
   } else if (typeof win.MutationObserver !== 'undefined') {
     observer = new win.MutationObserver(check);
     observer.observe(el, {
@@ -881,16 +881,16 @@ export function onResize(el, handler, _temp) {
       subtree: true,
       characterData: false
     });
-    safeInterval(check, interval * 10);
+    timeout = safeInterval(check, interval * 10);
   } else {
-    safeInterval(check, interval);
+    timeout = safeInterval(check, interval);
   }
 
   return {
     cancel: function cancel() {
       observer.disconnect();
       window.removeEventListener('resize', check);
-      clearTimeout(timeout);
+      timeout.cancel();
     }
   };
 }
