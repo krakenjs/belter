@@ -945,7 +945,7 @@ export function onResize(el : HTMLElement, handler : ({| width : number, height 
     if (typeof win.ResizeObserver !== 'undefined') {
         observer = new win.ResizeObserver(check);
         observer.observe(el);
-        safeInterval(check, interval * 10);
+        timeout = safeInterval(check, interval * 10);
 
     } else if (typeof win.MutationObserver !== 'undefined') {
         observer = new win.MutationObserver(check);
@@ -955,16 +955,16 @@ export function onResize(el : HTMLElement, handler : ({| width : number, height 
             subtree:       true,
             characterData: false
         });
-        safeInterval(check, interval * 10);
+        timeout = safeInterval(check, interval * 10);
     } else {
-        safeInterval(check, interval);
+        timeout = safeInterval(check, interval);
     }
 
     return {
         cancel: () => {
             observer.disconnect();
             window.removeEventListener('resize', check);
-            clearTimeout(timeout);
+            timeout.cancel();
         }
     };
 }
