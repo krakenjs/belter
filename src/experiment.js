@@ -60,7 +60,7 @@ export function experiment({ name, sample = 50, logTreatment = noop, logCheckpoi
 
     let group;
 
-    if (throttle < sample) {
+    if (throttle < sample && !__TEST__) {
         group = THROTTLE_GROUP.TEST;
     } else if ((sample >= 50) || ((sample <= throttle) && (throttle < (sample * 2)))) {
         group = THROTTLE_GROUP.CONTROL;
