@@ -44,7 +44,7 @@ export function experiment(_ref) {
   var throttle = getThrottlePercentile(name);
   var group;
 
-  if (throttle < sample) {
+  if (throttle < sample && !__TEST__) {
     group = THROTTLE_GROUP.TEST;
   } else if (sample >= 50 || sample <= throttle && throttle < sample * 2) {
     group = THROTTLE_GROUP.CONTROL;
