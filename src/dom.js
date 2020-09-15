@@ -6,7 +6,7 @@ import { linkFrameWindow, isWindowClosed,
     type SameDomainWindowType, type CrossDomainWindowType } from 'cross-domain-utils/src';
 import { WeakMap } from 'cross-domain-safe-weakmap/src';
 
-import { inlineMemoize, noop, stringify, capitalizeFirstLetter,
+import { inlineMemoize, memoize, noop, stringify, capitalizeFirstLetter,
     once, extend, safeInterval, uniqueID, arrayFrom } from './util';
 import { isDevice } from './device';
 import { KEY_CODES } from './constants';
@@ -15,7 +15,11 @@ import type { CancelableType } from './types';
 type ElementRefType = string | HTMLElement;
 
 export function isDocumentReady() : boolean {
-    return Boolean(document.body) && document.readyState === 'complete';
+    return Boolean(document.body) && (document.readyState === 'complete');
+}
+
+export function isDocumentInteractive() : boolean {
+    return Boolean(document.body) && (document.readyState === 'interactive');
 }
 
 export function urlEncode(str : string) : string {
@@ -34,31 +38,35 @@ export function waitForWindowReady() : ZalgoPromise<void> {
     });
 }
 
-export function waitForDocumentReady() : ZalgoPromise<void> {
-    return inlineMemoize(waitForDocumentReady, () : ZalgoPromise<void> => {
-        return new ZalgoPromise(resolve => {
+export const waitForDocumentReady = memoize(() : ZalgoPromise<void> => {
+    return new ZalgoPromise(resolve => {
 
-            if (isDocumentReady()) {
+        if (isDocumentReady() || isDocumentInteractive()) {
+            return resolve();
+        }
+
+        const interval = setInterval(() => {
+            if (isDocumentReady() || isDocumentInteractive()) {
+                clearInterval(interval);
                 return resolve();
             }
-
-            const interval = setInterval(() => {
-                if (isDocumentReady()) {
-                    clearInterval(interval);
-                    return resolve();
-                }
-            }, 10);
-        });
+        }, 10);
     });
-}
+});
 
 export function waitForDocumentBody() : ZalgoPromise<HTMLBodyElement> {
-    return waitForDocumentReady().then(() => {
+    return ZalgoPromise.try(() => {
         if (document.body) {
             return document.body;
         }
 
-        throw new Error('Document ready but document.body not present');
+        return waitForDocumentReady().then(() => {
+            if (document.body) {
+                return document.body;
+            }
+
+            throw new Error('Document ready but document.body not present');
+        });
     });
 }
 
