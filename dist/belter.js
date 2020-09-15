@@ -131,6 +131,9 @@
         __webpack_require__.d(__webpack_exports__, "isDocumentReady", (function() {
             return isDocumentReady;
         }));
+        __webpack_require__.d(__webpack_exports__, "isDocumentInteractive", (function() {
+            return isDocumentInteractive;
+        }));
         __webpack_require__.d(__webpack_exports__, "urlEncode", (function() {
             return urlEncode;
         }));
@@ -1884,6 +1887,9 @@
         function isDocumentReady() {
             return Boolean(document.body) && "complete" === document.readyState;
         }
+        function isDocumentInteractive() {
+            return Boolean(document.body) && "interactive" === document.readyState;
+        }
         function urlEncode(str) {
             return str.replace(/\?/g, "%3F").replace(/&/g, "%26").replace(/#/g, "%23").replace(/\+/g, "%2B");
         }
@@ -1897,23 +1903,23 @@
                 }));
             }));
         }
-        function waitForDocumentReady() {
-            return inlineMemoize(waitForDocumentReady, (function() {
-                return new promise_ZalgoPromise((function(resolve) {
-                    if (isDocumentReady()) return resolve();
-                    var interval = setInterval((function() {
-                        if (isDocumentReady()) {
-                            clearInterval(interval);
-                            return resolve();
-                        }
-                    }), 10);
-                }));
+        var waitForDocumentReady = memoize((function() {
+            return new promise_ZalgoPromise((function(resolve) {
+                if (isDocumentReady() || isDocumentInteractive()) return resolve();
+                var interval = setInterval((function() {
+                    if (isDocumentReady() || isDocumentInteractive()) {
+                        clearInterval(interval);
+                        return resolve();
+                    }
+                }), 10);
             }));
-        }
+        }));
         function waitForDocumentBody() {
-            return waitForDocumentReady().then((function() {
-                if (document.body) return document.body;
-                throw new Error("Document ready but document.body not present");
+            return promise_ZalgoPromise.try((function() {
+                return document.body ? document.body : waitForDocumentReady().then((function() {
+                    if (document.body) return document.body;
+                    throw new Error("Document ready but document.body not present");
+                }));
             }));
         }
         function parseQuery(queryString) {

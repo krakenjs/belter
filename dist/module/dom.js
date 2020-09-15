@@ -4,11 +4,14 @@ import _extends from "@babel/runtime/helpers/esm/extends";
 import { ZalgoPromise } from 'zalgo-promise/src';
 import { linkFrameWindow, isWindowClosed } from 'cross-domain-utils/src';
 import { WeakMap } from 'cross-domain-safe-weakmap/src';
-import { inlineMemoize, noop, stringify, capitalizeFirstLetter, once, extend, safeInterval, uniqueID, arrayFrom } from './util';
+import { inlineMemoize, memoize, noop, stringify, capitalizeFirstLetter, once, extend, safeInterval, uniqueID, arrayFrom } from './util';
 import { isDevice } from './device';
 import { KEY_CODES } from './constants';
 export function isDocumentReady() {
   return Boolean(document.body) && document.readyState === 'complete';
+}
+export function isDocumentInteractive() {
+  return Boolean(document.body) && document.readyState === 'interactive';
 }
 export function urlEncode(str) {
   return str.replace(/\?/g, '%3F').replace(/&/g, '%26').replace(/#/g, '%23').replace(/\+/g, '%2B');
@@ -26,29 +29,33 @@ export function waitForWindowReady() {
     });
   });
 }
-export function waitForDocumentReady() {
-  return inlineMemoize(waitForDocumentReady, function () {
-    return new ZalgoPromise(function (resolve) {
-      if (isDocumentReady()) {
+export var waitForDocumentReady = memoize(function () {
+  return new ZalgoPromise(function (resolve) {
+    if (isDocumentReady() || isDocumentInteractive()) {
+      return resolve();
+    }
+
+    var interval = setInterval(function () {
+      if (isDocumentReady() || isDocumentInteractive()) {
+        clearInterval(interval);
         return resolve();
       }
-
-      var interval = setInterval(function () {
-        if (isDocumentReady()) {
-          clearInterval(interval);
-          return resolve();
-        }
-      }, 10);
-    });
+    }, 10);
   });
-}
+});
 export function waitForDocumentBody() {
-  return waitForDocumentReady().then(function () {
+  return ZalgoPromise.try(function () {
     if (document.body) {
       return document.body;
     }
 
-    throw new Error('Document ready but document.body not present');
+    return waitForDocumentReady().then(function () {
+      if (document.body) {
+        return document.body;
+      }
+
+      throw new Error('Document ready but document.body not present');
+    });
   });
 }
 export function parseQuery(queryString) {
