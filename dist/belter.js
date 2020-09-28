@@ -2391,12 +2391,13 @@
             var _ref2 = void 0 === _temp ? {} : _temp, _ref2$width = _ref2.width, width = void 0 === _ref2$width || _ref2$width, _ref2$height = _ref2.height, height = void 0 === _ref2$height || _ref2$height, _ref2$interval = _ref2.interval, interval = void 0 === _ref2$interval ? 100 : _ref2$interval, _ref2$win = _ref2.win, win = void 0 === _ref2$win ? window : _ref2$win;
             var currentWidth = el.offsetWidth;
             var currentHeight = el.offsetHeight;
+            var canceled = !1;
             handler({
                 width: currentWidth,
                 height: currentHeight
             });
             var check = function() {
-                if (isElementVisible(el)) {
+                if (!canceled && isElementVisible(el)) {
                     var newWidth = el.offsetWidth;
                     var newHeight = el.offsetHeight;
                     (width && newWidth !== currentWidth || height && newHeight !== currentHeight) && handler({
@@ -2424,6 +2425,7 @@
             } else timeout = safeInterval(check, interval);
             return {
                 cancel: function() {
+                    canceled = !0;
                     observer.disconnect();
                     window.removeEventListener("resize", check);
                     timeout.cancel();

@@ -852,13 +852,14 @@ export function onResize(el, handler, _temp) {
 
   var currentWidth = el.offsetWidth;
   var currentHeight = el.offsetHeight;
+  var canceled = false;
   handler({
     width: currentWidth,
     height: currentHeight
   });
 
   var check = function check() {
-    if (!isElementVisible(el)) {
+    if (canceled || !isElementVisible(el)) {
       return;
     }
 
@@ -899,6 +900,7 @@ export function onResize(el, handler, _temp) {
 
   return {
     cancel: function cancel() {
+      canceled = true;
       observer.disconnect();
       window.removeEventListener('resize', check);
       timeout.cancel();
