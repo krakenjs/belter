@@ -934,6 +934,10 @@ export function onResize(el : HTMLElement, handler : ({| width : number, height 
     handler({ width: currentWidth, height: currentHeight });
 
     const check = () => {
+        if (!isElementVisible(el)) {
+            return;
+        }
+
         const newWidth = el.offsetWidth;
         const newHeight = el.offsetHeight;
 
