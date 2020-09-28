@@ -1106,7 +1106,7 @@ export const constHas = <X : (string | boolean | number), T : { [string] : X }>(
     return memoizedValues(constant).indexOf(value) !== -1;
 };
 
-export function dedupeErrors<T>(handler : (mixed) => T) : (mixed) => ?T {
+export function dedupeErrors<T>(handler : (mixed) => T) : (mixed) => (T | void) {
     const seenErrors = [];
     const seenStringifiedErrors = {};
 
