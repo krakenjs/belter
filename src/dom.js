@@ -930,11 +930,12 @@ type OnResizeOptions = {|
 export function onResize(el : HTMLElement, handler : ({| width : number, height : number |}) => void, { width = true, height = true, interval = 100, win = window } : OnResizeOptions = {}) : {| cancel : () => void |} {
     let currentWidth = el.offsetWidth;
     let currentHeight = el.offsetHeight;
+    let canceled = false;
 
     handler({ width: currentWidth, height: currentHeight });
 
     const check = () => {
-        if (!isElementVisible(el)) {
+        if (canceled || !isElementVisible(el)) {
             return;
         }
 
@@ -974,6 +975,7 @@ export function onResize(el : HTMLElement, handler : ({| width : number, height 
 
     return {
         cancel: () => {
+            canceled = true;
             observer.disconnect();
             window.removeEventListener('resize', check);
             timeout.cancel();
