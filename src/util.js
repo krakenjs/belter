@@ -1105,3 +1105,24 @@ export const memoizedValues = memoize(values);
 export const constHas = <X : (string | boolean | number), T : { [string] : X }>(constant : T, value : X) : boolean => {
     return memoizedValues(constant).indexOf(value) !== -1;
 };
+
+export function dedupeErrors<T>(handler : (mixed) => T) : (mixed) => ?T {
+    const seenErrors = [];
+    const seenStringifiedErrors = {};
+
+    return (err) => {
+        if (seenErrors.indexOf(err) !== -1) {
+            return;
+        }
+
+        seenErrors.push(err);
+
+        const stringifiedError = stringifyError(err);
+        if (seenStringifiedErrors[stringifiedError]) {
+            return;
+        }
+
+        seenStringifiedErrors[stringifiedError] = true;
+        return handler(err);
+    };
+}
