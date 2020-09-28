@@ -858,6 +858,10 @@ export function onResize(el, handler, _temp) {
   });
 
   var check = function check() {
+    if (!isElementVisible(el)) {
+      return;
+    }
+
     var newWidth = el.offsetWidth;
     var newHeight = el.offsetHeight;
 
