@@ -533,6 +533,9 @@
         __webpack_require__.d(__webpack_exports__, "constHas", (function() {
             return constHas;
         }));
+        __webpack_require__.d(__webpack_exports__, "dedupeErrors", (function() {
+            return dedupeErrors;
+        }));
         __webpack_require__.d(__webpack_exports__, "request", (function() {
             return request;
         }));
@@ -1884,6 +1887,20 @@
         var constHas = function(constant, value) {
             return -1 !== memoizedValues(constant).indexOf(value);
         };
+        function dedupeErrors(handler) {
+            var seenErrors = [];
+            var seenStringifiedErrors = {};
+            return function(err) {
+                if (-1 === seenErrors.indexOf(err)) {
+                    seenErrors.push(err);
+                    var stringifiedError = stringifyError(err);
+                    if (!seenStringifiedErrors[stringifiedError]) {
+                        seenStringifiedErrors[stringifiedError] = !0;
+                        return handler(err);
+                    }
+                }
+            };
+        }
         function isDocumentReady() {
             return Boolean(document.body) && "complete" === document.readyState;
         }

@@ -1049,3 +1049,22 @@ export var memoizedValues = memoize(values);
 export var constHas = function constHas(constant, value) {
   return memoizedValues(constant).indexOf(value) !== -1;
 };
+export function dedupeErrors(handler) {
+  var seenErrors = [];
+  var seenStringifiedErrors = {};
+  return function (err) {
+    if (seenErrors.indexOf(err) !== -1) {
+      return;
+    }
+
+    seenErrors.push(err);
+    var stringifiedError = stringifyError(err);
+
+    if (seenStringifiedErrors[stringifiedError]) {
+      return;
+    }
+
+    seenStringifiedErrors[stringifiedError] = true;
+    return handler(err);
+  };
+}
