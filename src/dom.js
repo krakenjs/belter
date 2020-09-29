@@ -253,11 +253,15 @@ export function onClick(element : HTMLElement, handler : (Event) => void) {
     });
 }
 
-export function getScript({ host = window.location.host, path } : {| host? : string, path : string |}) : ?HTMLScriptElement {
+export function getScript({ host = window.location.host, path, reverse = false } : {| host? : string, path : string, reverse? : boolean |}) : ?HTMLScriptElement {
     return inlineMemoize(getScript, () : ?HTMLScriptElement => {
 
         const url = `${ host }${ path }`;
         const scripts = Array.prototype.slice.call(document.getElementsByTagName('script'));
+
+        if (reverse) {
+            scripts.reverse();
+        }
 
         for (const script of scripts) {
             if (!script.src) {
