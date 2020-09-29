@@ -234,10 +234,16 @@ export function onClick(element, handler) {
 export function getScript(_ref) {
   var _ref$host = _ref.host,
       host = _ref$host === void 0 ? window.location.host : _ref$host,
-      path = _ref.path;
+      path = _ref.path,
+      _ref$reverse = _ref.reverse,
+      reverse = _ref$reverse === void 0 ? false : _ref$reverse;
   return inlineMemoize(getScript, function () {
     var url = "" + host + path;
     var scripts = Array.prototype.slice.call(document.getElementsByTagName('script'));
+
+    if (reverse) {
+      scripts.reverse();
+    }
 
     for (var _i4 = 0; _i4 < scripts.length; _i4++) {
       var script = scripts[_i4];

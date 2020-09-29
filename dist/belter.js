@@ -2035,10 +2035,11 @@
             }));
         }
         function getScript(_ref) {
-            var _ref$host = _ref.host, host = void 0 === _ref$host ? window.location.host : _ref$host, path = _ref.path;
+            var _ref$host = _ref.host, host = void 0 === _ref$host ? window.location.host : _ref$host, path = _ref.path, _ref$reverse = _ref.reverse, reverse = void 0 !== _ref$reverse && _ref$reverse;
             return inlineMemoize(getScript, (function() {
                 var url = "" + host + path;
                 var scripts = [].slice.call(document.getElementsByTagName("script"));
+                reverse && scripts.reverse();
                 for (var _i4 = 0; _i4 < scripts.length; _i4++) {
                     var script = scripts[_i4];
                     if (script.src && script.src.replace(/^https?:\/\//, "").split("?")[0] === url) return script;
