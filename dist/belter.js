@@ -314,8 +314,14 @@
         __webpack_require__.d(__webpack_exports__, "preventClickFocus", (function() {
             return preventClickFocus;
         }));
+        __webpack_require__.d(__webpack_exports__, "getStackTrace", (function() {
+            return getStackTrace;
+        }));
         __webpack_require__.d(__webpack_exports__, "getCurrentScript", (function() {
             return getCurrentScript;
+        }));
+        __webpack_require__.d(__webpack_exports__, "getCurrentScriptUID", (function() {
+            return getCurrentScriptUID;
         }));
         __webpack_require__.d(__webpack_exports__, "experiment", (function() {
             return experiment;
@@ -2485,10 +2491,38 @@
                 }), 1);
             }));
         }
-        var currentScript = document.currentScript;
-        function getCurrentScript() {
-            return currentScript;
+        function getStackTrace() {
+            try {
+                throw new Error("_");
+            } catch (err) {
+                return err.stack || "";
+            }
         }
+        var currentScript = document.currentScript;
+        var getCurrentScript = memoize((function() {
+            if (currentScript) return currentScript;
+            if (currentScript = function() {
+                try {
+                    var stack = getStackTrace();
+                    var stackDetails = /.*at [^(]*\((.*):(.+):(.+)\)$/gi.exec(stack);
+                    var scriptLocation = stackDetails && stackDetails[1];
+                    if (!scriptLocation) return;
+                    for (var _i20 = 0, _Array$prototype$slic2 = [].slice.call(document.getElementsByTagName("script")).reverse(); _i20 < _Array$prototype$slic2.length; _i20++) {
+                        var script = _Array$prototype$slic2[_i20];
+                        if (script.src && script.src === scriptLocation) return script;
+                    }
+                } catch (err) {}
+            }()) return currentScript;
+            throw new Error("Can not determine current script");
+        }));
+        var getCurrentScriptUID = memoize((function() {
+            var script = getCurrentScript();
+            var uid = script.getAttribute("data-uid");
+            if (uid && "string" == typeof uid) return uid;
+            uid = uniqueID();
+            script.setAttribute("data-uid", uid);
+            return uid;
+        }));
         function getStorage(_ref) {
             var name = _ref.name, _ref$lifetime = _ref.lifetime, lifetime = void 0 === _ref$lifetime ? 12e5 : _ref$lifetime;
             return inlineMemoize(getStorage, (function() {

@@ -6,7 +6,7 @@ import { linkFrameWindow, isWindowClosed } from 'cross-domain-utils/src';
 import { WeakMap } from 'cross-domain-safe-weakmap/src';
 import { inlineMemoize, memoize, noop, stringify, capitalizeFirstLetter, once, extend, safeInterval, uniqueID, arrayFrom } from './util';
 import { isDevice } from './device';
-import { KEY_CODES } from './constants';
+import { KEY_CODES, ATTRIBUTES } from './constants';
 export function isDocumentReady() {
   return Boolean(document.body) && document.readyState === 'complete';
 }
@@ -992,9 +992,60 @@ export function preventClickFocus(el) {
       el.removeEventListener('focus', onFocus);
     }, 1);
   });
+}
+export function getStackTrace() {
+  try {
+    throw new Error('_');
+  } catch (err) {
+    return err.stack || '';
+  }
+}
+
+function inferCurrentScript() {
+  try {
+    var stack = getStackTrace();
+    var stackDetails = /.*at [^(]*\((.*):(.+):(.+)\)$/ig.exec(stack);
+    var scriptLocation = stackDetails && stackDetails[1];
+
+    if (!scriptLocation) {
+      return;
+    }
+
+    for (var _i20 = 0, _Array$prototype$slic2 = Array.prototype.slice.call(document.getElementsByTagName('script')).reverse(); _i20 < _Array$prototype$slic2.length; _i20++) {
+      var script = _Array$prototype$slic2[_i20];
+
+      if (script.src && script.src === scriptLocation) {
+        return script;
+      }
+    }
+  } catch (err) {// pass
+  }
 } // eslint-disable-next-line compat/compat
 
+
 var currentScript = document.currentScript;
-export function getCurrentScript() {
-  return currentScript;
-}
+export var getCurrentScript = memoize(function () {
+  if (currentScript) {
+    return currentScript;
+  }
+
+  currentScript = inferCurrentScript();
+
+  if (currentScript) {
+    return currentScript;
+  }
+
+  throw new Error('Can not determine current script');
+});
+export var getCurrentScriptUID = memoize(function () {
+  var script = getCurrentScript();
+  var uid = script.getAttribute(ATTRIBUTES.UID);
+
+  if (uid && typeof uid === 'string') {
+    return uid;
+  }
+
+  uid = uniqueID();
+  script.setAttribute(ATTRIBUTES.UID, uid);
+  return uid;
+});
