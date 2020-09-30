@@ -1076,3 +1076,10 @@ export function preventClickFocus(el : HTMLElement) {
         }, 1);
     });
 }
+
+// eslint-disable-next-line compat/compat
+const currentScript = document.currentScript;
+
+export function getCurrentScript() : ?HTMLScriptElement {
+    return currentScript;
+}
