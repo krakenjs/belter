@@ -1037,8 +1037,16 @@ export var getCurrentScript = memoize(function () {
 
   throw new Error('Can not determine current script');
 });
+var currentUID = uniqueID();
 export var getCurrentScriptUID = memoize(function () {
-  var script = getCurrentScript();
+  var script;
+
+  try {
+    script = getCurrentScript();
+  } catch (err) {
+    return currentUID;
+  }
+
   var uid = script.getAttribute(ATTRIBUTES.UID);
 
   if (uid && typeof uid === 'string') {
