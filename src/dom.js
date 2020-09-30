@@ -9,7 +9,7 @@ import { WeakMap } from 'cross-domain-safe-weakmap/src';
 import { inlineMemoize, memoize, noop, stringify, capitalizeFirstLetter,
     once, extend, safeInterval, uniqueID, arrayFrom } from './util';
 import { isDevice } from './device';
-import { KEY_CODES } from './constants';
+import { KEY_CODES, ATTRIBUTES } from './constants';
 import type { CancelableType } from './types';
 
 type ElementRefType = string | HTMLElement;
@@ -1122,4 +1122,19 @@ export const getCurrentScript = memoize(() : HTMLScriptElement => {
     }
 
     throw new Error('Can not determine current script');
+});
+
+export const getCurrentScriptUID = memoize(() : string => {
+    const script = getCurrentScript();
+
+    let uid = script.getAttribute(ATTRIBUTES.UID);
+
+    if (uid && typeof uid === 'string') {
+        return uid;
+    }
+
+    uid = uniqueID();
+    script.setAttribute(ATTRIBUTES.UID, uid);
+
+    return uid;
 });
