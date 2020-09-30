@@ -1023,7 +1023,7 @@ function inferCurrentScript() {
 } // eslint-disable-next-line compat/compat
 
 
-var currentScript = document.currentScript;
+var currentScript = typeof document !== 'undefined' ? document.currentScript : null;
 export var getCurrentScript = memoize(function () {
   if (currentScript) {
     return currentScript;

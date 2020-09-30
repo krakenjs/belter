@@ -2511,7 +2511,7 @@
                 return err.stack || "";
             }
         }
-        var currentScript = document.currentScript;
+        var currentScript = "undefined" != typeof document ? document.currentScript : null;
         var getCurrentScript = memoize((function() {
             if (currentScript) return currentScript;
             if (currentScript = function() {
