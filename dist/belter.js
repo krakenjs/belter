@@ -584,6 +584,12 @@
         __webpack_require__.d(__webpack_exports__, "wrapPromise", (function() {
             return wrapPromise;
         }));
+        __webpack_require__.d(__webpack_exports__, "KEY_CODES", (function() {
+            return KEY_CODES;
+        }));
+        __webpack_require__.d(__webpack_exports__, "ATTRIBUTES", (function() {
+            return ATTRIBUTES;
+        }));
         function getUserAgent() {
             return window.navigator.mockUserAgent || window.navigator.userAgent;
         }
@@ -1910,6 +1916,13 @@
                 }
             };
         }
+        var KEY_CODES = {
+            ENTER: 13,
+            SPACE: 32
+        };
+        var ATTRIBUTES = {
+            UID: "data-uid"
+        };
         function isDocumentReady() {
             return Boolean(document.body) && "complete" === document.readyState;
         }
@@ -2040,7 +2053,7 @@
             element.addEventListener("touchstart", src_util_noop);
             element.addEventListener("click", handler);
             element.addEventListener("keypress", (function(event) {
-                if (13 === event.keyCode || 32 === event.keyCode) return handler(event);
+                if (event.keyCode === KEY_CODES.ENTER || event.keyCode === KEY_CODES.SPACE) return handler(event);
             }));
         }
         function getScript(_ref) {
@@ -2517,10 +2530,10 @@
         }));
         var getCurrentScriptUID = memoize((function() {
             var script = getCurrentScript();
-            var uid = script.getAttribute("data-uid");
+            var uid = script.getAttribute(ATTRIBUTES.UID);
             if (uid && "string" == typeof uid) return uid;
             uid = uniqueID();
-            script.setAttribute("data-uid", uid);
+            script.setAttribute(ATTRIBUTES.UID, uid);
             return uid;
         }));
         function getStorage(_ref) {
