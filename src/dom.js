@@ -1108,7 +1108,7 @@ function inferCurrentScript() : ?HTMLScriptElement {
 }
 
 // eslint-disable-next-line compat/compat
-let currentScript = document.currentScript;
+let currentScript = typeof document !== 'undefined' ? document.currentScript : null;
 
 export const getCurrentScript = memoize(() : HTMLScriptElement => {
     if (currentScript) {
