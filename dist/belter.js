@@ -314,6 +314,9 @@
         __webpack_require__.d(__webpack_exports__, "preventClickFocus", (function() {
             return preventClickFocus;
         }));
+        __webpack_require__.d(__webpack_exports__, "getCurrentScript", (function() {
+            return getCurrentScript;
+        }));
         __webpack_require__.d(__webpack_exports__, "experiment", (function() {
             return experiment;
         }));
@@ -2481,6 +2484,10 @@
                     el.removeEventListener("focus", onFocus);
                 }), 1);
             }));
+        }
+        var currentScript = document.currentScript;
+        function getCurrentScript() {
+            return currentScript;
         }
         function getStorage(_ref) {
             var name = _ref.name, _ref$lifetime = _ref.lifetime, lifetime = void 0 === _ref$lifetime ? 12e5 : _ref$lifetime;

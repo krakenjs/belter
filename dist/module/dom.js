@@ -992,4 +992,9 @@ export function preventClickFocus(el) {
       el.removeEventListener('focus', onFocus);
     }, 1);
   });
+} // eslint-disable-next-line compat/compat
+
+var currentScript = document.currentScript;
+export function getCurrentScript() {
+  return currentScript;
 }
