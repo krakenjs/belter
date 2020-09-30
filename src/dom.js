@@ -1077,9 +1077,49 @@ export function preventClickFocus(el : HTMLElement) {
     });
 }
 
-// eslint-disable-next-line compat/compat
-const currentScript = document.currentScript;
-
-export function getCurrentScript() : ?HTMLScriptElement {
-    return currentScript;
+export function getStackTrace() : string {
+    try {
+        throw new Error('_');
+    }
+    catch (err) {
+        return err.stack || '';
+    }
 }
+
+function inferCurrentScript() : ?HTMLScriptElement {
+    try {
+        const stack = getStackTrace();
+        const stackDetails = (/.*at [^(]*\((.*):(.+):(.+)\)$/ig).exec(stack);
+        const scriptLocation = stackDetails && stackDetails[1];
+
+        if (!scriptLocation) {
+            return;
+        }
+
+        for (const script of Array.prototype.slice.call(document.getElementsByTagName('script')).reverse()) {
+            if (script.src && script.src === scriptLocation) {
+                return script;
+            }
+        }
+
+    } catch (err) {
+        // pass
+    }
+}
+
+// eslint-disable-next-line compat/compat
+let currentScript = document.currentScript;
+
+export const getCurrentScript = memoize(() : HTMLScriptElement => {
+    if (currentScript) {
+        return currentScript;
+    }
+
+    currentScript = inferCurrentScript();
+
+    if (currentScript) {
+        return currentScript;
+    }
+
+    throw new Error('Can not determine current script');
+});
