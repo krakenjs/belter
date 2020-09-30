@@ -1124,8 +1124,16 @@ export const getCurrentScript = memoize(() : HTMLScriptElement => {
     throw new Error('Can not determine current script');
 });
 
+const currentUID = uniqueID();
+
 export const getCurrentScriptUID = memoize(() : string => {
-    const script = getCurrentScript();
+    let script;
+
+    try {
+        script = getCurrentScript();
+    } catch (err) {
+        return currentUID;
+    }
 
     let uid = script.getAttribute(ATTRIBUTES.UID);
 
