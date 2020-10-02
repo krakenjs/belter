@@ -1,10 +1,11 @@
+import _inheritsLoose from "@babel/runtime/helpers/esm/inheritsLoose";
 import _extends from "@babel/runtime/helpers/esm/extends";
 
 /* eslint max-lines: off */
 import { ZalgoPromise } from 'zalgo-promise/src';
 import { linkFrameWindow, isWindowClosed } from 'cross-domain-utils/src';
 import { WeakMap } from 'cross-domain-safe-weakmap/src';
-import { inlineMemoize, memoize, noop, stringify, capitalizeFirstLetter, once, extend, safeInterval, uniqueID, arrayFrom } from './util';
+import { inlineMemoize, memoize, noop, stringify, capitalizeFirstLetter, once, extend, safeInterval, uniqueID, arrayFrom, ExtendableError } from './util';
 import { isDevice } from './device';
 import { KEY_CODES, ATTRIBUTES } from './constants';
 export function isDocumentReady() {
@@ -385,11 +386,17 @@ export function elementReady(id) {
       }
     }, 10);
   });
-}
-export function PopupOpenError(message) {
-  this.message = message;
-}
-PopupOpenError.prototype = Object.create(Error.prototype);
+} // eslint-disable-next-line unicorn/custom-error-definition
+
+export var PopupOpenError = /*#__PURE__*/function (_ExtendableError) {
+  _inheritsLoose(PopupOpenError, _ExtendableError);
+
+  function PopupOpenError() {
+    return _ExtendableError.apply(this, arguments) || this;
+  }
+
+  return PopupOpenError;
+}(ExtendableError);
 export function popup(url, options) {
   // $FlowFixMe
   options = options || {};

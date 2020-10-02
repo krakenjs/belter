@@ -1,3 +1,7 @@
+import _assertThisInitialized from "@babel/runtime/helpers/esm/assertThisInitialized";
+import _inheritsLoose from "@babel/runtime/helpers/esm/inheritsLoose";
+import _wrapNativeSuper from "@babel/runtime/helpers/esm/wrapNativeSuper";
+
 /* eslint max-lines: 0 */
 import { ZalgoPromise } from 'zalgo-promise/src';
 import { WeakMap } from 'cross-domain-safe-weakmap/src';
@@ -413,18 +417,26 @@ export function extend(obj, source) {
   }
 
   return obj;
-}
-export function values(obj) {
+} // eslint-disable-next-line no-undef
+
+export var values = function values(obj) {
+  if (Object.values) {
+    // $FlowFixMe
+    return Object.values(obj);
+  }
+
   var result = [];
 
   for (var key in obj) {
     if (obj.hasOwnProperty(key)) {
       result.push(obj[key]);
     }
-  }
+  } // $FlowFixMe
+
 
   return result;
-}
+};
+export var memoizedValues = memoize(values);
 export function perc(pixels, percentage) {
   return Math.round(pixels * percentage / 100);
 }
@@ -1045,7 +1057,6 @@ export function unique(arr) {
 
   return Object.keys(result);
 }
-export var memoizedValues = memoize(values);
 export var constHas = function constHas(constant, value) {
   return memoizedValues(constant).indexOf(value) !== -1;
 };
@@ -1068,3 +1079,24 @@ export function dedupeErrors(handler) {
     return handler(err);
   };
 }
+export var ExtendableError = /*#__PURE__*/function (_Error) {
+  _inheritsLoose(ExtendableError, _Error);
+
+  function ExtendableError(message) {
+    var _this7;
+
+    _this7 = _Error.call(this, message) || this; // eslint-disable-next-line unicorn/custom-error-definition
+
+    _this7.name = _this7.constructor.name;
+
+    if (typeof Error.captureStackTrace === 'function') {
+      Error.captureStackTrace(_assertThisInitialized(_this7), _this7.constructor);
+    } else {
+      _this7.stack = new Error(message).stack;
+    }
+
+    return _this7;
+  }
+
+  return ExtendableError;
+}( /*#__PURE__*/_wrapNativeSuper(Error));

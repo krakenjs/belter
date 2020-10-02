@@ -219,7 +219,7 @@
             return elementReady;
         }));
         __webpack_require__.d(__webpack_exports__, "PopupOpenError", (function() {
-            return PopupOpenError;
+            return dom_PopupOpenError;
         }));
         __webpack_require__.d(__webpack_exports__, "popup", (function() {
             return popup;
@@ -407,6 +407,9 @@
         __webpack_require__.d(__webpack_exports__, "values", (function() {
             return util_values;
         }));
+        __webpack_require__.d(__webpack_exports__, "memoizedValues", (function() {
+            return memoizedValues;
+        }));
         __webpack_require__.d(__webpack_exports__, "perc", (function() {
             return perc;
         }));
@@ -536,14 +539,14 @@
         __webpack_require__.d(__webpack_exports__, "unique", (function() {
             return unique;
         }));
-        __webpack_require__.d(__webpack_exports__, "memoizedValues", (function() {
-            return memoizedValues;
-        }));
         __webpack_require__.d(__webpack_exports__, "constHas", (function() {
             return constHas;
         }));
         __webpack_require__.d(__webpack_exports__, "dedupeErrors", (function() {
             return dedupeErrors;
+        }));
+        __webpack_require__.d(__webpack_exports__, "ExtendableError", (function() {
+            return util_ExtendableError;
         }));
         __webpack_require__.d(__webpack_exports__, "request", (function() {
             return request;
@@ -684,6 +687,11 @@
         function isSafari(ua) {
             void 0 === ua && (ua = getUserAgent());
             return /Safari/.test(ua) && !isChrome(ua);
+        }
+        function _inheritsLoose(subClass, superClass) {
+            subClass.prototype = Object.create(superClass.prototype);
+            subClass.prototype.constructor = subClass;
+            subClass.__proto__ = superClass;
         }
         function _extends() {
             return (_extends = Object.assign || function(target) {
@@ -1282,6 +1290,61 @@
             };
             return CrossDomainSafeWeakMap;
         }();
+        function _getPrototypeOf(o) {
+            return (_getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function(o) {
+                return o.__proto__ || Object.getPrototypeOf(o);
+            })(o);
+        }
+        function _setPrototypeOf(o, p) {
+            return (_setPrototypeOf = Object.setPrototypeOf || function(o, p) {
+                o.__proto__ = p;
+                return o;
+            })(o, p);
+        }
+        function _isNativeReflectConstruct() {
+            if ("undefined" == typeof Reflect || !Reflect.construct) return !1;
+            if (Reflect.construct.sham) return !1;
+            if ("function" == typeof Proxy) return !0;
+            try {
+                Date.prototype.toString.call(Reflect.construct(Date, [], (function() {})));
+                return !0;
+            } catch (e) {
+                return !1;
+            }
+        }
+        function construct_construct(Parent, args, Class) {
+            return (construct_construct = _isNativeReflectConstruct() ? Reflect.construct : function(Parent, args, Class) {
+                var a = [ null ];
+                a.push.apply(a, args);
+                var instance = new (Function.bind.apply(Parent, a));
+                Class && _setPrototypeOf(instance, Class.prototype);
+                return instance;
+            }).apply(null, arguments);
+        }
+        function wrapNativeSuper_wrapNativeSuper(Class) {
+            var _cache = "function" == typeof Map ? new Map : void 0;
+            return (wrapNativeSuper_wrapNativeSuper = function(Class) {
+                if (null === Class || !(fn = Class, -1 !== Function.toString.call(fn).indexOf("[native code]"))) return Class;
+                var fn;
+                if ("function" != typeof Class) throw new TypeError("Super expression must either be null or a function");
+                if (void 0 !== _cache) {
+                    if (_cache.has(Class)) return _cache.get(Class);
+                    _cache.set(Class, Wrapper);
+                }
+                function Wrapper() {
+                    return construct_construct(Class, arguments, _getPrototypeOf(this).constructor);
+                }
+                Wrapper.prototype = Object.create(Class.prototype, {
+                    constructor: {
+                        value: Wrapper,
+                        enumerable: !1,
+                        writable: !0,
+                        configurable: !0
+                    }
+                });
+                return _setPrototypeOf(Wrapper, Class);
+            })(Class);
+        }
         function getFunctionName(fn) {
             return fn.name || fn.__name__ || fn.displayName || "anonymous";
         }
@@ -1499,11 +1562,13 @@
             for (var key in source) source.hasOwnProperty(key) && (obj[key] = source[key]);
             return obj;
         }
-        function util_values(obj) {
+        var util_values = function(obj) {
+            if (Object.values) return Object.values(obj);
             var result = [];
             for (var key in obj) obj.hasOwnProperty(key) && result.push(obj[key]);
             return result;
-        }
+        };
+        var memoizedValues = memoize(util_values);
         function perc(pixels, percentage) {
             return Math.round(pixels * percentage / 100);
         }
@@ -1898,7 +1963,6 @@
             for (var _i6 = 0; _i6 < arr.length; _i6++) result[arr[_i6]] = !0;
             return Object.keys(result);
         }
-        var memoizedValues = memoize(util_values);
         var constHas = function(constant, value) {
             return -1 !== memoizedValues(constant).indexOf(value);
         };
@@ -1916,6 +1980,19 @@
                 }
             };
         }
+        var util_ExtendableError = function(_Error) {
+            _inheritsLoose(ExtendableError, _Error);
+            function ExtendableError(message) {
+                var _this7;
+                (_this7 = _Error.call(this, message) || this).name = _this7.constructor.name;
+                "function" == typeof Error.captureStackTrace ? Error.captureStackTrace(function(self) {
+                    if (void 0 === self) throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+                    return self;
+                }(_this7), _this7.constructor) : _this7.stack = new Error(message).stack;
+                return _this7;
+            }
+            return ExtendableError;
+        }(wrapNativeSuper_wrapNativeSuper(Error));
         var KEY_CODES = {
             ENTER: 13,
             SPACE: 32
@@ -2135,10 +2212,13 @@
                 }), 10);
             }));
         }
-        function PopupOpenError(message) {
-            this.message = message;
-        }
-        PopupOpenError.prototype = Object.create(Error.prototype);
+        var dom_PopupOpenError = function(_ExtendableError) {
+            _inheritsLoose(PopupOpenError, _ExtendableError);
+            function PopupOpenError() {
+                return _ExtendableError.apply(this, arguments) || this;
+            }
+            return PopupOpenError;
+        }(util_ExtendableError);
         function popup(url, options) {
             var width = (options = options || {}).width, height = options.height;
             var top = 0;
@@ -2165,11 +2245,11 @@
             try {
                 win = window.open(url, name, params, !0);
             } catch (err) {
-                throw new PopupOpenError("Can not open popup window - " + (err.stack || err.message));
+                throw new dom_PopupOpenError("Can not open popup window - " + (err.stack || err.message));
             }
             if (isWindowClosed(win)) {
                 var err;
-                throw new PopupOpenError("Can not open popup window - blocked");
+                throw new dom_PopupOpenError("Can not open popup window - blocked");
             }
             window.addEventListener("unload", (function() {
                 return win.close();
