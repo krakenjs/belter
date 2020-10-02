@@ -1,3 +1,4 @@
+
 /* @flow */
 /* eslint max-lines: 0 */
 
@@ -308,7 +309,7 @@ export function awaitKey<T: mixed>(obj : Object, key : string) : ZalgoPromise<T>
                 }
             },
 
-            get() : mixed {
+            get() : T {
                 return value;
             }
         });
@@ -428,15 +429,27 @@ export function extend<T : Object | Function>(obj : T, source : Object) : T {
     return obj;
 }
 
-export function values<T>(obj : { [string] : T }) : $ReadOnlyArray<T> {
+// eslint-disable-next-line no-undef
+type Values = <T>({ [string] : T }) => $ReadOnlyArray<T>;
+
+export const values : Values = (obj) => {
+    if (Object.values) {
+        // $FlowFixMe
+        return Object.values(obj);
+    }
+
     const result = [];
     for (const key in obj) {
         if (obj.hasOwnProperty(key)) {
             result.push(obj[key]);
         }
     }
+
+    // $FlowFixMe
     return result;
-}
+};
+
+export const memoizedValues : Values = memoize(values);
 
 export function perc(pixels : number, percentage : number) : number {
     return Math.round((pixels * percentage) / 100);
@@ -1100,8 +1113,6 @@ export function unique(arr : $ReadOnlyArray<string>) : $ReadOnlyArray<string> {
     return Object.keys(result);
 }
 
-export const memoizedValues = memoize(values);
-
 export const constHas = <X : (string | boolean | number), T : { [string] : X }>(constant : T, value : X) : boolean => {
     return memoizedValues(constant).indexOf(value) !== -1;
 };
@@ -1126,3 +1137,17 @@ export function dedupeErrors<T>(handler : (mixed) => T) : (mixed) => (T | void) 
         return handler(err);
     };
 }
+
+export class ExtendableError extends Error {
+    constructor(message : string) {
+        super(message);
+        // eslint-disable-next-line unicorn/custom-error-definition
+        this.name = this.constructor.name;
+        if (typeof Error.captureStackTrace === 'function') {
+            Error.captureStackTrace(this, this.constructor);
+        } else {
+            this.stack = (new Error(message)).stack;
+        }
+    }
+}
+  

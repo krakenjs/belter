@@ -7,7 +7,7 @@ import { linkFrameWindow, isWindowClosed,
 import { WeakMap } from 'cross-domain-safe-weakmap/src';
 
 import { inlineMemoize, memoize, noop, stringify, capitalizeFirstLetter,
-    once, extend, safeInterval, uniqueID, arrayFrom } from './util';
+    once, extend, safeInterval, uniqueID, arrayFrom, ExtendableError } from './util';
 import { isDevice } from './device';
 import { KEY_CODES, ATTRIBUTES } from './constants';
 import type { CancelableType } from './types';
@@ -38,7 +38,9 @@ export function waitForWindowReady() : ZalgoPromise<void> {
     });
 }
 
-export const waitForDocumentReady = memoize(() : ZalgoPromise<void> => {
+type WaitForDocumentReady = () => ZalgoPromise<void>;
+
+export const waitForDocumentReady : WaitForDocumentReady = memoize(() => {
     return new ZalgoPromise(resolve => {
 
         if (isDocumentReady() || isDocumentInteractive()) {
@@ -403,11 +405,8 @@ export function elementReady(id : ElementRefType) : ZalgoPromise<HTMLElement> {
     });
 }
 
-export function PopupOpenError(message : string) {
-    this.message = message;
-}
-
-PopupOpenError.prototype = Object.create(Error.prototype);
+// eslint-disable-next-line unicorn/custom-error-definition
+export class PopupOpenError extends ExtendableError {}
 
 type PopupOptions = {|
     name? : string,
@@ -1110,7 +1109,9 @@ function inferCurrentScript() : ?HTMLScriptElement {
 // eslint-disable-next-line compat/compat
 let currentScript = typeof document !== 'undefined' ? document.currentScript : null;
 
-export const getCurrentScript = memoize(() : HTMLScriptElement => {
+type GetCurrentScript = () => HTMLScriptElement;
+
+export const getCurrentScript : GetCurrentScript = memoize(() => {
     if (currentScript) {
         return currentScript;
     }
@@ -1126,7 +1127,9 @@ export const getCurrentScript = memoize(() : HTMLScriptElement => {
 
 const currentUID = uniqueID();
 
-export const getCurrentScriptUID = memoize(() : string => {
+type GetCurrentScriptUID = () => string;
+
+export const getCurrentScriptUID : GetCurrentScriptUID = memoize(() => {
     let script;
 
     try {
