@@ -123,9 +123,11 @@ const getDefaultMemoizeOptions = () : MemoizeOptions => {
     return {};
 };
 
+export type Memoized<F> = F & {| reset : () => void |};
+
 const memoizedFunctions = [];
 
-export function memoize<F : Function>(method : F, options? : MemoizeOptions = getDefaultMemoizeOptions()) : F & {| reset : () => void |} {
+export function memoize<F : Function>(method : F, options? : MemoizeOptions = getDefaultMemoizeOptions()) : Memoized<F> {
     const cacheMap = new WeakMap();
 
     const memoizedFunction = function memoizedFunction(...args) : mixed {
