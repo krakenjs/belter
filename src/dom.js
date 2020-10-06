@@ -237,7 +237,7 @@ export function htmlEncode(html : string = '') : string {
 }
 
 export function isBrowser() : boolean {
-    return (typeof window !== 'undefined');
+    return (typeof window !== 'undefined') && window.location !== undefined;
 }
 
 export function querySelectorAll(selector : string, doc : HTMLElement = window.document) : $ReadOnlyArray<HTMLElement> {
