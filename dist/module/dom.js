@@ -212,7 +212,7 @@ export function htmlEncode(html) {
   return html.toString().replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;').replace(/\//g, '&#x2F;');
 }
 export function isBrowser() {
-  return typeof window !== 'undefined';
+  return typeof window !== 'undefined' && window.location !== undefined;
 }
 export function querySelectorAll(selector, doc) {
   if (doc === void 0) {

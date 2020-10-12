@@ -446,6 +446,10 @@ export function min() {
 export function max() {
   return Math.max.apply(Math, arguments);
 }
+export function roundUp(num, nearest) {
+  var remainder = num % nearest;
+  return remainder ? num - remainder + nearest : num;
+}
 export function regexMap(str, regexp, handler) {
   var results = []; // $FlowFixMe
 
