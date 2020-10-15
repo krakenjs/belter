@@ -48,12 +48,12 @@
   "readmeFilename": "README.md",
   "devDependencies": {
     "flow-bin": "^0.135.0",
-    "grumbler-scripts": "^3",
+    "grumbler-scripts": "^3.0.83",
     "mocha": "^4"
   },
   "dependencies": {
     "cross-domain-safe-weakmap": "^1.0.20",
-    "cross-domain-utils": "^2.0.10",
-    "zalgo-promise": "^1.0.28"
+    "cross-domain-utils": "^2.0.34",
+    "zalgo-promise": "^1.0.46"
   }
 }
