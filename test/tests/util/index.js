@@ -7,3 +7,4 @@ import './extend';
 import './serialize';
 import './domainMatches';
 import './identity';
+import './stringifyErrorMessage';
