@@ -419,6 +419,9 @@
         __webpack_require__.d(__webpack_exports__, "max", (function() {
             return max;
         }));
+        __webpack_require__.d(__webpack_exports__, "roundUp", (function() {
+            return roundUp;
+        }));
         __webpack_require__.d(__webpack_exports__, "regexMap", (function() {
             return regexMap;
         }));
@@ -1578,6 +1581,10 @@
         function max() {
             return Math.max.apply(Math, arguments);
         }
+        function roundUp(num, nearest) {
+            var remainder = num % nearest;
+            return remainder ? num - remainder + nearest : num;
+        }
         function regexMap(str, regexp, handler) {
             var results = [];
             str.replace(regexp, (function(item) {
@@ -2120,7 +2127,7 @@
             return html.toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;").replace(/\//g, "&#x2F;");
         }
         function dom_isBrowser() {
-            return "undefined" != typeof window;
+            return "undefined" != typeof window && void 0 !== window.location;
         }
         function querySelectorAll(selector, doc) {
             void 0 === doc && (doc = window.document);

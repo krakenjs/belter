@@ -465,6 +465,13 @@ export function max(...args : $ReadOnlyArray<number>) : number {
     return Math.max(...args);
 }
 
+export function roundUp(num : number, nearest : number) : number {
+    const remainder = num % nearest;
+    return remainder
+        ? (num - remainder) + nearest
+        : num;
+}
+
 export function regexMap<T>(str : string, regexp : RegExp, handler : () => T) : $ReadOnlyArray<T> {
     const results = [];
 
