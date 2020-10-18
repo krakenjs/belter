@@ -13,12 +13,10 @@ describe('experiment', () => {
         delete window.__goku__latest_global__;
     });
     it('should return default value from the namespace', () => {
-        window.__goku__latest_global__ = null;
         const { get } = getGlobalNameSpace({ name: 'goku' });
         const res = get('vegeta', 'testingDatDefaultValue');
         if (res !== 'testingDatDefaultValue') {
             throw new Error(`Expected testingDatDefaultValue, received ${ JSON.stringify(res) }`);
         }
-        delete window.__goku__latest_global__;
     });
 });
