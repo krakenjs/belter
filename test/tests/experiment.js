@@ -19,9 +19,11 @@ describe('experiment', () => {
         }
     });
     it('should call logStart function and NOT call logTreatment function when localStorage is not set', () => {
-        let isCalled;
-        const logTreatment = () => (isCalled = true);
-        const expObj = experiment({ name, logTreatment, sample: 100 });
+        let isCalled = false;
+        const logTreatment = () => {
+            isCalled = true;
+        };
+        const expObj = experiment({ name, logTreatment });
         expObj.logStart();
         expObj.log(name);
         if (isCalled) {
@@ -30,7 +32,9 @@ describe('experiment', () => {
     });
     it('should call logStart function and call logTreatment function when localStorage is set', () => {
         let isCalled;
-        const logTreatment = () => (isCalled = true);
+        const logTreatment = () => {
+            isCalled = true;
+        };
         window.localStorage.setItem('__belter_experiment_storage__', JSON.stringify({
             __session__: {
                 state: {
