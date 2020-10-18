@@ -4,21 +4,31 @@ import { experiment } from '../../src/experiment';
 
 describe('experiment', () => {
     const name = 'potatoLicker';
-    it('should return logComplete function that returns the result of experiment function call', () => {
-        const obj = experiment({ name });
-        const res = obj.logComplete({});
-        if (obj !== res) {
-            throw new Error(`Expected calling logComplete function to equal object returned from experiment function call`);
+    it('should call logComplete function that returns the result of experiment function call', () => {
+        const expObj = experiment({ name });
+        const logCompleteResult = expObj.logComplete({});
+        if (expObj !== logCompleteResult) {
+            throw new Error(`Expected calling logComplete function to equal expObject returned from experiment function call`);
         }
     });
-    it('should return logStart function that returns the result of experiment function call', () => {
-        const obj = experiment({ name });
-        const res = obj.logStart({});
-        if (obj !== res) {
-            throw new Error(`Expected calling logStart function to equal object returned from experiment function call`);
+    it('should call logStart function that returns the result of experiment function call', () => {
+        const expObj = experiment({ name });
+        const logStartResult = expObj.logStart({});
+        if (expObj !== logStartResult) {
+            throw new Error(`Expected calling logStart function to equal expObject returned from experiment function call`);
         }
     });
-    it('should call logTreatment function', () => {
+    it('should call logStart function and NOT call logTreatment function when localStorage is not set', () => {
+        let isCalled;
+        const logTreatment = () => (isCalled = true);
+        const expObj = experiment({ name, logTreatment, sample: 100 });
+        expObj.logStart();
+        expObj.log(name);
+        if (isCalled) {
+            throw new Error(`Expected logTreatment function to have been called`);
+        }
+    });
+    it('should call logStart function and call logTreatment function when localStorage is set', () => {
         let isCalled;
         const logTreatment = () => (isCalled = true);
         window.localStorage.setItem('__belter_experiment_storage__', JSON.stringify({
@@ -28,63 +38,63 @@ describe('experiment', () => {
                 }
             }
         }));
-        const obj = experiment({ name, logTreatment, sample: 100 });
-        obj.logStart();
-        obj.log('potatoLicker');
+        const expObj = experiment({ name, logTreatment, sample: 100 });
+        expObj.logStart();
+        expObj.log(name);
         if (!isCalled) {
             throw new Error(`Expected logTreatment function to have been called`);
         }
     });
     it('should return true when isDisabled is called', () => {
-        const res = experiment({ name });
-        const { isDisabled } = res;
+        const expObj = experiment({ name });
+        const { isDisabled } = expObj;
         const bool = isDisabled();
         if (!bool) {
             throw new Error(`Expected true, received ${ JSON.stringify(bool) }`);
         }
     });
     it('should return false when isDisabled is called with set localStorage', () => {
-        window.localStorage.potatoLicker = 'hi';
-        const res = experiment({ name });
-        const { isDisabled } = res;
+        window.localStorage[name] = 'hi';
+        const expObj = experiment({ name });
+        const { isDisabled } = expObj;
         const bool = isDisabled();
         if (bool) {
             throw new Error(`Expected false, received ${ JSON.stringify(bool) }`);
         }
-        window.localStorage.removeItem('potatoLicker');
+        window.localStorage.removeItem(name);
     });
     it('should return false when isEnabled is called', () => {
-        const res = experiment({ name });
-        const { isEnabled } = res;
+        const expObj = experiment({ name });
+        const { isEnabled } = expObj;
         const bool = isEnabled();
         if (bool) {
             throw new Error(`Expected false, received ${ JSON.stringify(bool) }`);
         }
     });
     it('should return true when isEnabled is called with set localStorage', () => {
-        window.localStorage.potatoLicker = 'hi';
-        const res = experiment({ name });
-        const { isEnabled } = res;
+        window.localStorage[name] = 'hi';
+        const expObj = experiment({ name });
+        const { isEnabled } = expObj;
         const bool = isEnabled();
         if (!bool) {
             throw new Error(`Expected true, received ${ JSON.stringify(bool) }`);
         }
-        window.localStorage.removeItem('potatoLicker');
+        window.localStorage.removeItem(name);
     });
-    it('should return potato_control when getTreatment is called with sample 100', () => {
-        const res = experiment({ name, sample: 100 });
-        const { getTreatment } = res;
-        const hi = getTreatment();
-        if (hi !== 'potatoLicker_control') {
-            throw new Error(`Expected potatoLicker_control, received ${ hi }`);
+    it('should return potatoLicker_control when getTreatment is called with sample 100', () => {
+        const expObj = experiment({ name, sample: 100 });
+        const { getTreatment } = expObj;
+        const getTreatmentResult = getTreatment();
+        if (getTreatmentResult !== 'potatoLicker_control') {
+            throw new Error(`Expected potatoLicker_control, received ${ JSON.stringify(getTreatmentResult) }`);
         }
     });
     it('should return potatoLicker_throttle when getTreatment is called with sample 0', () => {
-        const res = experiment({ name, sample: 0 });
-        const { getTreatment } = res;
-        const hi = getTreatment();
-        if (hi !== 'potatoLicker_throttle') {
-            throw new Error(`Expected potatoLicker_throttle, received ${ hi }`);
+        const expObj = experiment({ name, sample: 0 });
+        const { getTreatment } = expObj;
+        const getTreatmentResult = getTreatment();
+        if (getTreatmentResult !== 'potatoLicker_throttle') {
+            throw new Error(`Expected potatoLicker_throttle, received ${ JSON.stringify(getTreatmentResult) }`);
         }
     });
 });
