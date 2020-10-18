@@ -13,9 +13,8 @@ describe('isDocumentReady cases', () => {
                 return readyState;
             },
 
-            set(newState : string) : string {
+            set(newState : string) {
                 readyState = newState;
-                return newState;
             }
         });
 
