@@ -8,7 +8,7 @@ describe('document interactive cases', () => {
         const result = isDocumentInteractive();
 
         if (result) {
-            throw new Error(`Expected result to be true, got ${ result }`);
+            throw new Error(`Expected result to be true, got ${ String(result) }`);
         }
     });
 
@@ -21,7 +21,7 @@ describe('document interactive cases', () => {
         document.readyState = oldState;
 
         if (!result) {
-            throw new Error(`Expected result to equal true, got ${ result }`);
+            throw new Error(`Expected result to equal true, got ${ String(result) }`);
         }
     });
 });

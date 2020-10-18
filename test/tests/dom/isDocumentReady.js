@@ -22,7 +22,7 @@ describe('isDocumentReady cases', () => {
         document.readyState = oldState;
 
         if (result) {
-            throw new Error(`Expected result to be false, got ${ result }`);
+            throw new Error(`Expected result to be false, got ${ String(result) }`);
         }
     });
 
@@ -30,7 +30,7 @@ describe('isDocumentReady cases', () => {
         const result = isDocumentReady();
 
         if (!result) {
-            throw new Error(`Expected result to be true, got ${ result }`);
+            throw new Error(`Expected result to be true, got ${ String(result) }`);
         }
     });
 });
