@@ -48,6 +48,7 @@ describe('experiment', () => {
         if (!isCalled) {
             throw new Error(`Expected logTreatment function to have been called`);
         }
+        window.localStorage.removeItem('__belter_experiment_storage__');
     });
     it('should return true when isDisabled is called', () => {
         const expObj = experiment({ name });
