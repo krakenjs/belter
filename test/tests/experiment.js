@@ -19,7 +19,7 @@ describe('experiment', () => {
         }
     });
     it('should call logStart function and NOT call logTreatment function when localStorage is not set', () => {
-        let isCalled = false;
+        let isCalled;
         const logTreatment = () => {
             isCalled = true;
         };
