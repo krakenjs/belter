@@ -27,7 +27,7 @@ describe('experiment', () => {
         expObj.logStart();
         expObj.log(name);
         if (isCalled) {
-            throw new Error(`Expected logTreatment function to have been called`);
+            throw new Error(`Expected logTreatment function to not have been called`);
         }
     });
     it('should call logStart function and call logTreatment function when localStorage is set', () => {
