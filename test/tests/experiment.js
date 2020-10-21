@@ -3,6 +3,10 @@
 import { experiment } from '../../src/experiment';
 
 describe('experiment', () => {
+    beforeEach(() => {
+        window.sessionStorage.clear();
+        window.localStorage.clear();
+    });
     const name = 'potatoLicker';
     it('should call logComplete function that returns the result of experiment function call', () => {
         const expObj = experiment({ name });
@@ -26,29 +30,9 @@ describe('experiment', () => {
         const expObj = experiment({ name, logTreatment });
         expObj.logStart();
         expObj.log(name);
-        if (isCalled) {
+        if (!isCalled) {
             throw new Error(`Expected logTreatment function to not have been called`);
         }
-    });
-    it('should call logStart function and call logTreatment function when localStorage is set', () => {
-        let isCalled;
-        const logTreatment = () => {
-            isCalled = true;
-        };
-        window.localStorage.setItem('__belter_experiment_storage__', JSON.stringify({
-            __session__: {
-                state: {
-                    loggedBeacons: [ 'potatoLicker_potatoLicker_control_undefined' ]
-                }
-            }
-        }));
-        const expObj = experiment({ name, logTreatment, sample: 100 });
-        expObj.logStart();
-        expObj.log(name);
-        if (!isCalled) {
-            throw new Error(`Expected logTreatment function to have been called`);
-        }
-        window.localStorage.removeItem('__belter_experiment_storage__');
     });
     it('should return true when isDisabled is called', () => {
         const expObj = experiment({ name });
