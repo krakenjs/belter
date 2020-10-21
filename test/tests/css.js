@@ -228,7 +228,7 @@ describe('Css test cases', () => {
     });
     it('should return an error when given a string dimension', () => {
         try {
-            normalizeDimension('test');
+            normalizeDimension('test', 1);
             throw new Error(`Expected to return an error.`);
         } catch (err) {
             if (err.message !== 'Can not normalize dimension: test') {
