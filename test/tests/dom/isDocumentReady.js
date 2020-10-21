@@ -5,8 +5,8 @@ import { isDocumentReady } from '../../../src/dom';
 describe('isDocumentReady cases', () => {
     const oldState = document.readyState;
   
-    it('should return false when document is not ready', () => {        
-        let readyState = 'loading';
+    it('should return false when document is not ready', () => {
+        document.readyState = 'loading';
         const result = isDocumentReady();
         document.readyState = oldState;
 
