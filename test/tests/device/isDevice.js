@@ -95,7 +95,7 @@ describe('isDevice', () => {
             throw new Error(`Expected true, got ${ JSON.stringify(bool) }`);
         }
     });
-    it('should return true when userAgent is  contains iemobile(case insensitive)', () => {
+    it('should return true when userAgent is contains iemobile(case insensitive)', () => {
         // eslint-disable-next-line compat/compat
         window.navigator.userAgent = 'iemobile';
         const bool = isDevice();
