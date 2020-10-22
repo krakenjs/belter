@@ -2,7 +2,7 @@
 
 import { isAndroid  } from '../../../src/device';
 
-describe('android', () => {
+describe('isAndroid', () => {
     beforeEach(() => {
         // eslint-disable-next-line compat/compat
         window.navigator = {};
