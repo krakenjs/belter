@@ -7,7 +7,7 @@ describe('isFirefoxIOS', () => {
         // eslint-disable-next-line compat/compat
         window.navigator = {};
     });
-    it('should return true when userAgent equals fxios', () => {
+    it('should return true when userAgent contains fxios (case insensitive) ', () => {
         // eslint-disable-next-line compat/compat
         window.navigator.userAgent = 'fxios';
         const bool = isFirefoxIOS();
@@ -15,7 +15,7 @@ describe('isFirefoxIOS', () => {
             throw new Error(`Expected true, got ${ JSON.stringify(bool) }`);
         }
     });
-    it('should return false when userAgent does NOT equal fxios(case insensitive)', () => {
+    it('should return false when userAgent does NOT contain fxios(case insensitive)', () => {
         // eslint-disable-next-line compat/compat
         window.navigator.userAgent = 'firefox potato';
         const bool = isFirefoxIOS();

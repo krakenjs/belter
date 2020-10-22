@@ -2,12 +2,12 @@
 
 import { isAndroid  } from '../../../src/device';
 
-describe('isAndroid', () => {
+describe('android', () => {
     beforeEach(() => {
         // eslint-disable-next-line compat/compat
         window.navigator = {};
     });
-    it('should return true when userAgent equals android', () => {
+    it('should return true when userAgent contains Android', () => {
         // eslint-disable-next-line compat/compat
         window.navigator.userAgent = 'Android';
         const bool = isAndroid();
@@ -15,7 +15,7 @@ describe('isAndroid', () => {
             throw new Error(`Expected true, got ${ JSON.stringify(bool) }`);
         }
     });
-    it('should return false when userAgent does NOT equal Android(case sensitive)', () => {
+    it('should return false when userAgent does NOT contain Android', () => {
         // eslint-disable-next-line compat/compat
         window.navigator.userAgent = 'android';
         const bool = isAndroid();

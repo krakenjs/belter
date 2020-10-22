@@ -7,7 +7,7 @@ describe('isEdgeIOS', () => {
         // eslint-disable-next-line compat/compat
         window.navigator = {};
     });
-    it('should return true when userAgent equals edgios', () => {
+    it('should return true when userAgent equals edgios(case insensitive)', () => {
         // eslint-disable-next-line compat/compat
         window.navigator.userAgent = 'edgios';
         const bool = isEdgeIOS();
@@ -17,7 +17,7 @@ describe('isEdgeIOS', () => {
     });
     it('should return false when userAgent does NOT equal edgios(case insensitive)', () => {
         // eslint-disable-next-line compat/compat
-        window.navigator.userAgent = 'unanimous potato';
+        window.navigator.userAgent = 'edgey potato';
         const bool = isEdgeIOS();
         if (bool) {
             throw new Error(`Expected false, got ${ JSON.stringify(bool) }`);

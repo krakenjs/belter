@@ -7,7 +7,7 @@ describe('isGoogleSearchApp', () => {
         // eslint-disable-next-line compat/compat
         window.navigator = {};
     });
-    it('should return true when userAgent equals GSA', () => {
+    it('should return true when userAgent contain whole word GSA ', () => {
         // eslint-disable-next-line compat/compat
         window.navigator.userAgent = 'GSA';
         const bool = isGoogleSearchApp();
@@ -15,7 +15,7 @@ describe('isGoogleSearchApp', () => {
             throw new Error(`Expected true, got ${ JSON.stringify(bool) }`);
         }
     });
-    it('should return false when userAgent does NOT equal GSA', () => {
+    it('should return false when userAgent does NOT contain whole word GSA', () => {
         // eslint-disable-next-line compat/compat
         window.navigator.userAgent = 'poGSAtato';
         const bool = isGoogleSearchApp();

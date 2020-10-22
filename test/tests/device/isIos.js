@@ -7,7 +7,7 @@ describe('isIos', () => {
         // eslint-disable-next-line compat/compat
         window.navigator = {};
     });
-    it('should return true when userAgent equals iPhone', () => {
+    it('should return true when userAgent contains iPhone', () => {
         // eslint-disable-next-line compat/compat
         window.navigator.userAgent = 'iPhone';
         const bool = isIos();
@@ -15,7 +15,7 @@ describe('isIos', () => {
             throw new Error(`Expected true, got ${ JSON.stringify(bool) }`);
         }
     });
-    it('should return true when userAgent equals iPod', () => {
+    it('should return true when userAgent equals contains iPod', () => {
         // eslint-disable-next-line compat/compat
         window.navigator.userAgent = 'iPod';
         const bool = isIos();
@@ -23,7 +23,7 @@ describe('isIos', () => {
             throw new Error(`Expected true, got ${ JSON.stringify(bool) }`);
         }
     });
-    it('should return true when userAgent equals iPad', () => {
+    it('should return true when userAgent contains iPad', () => {
         // eslint-disable-next-line compat/compat
         window.navigator.userAgent = 'iPad';
         const bool = isIos();

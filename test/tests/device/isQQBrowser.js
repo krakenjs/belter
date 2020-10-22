@@ -7,7 +7,7 @@ describe('isQQBrowser', () => {
         // eslint-disable-next-line compat/compat
         window.navigator = {};
     });
-    it('should return true when userAgent equals QQBrowser', () => {
+    it('should return true when userAgent contains QQBrowser', () => {
         // eslint-disable-next-line compat/compat
         window.navigator.userAgent = 'QQBrowser';
         const bool = isQQBrowser();
@@ -15,7 +15,7 @@ describe('isQQBrowser', () => {
             throw new Error(`Expected true, got ${ JSON.stringify(bool) }`);
         }
     });
-    it('should return false when userAgent does NOT equal QQBrowser', () => {
+    it('should return false when userAgent does NOT contain QQBrowser', () => {
         // eslint-disable-next-line compat/compat
         window.navigator.userAgent = 'QQPotato';
         const bool = isQQBrowser();
