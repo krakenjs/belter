@@ -17,7 +17,7 @@ describe('isOperaMini', () => {
     });
     it('should return false when userAgent does NOT equal `Opera Mini`', () => {
         // eslint-disable-next-line compat/compat
-        window.navigator.userAgent = 'mini potato';
+        window.navigator.userAgent = 'Potato Mini';
         const bool = isOperaMini();
         if (bool) {
             throw new Error(`Expected false, got ${ JSON.stringify(bool) }`);

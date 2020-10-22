@@ -33,7 +33,7 @@ describe('isIos', () => {
     });
     it('should return false when userAgent is NOT an IOS', () => {
         // eslint-disable-next-line compat/compat
-        window.navigator.userAgent = 'fake potato';
+        window.navigator.userAgent = 'iPotato';
         const bool = isIos();
         if (bool) {
             throw new Error(`Expected false, got ${ JSON.stringify(bool) }`);

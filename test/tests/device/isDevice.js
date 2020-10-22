@@ -124,7 +124,7 @@ describe('isDevice', () => {
         window.navigator.userAgent = 'supreme potato';
         const bool = isDevice();
         if (bool) {
-            throw new Error(`Expected true, got ${ JSON.stringify(bool) }`);
+            throw new Error(`Expected false, got ${ JSON.stringify(bool) }`);
         }
     });
 });
