@@ -119,7 +119,7 @@ describe('isDevice', () => {
             throw new Error(`Expected true, got ${ JSON.stringify(bool) }`);
         }
     });
-    it('should return false when userAgent is not a valid Choice', () => {
+    it('should return false when userAgent is not a valid choice', () => {
         // eslint-disable-next-line compat/compat
         window.navigator.userAgent = 'supreme potato';
         const bool = isDevice();
