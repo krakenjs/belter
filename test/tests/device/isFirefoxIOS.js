@@ -7,7 +7,7 @@ describe('isFirefoxIOS', () => {
         // eslint-disable-next-line compat/compat
         window.navigator = {};
     });
-    it('should return true when userAgent contains fxios (case insensitive) ', () => {
+    it('should return true when userAgent contains fxios(case insensitive)', () => {
         // eslint-disable-next-line compat/compat
         window.navigator.userAgent = 'fxios';
         const bool = isFirefoxIOS();

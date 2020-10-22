@@ -7,7 +7,7 @@ describe('isGoogleSearchApp', () => {
         // eslint-disable-next-line compat/compat
         window.navigator = {};
     });
-    it('should return true when userAgent contain whole word GSA ', () => {
+    it('should return true when userAgent contains whole word GSA ', () => {
         // eslint-disable-next-line compat/compat
         window.navigator.userAgent = 'GSA';
         const bool = isGoogleSearchApp();
