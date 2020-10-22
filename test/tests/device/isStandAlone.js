@@ -6,9 +6,10 @@ describe('isStandAlone', () => {
     beforeEach(() => {
         // eslint-disable-next-line compat/compat
         window.navigator = {};
-        window.watchMedia = {};
+        window.matchMedia = () => ({ matches: true });
     });
     it('should return false when window.navigator.standalone is falsy and window.matchMedia().matches returns a falsy value', () => {
+        window.matchMedia = () => ({ matches: false });
         const bool = isStandAlone();
         if (bool) {
             throw new Error(`Expected false, got ${ JSON.stringify(bool) }`);
@@ -25,7 +26,6 @@ describe('isStandAlone', () => {
     it('should return true when navigator.standalone is falsy and window.matchMedia().matches returns a truthy value', () => {
         // eslint-disable-next-line compat/compat
         window.navigator.standalone = false;
-        window.matchMedia = () => ({ matches: true });
         const bool = isStandAlone();
         if (!bool) {
             throw new Error(`Expected true, got ${ JSON.stringify(bool) }`);
