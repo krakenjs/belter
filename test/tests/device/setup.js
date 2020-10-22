@@ -4,13 +4,12 @@
  * Sets up mocking for tests in this directory
  */
 
+const initProperty = {
+    value:    {},
+    writable: true
+};
+
 Object.defineProperties(window, {
-    navigator: {
-        value:    {},
-        writable: true
-    },
-    watchMedia: {
-        value:    {},
-        writable: true
-    }
+    navigator:  initProperty,
+    watchMedia: initProperty
 });
