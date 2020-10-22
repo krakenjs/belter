@@ -8,7 +8,7 @@ describe('getUserAgent', () => {
         window.navigator = {};
     });
     it('should return value of window.navigator.mockUserAgent', () => {
-        const expectedResult = 'incredible potato';
+        const expectedResult = 'mock potato';
         // eslint-disable-next-line compat/compat
         window.navigator.mockUserAgent = expectedResult;
         const mockUserAgent = getUserAgent();
@@ -17,9 +17,9 @@ describe('getUserAgent', () => {
         }
     });
     it('should return value of window.navigator.userAgent', () => {
-        const expectedResult = 'subpar potato';
+        const expectedResult = 'userAgent potato';
         // eslint-disable-next-line compat/compat
-        window.navigator.mockUserAgent = expectedResult;
+        window.navigator.userAgent = expectedResult;
         const userAgent = getUserAgent();
         if (userAgent !== expectedResult) {
             throw new Error(`Expected ${ expectedResult }, got ${ userAgent }`);

@@ -17,7 +17,7 @@ describe('isFirefoxIOS', () => {
     });
     it('should return false when userAgent does NOT equal fxios(case insensitive)', () => {
         // eslint-disable-next-line compat/compat
-        window.navigator.userAgent = 'peerless potato';
+        window.navigator.userAgent = 'firefox potato';
         const bool = isFirefoxIOS();
         if (bool) {
             throw new Error(`Expected false, got ${ JSON.stringify(bool) }`);

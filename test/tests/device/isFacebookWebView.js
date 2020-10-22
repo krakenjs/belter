@@ -25,7 +25,7 @@ describe('isFacebookWebView', () => {
     });
     it('should return false when userAgent does not equal FBAV or FBAN', () => {
         // eslint-disable-next-line compat/compat
-        window.navigator.userAgent = 'erroneous potato';
+        window.navigator.userAgent = 'facebook potato';
         const bool = isFacebookWebView();
         if (bool) {
             throw new Error(`Expected false, got ${ JSON.stringify(bool) }`);
