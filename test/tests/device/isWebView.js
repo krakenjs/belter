@@ -7,7 +7,7 @@ describe('isWebView', () => {
         // eslint-disable-next-line compat/compat
         window.navigator = {};
     });
-    it('should return false when userAgent is inValid', () => {
+    it('should return false when userAgent is invalid', () => {
         // eslint-disable-next-line compat/compat
         window.navigator.userAgent = 'invalid potato';
         const bool = isWebView();
