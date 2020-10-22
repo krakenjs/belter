@@ -15,7 +15,7 @@ describe('isIos', () => {
             throw new Error(`Expected true, got ${ JSON.stringify(bool) }`);
         }
     });
-    it('should return true when userAgent equals contains iPod', () => {
+    it('should return true when userAgent contains iPod', () => {
         // eslint-disable-next-line compat/compat
         window.navigator.userAgent = 'iPod';
         const bool = isIos();
