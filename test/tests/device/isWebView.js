@@ -23,7 +23,7 @@ describe('isWebView', () => {
             throw new Error(`Expected false, got ${ JSON.stringify(bool) }`);
         }
     });
-    it('should return true when userAgent equals wv', () => {
+    it('should return true when userAgent contains whole word wv', () => {
         // eslint-disable-next-line compat/compat
         window.navigator.userAgent = 'wv';
         const bool = isWebView();
