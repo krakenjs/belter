@@ -4,3 +4,4 @@ import './extendUrl';
 import './urlEncode';
 import './isDocumentReady';
 import './isDocumentInteractive';
+import './waitForDocumentReady';
