@@ -9,6 +9,17 @@ describe('waitForDocumentReady cases', () => {
         document.readyState = oldState;
     });
 
+    it('should resolve when document is ready', async () => {
+        try {
+            document.readyState = 'complete';
+            await waitForDocumentReady();
+        } catch (err) {
+            throw new Error(
+                'Expected waitForDocumentReady to resolve when document is ready'
+            );
+        }
+    });
+
     it('should eventully resolve when document is ready', async () => {
         try {
             document.readyState = 'loading';
@@ -17,7 +28,20 @@ describe('waitForDocumentReady cases', () => {
             }, 100);
             await waitForDocumentReady();
         } catch (err) {
-            throw new Error('Expected waitForDocumentReady to resolve');
+            throw new Error(
+                'Expected waitForDocumentReady to eventully resolve when document is ready'
+            );
+        }
+    });
+
+    it('should resolve when document is interactive', async () => {
+        try {
+            document.readyState = 'interactive';
+            await waitForDocumentReady();
+        } catch (err) {
+            throw new Error(
+                'Expected waitForDocumentReady to resolve when document is interactive'
+            );
         }
     });
 
@@ -29,7 +53,9 @@ describe('waitForDocumentReady cases', () => {
             }, 100);
             await waitForDocumentReady();
         } catch (err) {
-            throw new Error('Expected waitForDocumentReady to resolve');
+            throw new Error(
+                'Expected waitForDocumentReady to eventully resolve when document is interactive'
+            );
         }
     });
 });
