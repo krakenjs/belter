@@ -11,3 +11,8 @@ import './isEdgeIOS';
 import './isOperaMini';
 import './isAndroid';
 import './isIos';
+import './isGoogleSearchApp';
+import './isQQBrowser';
+import './isIosWebview';
+import './isAndroidWebview';
+import './isIE';
