@@ -11,7 +11,7 @@ describe('isIosWebview', () => {
             throw new Error(`Expected true, got ${ JSON.stringify(bool) }`);
         }
     });
-    it('should return true when isIos function return true, and Applekit regex test passes', () => {
+    it('should return true when isIos function returns true, and Applekit regex test passes', () => {
         // eslint-disable-next-line compat/compat
         window.navigator.userAgent = '.iPhoneAppleWebKit';
         const bool = isIosWebview();
