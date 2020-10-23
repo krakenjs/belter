@@ -20,7 +20,7 @@ describe('isIE', () => {
             throw new Error(`Expected false, got ${ JSON.stringify(bool) }`);
         }
     });
-    it('should return false when window.document.documentMode is a falsy value, and wwindow.navigator is a falsy value', () => {
+    it('should return false when window.document.documentMode is a falsy value, and window.navigator is a falsy value', () => {
         const bool = isIE();
         if (bool) {
             throw new Error(`Expected false, got ${ JSON.stringify(bool) }`);
