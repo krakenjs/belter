@@ -1,6 +1,6 @@
 /* @flow */
 
-import { isQQBrowser  } from '../../../src/device';
+import { isQQBrowser } from '../../../src/device';
 
 describe('isQQBrowser', () => {
     it('should return true when userAgent contains QQBrowser', () => {

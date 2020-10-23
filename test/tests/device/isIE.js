@@ -1,6 +1,6 @@
 /* @flow */
 
-import { isIE  } from '../../../src/device';
+import { isIE } from '../../../src/device';
 
 describe('isIE', () => {
     beforeEach(() => {

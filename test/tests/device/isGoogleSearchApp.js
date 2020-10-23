@@ -1,6 +1,6 @@
 /* @flow */
 
-import { isGoogleSearchApp  } from '../../../src/device';
+import { isGoogleSearchApp } from '../../../src/device';
 
 describe('isGoogleSearchApp', () => {
     it('should return true when userAgent contains whole word GSA ', () => {

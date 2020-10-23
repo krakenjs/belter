@@ -1,6 +1,6 @@
 /* @flow */
 
-import { isIosWebview  } from '../../../src/device';
+import { isIosWebview } from '../../../src/device';
 
 describe('isIosWebview', () => {
     it('should return true when both isIos and isGoogleSearchApp functions return true', () => {
