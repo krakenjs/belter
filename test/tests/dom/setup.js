@@ -10,6 +10,18 @@
     - Although your tests would pass but not for the reasons you were testing them for
 */
 
+let oldMockReadyState = '';
+
+Object.defineProperty(document, 'mockReadyState', {
+    get() : string {
+        return oldMockReadyState;
+    },
+
+    set(newMockState : string) {
+        oldMockReadyState = newMockState;
+    }
+});
+
 let oldReadyState = document.readyState;
 
 Object.defineProperty(document, 'readyState', {

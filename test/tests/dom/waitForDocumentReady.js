@@ -17,7 +17,7 @@ describe('waitForDocumentReady cases', () => {
             document.mockReadyState = 'loading';
 
             setTimeout(() => {
-                document.mockReadyState = false;
+                document.mockReadyState = '';
                 document.readyState = 'complete';
             }, 20);
 
