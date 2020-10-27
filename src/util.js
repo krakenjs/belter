@@ -112,6 +112,12 @@ function serializeArgs<T>(args : $ReadOnlyArray<T>) : string {
         throw new Error(`Arguments not serializable -- can not be used to memoize`);
     }
 }
+
+export function getEmptyObject() : {||} {
+    // $FlowFixMe
+    return {};
+}
+
 type MemoizeOptions = {|
     name? : string,
     time? : number,
@@ -125,38 +131,59 @@ const getDefaultMemoizeOptions = () : MemoizeOptions => {
 
 export type Memoized<F> = F & {| reset : () => void |};
 
-const memoizedFunctions = [];
+let memoizeGlobalIndex = 0;
+let memoizeGlobalIndexValidFrom = 0;
 
 export function memoize<F : Function>(method : F, options? : MemoizeOptions = getDefaultMemoizeOptions()) : Memoized<F> {
-    const cacheMap = new WeakMap();
+    const { thisNamespace = false, time: cacheTime } = options;
+
+    let simpleCache;
+    let thisCache;
+
+    let memoizeIndex = memoizeGlobalIndex;
+    memoizeGlobalIndex += 1;
 
     const memoizedFunction = function memoizedFunction(...args) : mixed {
-        const cache = cacheMap.getOrSet(options.thisNamespace ? this : method, () => ({}));
-
-        const key : string = serializeArgs(args);
-
-        const cacheTime = options.time;
-        if (cache[key] && cacheTime && (Date.now() - cache[key].time) < cacheTime) {
-            delete cache[key];
+        if (memoizeIndex < memoizeGlobalIndexValidFrom) {
+            simpleCache = null;
+            thisCache = null;
+            memoizeIndex = memoizeGlobalIndex;
+            memoizeGlobalIndex += 1;
         }
 
-        if (cache[key]) {
-            return cache[key].value;
+        let cache;
+
+        if (thisNamespace) {
+            thisCache = thisCache || new WeakMap();
+            cache = thisCache.getOrSet(this, getEmptyObject);
+        } else {
+            cache = simpleCache = simpleCache || {};
+        }
+
+        const cacheKey = serializeArgs(args);
+        let cacheResult = cache[cacheKey];
+
+        if (cacheResult && cacheTime && (Date.now() - cacheResult.time) < cacheTime) {
+            delete cache[cacheKey];
+            cacheResult = null;
+        }
+
+        if (cacheResult) {
+            return cacheResult.value;
         }
 
         const time  = Date.now();
         const value = method.apply(this, arguments);
 
-        cache[key] = { time, value };
+        cache[cacheKey] = { time, value };
 
-        return cache[key].value;
+        return value;
     };
 
     memoizedFunction.reset = () => {
-        cacheMap.delete(options.thisNamespace ? this : method);
+        simpleCache = null;
+        thisCache = null;
     };
-
-    memoizedFunctions.push(memoizedFunction);
 
     // $FlowFixMe
     const result : F = memoizedFunction;
@@ -165,9 +192,7 @@ export function memoize<F : Function>(method : F, options? : MemoizeOptions = ge
 }
 
 memoize.clear = () => {
-    for (const memoizedFunction of memoizedFunctions) {
-        memoizedFunction.reset();
-    }
+    memoizeGlobalIndexValidFrom = memoizeGlobalIndex;
 };
 
 export function promiseIdentity<T : mixed>(item : ZalgoPromise<T> | T) : ZalgoPromise<T> {
