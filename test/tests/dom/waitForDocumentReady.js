@@ -20,7 +20,7 @@ describe('waitForDocumentReady cases', () => {
 
             setTimeout(() => {
                 document.readyState = 'complete';
-            }, 20000);
+            }, 20);
 
             await waitForDocumentReady();
         } catch (err) {
