@@ -21,8 +21,7 @@ describe('waitForDocumentReady cases', () => {
             }, 20);
 
             // the argument 'test' is passed in just to bust the cache, as the function is memoized
-            // eslint-disable-next-line
-      await waitForDocumentReady("test");
+            await waitForDocumentReady('test');
         } catch (err) {
             throw new Error(
                 `Expected waitForDocumentReady to eventully resolve when document is ready: ${ err.message }`
