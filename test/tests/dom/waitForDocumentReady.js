@@ -4,6 +4,7 @@ import { waitForDocumentReady } from '../../../src/dom';
 import { memoize } from '../../../src/util';
 
 describe('waitForDocumentReady cases', () => {
+    beforeEach(memoize.clear);
     it('should resolve when document is interactive', async () => {
         try {
             document.readyState = 'interactive';
@@ -15,12 +16,11 @@ describe('waitForDocumentReady cases', () => {
 
     it('should eventully resolve when document is ready', async () => {
         try {
-            memoize.clear();
             document.readyState = 'loading';
 
             setTimeout(() => {
                 document.readyState = 'complete';
-            }, 20);
+            }, 20000);
 
             await waitForDocumentReady();
         } catch (err) {
