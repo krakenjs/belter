@@ -8,3 +8,5 @@ import './serialize';
 import './domainMatches';
 import './identity';
 import './stringifyErrorMessage';
+import './isRegex';
+import './isDefined';
