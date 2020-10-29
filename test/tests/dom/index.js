@@ -6,3 +6,4 @@ import './isDocumentReady';
 import './isDocumentInteractive';
 import './waitForWindowReady';
 import './waitForDocumentReady';
+import './waitForDocumentBody';
