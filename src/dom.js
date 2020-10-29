@@ -56,7 +56,7 @@ export const waitForDocumentReady : WaitForDocumentReady = memoize(() => {
     });
 });
 
-export function waitForDocumentBody() : ZalgoPromise<HTMLBodyElement> {
+export function waitForDocumentBody() : ZalgoPromise<HTMLBodyElement | null> {
     return ZalgoPromise.try(() => {
         if (document.body) {
             return document.body;
