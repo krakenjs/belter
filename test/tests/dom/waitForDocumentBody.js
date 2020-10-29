@@ -3,7 +3,7 @@
 import { waitForDocumentBody } from '../../../src/dom';
 import { memoize } from '../../../src/util';
 
-describe('waitForDocumentReady cases', () => {
+describe('waitForDocumentBody cases', () => {
     const oldBody = document.body;
     const testBody = document.createElement('body');
 
@@ -16,9 +16,13 @@ describe('waitForDocumentReady cases', () => {
         try {
             document.readyState = 'complete';
             document.body = testBody;
-            await waitForDocumentBody();
+            const result = await waitForDocumentBody();
+
+            if (result !== testBody) {
+                throw new Error('Expected result to be the same as testBody');
+            }
         } catch (err) {
-            throw new Error('Expected waitForDocumentReady to resolve');
+            throw new Error(` ${ err }`);
         }
     });
 
@@ -32,11 +36,13 @@ describe('waitForDocumentReady cases', () => {
                 document.body = testBody;
             }, 20);
 
-            await waitForDocumentBody();
+            const result = await waitForDocumentBody();
+
+            if (result !== testBody) {
+                throw new Error('Expected result to be the same as testBody');
+            }
         } catch (err) {
-            throw new Error(
-                `Expected waitForDocumentReady to eventully resolve when document is ready: ${ err.message }`
-            );
+            throw new Error(` ${ err }`);
         }
     });
 });
