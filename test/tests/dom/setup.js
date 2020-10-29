@@ -20,11 +20,11 @@ Object.defineProperty(document, 'readyState', {
 let oldBody = document.body;
 
 Object.defineProperty(document, 'body', {
-    get() : HTMLElement | null {
+    get() : HTMLBodyElement | null {
         return oldBody;
     },
 
-    set(newBody : HTMLElement | null) {
+    set(newBody : HTMLBodyElement | null) {
         oldBody = newBody;
     }
 });
