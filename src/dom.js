@@ -63,11 +63,7 @@ export function waitForDocumentBody() : ZalgoPromise<HTMLBodyElement> {
         }
 
         return waitForDocumentReady().then(() => {
-            if (document.body) {
-                return document.body;
-            }
-
-            throw new Error('Document ready but document.body not present');
+            return document.body;
         });
     });
 }
