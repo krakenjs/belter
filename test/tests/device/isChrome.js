@@ -1,6 +1,6 @@
 /* @flow */
 
-import { isChrome  } from '../../../src/device';
+import { isChrome } from '../../../src/device';
 
 describe('isChrome', () => {
     it('should return true when userAgent contains Chrome', () => {

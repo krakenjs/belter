@@ -1,6 +1,6 @@
 /* @flow */
 
-import { isSafari  } from '../../../src/device';
+import { isSafari } from '../../../src/device';
 
 describe('isSafari', () => {
     it('should return true when userAgent contains Safari and isChrome function returns false', () => {
