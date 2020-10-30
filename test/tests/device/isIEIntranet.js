@@ -1,6 +1,6 @@
 /* @flow */
 
-import { isIEIntranet  } from '../../../src/device';
+import { isIEIntranet } from '../../../src/device';
 
 describe('isIEIntranet', () => {
     beforeEach(() => {

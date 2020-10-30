@@ -1,6 +1,6 @@
 /* @flow */
 
-import { isIECompHeader  } from '../../../src/device';
+import { isIECompHeader } from '../../../src/device';
 
 describe('isIECompHeader', () => {
     beforeEach(() => {

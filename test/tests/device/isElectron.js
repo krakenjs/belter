@@ -1,6 +1,6 @@
 /* @flow */
 
-import { isElectron  } from '../../../src/device';
+import { isElectron } from '../../../src/device';
 
 describe('isElectron', () => {
     beforeEach(() => {
