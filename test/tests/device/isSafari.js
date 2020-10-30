@@ -19,7 +19,7 @@ describe('isSafari', () => {
             throw new Error(`Expected false, got ${ JSON.stringify(bool) }`);
         }
     });
-    it('should return false when userAgent does not contain Safari', () => {
+    it('should return false when userAgent does NOT contain Safari', () => {
         // eslint-disable-next-line compat/compat
         window.navigator.userAgent = 'potato';
         const bool = isSafari();
