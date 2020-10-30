@@ -16,3 +16,7 @@ import './isQQBrowser';
 import './isIosWebview';
 import './isAndroidWebview';
 import './isIE';
+import './isIECompHeader';
+import './isElectron';
+import './isIEIntranet';
+import './isMacOsCna';
