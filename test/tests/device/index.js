@@ -20,3 +20,6 @@ import './isIECompHeader';
 import './isElectron';
 import './isIEIntranet';
 import './isMacOsCna';
+import './supportsPopups';
+import './isChrome';
+import './isSafari';
