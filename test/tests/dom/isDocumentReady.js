@@ -3,21 +3,10 @@
 import { isDocumentReady } from '../../../src/dom';
 
 describe('isDocumentReady cases', () => {
+    const oldState = document.readyState;
+  
     it('should return false when document is not ready', () => {
-        const oldState = document.readyState;
-        let readyState = 'loading';
-        // since document.readyState is only a readonly property, we are creating a mock property
-        // this allows us to switch readyState between 'loading', 'complete' and 'interactive'
-        Object.defineProperty(document, 'readyState', {
-            get() : string {
-                return readyState;
-            },
-
-            set(newState : string) {
-                readyState = newState;
-            }
-        });
-
+        document.readyState = 'loading';
         const result = isDocumentReady();
         document.readyState = oldState;
 
@@ -27,8 +16,10 @@ describe('isDocumentReady cases', () => {
     });
 
     it('should return true when document is ready', () => {
+        document.readyState = 'complete';
         const result = isDocumentReady();
-
+        document.readyState = oldState;
+      
         if (!result) {
             throw new Error(`Expected result to be true, got ${ String(result) }`);
         }
