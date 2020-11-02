@@ -16,3 +16,15 @@ Object.defineProperty(document, 'readyState', {
         oldReadyState = newState;
     }
 });
+
+let oldBody = document.body;
+
+Object.defineProperty(document, 'body', {
+    get() : HTMLBodyElement | null {
+        return oldBody;
+    },
+
+    set(newBody : HTMLBodyElement | null) {
+        oldBody = newBody;
+    }
+});
