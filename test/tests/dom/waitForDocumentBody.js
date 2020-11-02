@@ -12,6 +12,7 @@ describe('waitForDocumentBody cases', () => {
     afterEach(() => {
         document.body = oldBody;
     });
+
     it('should resolve when body is present', async () => {
         document.readyState = 'complete';
         document.body = testBody;
