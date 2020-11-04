@@ -353,6 +353,9 @@
         __webpack_require__.d(__webpack_exports__, "getObjectID", (function() {
             return getObjectID;
         }));
+        __webpack_require__.d(__webpack_exports__, "getEmptyObject", (function() {
+            return getEmptyObject;
+        }));
         __webpack_require__.d(__webpack_exports__, "memoize", (function() {
             return memoize;
         }));
@@ -1405,36 +1408,51 @@
                 throw new Error("Arguments not serializable -- can not be used to memoize");
             }
         }
-        var memoizedFunctions = [];
+        function getEmptyObject() {
+            return {};
+        }
+        var memoizeGlobalIndex = 0;
+        var memoizeGlobalIndexValidFrom = 0;
         function memoize(method, options) {
-            var _this = this;
             void 0 === options && (options = {});
-            var cacheMap = new weakmap_CrossDomainSafeWeakMap;
+            var _options$thisNamespac = options.thisNamespace, thisNamespace = void 0 !== _options$thisNamespac && _options$thisNamespac, cacheTime = options.time;
+            var simpleCache;
+            var thisCache;
+            var memoizeIndex = memoizeGlobalIndex;
+            memoizeGlobalIndex += 1;
             var memoizedFunction = function() {
                 for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) args[_key] = arguments[_key];
-                var cache = cacheMap.getOrSet(options.thisNamespace ? this : method, (function() {
-                    return {};
-                }));
-                var key = serializeArgs(args);
-                var cacheTime = options.time;
-                cache[key] && cacheTime && Date.now() - cache[key].time < cacheTime && delete cache[key];
-                if (cache[key]) return cache[key].value;
+                if (memoizeIndex < memoizeGlobalIndexValidFrom) {
+                    simpleCache = null;
+                    thisCache = null;
+                    memoizeIndex = memoizeGlobalIndex;
+                    memoizeGlobalIndex += 1;
+                }
+                var cache;
+                cache = thisNamespace ? (thisCache = thisCache || new weakmap_CrossDomainSafeWeakMap).getOrSet(this, getEmptyObject) : simpleCache = simpleCache || {};
+                var cacheKey = serializeArgs(args);
+                var cacheResult = cache[cacheKey];
+                if (cacheResult && cacheTime && Date.now() - cacheResult.time < cacheTime) {
+                    delete cache[cacheKey];
+                    cacheResult = null;
+                }
+                if (cacheResult) return cacheResult.value;
                 var time = Date.now();
                 var value = method.apply(this, arguments);
-                cache[key] = {
+                cache[cacheKey] = {
                     time: time,
                     value: value
                 };
-                return cache[key].value;
+                return value;
             };
             memoizedFunction.reset = function() {
-                cacheMap.delete(options.thisNamespace ? _this : method);
+                simpleCache = null;
+                thisCache = null;
             };
-            memoizedFunctions.push(memoizedFunction);
             return setFunctionName(memoizedFunction, (options.name || getFunctionName(method)) + "::memoized");
         }
         memoize.clear = function() {
-            for (var _i2 = 0; _i2 < memoizedFunctions.length; _i2++) memoizedFunctions[_i2].reset();
+            memoizeGlobalIndexValidFrom = memoizeGlobalIndex;
         };
         function promiseIdentity(item) {
             return promise_ZalgoPromise.resolve(item);
@@ -1442,12 +1460,12 @@
         function memoizePromise(method) {
             var cache = {};
             function memoizedPromiseFunction() {
-                var _arguments = arguments, _this2 = this;
+                var _arguments = arguments, _this = this;
                 for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) args[_key2] = arguments[_key2];
                 var key = serializeArgs(args);
                 if (cache.hasOwnProperty(key)) return cache[key];
                 cache[key] = promise_ZalgoPromise.try((function() {
-                    return method.apply(_this2, _arguments);
+                    return method.apply(_this, _arguments);
                 })).finally((function() {
                     delete cache[key];
                 }));
@@ -1548,13 +1566,13 @@
         function patchMethod(obj, name, handler) {
             var original = obj[name];
             obj[name] = function() {
-                var _arguments2 = arguments, _this3 = this;
+                var _arguments2 = arguments, _this2 = this;
                 return handler({
                     context: this,
                     args: [].slice.call(arguments),
                     original: original,
                     callOriginal: function() {
-                        return original.apply(_this3, _arguments2);
+                        return original.apply(_this2, _arguments2);
                     }
                 });
             };
@@ -1715,13 +1733,13 @@
                     var handlerList = handlers[eventName];
                     var promises = [];
                     if (handlerList) {
-                        var _loop = function(_i4) {
-                            var handler = handlerList[_i4];
+                        var _loop = function(_i2) {
+                            var handler = handlerList[_i2];
                             promises.push(promise_ZalgoPromise.try((function() {
                                 return handler.apply(void 0, args);
                             })));
                         };
-                        for (var _i4 = 0; _i4 < handlerList.length; _i4++) _loop(_i4);
+                        for (var _i2 = 0; _i2 < handlerList.length; _i2++) _loop(_i2);
                     }
                     return promise_ZalgoPromise.all(promises).then(src_util_noop);
                 },
@@ -1881,10 +1899,10 @@
             void 0 === time && (time = 100);
             var timeout;
             return setFunctionName((function() {
-                var _arguments3 = arguments, _this4 = this;
+                var _arguments3 = arguments, _this3 = this;
                 clearTimeout(timeout);
                 timeout = setTimeout((function() {
-                    return method.apply(_this4, _arguments3);
+                    return method.apply(_this3, _arguments3);
                 }), time);
             }), getFunctionName(method) + "::debounced");
         }
@@ -1894,18 +1912,18 @@
         var util_weakMapMemoize = function(method) {
             var weakmap = new weakmap_CrossDomainSafeWeakMap;
             return function(arg) {
-                var _this5 = this;
+                var _this4 = this;
                 return weakmap.getOrSet(arg, (function() {
-                    return method.call(_this5, arg);
+                    return method.call(_this4, arg);
                 }));
             };
         };
         var util_weakMapMemoizePromise = function(method) {
             var weakmap = new weakmap_CrossDomainSafeWeakMap;
             return function(arg) {
-                var _this6 = this;
+                var _this5 = this;
                 return weakmap.getOrSet(arg, (function() {
-                    return method.call(_this6, arg).finally((function() {
+                    return method.call(_this5, arg).finally((function() {
                         weakmap.delete(arg);
                     }));
                 }));
@@ -1967,7 +1985,7 @@
         }
         function unique(arr) {
             var result = {};
-            for (var _i6 = 0; _i6 < arr.length; _i6++) result[arr[_i6]] = !0;
+            for (var _i4 = 0; _i4 < arr.length; _i4++) result[arr[_i4]] = !0;
             return Object.keys(result);
         }
         var constHas = function(constant, value) {
@@ -1990,13 +2008,13 @@
         var util_ExtendableError = function(_Error) {
             _inheritsLoose(ExtendableError, _Error);
             function ExtendableError(message) {
-                var _this7;
-                (_this7 = _Error.call(this, message) || this).name = _this7.constructor.name;
+                var _this6;
+                (_this6 = _Error.call(this, message) || this).name = _this6.constructor.name;
                 "function" == typeof Error.captureStackTrace ? Error.captureStackTrace(function(self) {
                     if (void 0 === self) throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
                     return self;
-                }(_this7), _this7.constructor) : _this7.stack = new Error(message).stack;
-                return _this7;
+                }(_this6), _this6.constructor) : _this6.stack = new Error(message).stack;
+                return _this6;
             }
             return ExtendableError;
         }(wrapNativeSuper_wrapNativeSuper(Error));
@@ -2625,8 +2643,9 @@
             }
             var uid = script.getAttribute(ATTRIBUTES.UID);
             if (uid && "string" == typeof uid) return uid;
+            if ((uid = script.getAttribute(ATTRIBUTES.UID + "-auto")) && "string" == typeof uid) return uid;
             uid = uniqueID();
-            script.setAttribute(ATTRIBUTES.UID, uid);
+            script.setAttribute(ATTRIBUTES.UID + "-auto", uid);
             return uid;
         }));
         function getStorage(_ref) {

@@ -1060,7 +1060,13 @@ export var getCurrentScriptUID = memoize(function () {
     return uid;
   }
 
+  uid = script.getAttribute(ATTRIBUTES.UID + "-auto");
+
+  if (uid && typeof uid === 'string') {
+    return uid;
+  }
+
   uid = uniqueID();
-  script.setAttribute(ATTRIBUTES.UID, uid);
+  script.setAttribute(ATTRIBUTES.UID + "-auto", uid);
   return uid;
 });

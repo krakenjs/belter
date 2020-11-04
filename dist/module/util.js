@@ -100,64 +100,86 @@ function serializeArgs(args) {
   }
 }
 
+export function getEmptyObject() {
+  // $FlowFixMe
+  return {};
+}
+
 var getDefaultMemoizeOptions = function getDefaultMemoizeOptions() {
   // $FlowFixMe
   return {};
 };
 
-var memoizedFunctions = [];
+var memoizeGlobalIndex = 0;
+var memoizeGlobalIndexValidFrom = 0;
 export function memoize(method, options) {
-  var _this = this;
-
   if (options === void 0) {
     options = getDefaultMemoizeOptions();
   }
 
-  var cacheMap = new WeakMap();
+  var _options = options,
+      _options$thisNamespac = _options.thisNamespace,
+      thisNamespace = _options$thisNamespac === void 0 ? false : _options$thisNamespac,
+      cacheTime = _options.time;
+  var simpleCache;
+  var thisCache;
+  var memoizeIndex = memoizeGlobalIndex;
+  memoizeGlobalIndex += 1;
 
   var memoizedFunction = function memoizedFunction() {
     for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
 
-    var cache = cacheMap.getOrSet(options.thisNamespace ? this : method, function () {
-      return {};
-    });
-    var key = serializeArgs(args);
-    var cacheTime = options.time;
-
-    if (cache[key] && cacheTime && Date.now() - cache[key].time < cacheTime) {
-      delete cache[key];
+    if (memoizeIndex < memoizeGlobalIndexValidFrom) {
+      simpleCache = null;
+      thisCache = null;
+      memoizeIndex = memoizeGlobalIndex;
+      memoizeGlobalIndex += 1;
     }
 
-    if (cache[key]) {
-      return cache[key].value;
+    var cache;
+
+    if (thisNamespace) {
+      thisCache = thisCache || new WeakMap();
+      cache = thisCache.getOrSet(this, getEmptyObject);
+    } else {
+      cache = simpleCache = simpleCache || {};
+    }
+
+    var cacheKey = serializeArgs(args);
+    var cacheResult = cache[cacheKey];
+
+    if (cacheResult && cacheTime && Date.now() - cacheResult.time < cacheTime) {
+      delete cache[cacheKey];
+      cacheResult = null;
+    }
+
+    if (cacheResult) {
+      return cacheResult.value;
     }
 
     var time = Date.now();
     var value = method.apply(this, arguments);
-    cache[key] = {
+    cache[cacheKey] = {
       time: time,
       value: value
     };
-    return cache[key].value;
+    return value;
   };
 
   memoizedFunction.reset = function () {
-    cacheMap.delete(options.thisNamespace ? _this : method);
-  };
+    simpleCache = null;
+    thisCache = null;
+  }; // $FlowFixMe
 
-  memoizedFunctions.push(memoizedFunction); // $FlowFixMe
 
   var result = memoizedFunction;
   return setFunctionName(result, (options.name || getFunctionName(method)) + "::memoized");
 }
 
 memoize.clear = function () {
-  for (var _i2 = 0; _i2 < memoizedFunctions.length; _i2++) {
-    var memoizedFunction = memoizedFunctions[_i2];
-    memoizedFunction.reset();
-  }
+  memoizeGlobalIndexValidFrom = memoizeGlobalIndex;
 };
 
 export function promiseIdentity(item) {
@@ -170,7 +192,7 @@ export function memoizePromise(method) {
 
   function memoizedPromiseFunction() {
     var _arguments = arguments,
-        _this2 = this;
+        _this = this;
 
     for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
       args[_key2] = arguments[_key2];
@@ -183,7 +205,7 @@ export function memoizePromise(method) {
     }
 
     cache[key] = ZalgoPromise.try(function () {
-      return method.apply(_this2, _arguments);
+      return method.apply(_this, _arguments);
     }).finally(function () {
       delete cache[key];
     });
@@ -389,14 +411,14 @@ export function patchMethod(obj, name, handler) {
 
   obj[name] = function patchedMethod() {
     var _arguments2 = arguments,
-        _this3 = this;
+        _this2 = this;
 
     return handler({
       context: this,
       args: Array.prototype.slice.call(arguments),
       original: original,
       callOriginal: function callOriginal() {
-        return original.apply(_this3, _arguments2);
+        return original.apply(_this2, _arguments2);
       }
     });
   };
@@ -658,15 +680,15 @@ export function eventEmitter() {
       var promises = [];
 
       if (handlerList) {
-        var _loop = function _loop(_i4) {
-          var handler = handlerList[_i4];
+        var _loop = function _loop(_i2) {
+          var handler = handlerList[_i2];
           promises.push(ZalgoPromise.try(function () {
             return handler.apply(void 0, args);
           }));
         };
 
-        for (var _i4 = 0; _i4 < handlerList.length; _i4++) {
-          _loop(_i4);
+        for (var _i2 = 0; _i2 < handlerList.length; _i2++) {
+          _loop(_i2);
         }
       }
 
@@ -938,11 +960,11 @@ export function debounce(method, time) {
 
   var debounceWrapper = function debounceWrapper() {
     var _arguments3 = arguments,
-        _this4 = this;
+        _this3 = this;
 
     clearTimeout(timeout);
     timeout = setTimeout(function () {
-      return method.apply(_this4, _arguments3);
+      return method.apply(_this3, _arguments3);
     }, time);
   };
 
@@ -956,10 +978,10 @@ export var weakMapMemoize = function weakMapMemoize(method) {
   var weakmap = new WeakMap(); // eslint-disable-next-line flowtype/no-weak-types
 
   return function weakmapMemoized(arg) {
-    var _this5 = this;
+    var _this4 = this;
 
     return weakmap.getOrSet(arg, function () {
-      return method.call(_this5, arg);
+      return method.call(_this4, arg);
     });
   };
 };
@@ -968,10 +990,10 @@ export var weakMapMemoizePromise = function weakMapMemoizePromise(method) {
   var weakmap = new WeakMap(); // eslint-disable-next-line flowtype/no-weak-types
 
   return function weakmapMemoizedPromise(arg) {
-    var _this6 = this;
+    var _this5 = this;
 
     return weakmap.getOrSet(arg, function () {
-      return method.call(_this6, arg).finally(function () {
+      return method.call(_this5, arg).finally(function () {
         weakmap.delete(arg);
       });
     });
@@ -1054,8 +1076,8 @@ export function assertExists(name, thing) {
 export function unique(arr) {
   var result = {};
 
-  for (var _i6 = 0; _i6 < arr.length; _i6++) {
-    var item = arr[_i6];
+  for (var _i4 = 0; _i4 < arr.length; _i4++) {
+    var item = arr[_i4];
     result[item] = true;
   }
 
@@ -1087,19 +1109,19 @@ export var ExtendableError = /*#__PURE__*/function (_Error) {
   _inheritsLoose(ExtendableError, _Error);
 
   function ExtendableError(message) {
-    var _this7;
+    var _this6;
 
-    _this7 = _Error.call(this, message) || this; // eslint-disable-next-line unicorn/custom-error-definition
+    _this6 = _Error.call(this, message) || this; // eslint-disable-next-line unicorn/custom-error-definition
 
-    _this7.name = _this7.constructor.name;
+    _this6.name = _this6.constructor.name;
 
     if (typeof Error.captureStackTrace === 'function') {
-      Error.captureStackTrace(_assertThisInitialized(_this7), _this7.constructor);
+      Error.captureStackTrace(_assertThisInitialized(_this6), _this6.constructor);
     } else {
-      _this7.stack = new Error(message).stack;
+      _this6.stack = new Error(message).stack;
     }
 
-    return _this7;
+    return _this6;
   }
 
   return ExtendableError;
