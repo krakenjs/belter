@@ -2,7 +2,7 @@
 /* eslint max-lines: off */
 
 import { ZalgoPromise } from 'zalgo-promise/src';
-import { linkFrameWindow, isWindowClosed,
+import { linkFrameWindow, isWindowClosed, assertSameDomain,
     type SameDomainWindowType, type CrossDomainWindowType } from 'cross-domain-utils/src';
 import { WeakMap } from 'cross-domain-safe-weakmap/src';
 
@@ -878,7 +878,7 @@ export function removeClass(element : HTMLElement, name : string) {
 }
 
 export function isElementClosed(el : HTMLElement) : boolean {
-    if (!el || !el.parentNode) {
+    if (!el || !el.parentNode || !el.ownerDocument || !el.ownerDocument.documentElement || !el.ownerDocument.documentElement.contains(el)) {
         return true;
     }
     return false;
@@ -887,26 +887,81 @@ export function isElementClosed(el : HTMLElement) : boolean {
 export function watchElementForClose(element : HTMLElement, handler : () => mixed) : CancelableType {
     handler = once(handler);
 
+    let cancelled = false;
+    const mutationObservers = [];
+    // eslint-disable-next-line prefer-const
     let interval;
+    // eslint-disable-next-line prefer-const
+    let sacrificialFrame;
+    let sacrificialFrameWin;
 
-    if (isElementClosed(element)) {
-        handler();
-    } else {
-        interval = safeInterval(() => {
-            if (isElementClosed(element)) {
-                interval.cancel();
-                handler();
-            }
-        }, 50);
-    }
-
-    return {
-        cancel() {
-            if (interval) {
-                interval.cancel();
-            }
+    const cancel = () => {
+        cancelled = true;
+        for (const observer of mutationObservers) {
+            observer.disconnect();
+        }
+        if (interval) {
+            interval.cancel();
+        }
+        if (sacrificialFrameWin) {
+            // eslint-disable-next-line no-use-before-define
+            sacrificialFrameWin.removeEventListener('unload', elementClosed);
+        }
+        if (sacrificialFrame) {
+            destroyElement(sacrificialFrame);
         }
     };
+
+    const elementClosed = () => {
+        if (!cancelled) {
+            handler();
+            cancel();
+        }
+    };
+
+    if (isElementClosed(element)) {
+        elementClosed();
+        return { cancel };
+    }
+
+    // Strategy 1: Mutation observer
+
+    if (window.MutationObserver) {
+        let mutationElement = element.parentElement;
+        while (mutationElement) {
+            const mutationObserver = new window.MutationObserver(() => {
+                if (isElementClosed(element)) {
+                    elementClosed();
+                }
+            });
+
+            mutationObserver.observe(mutationElement, { childList: true });
+            mutationObservers.push(mutationObserver);
+            mutationElement = mutationElement.parentElement;
+        }
+    }
+
+    // Strategy 2: Sacrificial iframe
+
+    sacrificialFrame = document.createElement('iframe');
+    sacrificialFrame.setAttribute('name', `__detect_close_${ uniqueID() }__`);
+    sacrificialFrame.style.display = 'none';
+    awaitFrameWindow(sacrificialFrame).then(frameWin => {
+        sacrificialFrameWin = assertSameDomain(frameWin);
+        sacrificialFrameWin.addEventListener('unload', elementClosed);
+    });
+    element.appendChild(sacrificialFrame);
+
+    // Strategy 3: Poller
+
+    const check = () => {
+        if (isElementClosed(element)) {
+            elementClosed();
+        }
+    };
+    interval = safeInterval(check, 1000);
+
+    return { cancel };
 }
 
 export function fixScripts(el : HTMLElement, doc : Document = window.document) {
