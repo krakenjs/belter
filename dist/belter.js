@@ -1050,6 +1050,30 @@
             var domain = getActualDomain(win);
             return domain && win.mockDomain && 0 === win.mockDomain.indexOf("mock:") ? win.mockDomain : domain;
         }
+        function isSameDomain(win) {
+            if (!function(win) {
+                try {
+                    if (win === window) return !0;
+                } catch (err) {}
+                try {
+                    var desc = Object.getOwnPropertyDescriptor(win, "location");
+                    if (desc && !1 === desc.enumerable) return !1;
+                } catch (err) {}
+                try {
+                    if (isAboutProtocol(win) && canReadFromWindow()) return !0;
+                } catch (err) {}
+                try {
+                    if (getActualDomain(win) === getActualDomain(window)) return !0;
+                } catch (err) {}
+                return !1;
+            }(win)) return !1;
+            try {
+                if (win === window) return !0;
+                if (isAboutProtocol(win) && canReadFromWindow()) return !0;
+                if (getDomain(window) === getDomain(win)) return !0;
+            } catch (err) {}
+            return !1;
+        }
         var iframeWindows = [];
         var iframeFrames = [];
         function isWindowClosed(win, allowMock) {
@@ -1069,30 +1093,7 @@
             } catch (err) {
                 return !err || err.message !== IE_WIN_ACCESS_ERROR;
             }
-            if (allowMock && function(win) {
-                if (!function(win) {
-                    try {
-                        if (win === window) return !0;
-                    } catch (err) {}
-                    try {
-                        var desc = Object.getOwnPropertyDescriptor(win, "location");
-                        if (desc && !1 === desc.enumerable) return !1;
-                    } catch (err) {}
-                    try {
-                        if (isAboutProtocol(win) && canReadFromWindow()) return !0;
-                    } catch (err) {}
-                    try {
-                        if (getActualDomain(win) === getActualDomain(window)) return !0;
-                    } catch (err) {}
-                    return !1;
-                }(win)) return !1;
-                try {
-                    if (win === window) return !0;
-                    if (isAboutProtocol(win) && canReadFromWindow()) return !0;
-                    if (getDomain(window) === getDomain(win)) return !0;
-                } catch (err) {}
-                return !1;
-            }(win)) try {
+            if (allowMock && isSameDomain(win)) try {
                 if (win.mockclosed) return !0;
             } catch (err) {}
             try {
@@ -2486,27 +2487,67 @@
             element.classList.remove(name);
         }
         function isElementClosed(el) {
-            return !el || !el.parentNode;
+            return !(el && el.parentNode && el.ownerDocument && el.ownerDocument.documentElement && el.ownerDocument.documentElement.contains(el));
         }
         function watchElementForClose(element, handler) {
             handler = once(handler);
+            var cancelled = !1;
+            var mutationObservers = [];
             var interval;
-            isElementClosed(element) ? handler() : interval = safeInterval((function() {
-                if (isElementClosed(element)) {
-                    interval.cancel();
+            var sacrificialFrame;
+            var sacrificialFrameWin;
+            var cancel = function() {
+                cancelled = !0;
+                for (var _i18 = 0; _i18 < mutationObservers.length; _i18++) mutationObservers[_i18].disconnect();
+                interval && interval.cancel();
+                sacrificialFrameWin && sacrificialFrameWin.removeEventListener("unload", elementClosed);
+                sacrificialFrame && destroyElement(sacrificialFrame);
+            };
+            var elementClosed = function() {
+                if (!cancelled) {
                     handler();
+                    cancel();
                 }
-            }), 50);
+            };
+            if (isElementClosed(element)) {
+                elementClosed();
+                return {
+                    cancel: cancel
+                };
+            }
+            if (window.MutationObserver) {
+                var mutationElement = element.parentElement;
+                for (;mutationElement; ) {
+                    var mutationObserver = new window.MutationObserver((function() {
+                        isElementClosed(element) && elementClosed();
+                    }));
+                    mutationObserver.observe(mutationElement, {
+                        childList: !0
+                    });
+                    mutationObservers.push(mutationObserver);
+                    mutationElement = mutationElement.parentElement;
+                }
+            }
+            (sacrificialFrame = document.createElement("iframe")).setAttribute("name", "__detect_close_" + uniqueID() + "__");
+            sacrificialFrame.style.display = "none";
+            awaitFrameWindow(sacrificialFrame).then((function(frameWin) {
+                (sacrificialFrameWin = function(win) {
+                    if (!isSameDomain(win)) throw new Error("Expected window to be same domain");
+                    return win;
+                }(frameWin)).addEventListener("unload", elementClosed);
+            }));
+            element.appendChild(sacrificialFrame);
+            interval = safeInterval((function() {
+                isElementClosed(element) && elementClosed();
+            }), 1e3);
             return {
-                cancel: function() {
-                    interval && interval.cancel();
-                }
+                cancel: cancel
             };
         }
         function fixScripts(el, doc) {
             void 0 === doc && (doc = window.document);
-            for (var _i18 = 0, _querySelectorAll2 = querySelectorAll("script", el); _i18 < _querySelectorAll2.length; _i18++) {
-                var script = _querySelectorAll2[_i18];
+            for (var _i20 = 0, _querySelectorAll2 = querySelectorAll("script", el); _i20 < _querySelectorAll2.length; _i20++) {
+                var script = _querySelectorAll2[_i20];
                 var parentNode = script.parentNode;
                 if (parentNode) {
                     var newScript = doc.createElement("script");
@@ -2625,8 +2666,8 @@
                     var stackDetails = /.*at [^(]*\((.*):(.+):(.+)\)$/gi.exec(stack);
                     var scriptLocation = stackDetails && stackDetails[1];
                     if (!scriptLocation) return;
-                    for (var _i20 = 0, _Array$prototype$slic2 = [].slice.call(document.getElementsByTagName("script")).reverse(); _i20 < _Array$prototype$slic2.length; _i20++) {
-                        var script = _Array$prototype$slic2[_i20];
+                    for (var _i22 = 0, _Array$prototype$slic2 = [].slice.call(document.getElementsByTagName("script")).reverse(); _i22 < _Array$prototype$slic2.length; _i22++) {
+                        var script = _Array$prototype$slic2[_i22];
                         if (script.src && script.src === scriptLocation) return script;
                     }
                 } catch (err) {}

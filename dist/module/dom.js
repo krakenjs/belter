@@ -3,7 +3,7 @@ import _extends from "@babel/runtime/helpers/esm/extends";
 
 /* eslint max-lines: off */
 import { ZalgoPromise } from 'zalgo-promise/src';
-import { linkFrameWindow, isWindowClosed } from 'cross-domain-utils/src';
+import { linkFrameWindow, isWindowClosed, assertSameDomain } from 'cross-domain-utils/src';
 import { WeakMap } from 'cross-domain-safe-weakmap/src';
 import { inlineMemoize, memoize, noop, stringify, capitalizeFirstLetter, once, extend, safeInterval, uniqueID, arrayFrom, ExtendableError } from './util';
 import { isDevice } from './device';
@@ -805,7 +805,7 @@ export function removeClass(element, name) {
   element.classList.remove(name);
 }
 export function isElementClosed(el) {
-  if (!el || !el.parentNode) {
+  if (!el || !el.parentNode || !el.ownerDocument || !el.ownerDocument.documentElement || !el.ownerDocument.documentElement.contains(el)) {
     return true;
   }
 
@@ -813,25 +813,87 @@ export function isElementClosed(el) {
 }
 export function watchElementForClose(element, handler) {
   handler = once(handler);
-  var interval;
+  var cancelled = false;
+  var mutationObservers = []; // eslint-disable-next-line prefer-const
+
+  var interval; // eslint-disable-next-line prefer-const
+
+  var sacrificialFrame;
+  var sacrificialFrameWin;
+
+  var cancel = function cancel() {
+    cancelled = true;
+
+    for (var _i18 = 0; _i18 < mutationObservers.length; _i18++) {
+      var observer = mutationObservers[_i18];
+      observer.disconnect();
+    }
+
+    if (interval) {
+      interval.cancel();
+    }
+
+    if (sacrificialFrameWin) {
+      // eslint-disable-next-line no-use-before-define
+      sacrificialFrameWin.removeEventListener('unload', elementClosed);
+    }
+
+    if (sacrificialFrame) {
+      destroyElement(sacrificialFrame);
+    }
+  };
+
+  var elementClosed = function elementClosed() {
+    if (!cancelled) {
+      handler();
+      cancel();
+    }
+  };
 
   if (isElementClosed(element)) {
-    handler();
-  } else {
-    interval = safeInterval(function () {
-      if (isElementClosed(element)) {
-        interval.cancel();
-        handler();
-      }
-    }, 50);
-  }
+    elementClosed();
+    return {
+      cancel: cancel
+    };
+  } // Strategy 1: Mutation observer
 
-  return {
-    cancel: function cancel() {
-      if (interval) {
-        interval.cancel();
-      }
+
+  if (window.MutationObserver) {
+    var mutationElement = element.parentElement;
+
+    while (mutationElement) {
+      var mutationObserver = new window.MutationObserver(function () {
+        if (isElementClosed(element)) {
+          elementClosed();
+        }
+      });
+      mutationObserver.observe(mutationElement, {
+        childList: true
+      });
+      mutationObservers.push(mutationObserver);
+      mutationElement = mutationElement.parentElement;
     }
+  } // Strategy 2: Sacrificial iframe
+
+
+  sacrificialFrame = document.createElement('iframe');
+  sacrificialFrame.setAttribute('name', "__detect_close_" + uniqueID() + "__");
+  sacrificialFrame.style.display = 'none';
+  awaitFrameWindow(sacrificialFrame).then(function (frameWin) {
+    sacrificialFrameWin = assertSameDomain(frameWin);
+    sacrificialFrameWin.addEventListener('unload', elementClosed);
+  });
+  element.appendChild(sacrificialFrame); // Strategy 3: Poller
+
+  var check = function check() {
+    if (isElementClosed(element)) {
+      elementClosed();
+    }
+  };
+
+  interval = safeInterval(check, 1000);
+  return {
+    cancel: cancel
   };
 }
 export function fixScripts(el, doc) {
@@ -839,8 +901,8 @@ export function fixScripts(el, doc) {
     doc = window.document;
   }
 
-  for (var _i18 = 0, _querySelectorAll2 = querySelectorAll('script', el); _i18 < _querySelectorAll2.length; _i18++) {
-    var script = _querySelectorAll2[_i18];
+  for (var _i20 = 0, _querySelectorAll2 = querySelectorAll('script', el); _i20 < _querySelectorAll2.length; _i20++) {
+    var script = _querySelectorAll2[_i20];
     var parentNode = script.parentNode;
 
     if (!parentNode) {
@@ -1018,8 +1080,8 @@ function inferCurrentScript() {
       return;
     }
 
-    for (var _i20 = 0, _Array$prototype$slic2 = Array.prototype.slice.call(document.getElementsByTagName('script')).reverse(); _i20 < _Array$prototype$slic2.length; _i20++) {
-      var script = _Array$prototype$slic2[_i20];
+    for (var _i22 = 0, _Array$prototype$slic2 = Array.prototype.slice.call(document.getElementsByTagName('script')).reverse(); _i22 < _Array$prototype$slic2.length; _i22++) {
+      var script = _Array$prototype$slic2[_i22];
 
       if (script.src && script.src === scriptLocation) {
         return script;
