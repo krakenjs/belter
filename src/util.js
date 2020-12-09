@@ -1068,13 +1068,14 @@ export function getOrSet<O : Object, T : mixed>(obj : O, key : string, getter : 
 export type CleanupType = {|
     set : <T : mixed>(string, T) => T, // eslint-disable-line no-undef
     register : (Function) => void,
-    all : () => ZalgoPromise<void>
+    all : (err? : mixed) => ZalgoPromise<void>
 |};
 
 export function cleanup(obj : Object) : CleanupType {
 
     const tasks = [];
     let cleaned = false;
+    let cleanErr;
 
     return {
         set<T : mixed>(name : string, item : T) : T {
@@ -1089,13 +1090,15 @@ export function cleanup(obj : Object) : CleanupType {
 
         register(method : Function) {
             if (cleaned) {
-                method();
+                method(cleanErr);
             } else {
-                tasks.push(once(method));
+                tasks.push(once(() => method(cleanErr)));
             }
         },
 
-        all() : ZalgoPromise<void> {
+        all(err? : mixed) : ZalgoPromise<void> {
+            cleanErr = err;
+
             const results = [];
             cleaned = true;
 
