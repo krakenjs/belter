@@ -1011,6 +1011,7 @@ export function getOrSet(obj, key, getter) {
 export function cleanup(obj) {
   var tasks = [];
   var cleaned = false;
+  var cleanErr;
   return {
     set: function set(name, item) {
       if (!cleaned) {
@@ -1024,12 +1025,15 @@ export function cleanup(obj) {
     },
     register: function register(method) {
       if (cleaned) {
-        method();
+        method(cleanErr);
       } else {
-        tasks.push(once(method));
+        tasks.push(once(function () {
+          return method(cleanErr);
+        }));
       }
     },
-    all: function all() {
+    all: function all(err) {
+      cleanErr = err;
       var results = [];
       cleaned = true;
 

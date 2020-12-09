@@ -1939,6 +1939,7 @@
         function cleanup(obj) {
             var tasks = [];
             var cleaned = !1;
+            var cleanErr;
             return {
                 set: function(name, item) {
                     if (!cleaned) {
@@ -1950,9 +1951,12 @@
                     return item;
                 },
                 register: function(method) {
-                    cleaned ? method() : tasks.push(once(method));
+                    cleaned ? method(cleanErr) : tasks.push(once((function() {
+                        return method(cleanErr);
+                    })));
                 },
-                all: function() {
+                all: function(err) {
+                    cleanErr = err;
                     var results = [];
                     cleaned = !0;
                     for (;tasks.length; ) {
