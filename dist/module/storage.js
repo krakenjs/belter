@@ -7,6 +7,7 @@ export function getStorage(_ref) {
       lifetime = _ref$lifetime === void 0 ? DEFAULT_SESSION_STORAGE : _ref$lifetime;
   return inlineMemoize(getStorage, function () {
     var STORAGE_KEY = "__" + name + "_storage__";
+    var newStateID = uniqueID();
     var accessedStorage;
 
     function getState(handler) {
@@ -31,12 +32,12 @@ export function getStorage(_ref) {
 
       if (!storage) {
         storage = {
-          id: uniqueID()
+          id: newStateID
         };
       }
 
       if (!storage.id) {
-        storage.id = uniqueID();
+        storage.id = newStateID;
       }
 
       accessedStorage = storage;
@@ -56,6 +57,10 @@ export function getStorage(_ref) {
       return getState(function (storage) {
         return storage.id;
       });
+    }
+
+    function isStateFresh() {
+      return getID() === newStateID;
     }
 
     function getSession(handler) {
@@ -95,6 +100,7 @@ export function getStorage(_ref) {
     return {
       getState: getState,
       getID: getID,
+      isStateFresh: isStateFresh,
       getSessionState: getSessionState,
       getSessionID: getSessionID
     };

@@ -2697,6 +2697,7 @@
             var name = _ref.name, _ref$lifetime = _ref.lifetime, lifetime = void 0 === _ref$lifetime ? 12e5 : _ref$lifetime;
             return inlineMemoize(getStorage, (function() {
                 var STORAGE_KEY = "__" + name + "_storage__";
+                var newStateID = uniqueID();
                 var accessedStorage;
                 function getState(handler) {
                     var localStorageEnabled = isLocalStorageEnabled();
@@ -2708,14 +2709,19 @@
                     }
                     storage || (storage = getGlobal()[STORAGE_KEY]);
                     storage || (storage = {
-                        id: uniqueID()
+                        id: newStateID
                     });
-                    storage.id || (storage.id = uniqueID());
+                    storage.id || (storage.id = newStateID);
                     accessedStorage = storage;
                     var result = handler(storage);
                     localStorageEnabled ? window.localStorage.setItem(STORAGE_KEY, JSON.stringify(storage)) : getGlobal()[STORAGE_KEY] = storage;
                     accessedStorage = null;
                     return result;
+                }
+                function getID() {
+                    return getState((function(storage) {
+                        return storage.id;
+                    }));
                 }
                 function getSession(handler) {
                     return getState((function(storage) {
@@ -2732,10 +2738,9 @@
                 }
                 return {
                     getState: getState,
-                    getID: function() {
-                        return getState((function(storage) {
-                            return storage.id;
-                        }));
+                    getID: getID,
+                    isStateFresh: function() {
+                        return getID() === newStateID;
                     },
                     getSessionState: function(handler) {
                         return getSession((function(session) {
