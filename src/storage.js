@@ -8,6 +8,7 @@ type Getter<T> = <T>(handler : (Object) => T) => T;
 export type Storage = {|
     getState : Getter<*>,
     getID : () => string,
+    isStateFresh : () => boolean,
     getSessionState : Getter<*>,
     getSessionID : () => string
 |};
@@ -17,6 +18,7 @@ const DEFAULT_SESSION_STORAGE = 20 * 60 * 1000;
 export function getStorage({ name, lifetime = DEFAULT_SESSION_STORAGE } : {| name : string, lifetime? : number |}) : Storage {
     return inlineMemoize(getStorage, () => {
         const STORAGE_KEY = `__${ name }_storage__`;
+        const newStateID = uniqueID();
 
         let accessedStorage;
 
@@ -43,12 +45,12 @@ export function getStorage({ name, lifetime = DEFAULT_SESSION_STORAGE } : {| nam
 
             if (!storage) {
                 storage = {
-                    id: uniqueID()
+                    id: newStateID
                 };
             }
 
             if (!storage.id) {
-                storage.id = uniqueID();
+                storage.id = newStateID;
             }
 
             accessedStorage = storage;
@@ -68,6 +70,10 @@ export function getStorage({ name, lifetime = DEFAULT_SESSION_STORAGE } : {| nam
 
         function getID() : string {
             return getState(storage => storage.id);
+        }
+
+        function isStateFresh() : boolean {
+            return getID() === newStateID;
         }
 
         function getSession<T>(handler : (state : Object) => T) : T {
@@ -107,6 +113,7 @@ export function getStorage({ name, lifetime = DEFAULT_SESSION_STORAGE } : {| nam
         return {
             getState,
             getID,
+            isStateFresh,
             getSessionState,
             getSessionID
         };
