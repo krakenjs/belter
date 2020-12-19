@@ -2089,9 +2089,11 @@
         function formatQuery(obj) {
             void 0 === obj && (obj = {});
             return Object.keys(obj).filter((function(key) {
-                return "string" == typeof obj[key];
+                return "string" == typeof obj[key] || "boolean" == typeof obj[key];
             })).map((function(key) {
-                return urlEncode(key) + "=" + urlEncode(obj[key]);
+                var val = obj[key];
+                if ("string" != typeof val && "boolean" != typeof val) throw new TypeError("Invalid type for query");
+                return urlEncode(key) + "=" + urlEncode(val.toString());
             })).join("&");
         }
         function extendQuery(originalQuery, props) {

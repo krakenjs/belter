@@ -107,9 +107,15 @@ export function formatQuery(obj) {
   }
 
   return Object.keys(obj).filter(function (key) {
-    return typeof obj[key] === 'string';
+    return typeof obj[key] === 'string' || typeof obj[key] === 'boolean';
   }).map(function (key) {
-    return urlEncode(key) + "=" + urlEncode(obj[key]);
+    var val = obj[key];
+
+    if (typeof val !== 'string' && typeof val !== 'boolean') {
+      throw new TypeError("Invalid type for query");
+    }
+
+    return urlEncode(key) + "=" + urlEncode(val.toString());
   }).join('&');
 }
 export function extendQuery(originalQuery, props) {
