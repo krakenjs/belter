@@ -118,16 +118,26 @@ export function urlWillRedirectPage(url : string) : boolean {
     return true;
 }
 
-export function formatQuery(obj : { [ string ] : string } = {}) : string {
+type Query = {
+    [ string ] : boolean | string
+};
+
+export function formatQuery(obj : Query = {}) : string {
 
     return Object.keys(obj).filter(key => {
-        return typeof obj[key] === 'string';
+        return typeof obj[key] === 'string' || typeof obj[key] === 'boolean';
     }).map(key => {
-        return `${ urlEncode(key) }=${ urlEncode(obj[key]) }`;
+        const val = obj[key];
+
+        if (typeof val !== 'string' && typeof val !== 'boolean') {
+            throw new TypeError(`Invalid type for query`);
+        }
+
+        return `${ urlEncode(key) }=${ urlEncode(val.toString()) }`;
     }).join('&');
 }
 
-export function extendQuery(originalQuery : string, props : { [ string ] : string } = {}) : string {
+export function extendQuery(originalQuery : string, props : Query = {}) : string {
 
     if (!props || !Object.keys(props).length) {
         return originalQuery;
@@ -139,7 +149,7 @@ export function extendQuery(originalQuery : string, props : { [ string ] : strin
     });
 }
 
-export function extendUrl(url : string, options : {| query? : { [string] : string }, hash? : { [string] : string } |}) : string {
+export function extendUrl(url : string, options : {| query? : Query, hash? : Query |}) : string {
 
     const query = options.query || {};
     const hash = options.hash || {};
