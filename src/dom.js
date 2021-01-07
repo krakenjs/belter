@@ -227,7 +227,7 @@ export function getPageRenderTime() : ZalgoPromise<?number> {
         if (!performance) {
             return;
         }
-        
+
         const timing = performance.timing;
 
         if (timing.connectEnd && timing.domInteractive) {
@@ -937,18 +937,16 @@ export function watchElementForClose(element : HTMLElement, handler : () => mixe
     // Strategy 1: Mutation observer
 
     if (window.MutationObserver) {
-        let mutationElement = element.parentElement;
-        while (mutationElement) {
-            const mutationObserver = new window.MutationObserver(() => {
-                if (isElementClosed(element)) {
-                    elementClosed();
-                }
-            });
+        const mutationObserver = new window.MutationObserver(() => {
+            if (isElementClosed(element)) {
+                elementClosed();
+            }
+        });
 
-            mutationObserver.observe(mutationElement, { childList: true });
-            mutationObservers.push(mutationObserver);
-            mutationElement = mutationElement.parentElement;
-        }
+        mutationObserver.observe(element.parentElement, { childList: true });
+
+        // store mutation observer in an array that's used for disconnecting
+        mutationObservers.push(mutationObserver);
     }
 
     // Strategy 2: Sacrificial iframe
@@ -1022,7 +1020,7 @@ export function onResize(el : HTMLElement, handler : ({| width : number, height 
     let timeout;
 
     win.addEventListener('resize', check);
-    
+
     if (typeof win.ResizeObserver !== 'undefined') {
         observer = new win.ResizeObserver(check);
         observer.observe(el);
@@ -1117,7 +1115,7 @@ export function insertShadowSlot(element : HTMLElement) : HTMLElement {
     const slot = document.createElement('slot');
     slot.setAttribute('name', slotName);
     element.appendChild(slot);
-    
+
     const slotProvider = document.createElement('div');
     slotProvider.setAttribute('slot', slotName);
     shadowHost.appendChild(slotProvider);
