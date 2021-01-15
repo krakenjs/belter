@@ -7,7 +7,7 @@ describe('url encode cases', () => {
         const url = 'https://example.com/search?q=foo+bar&p=fizz#';
         const result = urlEncode(url);
         const expectedResult =
-      'https://example.com/search%3Fq=foo%2Bbar%26p=fizz%23';
+      'https://example.com/search%3Fq%3Dfoo%2Bbar%26p%3Dfizz%23';
 
         if (result !== expectedResult) {
             throw new Error(
