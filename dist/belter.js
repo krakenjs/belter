@@ -2037,7 +2037,7 @@
             return Boolean(document.body) && "interactive" === document.readyState;
         }
         function urlEncode(str) {
-            return str.replace(/\?/g, "%3F").replace(/&/g, "%26").replace(/#/g, "%23").replace(/\+/g, "%2B");
+            return str.replace(/\?/g, "%3F").replace(/&/g, "%26").replace(/#/g, "%23").replace(/\+/g, "%2B").replace(/[=]/g, "%3D");
         }
         function waitForWindowReady() {
             return inlineMemoize(waitForWindowReady, (function() {
