@@ -23,7 +23,7 @@ export function isDocumentInteractive() : boolean {
 }
 
 export function urlEncode(str : string) : string {
-    return str.replace(/\?/g, '%3F').replace(/&/g, '%26').replace(/#/g, '%23').replace(/\+/g, '%2B').replace(/[=]/g, '%3D');
+    return encodeURIComponent(str);
 }
 
 export function waitForWindowReady() : ZalgoPromise<void> {
