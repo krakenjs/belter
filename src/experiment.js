@@ -33,10 +33,14 @@ export type Experiment = {|
     logComplete : (payload? : Payload) => Experiment
 |};
 
+function getRandomInteger(range : number) : number {
+    return Math.floor(Math.random() * range);
+}
+
 function getThrottlePercentile(name : string) : number {
     return getBelterExperimentStorage().getState(state => {
         state.throttlePercentiles = state.throttlePercentiles || {};
-        state.throttlePercentiles[name] = state.throttlePercentiles[name] || Math.floor(Math.random() * 100);
+        state.throttlePercentiles[name] = state.throttlePercentiles[name] || getRandomInteger(100);
         return state.throttlePercentiles[name];
     });
 }
@@ -51,12 +55,15 @@ type ExperimentOptions = {|
     name : string,
     sample? : number,
     logTreatment? : ({| name : string, treatment : string, payload : Payload |}) => void,
-    logCheckpoint? : ({| name : string, treatment : string, checkpoint : string, payload : Payload |}) => void
+    logCheckpoint? : ({| name : string, treatment : string, checkpoint : string, payload : Payload |}) => void,
+    sticky? : boolean
 |};
 
-export function experiment({ name, sample = 50, logTreatment = noop, logCheckpoint = noop } : ExperimentOptions) : Experiment {
+export function experiment({ name, sample = 50, logTreatment = noop, logCheckpoint = noop, sticky = true } : ExperimentOptions) : Experiment {
 
-    const throttle = getThrottlePercentile(name);
+    const throttle = sticky
+        ? getThrottlePercentile(name)
+        : getRandomInteger(100);
 
     let group;
 
@@ -100,11 +107,11 @@ export function experiment({ name, sample = 50, logTreatment = noop, logCheckpoi
                 return this;
             }
 
-            if (isEventUnique(`${ name }_${ treatment }_${ JSON.stringify(payload) }`)) {
+            if (isEventUnique(`${ treatment }_${ JSON.stringify(payload) }`)) {
                 logTreatment({ name, treatment, payload });
             }
 
-            if (isEventUnique(`${ name }_${ treatment }_${ checkpoint }_${ JSON.stringify(payload) }`)) {
+            if (isEventUnique(`${ treatment }_${ checkpoint }_${ JSON.stringify(payload) }`)) {
                 logCheckpoint({ name, treatment, checkpoint, payload });
             }
 
