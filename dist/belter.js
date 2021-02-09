@@ -2811,13 +2811,15 @@
                     isEventUnique(treatment + "_" + JSON.stringify(payload)) && logTreatment({
                         name: name,
                         treatment: treatment,
-                        payload: payload
+                        payload: payload,
+                        throttle: throttle
                     });
                     isEventUnique(treatment + "_" + checkpoint + "_" + JSON.stringify(payload)) && logCheckpoint({
                         name: name,
                         treatment: treatment,
                         checkpoint: checkpoint,
-                        payload: payload
+                        payload: payload,
+                        throttle: throttle
                     });
                     return this;
                 },

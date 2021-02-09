@@ -92,7 +92,8 @@ export function experiment(_ref) {
         logTreatment({
           name: name,
           treatment: treatment,
-          payload: payload
+          payload: payload,
+          throttle: throttle
         });
       }
 
@@ -101,7 +102,8 @@ export function experiment(_ref) {
           name: name,
           treatment: treatment,
           checkpoint: checkpoint,
-          payload: payload
+          payload: payload,
+          throttle: throttle
         });
       }
 
