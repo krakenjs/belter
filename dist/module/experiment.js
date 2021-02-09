@@ -20,10 +20,14 @@ function isEventUnique(name) {
   });
 }
 
+function getRandomInteger(range) {
+  return Math.floor(Math.random() * range);
+}
+
 function getThrottlePercentile(name) {
   return getBelterExperimentStorage().getState(function (state) {
     state.throttlePercentiles = state.throttlePercentiles || {};
-    state.throttlePercentiles[name] = state.throttlePercentiles[name] || Math.floor(Math.random() * 100);
+    state.throttlePercentiles[name] = state.throttlePercentiles[name] || getRandomInteger(100);
     return state.throttlePercentiles[name];
   });
 }
@@ -40,8 +44,10 @@ export function experiment(_ref) {
       _ref$logTreatment = _ref.logTreatment,
       logTreatment = _ref$logTreatment === void 0 ? noop : _ref$logTreatment,
       _ref$logCheckpoint = _ref.logCheckpoint,
-      logCheckpoint = _ref$logCheckpoint === void 0 ? noop : _ref$logCheckpoint;
-  var throttle = getThrottlePercentile(name);
+      logCheckpoint = _ref$logCheckpoint === void 0 ? noop : _ref$logCheckpoint,
+      _ref$sticky = _ref.sticky,
+      sticky = _ref$sticky === void 0 ? true : _ref$sticky;
+  var throttle = sticky ? getThrottlePercentile(name) : getRandomInteger(100);
   var group;
 
   if (throttle < sample && !__TEST__) {
@@ -82,7 +88,7 @@ export function experiment(_ref) {
         return this;
       }
 
-      if (isEventUnique(name + "_" + treatment + "_" + JSON.stringify(payload))) {
+      if (isEventUnique(treatment + "_" + JSON.stringify(payload))) {
         logTreatment({
           name: name,
           treatment: treatment,
@@ -90,7 +96,7 @@ export function experiment(_ref) {
         });
       }
 
-      if (isEventUnique(name + "_" + treatment + "_" + checkpoint + "_" + JSON.stringify(payload))) {
+      if (isEventUnique(treatment + "_" + checkpoint + "_" + JSON.stringify(payload))) {
         logCheckpoint({
           name: name,
           treatment: treatment,

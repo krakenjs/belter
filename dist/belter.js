@@ -694,10 +694,16 @@
             void 0 === ua && (ua = getUserAgent());
             return /Safari/.test(ua) && !isChrome(ua);
         }
+        function _setPrototypeOf(o, p) {
+            return (_setPrototypeOf = Object.setPrototypeOf || function(o, p) {
+                o.__proto__ = p;
+                return o;
+            })(o, p);
+        }
         function _inheritsLoose(subClass, superClass) {
             subClass.prototype = Object.create(superClass.prototype);
             subClass.prototype.constructor = subClass;
-            subClass.__proto__ = superClass;
+            _setPrototypeOf(subClass, superClass);
         }
         function _extends() {
             return (_extends = Object.assign || function(target) {
@@ -1301,12 +1307,6 @@
             return (_getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function(o) {
                 return o.__proto__ || Object.getPrototypeOf(o);
             })(o);
-        }
-        function _setPrototypeOf(o, p) {
-            return (_setPrototypeOf = Object.setPrototypeOf || function(o, p) {
-                o.__proto__ = p;
-                return o;
-            })(o, p);
         }
         function _isNativeReflectConstruct() {
             if ("undefined" == typeof Reflect || !Reflect.construct) return !1;
@@ -2776,15 +2776,18 @@
                 return !1;
             }));
         }
+        function getRandomInteger(range) {
+            return Math.floor(Math.random() * range);
+        }
         function experiment(_ref) {
-            var name = _ref.name, _ref$sample = _ref.sample, sample = void 0 === _ref$sample ? 50 : _ref$sample, _ref$logTreatment = _ref.logTreatment, logTreatment = void 0 === _ref$logTreatment ? src_util_noop : _ref$logTreatment, _ref$logCheckpoint = _ref.logCheckpoint, logCheckpoint = void 0 === _ref$logCheckpoint ? src_util_noop : _ref$logCheckpoint;
-            var throttle = function(name) {
+            var name = _ref.name, _ref$sample = _ref.sample, sample = void 0 === _ref$sample ? 50 : _ref$sample, _ref$logTreatment = _ref.logTreatment, logTreatment = void 0 === _ref$logTreatment ? src_util_noop : _ref$logTreatment, _ref$logCheckpoint = _ref.logCheckpoint, logCheckpoint = void 0 === _ref$logCheckpoint ? src_util_noop : _ref$logCheckpoint, _ref$sticky = _ref.sticky;
+            var throttle = void 0 === _ref$sticky || _ref$sticky ? function(name) {
                 return getBelterExperimentStorage().getState((function(state) {
                     state.throttlePercentiles = state.throttlePercentiles || {};
-                    state.throttlePercentiles[name] = state.throttlePercentiles[name] || Math.floor(100 * Math.random());
+                    state.throttlePercentiles[name] = state.throttlePercentiles[name] || getRandomInteger(100);
                     return state.throttlePercentiles[name];
                 }));
-            }(name);
+            }(name) : getRandomInteger(100);
             var group;
             var treatment = name + "_" + (group = throttle < sample ? "test" : sample >= 50 || sample <= throttle && throttle < 2 * sample ? "control" : "throttle");
             var started = !1;
@@ -2805,12 +2808,12 @@
                 log: function(checkpoint, payload) {
                     void 0 === payload && (payload = {});
                     if (!started) return this;
-                    isEventUnique(name + "_" + treatment + "_" + JSON.stringify(payload)) && logTreatment({
+                    isEventUnique(treatment + "_" + JSON.stringify(payload)) && logTreatment({
                         name: name,
                         treatment: treatment,
                         payload: payload
                     });
-                    isEventUnique(name + "_" + treatment + "_" + checkpoint + "_" + JSON.stringify(payload)) && logCheckpoint({
+                    isEventUnique(treatment + "_" + checkpoint + "_" + JSON.stringify(payload)) && logCheckpoint({
                         name: name,
                         treatment: treatment,
                         checkpoint: checkpoint,
