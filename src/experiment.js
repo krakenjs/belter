@@ -54,8 +54,8 @@ const THROTTLE_GROUP = {
 type ExperimentOptions = {|
     name : string,
     sample? : number,
-    logTreatment? : ({| name : string, treatment : string, payload : Payload |}) => void,
-    logCheckpoint? : ({| name : string, treatment : string, checkpoint : string, payload : Payload |}) => void,
+    logTreatment? : ({| name : string, treatment : string, payload : Payload, throttle : number |}) => void,
+    logCheckpoint? : ({| name : string, treatment : string, checkpoint : string, payload : Payload, throttle : number |}) => void,
     sticky? : boolean
 |};
 
@@ -108,11 +108,11 @@ export function experiment({ name, sample = 50, logTreatment = noop, logCheckpoi
             }
 
             if (isEventUnique(`${ treatment }_${ JSON.stringify(payload) }`)) {
-                logTreatment({ name, treatment, payload });
+                logTreatment({ name, treatment, payload, throttle });
             }
 
             if (isEventUnique(`${ treatment }_${ checkpoint }_${ JSON.stringify(payload) }`)) {
-                logCheckpoint({ name, treatment, checkpoint, payload });
+                logCheckpoint({ name, treatment, checkpoint, payload, throttle });
             }
 
             return this;
