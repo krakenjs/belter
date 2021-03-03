@@ -143,13 +143,13 @@ export function isSafari(ua? : string = getUserAgent()) : boolean {
 export function isWebView() : boolean {
     const height = window.visualViewport.height;
     const scale = Math.round(window.visualViewport.scale * 100) / 100;
-    const outerHeight = iPhoneScreenHeightMatrix[window.outerHeight];
     const computedHeight = Math.round(height * scale);
 
+    const outerHeight = iPhoneScreenHeightMatrix[window.outerHeight];
     if (!outerHeight) {
         return false;
     }
-    
+
     return outerHeight &&
            scale > 1 ? outerHeight.zoomHeight[scale].includes(computedHeight) : outerHeight.textSizeHeights.includes(computedHeight);
 }
