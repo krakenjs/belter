@@ -18,7 +18,7 @@ describe('isWebView', () => {
             textSizeHeights.forEach(textSize => {
                 it(`${ textSize } text size should not be a web view`, () => {
                     if (isWebView()) {
-                        throw new Error(`Expected text size, ${ textSize }, to be a web view.`);
+                        throw new Error(`Expected text size, ${ textSize }, to not be a web view.`);
                     }
                 });
             });
