@@ -1,43 +1,28 @@
+// eslint-disable-next-line eslint-comments/disable-enable-pair
+/* eslint-disable max-nested-callbacks */
 /* @flow */
 
 import { isWebView } from '../../../src/device';
+import { iPhoneScreenHeightMatrix } from '../../../src/screenHeights';
 
 describe('isWebView', () => {
-    beforeEach(() => {
-        // eslint-disable-next-line compat/compat
-        window.navigator = {};
-    });
-    it('should return false when userAgent is invalid', () => {
-        // eslint-disable-next-line compat/compat
-        window.navigator.userAgent = 'invalid potato';
-        const bool = isWebView();
-        if (bool) {
-            throw new Error(`Expected false, got ${ JSON.stringify(bool) }`);
+    Object.keys(iPhoneScreenHeightMatrix).forEach(height => {
+        if (height === '568') {
+            return;
         }
-    });
-    it('should return true when userAgent is valid and begins with iPhone or iPod or iPad or Macintosh(case insensitive)', () => {
-        // eslint-disable-next-line compat/compat
-        window.navigator.userAgent = 'ipod.potatoAppleWebKit.potato';
-        const bool = isWebView();
-        if (!bool) {
-            throw new Error(`Expected false, got ${ JSON.stringify(bool) }`);
-        }
-    });
-    it('should return true when userAgent contains whole word wv', () => {
-        // eslint-disable-next-line compat/compat
-        window.navigator.userAgent = 'wv';
-        const bool = isWebView();
-        if (!bool) {
-            throw new Error(`Expected false, got ${ JSON.stringify(bool) }`);
-        }
-    });
-    it('should return true when userAgent is valid and starts with android(case insensitive)', () => {
-        // eslint-disable-next-line compat/compat
-        window.navigator.userAgent = 'android.potatoVersion/9.3';
-        const bool = isWebView();
-        if (!bool) {
-            throw new Error(`Expected false, got ${ JSON.stringify(bool) }`);
-        }
+
+        const device = iPhoneScreenHeightMatrix[height].device;
+        const textSizeHeights = iPhoneScreenHeightMatrix[height].textSizeHeights;
+
+        describe(`${ device }`, () => {
+            textSizeHeights.forEach(textSize => {
+                it(`${ textSize } text size should not be a web view`, () => {
+                    if (isWebView()) {
+                        throw new Error(`Expected text size, ${ textSize }, to be a web view.`);
+                    }
+                });
+            });
+        });
     });
 });
 
