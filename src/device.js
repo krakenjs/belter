@@ -70,7 +70,7 @@ export function isIosWebview(ua? : string = getUserAgent()) : Object {
         const height = window.visualViewport.height;
         const scale = Math.round(window.visualViewport.scale * 100) / 100;
         const computedHeight = Math.round(height * scale);
-        const ineligibleSizes = iPhoneScreenHeightMatrix[window.outerHeight].ineligible;
+        const ineligibleSizes = device.ineligible;
 
         let ineligible = false;
         if (scale > 1 &&
@@ -86,9 +86,9 @@ export function isIosWebview(ua? : string = getUserAgent()) : Object {
 
         let result = false;
         if (scale > 1) {
-            result = outerHeight.zoomHeight[scale].indexOf(computedHeight) !== -1;
+            result = device.zoomHeight[scale].indexOf(computedHeight) !== -1;
         } else {
-            result = outerHeight.textSizeHeights.indexOf(computedHeight) !== -1;
+            result = device.textSizeHeights.indexOf(computedHeight) !== -1;
         }
 
         return { webview: result, ineligible };
