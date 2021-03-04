@@ -66,7 +66,6 @@ export function isIosWebview(ua? : string = getUserAgent()) : Object {
         const height = window.visualViewport.height;
         const scale = Math.round(window.visualViewport.scale * 100) / 100;
         const computedHeight = Math.round(height * scale);
-
         const ineligibleSizes = iPhoneScreenHeightMatrix[window.outerHeight].ineligible;
 
         let ineligible = false;
