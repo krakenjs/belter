@@ -1,4 +1,5 @@
 /* @flow */
+import { iPhoneScreenHeightMatrix } from './screenHeights';
 
 export function getUserAgent() : string {
     return window.navigator.mockUserAgent || window.navigator.userAgent; // eslint-disable-line compat/compat
@@ -55,14 +56,44 @@ export function isQQBrowser(ua? : string = getUserAgent()) : boolean {
     return (/QQBrowser/).test(ua);
 }
 
-export function isIosWebview(ua? : string = getUserAgent()) : boolean {
+export function isIosWebview(ua? : string = getUserAgent()) : Object {
     if (isIos(ua)) {
-        if (isGoogleSearchApp(ua)) {
-            return true;
+        const device = iPhoneScreenHeightMatrix[window.outerHeight];
+        if (!window.visualViewport || !device) {
+            return { webview: false, ineligible: false };
         }
-        return (/.+AppleWebKit(?!.*Safari)/).test(ua);
+
+        if (window.outerHeight === 568) {
+            return { webview: false, ineligible: true };
+        }
+
+        const height = window.visualViewport.height;
+        const scale = Math.round(window.visualViewport.scale * 100) / 100;
+        const computedHeight = Math.round(height * scale);
+        const ineligibleSizes = device.ineligible;
+
+        let ineligible = false;
+        if (scale > 1 &&
+            ineligibleSizes[scale] &&
+            ineligibleSizes[scale].indexOf(computedHeight) !== -1) {
+                
+            ineligible = true;
+        }
+
+        if (isGoogleSearchApp(ua)) {
+            return { webview: true, ineligible };
+        }
+
+        let result = false;
+        if (scale > 1) {
+            result = device.zoomHeight[scale].indexOf(computedHeight) !== -1;
+        } else {
+            result = device.textSizeHeights.indexOf(computedHeight) !== -1;
+        }
+
+        return { webview: result, ineligible };
     }
-    return false;
+    return { webview: false, ineligible: false };
 }
 
 export function isAndroidWebview(ua? : string = getUserAgent()) : boolean {
@@ -134,7 +165,8 @@ export function isMacOsCna() : boolean {
 }
 
 export function supportsPopups(ua? : string = getUserAgent()) : boolean {
-    return !(isIosWebview(ua) || isAndroidWebview(ua) || isOperaMini(ua) ||
+    const { webview } = isIosWebview(ua);
+    return !(webview || isAndroidWebview(ua) || isOperaMini(ua) ||
         isFirefoxIOS(ua) || isEdgeIOS(ua) || isFacebookWebView(ua) || isQQBrowser(ua) || isElectron() || isMacOsCna() || isStandAlone());
 }
 
