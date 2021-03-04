@@ -14,6 +14,11 @@ export const iPhoneScreenHeightMatrix = {
             '2':    [ 752, 748, 744 ],  // 738 removed as same in Safari
             '2.5':  [ 753, 748 ],       // 745, 738 removed as same in Safari
             '3':    [ 753, 744 ]        // 747, 738 removed as same in Safari
+        },
+        ineligible: {
+            '2':    [ 738 ],
+            '2.5':  [ 745, 738 ],
+            '3':    [ 747, 738 ]
         }
     },
     '896': {
@@ -29,6 +34,10 @@ export const iPhoneScreenHeightMatrix = {
             '2':    [ 722, 718, 714, 708 ],
             '2.5':  [ 720, 718, 713, 708 ],
             '3':    [ 720, 717, 708 ] // 714 removed as same in Safari
+        },
+        ineligible: {
+            '1.5':  [ 707 ],
+            '3':    [ 714 ]
         }
     },
     '844': {
@@ -44,6 +53,13 @@ export const iPhoneScreenHeightMatrix = {
             '2':    [ 670, 666, 662 ], // 656 removed as same in Safari
             '2.5':  [ 670, 663 ], // 665, 655 removed as same in Safari
             '3':    [ 669, 666, 663, 657 ] // 663 removed as same in Safari
+        },
+        ineligible: {
+            '1.15': [ 656 ],
+            '1.5':  [ 656 ],
+            '2':    [ 656 ],
+            '2.5':  [ 665, 655 ],
+            '3':    [ 663 ]
         }
     },
     '812': {
@@ -59,6 +75,10 @@ export const iPhoneScreenHeightMatrix = {
             '2':    [ 642, 638, 634, 628 ],
             '2.5':  [ 640, 638, 633, 628 ],
             '3':    [ 642, 633 ] // 636, 627 removed as same in Safari
+        },
+        ineligible: {
+            '1.75': [ 627 ],
+            '3':    [ 636, 627 ]
         }
     },
     '736': {
@@ -74,6 +94,11 @@ export const iPhoneScreenHeightMatrix = {
             '2':    [ 628, 624, 620 ], // 614
             '2.5':  [ 628, 625, 620, 615 ],
             '3':    [ 627, 624, 615 ] // 621
+        },
+        ineligible: {
+            '1.5':  [ 614 ],
+            '2':    [ 614 ],
+            '3':    [ 621 ]
         }
     },
     '667': {
@@ -89,6 +114,12 @@ export const iPhoneScreenHeightMatrix = {
             '2':    [ 560, 556, 552, 546 ],
             '2.5':  [ 560, 555, 550 ], // 545
             '3':    [ 558, 555, 546 ] // 552
+        },
+        ineligible: {
+            '1.5':  [ 545 ],
+            '1.75': [ 544 ],
+            '2.5':  [ 545 ],
+            '3':    [ 552 ]
         }
     },
     '568': {
@@ -97,6 +128,15 @@ export const iPhoneScreenHeightMatrix = {
             0
         ],
         zoomHeight: {
+            '1.15': [ 0 ],
+            '1.25': [ 0 ],
+            '1.5':  [ 0 ],
+            '1.75': [ 0 ],
+            '2':    [ 0 ],
+            '2.5':  [ 0 ],
+            '3':    [ 0 ]
+        },
+        ineligible: {
             '1.15': [ 0 ],
             '1.25': [ 0 ],
             '1.5':  [ 0 ],

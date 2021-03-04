@@ -13,6 +13,13 @@ export function isDevice(userAgent? : string = getUserAgent()) : boolean {
     return false;
 }
 
+export function isWebView() : boolean {
+    const userAgent = getUserAgent();
+    return (/(iPhone|iPod|iPad|Macintosh).*AppleWebKit(?!.*Safari)/i).test(userAgent) ||
+        (/\bwv\b/).test(userAgent) ||
+    (/Android.*Version\/(\d)\.(\d)/i).test(userAgent);
+}
+
 export function isStandAlone() : boolean {
     return (window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches); // eslint-disable-line compat/compat
 }
@@ -54,7 +61,18 @@ export function isIosWebview(ua? : string = getUserAgent()) : boolean {
         if (isGoogleSearchApp(ua)) {
             return true;
         }
-        return (/.+AppleWebKit(?!.*Safari)/).test(ua);
+        
+        const height = window.visualViewport.height;
+        const scale = Math.round(window.visualViewport.scale * 100) / 100;
+        const computedHeight = Math.round(height * scale);
+        
+        const outerHeight = iPhoneScreenHeightMatrix[window.outerHeight];
+        if (!outerHeight) {
+            return false;
+        }
+
+        return outerHeight &&
+            scale > 1 ? outerHeight.zoomHeight[scale].includes(computedHeight) : outerHeight.textSizeHeights.includes(computedHeight);
     }
     return false;
 }
@@ -138,18 +156,4 @@ export function isChrome(ua? : string = getUserAgent()) : boolean {
 
 export function isSafari(ua? : string = getUserAgent()) : boolean {
     return (/Safari/).test(ua) && !isChrome(ua);
-}
-
-export function isWebView() : boolean {
-    const height = window.visualViewport.height;
-    const scale = Math.round(window.visualViewport.scale * 100) / 100;
-    const computedHeight = Math.round(height * scale);
-
-    const outerHeight = iPhoneScreenHeightMatrix[window.outerHeight];
-    if (!outerHeight) {
-        return false;
-    }
-
-    return outerHeight &&
-           scale > 1 ? outerHeight.zoomHeight[scale].includes(computedHeight) : outerHeight.textSizeHeights.includes(computedHeight);
 }
