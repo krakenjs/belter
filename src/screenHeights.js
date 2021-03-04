@@ -15,7 +15,7 @@ export const iPhoneScreenHeightMatrix = {
             '2.5':  [ 753, 748 ],       // 745, 738 removed as same in Safari
             '3':    [ 753, 744 ]        // 747, 738 removed as same in Safari
         },
-        ineligible: {
+        maybeSafari: {
             '2':    [ 738 ],
             '2.5':  [ 745, 738 ],
             '3':    [ 747, 738 ]
@@ -35,7 +35,7 @@ export const iPhoneScreenHeightMatrix = {
             '2.5':  [ 720, 718, 713, 708 ],
             '3':    [ 720, 717, 708 ] // 714 removed as same in Safari
         },
-        ineligible: {
+        maybeSafari: {
             '1.5':  [ 707 ],
             '3':    [ 714 ]
         }
@@ -54,7 +54,7 @@ export const iPhoneScreenHeightMatrix = {
             '2.5':  [ 670, 663 ], // 665, 655 removed as same in Safari
             '3':    [ 669, 666, 663, 657 ] // 663 removed as same in Safari
         },
-        ineligible: {
+        maybeSafari: {
             '1.15': [ 656 ],
             '1.5':  [ 656 ],
             '2':    [ 656 ],
@@ -76,7 +76,7 @@ export const iPhoneScreenHeightMatrix = {
             '2.5':  [ 640, 638, 633, 628 ],
             '3':    [ 642, 633 ] // 636, 627 removed as same in Safari
         },
-        ineligible: {
+        maybeSafari: {
             '1.75': [ 627 ],
             '3':    [ 636, 627 ]
         }
@@ -95,7 +95,7 @@ export const iPhoneScreenHeightMatrix = {
             '2.5':  [ 628, 625, 620, 615 ],
             '3':    [ 627, 624, 615 ] // 621
         },
-        ineligible: {
+        maybeSafari: {
             '1.5':  [ 614 ],
             '2':    [ 614 ],
             '3':    [ 621 ]
@@ -115,7 +115,7 @@ export const iPhoneScreenHeightMatrix = {
             '2.5':  [ 560, 555, 550 ], // 545
             '3':    [ 558, 555, 546 ] // 552
         },
-        ineligible: {
+        maybeSafari: {
             '1.5':  [ 545 ],
             '1.75': [ 544 ],
             '2.5':  [ 545 ],
@@ -136,7 +136,7 @@ export const iPhoneScreenHeightMatrix = {
             '2.5':  [ 0 ],
             '3':    [ 0 ]
         },
-        ineligible: {
+        maybeSafari: {
             '1.15': [ 0 ],
             '1.25': [ 0 ],
             '1.5':  [ 0 ],

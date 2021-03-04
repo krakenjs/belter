@@ -102,16 +102,16 @@ export function isSFVCorSafari(ua? : string = getUserAgent()) : boolean {
         if (window.outerHeight === 568) {
             return false;
         }
-        
+
         const height = window.visualViewport.height;
         const scale = Math.round(window.visualViewport.scale * 100) / 100;
         const computedHeight = Math.round(height * scale);
-        const ineligibleSizes = device.ineligible;
+        const possibleSafariSizes = device.maybeSafari;
 
         let maybeSafari = false;
         if (scale > 1 &&
-            ineligibleSizes[scale] &&
-            ineligibleSizes[scale].indexOf(computedHeight) !== -1) {
+            possibleSafariSizes[scale] &&
+            possibleSafariSizes[scale].indexOf(computedHeight) !== -1) {
                 
             maybeSafari = true;
         }
