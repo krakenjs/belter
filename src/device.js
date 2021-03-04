@@ -73,10 +73,6 @@ export function isSFVC(ua? : string = getUserAgent()) : boolean {
             return false;
         }
 
-        if (window.outerHeight === 568) {
-            return false;
-        }
-
         const height = window.visualViewport.height;
         const scale = Math.round(window.visualViewport.scale * 100) / 100;
         const computedHeight = Math.round(height * scale);
@@ -96,10 +92,6 @@ export function isSFVCorSafari(ua? : string = getUserAgent()) : boolean {
 
         const device = iPhoneScreenHeightMatrix[window.outerHeight];
         if (!window.visualViewport || !device) {
-            return false;
-        }
-
-        if (window.outerHeight === 568) {
             return false;
         }
 

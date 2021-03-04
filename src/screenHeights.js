@@ -121,29 +121,5 @@ export const iPhoneScreenHeightMatrix = {
             '2.5':  [ 545 ],
             '3':    [ 552 ]
         }
-    },
-    '568': {
-        device:          'iPhone 5, iPhone 5S, iPhone 5C, iPhone SE',
-        textSizeHeights: [
-            0
-        ],
-        zoomHeight: {
-            '1.15': [ 0 ],
-            '1.25': [ 0 ],
-            '1.5':  [ 0 ],
-            '1.75': [ 0 ],
-            '2':    [ 0 ],
-            '2.5':  [ 0 ],
-            '3':    [ 0 ]
-        },
-        maybeSafari: {
-            '1.15': [ 0 ],
-            '1.25': [ 0 ],
-            '1.5':  [ 0 ],
-            '1.75': [ 0 ],
-            '2':    [ 0 ],
-            '2.5':  [ 0 ],
-            '3':    [ 0 ]
-        }
     }
 };
