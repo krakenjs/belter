@@ -58,9 +58,13 @@ export function isQQBrowser(ua? : string = getUserAgent()) : boolean {
 
 export function isIosWebview(ua? : string = getUserAgent()) : Object {
     if (isIos(ua)) {
-        const outerHeight = iPhoneScreenHeightMatrix[window.outerHeight];
-        if (!window.visualViewport || !outerHeight) {
+        const device = iPhoneScreenHeightMatrix[window.outerHeight];
+        if (!window.visualViewport || !device) {
             return { webview: false, ineligible: false };
+        }
+
+        if (window.outerHeight === 568) {
+            return { webview: false, ineligible: true };
         }
 
         const height = window.visualViewport.height;
