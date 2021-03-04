@@ -81,7 +81,7 @@ export function isIosWebview(ua? : string = getUserAgent()) : Object {
         }
 
         let result = false;
-        if (outerHeight && scale > 1) {
+        if (scale > 1) {
             result = outerHeight.zoomHeight[scale].indexOf(computedHeight) !== -1;
         } else {
             result = outerHeight.textSizeHeights.indexOf(computedHeight) !== -1;

@@ -20,10 +20,6 @@ describe('isIosWebview', () => {
     });
 
     Object.keys(iPhoneScreenHeightMatrix).forEach(height => {
-        if (height === '568') {
-            return;
-        }
-
         const device = iPhoneScreenHeightMatrix[height].device;
         const textSizeHeights = iPhoneScreenHeightMatrix[height].textSizeHeights;
 
