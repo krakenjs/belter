@@ -599,6 +599,142 @@
         __webpack_require__.d(__webpack_exports__, "ATTRIBUTES", (function() {
             return ATTRIBUTES;
         }));
+        __webpack_require__.d(__webpack_exports__, "iPhoneScreenHeightMatrix", (function() {
+            return iPhoneScreenHeightMatrix;
+        }));
+        var iPhoneScreenHeightMatrix = {
+            926: {
+                device: "iPhone 12 Pro Max",
+                textSizeHeights: [ 752, 748, 744, 738 ],
+                zoomHeight: {
+                    1.15: [ 752, 747, 744, 738 ],
+                    1.25: [ 753, 748, 744, 738 ],
+                    1.5: [ 752, 749, 744, 738 ],
+                    1.75: [ 753, 747, 744, 739 ],
+                    2: [ 752, 748, 744 ],
+                    2.5: [ 753, 748 ],
+                    3: [ 753, 744 ]
+                },
+                ineligible: {
+                    2: [ 738 ],
+                    2.5: [ 745, 738 ],
+                    3: [ 747, 738 ]
+                }
+            },
+            896: {
+                device: "iPhone XS Max, iPhone 11 Pro Max, iPhone XR, iPhone 11",
+                textSizeHeights: [ 721, 717, 713, 707 ],
+                zoomHeight: {
+                    1.15: [ 721, 716, 713, 707 ],
+                    1.25: [ 721, 718, 713, 708 ],
+                    1.5: [ 722, 717, 713 ],
+                    1.75: [ 721, 718, 712, 707 ],
+                    2: [ 722, 718, 714, 708 ],
+                    2.5: [ 720, 718, 713, 708 ],
+                    3: [ 720, 717, 708 ]
+                },
+                ineligible: {
+                    1.5: [ 707 ],
+                    3: [ 714 ]
+                }
+            },
+            844: {
+                device: "iPhone 12, iPhone 12 Pro",
+                textSizeHeights: [ 670, 666, 662, 656 ],
+                zoomHeight: {
+                    1.15: [ 670, 666, 662 ],
+                    1.25: [ 670, 666, 663, 656 ],
+                    1.5: [ 671, 666, 662 ],
+                    1.75: [ 670, 667, 662, 656 ],
+                    2: [ 670, 666, 662 ],
+                    2.5: [ 670, 663 ],
+                    3: [ 669, 666, 663, 657 ]
+                },
+                ineligible: {
+                    1.15: [ 656 ],
+                    1.5: [ 656 ],
+                    2: [ 656 ],
+                    2.5: [ 665, 655 ],
+                    3: [ 663 ]
+                }
+            },
+            812: {
+                device: "iPhone X, iPhone XS, iPhone 11 Pro, iPhone 12 Mini",
+                textSizeHeights: [ 641, 637, 633, 627 ],
+                zoomHeight: {
+                    1.15: [ 641, 637, 633, 627 ],
+                    1.25: [ 641, 638, 633, 628 ],
+                    1.5: [ 641, 638, 633, 627 ],
+                    1.75: [ 641, 637, 634 ],
+                    2: [ 642, 638, 634, 628 ],
+                    2.5: [ 640, 638, 633, 628 ],
+                    3: [ 642, 633 ]
+                },
+                ineligible: {
+                    1.75: [ 627 ],
+                    3: [ 636, 627 ]
+                }
+            },
+            736: {
+                device: "iPhone 6 Plus, iPhone 6S Plus, iPhone 7 Plus, iPhone 8 Plus",
+                textSizeHeights: [ 628, 624, 620, 614 ],
+                zoomHeight: {
+                    1.15: [ 628, 624, 620, 614 ],
+                    1.25: [ 628, 624, 620, 614 ],
+                    1.5: [ 629, 624, 620 ],
+                    1.75: [ 628, 625, 620, 614 ],
+                    2: [ 628, 624, 620 ],
+                    2.5: [ 628, 625, 620, 615 ],
+                    3: [ 627, 624, 615 ]
+                },
+                ineligible: {
+                    1.5: [ 614 ],
+                    2: [ 614 ],
+                    3: [ 621 ]
+                }
+            },
+            667: {
+                device: "iPhone 6, iPhone 6S, iPhone 7, iPhone 8,  iPhone SE2",
+                textSizeHeights: [ 559, 555, 551, 545 ],
+                zoomHeight: {
+                    1.15: [ 559, 555, 551, 545 ],
+                    1.25: [ 559, 555, 551, 545 ],
+                    1.5: [ 560, 555, 551 ],
+                    1.75: [ 558, 555, 551 ],
+                    2: [ 560, 556, 552, 546 ],
+                    2.5: [ 560, 555, 550 ],
+                    3: [ 558, 555, 546 ]
+                },
+                ineligible: {
+                    1.5: [ 545 ],
+                    1.75: [ 544 ],
+                    2.5: [ 545 ],
+                    3: [ 552 ]
+                }
+            },
+            568: {
+                device: "iPhone 5, iPhone 5S, iPhone 5C, iPhone SE",
+                textSizeHeights: [ 0 ],
+                zoomHeight: {
+                    1.15: [ 0 ],
+                    1.25: [ 0 ],
+                    1.5: [ 0 ],
+                    1.75: [ 0 ],
+                    2: [ 0 ],
+                    2.5: [ 0 ],
+                    3: [ 0 ]
+                },
+                ineligible: {
+                    1.15: [ 0 ],
+                    1.25: [ 0 ],
+                    1.5: [ 0 ],
+                    1.75: [ 0 ],
+                    2: [ 0 ],
+                    2.5: [ 0 ],
+                    3: [ 0 ]
+                }
+            }
+        };
         function getUserAgent() {
             return window.navigator.mockUserAgent || window.navigator.userAgent;
         }
@@ -647,7 +783,34 @@
         }
         function isIosWebview(ua) {
             void 0 === ua && (ua = getUserAgent());
-            return !!isIos(ua) && (!!isGoogleSearchApp(ua) || /.+AppleWebKit(?!.*Safari)/.test(ua));
+            if (isIos(ua)) {
+                var device = iPhoneScreenHeightMatrix[window.outerHeight];
+                if (!window.visualViewport || !device) return {
+                    webview: !1,
+                    ineligible: !1
+                };
+                if (568 === window.outerHeight) return {
+                    webview: !1,
+                    ineligible: !0
+                };
+                var height = window.visualViewport.height;
+                var scale = Math.round(100 * window.visualViewport.scale) / 100;
+                var computedHeight = Math.round(height * scale);
+                var ineligibleSizes = device.ineligible;
+                var ineligible = !1;
+                scale > 1 && ineligibleSizes[scale] && -1 !== ineligibleSizes[scale].indexOf(computedHeight) && (ineligible = !0);
+                return isGoogleSearchApp(ua) ? {
+                    webview: !0,
+                    ineligible: ineligible
+                } : {
+                    webview: scale > 1 ? -1 !== device.zoomHeight[scale].indexOf(computedHeight) : -1 !== device.textSizeHeights.indexOf(computedHeight),
+                    ineligible: ineligible
+                };
+            }
+            return {
+                webview: !1,
+                ineligible: !1
+            };
         }
         function isAndroidWebview(ua) {
             void 0 === ua && (ua = getUserAgent());
@@ -684,7 +847,7 @@
         }
         function supportsPopups(ua) {
             void 0 === ua && (ua = getUserAgent());
-            return !(isIosWebview(ua) || isAndroidWebview(ua) || isOperaMini(ua) || isFirefoxIOS(ua) || isEdgeIOS(ua) || isFacebookWebView(ua) || isQQBrowser(ua) || isElectron() || isMacOsCna() || isStandAlone());
+            return !(isIosWebview(ua).webview || isAndroidWebview(ua) || isOperaMini(ua) || isFirefoxIOS(ua) || isEdgeIOS(ua) || isFacebookWebView(ua) || isQQBrowser(ua) || isElectron() || isMacOsCna() || isStandAlone());
         }
         function isChrome(ua) {
             void 0 === ua && (ua = getUserAgent());

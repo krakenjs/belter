@@ -1,3 +1,4 @@
+import { iPhoneScreenHeightMatrix } from './screenHeights';
 export function getUserAgent() {
   return window.navigator.mockUserAgent || window.navigator.userAgent; // eslint-disable-line compat/compat
 }
@@ -81,14 +82,57 @@ export function isIosWebview(ua) {
   }
 
   if (isIos(ua)) {
-    if (isGoogleSearchApp(ua)) {
-      return true;
+    var device = iPhoneScreenHeightMatrix[window.outerHeight];
+
+    if (!window.visualViewport || !device) {
+      return {
+        webview: false,
+        ineligible: false
+      };
     }
 
-    return /.+AppleWebKit(?!.*Safari)/.test(ua);
+    if (window.outerHeight === 568) {
+      return {
+        webview: false,
+        ineligible: true
+      };
+    }
+
+    var height = window.visualViewport.height;
+    var scale = Math.round(window.visualViewport.scale * 100) / 100;
+    var computedHeight = Math.round(height * scale);
+    var ineligibleSizes = device.ineligible;
+    var ineligible = false;
+
+    if (scale > 1 && ineligibleSizes[scale] && ineligibleSizes[scale].indexOf(computedHeight) !== -1) {
+      ineligible = true;
+    }
+
+    if (isGoogleSearchApp(ua)) {
+      return {
+        webview: true,
+        ineligible: ineligible
+      };
+    }
+
+    var result = false;
+
+    if (scale > 1) {
+      result = device.zoomHeight[scale].indexOf(computedHeight) !== -1;
+    } else {
+      result = device.textSizeHeights.indexOf(computedHeight) !== -1;
+    }
+
+    return {
+      webview: result,
+      ineligible: ineligible
+    };
   }
 
-  return false;
+  return {
+    webview: false,
+    ineligible: false
+  };
 }
 export function isAndroidWebview(ua) {
   if (ua === void 0) {
@@ -157,7 +201,10 @@ export function supportsPopups(ua) {
     ua = getUserAgent();
   }
 
-  return !(isIosWebview(ua) || isAndroidWebview(ua) || isOperaMini(ua) || isFirefoxIOS(ua) || isEdgeIOS(ua) || isFacebookWebView(ua) || isQQBrowser(ua) || isElectron() || isMacOsCna() || isStandAlone());
+  var _isIosWebview = isIosWebview(ua),
+      webview = _isIosWebview.webview;
+
+  return !(webview || isAndroidWebview(ua) || isOperaMini(ua) || isFirefoxIOS(ua) || isEdgeIOS(ua) || isFacebookWebView(ua) || isQQBrowser(ua) || isElectron() || isMacOsCna() || isStandAlone());
 }
 export function isChrome(ua) {
   if (ua === void 0) {
