@@ -1,3 +1,4 @@
+// eslint-disable-next-line eslint-comments/disable-enable-pair
 /* eslint-disable max-nested-callbacks */
 /* @flow */
 
@@ -5,12 +6,16 @@ import { isIosWebview } from '../../../src/device';
 import { iPhoneScreenHeightMatrix } from '../../../src/screenHeights';
 
 describe('isIosWebview', () => {
+    beforeEach(() => {
+        window.outerHeight = 926;
+    });
+    
     it('should return true when both isIos and isGoogleSearchApp functions return true', () => {
         // eslint-disable-next-line compat/compat
         window.navigator.userAgent = 'iPhone GSA';
-        const bool = isIosWebview();
-        if (!bool) {
-            throw new Error(`Expected true, got ${ JSON.stringify(bool) }`);
+        const { webview } = isIosWebview();
+        if (!webview) {
+            throw new Error(`Expected true, got ${ JSON.stringify(webview) }`);
         }
     });
 
@@ -27,8 +32,8 @@ describe('isIosWebview', () => {
                 it(`${ textSize } text size should not be a web view`, () => {
                     // eslint-disable-next-line compat/compat
                     window.navigator.userAgent = 'iPhone';
-                    
-                    if (isIosWebview()) {
+                    const { webview } = isIosWebview();
+                    if (webview) {
                         throw new Error(`Expected text size, ${ textSize }, to not be a web view.`);
                     }
                 });
@@ -39,9 +44,9 @@ describe('isIosWebview', () => {
     it('should return false when isIos function returns false', () => {
         // eslint-disable-next-line compat/compat
         window.navigator.userAgent = 'potatoIOS';
-        const bool = isIosWebview();
-        if (bool) {
-            throw new Error(`Expected false, got ${ JSON.stringify(bool) }`);
+        const { webview } = isIosWebview();
+        if (webview) {
+            throw new Error(`Expected false, got ${ JSON.stringify(webview) }`);
         }
     });
 });
