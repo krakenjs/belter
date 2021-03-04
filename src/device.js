@@ -56,44 +56,61 @@ export function isQQBrowser(ua? : string = getUserAgent()) : boolean {
     return (/QQBrowser/).test(ua);
 }
 
-export function isIosWebview(ua? : string = getUserAgent()) : Object {
+export function isIosWebview(ua? : string = getUserAgent()) : boolean {
+    if (isIos(ua)) {
+        if (isGoogleSearchApp(ua)) {
+            return true;
+        }
+        return (/.+AppleWebKit(?!.*Safari)/).test(ua);
+    }
+    return false;
+}
+
+export function isSFVC(ua? : string = getUserAgent()) : boolean {
     if (isIos(ua)) {
         const device = iPhoneScreenHeightMatrix[window.outerHeight];
         if (!window.visualViewport || !device) {
-            return { webview: false, ineligible: false };
-        }
-
-        if (window.outerHeight === 568) {
-            return { webview: false, ineligible: true };
+            return false;
         }
 
         const height = window.visualViewport.height;
         const scale = Math.round(window.visualViewport.scale * 100) / 100;
         const computedHeight = Math.round(height * scale);
-        const ineligibleSizes = device.ineligible;
 
-        let ineligible = false;
-        if (scale > 1 &&
-            ineligibleSizes[scale] &&
-            ineligibleSizes[scale].indexOf(computedHeight) !== -1) {
-                
-            ineligible = true;
-        }
-
-        if (isGoogleSearchApp(ua)) {
-            return { webview: true, ineligible };
-        }
-
-        let result = false;
         if (scale > 1) {
-            result = device.zoomHeight[scale].indexOf(computedHeight) !== -1;
+            return device.zoomHeight[scale].indexOf(computedHeight) !== -1;
         } else {
-            result = device.textSizeHeights.indexOf(computedHeight) !== -1;
+            return device.textSizeHeights.indexOf(computedHeight) !== -1;
+        }
+    }
+    return false;
+}
+
+export function isSFVCorSafari(ua? : string = getUserAgent()) : boolean {
+    if (isIos(ua)) {
+        const sfvc = isSFVC(ua);
+
+        const device = iPhoneScreenHeightMatrix[window.outerHeight];
+        if (!window.visualViewport || !device) {
+            return false;
         }
 
-        return { webview: result, ineligible };
+        const height = window.visualViewport.height;
+        const scale = Math.round(window.visualViewport.scale * 100) / 100;
+        const computedHeight = Math.round(height * scale);
+        const possibleSafariSizes = device.maybeSafari;
+
+        let maybeSafari = false;
+        if (scale > 1 &&
+            possibleSafariSizes[scale] &&
+            possibleSafariSizes[scale].indexOf(computedHeight) !== -1) {
+                
+            maybeSafari = true;
+        }
+
+        return sfvc || maybeSafari;
     }
-    return { webview: false, ineligible: false };
+    return false;
 }
 
 export function isAndroidWebview(ua? : string = getUserAgent()) : boolean {
@@ -165,8 +182,7 @@ export function isMacOsCna() : boolean {
 }
 
 export function supportsPopups(ua? : string = getUserAgent()) : boolean {
-    const { webview } = isIosWebview(ua);
-    return !(webview || isAndroidWebview(ua) || isOperaMini(ua) ||
+    return !(isIosWebview(ua) || isAndroidWebview(ua) || isOperaMini(ua) ||
         isFirefoxIOS(ua) || isEdgeIOS(ua) || isFacebookWebView(ua) || isQQBrowser(ua) || isElectron() || isMacOsCna() || isStandAlone());
 }
 

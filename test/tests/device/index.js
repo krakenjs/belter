@@ -23,3 +23,5 @@ import './isMacOsCna';
 import './supportsPopups';
 import './isChrome';
 import './isSafari';
+import './isSFVC';
+import './isSFVCorSafari';
