@@ -82,57 +82,67 @@ export function isIosWebview(ua) {
   }
 
   if (isIos(ua)) {
+    if (isGoogleSearchApp(ua)) {
+      return true;
+    }
+
+    return /.+AppleWebKit(?!.*Safari)/.test(ua);
+  }
+
+  return false;
+}
+export function isSFVC(ua) {
+  if (ua === void 0) {
+    ua = getUserAgent();
+  }
+
+  if (isIos(ua)) {
     var device = iPhoneScreenHeightMatrix[window.outerHeight];
 
     if (!window.visualViewport || !device) {
-      return {
-        webview: false,
-        ineligible: false
-      };
-    }
-
-    if (window.outerHeight === 568) {
-      return {
-        webview: false,
-        ineligible: true
-      };
+      return false;
     }
 
     var height = window.visualViewport.height;
     var scale = Math.round(window.visualViewport.scale * 100) / 100;
     var computedHeight = Math.round(height * scale);
-    var ineligibleSizes = device.ineligible;
-    var ineligible = false;
-
-    if (scale > 1 && ineligibleSizes[scale] && ineligibleSizes[scale].indexOf(computedHeight) !== -1) {
-      ineligible = true;
-    }
-
-    if (isGoogleSearchApp(ua)) {
-      return {
-        webview: true,
-        ineligible: ineligible
-      };
-    }
-
-    var result = false;
 
     if (scale > 1) {
-      result = device.zoomHeight[scale].indexOf(computedHeight) !== -1;
+      return device.zoomHeight[scale].indexOf(computedHeight) !== -1;
     } else {
-      result = device.textSizeHeights.indexOf(computedHeight) !== -1;
+      return device.textSizeHeights.indexOf(computedHeight) !== -1;
     }
-
-    return {
-      webview: result,
-      ineligible: ineligible
-    };
   }
 
-  return {
-    webview: false,
-    ineligible: false
-  };
+  return false;
+}
+export function isSFVCorSafari(ua) {
+  if (ua === void 0) {
+    ua = getUserAgent();
+  }
+
+  if (isIos(ua)) {
+    var sfvc = isSFVC(ua);
+    var device = iPhoneScreenHeightMatrix[window.outerHeight];
+
+    if (!window.visualViewport || !device) {
+      return false;
+    }
+
+    var height = window.visualViewport.height;
+    var scale = Math.round(window.visualViewport.scale * 100) / 100;
+    var computedHeight = Math.round(height * scale);
+    var possibleSafariSizes = device.maybeSafari;
+    var maybeSafari = false;
+
+    if (scale > 1 && possibleSafariSizes[scale] && possibleSafariSizes[scale].indexOf(computedHeight) !== -1) {
+      maybeSafari = true;
+    }
+
+    return sfvc || maybeSafari;
+  }
+
+  return false;
 }
 export function isAndroidWebview(ua) {
   if (ua === void 0) {
@@ -201,10 +211,7 @@ export function supportsPopups(ua) {
     ua = getUserAgent();
   }
 
-  var _isIosWebview = isIosWebview(ua),
-      webview = _isIosWebview.webview;
-
-  return !(webview || isAndroidWebview(ua) || isOperaMini(ua) || isFirefoxIOS(ua) || isEdgeIOS(ua) || isFacebookWebView(ua) || isQQBrowser(ua) || isElectron() || isMacOsCna() || isStandAlone());
+  return !(isIosWebview(ua) || isAndroidWebview(ua) || isOperaMini(ua) || isFirefoxIOS(ua) || isEdgeIOS(ua) || isFacebookWebView(ua) || isQQBrowser(ua) || isElectron() || isMacOsCna() || isStandAlone());
 }
 export function isChrome(ua) {
   if (ua === void 0) {

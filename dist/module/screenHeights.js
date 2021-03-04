@@ -14,7 +14,7 @@ export var iPhoneScreenHeightMatrix = {
       '3': [753, 744] // 747, 738 removed as same in Safari
 
     },
-    ineligible: {
+    maybeSafari: {
       '2': [738],
       '2.5': [745, 738],
       '3': [747, 738]
@@ -34,7 +34,7 @@ export var iPhoneScreenHeightMatrix = {
       '3': [720, 717, 708] // 714 removed as same in Safari
 
     },
-    ineligible: {
+    maybeSafari: {
       '1.5': [707],
       '3': [714]
     }
@@ -56,7 +56,7 @@ export var iPhoneScreenHeightMatrix = {
       '3': [669, 666, 663, 657] // 663 removed as same in Safari
 
     },
-    ineligible: {
+    maybeSafari: {
       '1.15': [656],
       '1.5': [656],
       '2': [656],
@@ -78,7 +78,7 @@ export var iPhoneScreenHeightMatrix = {
       '3': [642, 633] // 636, 627 removed as same in Safari
 
     },
-    ineligible: {
+    maybeSafari: {
       '1.75': [627],
       '3': [636, 627]
     }
@@ -98,7 +98,7 @@ export var iPhoneScreenHeightMatrix = {
       '3': [627, 624, 615] // 621
 
     },
-    ineligible: {
+    maybeSafari: {
       '1.5': [614],
       '2': [614],
       '3': [621]
@@ -120,33 +120,11 @@ export var iPhoneScreenHeightMatrix = {
       '3': [558, 555, 546] // 552
 
     },
-    ineligible: {
+    maybeSafari: {
       '1.5': [545],
       '1.75': [544],
       '2.5': [545],
       '3': [552]
-    }
-  },
-  '568': {
-    device: 'iPhone 5, iPhone 5S, iPhone 5C, iPhone SE',
-    textSizeHeights: [0],
-    zoomHeight: {
-      '1.15': [0],
-      '1.25': [0],
-      '1.5': [0],
-      '1.75': [0],
-      '2': [0],
-      '2.5': [0],
-      '3': [0]
-    },
-    ineligible: {
-      '1.15': [0],
-      '1.25': [0],
-      '1.5': [0],
-      '1.75': [0],
-      '2': [0],
-      '2.5': [0],
-      '3': [0]
     }
   }
 };

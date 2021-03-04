@@ -101,6 +101,12 @@
         __webpack_require__.d(__webpack_exports__, "isIosWebview", (function() {
             return isIosWebview;
         }));
+        __webpack_require__.d(__webpack_exports__, "isSFVC", (function() {
+            return isSFVC;
+        }));
+        __webpack_require__.d(__webpack_exports__, "isSFVCorSafari", (function() {
+            return isSFVCorSafari;
+        }));
         __webpack_require__.d(__webpack_exports__, "isAndroidWebview", (function() {
             return isAndroidWebview;
         }));
@@ -615,7 +621,7 @@
                     2.5: [ 753, 748 ],
                     3: [ 753, 744 ]
                 },
-                ineligible: {
+                maybeSafari: {
                     2: [ 738 ],
                     2.5: [ 745, 738 ],
                     3: [ 747, 738 ]
@@ -633,7 +639,7 @@
                     2.5: [ 720, 718, 713, 708 ],
                     3: [ 720, 717, 708 ]
                 },
-                ineligible: {
+                maybeSafari: {
                     1.5: [ 707 ],
                     3: [ 714 ]
                 }
@@ -650,7 +656,7 @@
                     2.5: [ 670, 663 ],
                     3: [ 669, 666, 663, 657 ]
                 },
-                ineligible: {
+                maybeSafari: {
                     1.15: [ 656 ],
                     1.5: [ 656 ],
                     2: [ 656 ],
@@ -670,7 +676,7 @@
                     2.5: [ 640, 638, 633, 628 ],
                     3: [ 642, 633 ]
                 },
-                ineligible: {
+                maybeSafari: {
                     1.75: [ 627 ],
                     3: [ 636, 627 ]
                 }
@@ -687,7 +693,7 @@
                     2.5: [ 628, 625, 620, 615 ],
                     3: [ 627, 624, 615 ]
                 },
-                ineligible: {
+                maybeSafari: {
                     1.5: [ 614 ],
                     2: [ 614 ],
                     3: [ 621 ]
@@ -705,33 +711,11 @@
                     2.5: [ 560, 555, 550 ],
                     3: [ 558, 555, 546 ]
                 },
-                ineligible: {
+                maybeSafari: {
                     1.5: [ 545 ],
                     1.75: [ 544 ],
                     2.5: [ 545 ],
                     3: [ 552 ]
-                }
-            },
-            568: {
-                device: "iPhone 5, iPhone 5S, iPhone 5C, iPhone SE",
-                textSizeHeights: [ 0 ],
-                zoomHeight: {
-                    1.15: [ 0 ],
-                    1.25: [ 0 ],
-                    1.5: [ 0 ],
-                    1.75: [ 0 ],
-                    2: [ 0 ],
-                    2.5: [ 0 ],
-                    3: [ 0 ]
-                },
-                ineligible: {
-                    1.15: [ 0 ],
-                    1.25: [ 0 ],
-                    1.5: [ 0 ],
-                    1.75: [ 0 ],
-                    2: [ 0 ],
-                    2.5: [ 0 ],
-                    3: [ 0 ]
                 }
             }
         };
@@ -783,34 +767,35 @@
         }
         function isIosWebview(ua) {
             void 0 === ua && (ua = getUserAgent());
+            return !!isIos(ua) && (!!isGoogleSearchApp(ua) || /.+AppleWebKit(?!.*Safari)/.test(ua));
+        }
+        function isSFVC(ua) {
+            void 0 === ua && (ua = getUserAgent());
             if (isIos(ua)) {
                 var device = iPhoneScreenHeightMatrix[window.outerHeight];
-                if (!window.visualViewport || !device) return {
-                    webview: !1,
-                    ineligible: !1
-                };
-                if (568 === window.outerHeight) return {
-                    webview: !1,
-                    ineligible: !0
-                };
+                if (!window.visualViewport || !device) return !1;
                 var height = window.visualViewport.height;
                 var scale = Math.round(100 * window.visualViewport.scale) / 100;
                 var computedHeight = Math.round(height * scale);
-                var ineligibleSizes = device.ineligible;
-                var ineligible = !1;
-                scale > 1 && ineligibleSizes[scale] && -1 !== ineligibleSizes[scale].indexOf(computedHeight) && (ineligible = !0);
-                return isGoogleSearchApp(ua) ? {
-                    webview: !0,
-                    ineligible: ineligible
-                } : {
-                    webview: scale > 1 ? -1 !== device.zoomHeight[scale].indexOf(computedHeight) : -1 !== device.textSizeHeights.indexOf(computedHeight),
-                    ineligible: ineligible
-                };
+                return scale > 1 ? -1 !== device.zoomHeight[scale].indexOf(computedHeight) : -1 !== device.textSizeHeights.indexOf(computedHeight);
             }
-            return {
-                webview: !1,
-                ineligible: !1
-            };
+            return !1;
+        }
+        function isSFVCorSafari(ua) {
+            void 0 === ua && (ua = getUserAgent());
+            if (isIos(ua)) {
+                var sfvc = isSFVC(ua);
+                var device = iPhoneScreenHeightMatrix[window.outerHeight];
+                if (!window.visualViewport || !device) return !1;
+                var height = window.visualViewport.height;
+                var scale = Math.round(100 * window.visualViewport.scale) / 100;
+                var computedHeight = Math.round(height * scale);
+                var possibleSafariSizes = device.maybeSafari;
+                var maybeSafari = !1;
+                scale > 1 && possibleSafariSizes[scale] && -1 !== possibleSafariSizes[scale].indexOf(computedHeight) && (maybeSafari = !0);
+                return sfvc || maybeSafari;
+            }
+            return !1;
         }
         function isAndroidWebview(ua) {
             void 0 === ua && (ua = getUserAgent());
@@ -847,7 +832,7 @@
         }
         function supportsPopups(ua) {
             void 0 === ua && (ua = getUserAgent());
-            return !(isIosWebview(ua).webview || isAndroidWebview(ua) || isOperaMini(ua) || isFirefoxIOS(ua) || isEdgeIOS(ua) || isFacebookWebView(ua) || isQQBrowser(ua) || isElectron() || isMacOsCna() || isStandAlone());
+            return !(isIosWebview(ua) || isAndroidWebview(ua) || isOperaMini(ua) || isFirefoxIOS(ua) || isEdgeIOS(ua) || isFacebookWebView(ua) || isQQBrowser(ua) || isElectron() || isMacOsCna() || isStandAlone());
         }
         function isChrome(ua) {
             void 0 === ua && (ua = getUserAgent());
