@@ -73,12 +73,8 @@ export function isSFVC(ua? : string = getUserAgent()) : boolean {
             return false;
         }
 
-        const height = window.visualViewport
-            ? window.visualViewport.height
-            : window.innerHeight;
-        const scale = window.visualViewport
-            ? Math.round(window.visualViewport.scale * 100) / 100
-            : Math.round(window.screen.width / window.innerWidth * 100) / 100;
+        const height = window.innerHeight;
+        const scale = Math.round(window.screen.width / window.innerWidth * 100) / 100;
         const computedHeight = Math.round(height * scale);
 
         if (scale > 1 && device.zoomHeight[scale]) {
@@ -99,12 +95,8 @@ export function isSFVCorSafari(ua? : string = getUserAgent()) : boolean {
             return false;
         }
 
-        const height = window.visualViewport
-            ? window.visualViewport.height
-            : window.innerHeight;
-        const scale = window.visualViewport
-            ? Math.round(window.visualViewport.scale * 100) / 100
-            : Math.round(window.screen.width / window.innerWidth * 100) / 100;
+        const height = window.innerHeight;
+        const scale = Math.round(window.screen.width / window.innerWidth * 100) / 100;
 
         const computedHeight = Math.round(height * scale);
         const possibleSafariSizes = device.maybeSafari;
