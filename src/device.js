@@ -69,15 +69,15 @@ export function isIosWebview(ua? : string = getUserAgent()) : boolean {
 export function isSFVC(ua? : string = getUserAgent()) : boolean {
     if (isIos(ua)) {
         const device = iPhoneScreenHeightMatrix[window.outerHeight];
-        if (!window.visualViewport || !device) {
+        if (!device) {
             return false;
         }
 
-        const height = window.visualViewport.height;
-        const scale = Math.round(window.visualViewport.scale * 100) / 100;
+        const height = window.innerHeight;
+        const scale = Math.round(window.screen.width / window.innerWidth * 100) / 100;
         const computedHeight = Math.round(height * scale);
 
-        if (scale > 1) {
+        if (scale > 1 && device.zoomHeight[scale]) {
             return device.zoomHeight[scale].indexOf(computedHeight) !== -1;
         } else {
             return device.textSizeHeights.indexOf(computedHeight) !== -1;
@@ -91,12 +91,13 @@ export function isSFVCorSafari(ua? : string = getUserAgent()) : boolean {
         const sfvc = isSFVC(ua);
 
         const device = iPhoneScreenHeightMatrix[window.outerHeight];
-        if (!window.visualViewport || !device) {
+        if (!device) {
             return false;
         }
 
-        const height = window.visualViewport.height;
-        const scale = Math.round(window.visualViewport.scale * 100) / 100;
+        const height = window.innerHeight;
+        const scale = Math.round(window.screen.width / window.innerWidth * 100) / 100;
+
         const computedHeight = Math.round(height * scale);
         const possibleSafariSizes = device.maybeSafari;
 
