@@ -728,7 +728,7 @@
         }
         function isWebView() {
             var userAgent = getUserAgent();
-            return /(iPhone|iPod|iPad|Macintosh).*AppleWebKit(?!.*Safari)/i.test(userAgent) || /\bwv\b/.test(userAgent) || /Android.*Version\/(\d)\.(\d)/i.test(userAgent);
+            return /(iPhone|iPod|iPad|Macintosh).*AppleWebKit(?!.*Safari)|.*WKWebView/i.test(userAgent) || /\bwv\b/.test(userAgent) || /Android.*Version\/(\d)\.(\d)/i.test(userAgent);
         }
         function isStandAlone() {
             return !0 === window.navigator.standalone || window.matchMedia("(display-mode: standalone)").matches;
@@ -767,7 +767,7 @@
         }
         function isIosWebview(ua) {
             void 0 === ua && (ua = getUserAgent());
-            return !!isIos(ua) && (!!isGoogleSearchApp(ua) || /.+AppleWebKit(?!.*Safari)/.test(ua));
+            return !!isIos(ua) && (!!isGoogleSearchApp(ua) || /.+AppleWebKit(?!.*Safari)|.*WKWebView/.test(ua));
         }
         function isSFVC(ua) {
             void 0 === ua && (ua = getUserAgent());

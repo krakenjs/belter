@@ -15,7 +15,7 @@ export function isDevice(userAgent) {
 }
 export function isWebView() {
   var userAgent = getUserAgent();
-  return /(iPhone|iPod|iPad|Macintosh).*AppleWebKit(?!.*Safari)/i.test(userAgent) || /\bwv\b/.test(userAgent) || /Android.*Version\/(\d)\.(\d)/i.test(userAgent);
+  return /(iPhone|iPod|iPad|Macintosh).*AppleWebKit(?!.*Safari)|.*WKWebView/i.test(userAgent) || /\bwv\b/.test(userAgent) || /Android.*Version\/(\d)\.(\d)/i.test(userAgent);
 }
 export function isStandAlone() {
   return window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches; // eslint-disable-line compat/compat
@@ -86,7 +86,7 @@ export function isIosWebview(ua) {
       return true;
     }
 
-    return /.+AppleWebKit(?!.*Safari)/.test(ua);
+    return /.+AppleWebKit(?!.*Safari)|.*WKWebView/.test(ua);
   }
 
   return false;
