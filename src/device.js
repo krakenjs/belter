@@ -15,7 +15,7 @@ export function isDevice(userAgent? : string = getUserAgent()) : boolean {
 
 export function isWebView() : boolean {
     const userAgent = getUserAgent();
-    return (/(iPhone|iPod|iPad|Macintosh).*AppleWebKit(?!.*Safari)/i).test(userAgent) ||
+    return (/(iPhone|iPod|iPad|Macintosh).*AppleWebKit(?!.*Safari)|.*WKWebView/i).test(userAgent) ||
         (/\bwv\b/).test(userAgent) ||
     (/Android.*Version\/(\d)\.(\d)/i).test(userAgent);
 }
@@ -61,7 +61,7 @@ export function isIosWebview(ua? : string = getUserAgent()) : boolean {
         if (isGoogleSearchApp(ua)) {
             return true;
         }
-        return (/.+AppleWebKit(?!.*Safari)/).test(ua);
+        return (/.+AppleWebKit(?!.*Safari)|.*WKWebView/).test(ua);
     }
     return false;
 }
