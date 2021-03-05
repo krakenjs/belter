@@ -99,15 +99,15 @@ export function isSFVC(ua) {
   if (isIos(ua)) {
     var device = iPhoneScreenHeightMatrix[window.outerHeight];
 
-    if (!window.visualViewport || !device) {
+    if (!device) {
       return false;
     }
 
-    var height = window.visualViewport.height;
-    var scale = Math.round(window.visualViewport.scale * 100) / 100;
+    var height = window.innerHeight;
+    var scale = Math.round(window.screen.width / window.innerWidth * 100) / 100;
     var computedHeight = Math.round(height * scale);
 
-    if (scale > 1) {
+    if (scale > 1 && device.zoomHeight[scale]) {
       return device.zoomHeight[scale].indexOf(computedHeight) !== -1;
     } else {
       return device.textSizeHeights.indexOf(computedHeight) !== -1;
@@ -125,12 +125,12 @@ export function isSFVCorSafari(ua) {
     var sfvc = isSFVC(ua);
     var device = iPhoneScreenHeightMatrix[window.outerHeight];
 
-    if (!window.visualViewport || !device) {
+    if (!device) {
       return false;
     }
 
-    var height = window.visualViewport.height;
-    var scale = Math.round(window.visualViewport.scale * 100) / 100;
+    var height = window.innerHeight;
+    var scale = Math.round(window.screen.width / window.innerWidth * 100) / 100;
     var computedHeight = Math.round(height * scale);
     var possibleSafariSizes = device.maybeSafari;
     var maybeSafari = false;

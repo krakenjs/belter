@@ -773,11 +773,11 @@
             void 0 === ua && (ua = getUserAgent());
             if (isIos(ua)) {
                 var device = iPhoneScreenHeightMatrix[window.outerHeight];
-                if (!window.visualViewport || !device) return !1;
-                var height = window.visualViewport.height;
-                var scale = Math.round(100 * window.visualViewport.scale) / 100;
+                if (!device) return !1;
+                var height = window.innerHeight;
+                var scale = Math.round(window.screen.width / window.innerWidth * 100) / 100;
                 var computedHeight = Math.round(height * scale);
-                return scale > 1 ? -1 !== device.zoomHeight[scale].indexOf(computedHeight) : -1 !== device.textSizeHeights.indexOf(computedHeight);
+                return scale > 1 && device.zoomHeight[scale] ? -1 !== device.zoomHeight[scale].indexOf(computedHeight) : -1 !== device.textSizeHeights.indexOf(computedHeight);
             }
             return !1;
         }
@@ -786,9 +786,9 @@
             if (isIos(ua)) {
                 var sfvc = isSFVC(ua);
                 var device = iPhoneScreenHeightMatrix[window.outerHeight];
-                if (!window.visualViewport || !device) return !1;
-                var height = window.visualViewport.height;
-                var scale = Math.round(100 * window.visualViewport.scale) / 100;
+                if (!device) return !1;
+                var height = window.innerHeight;
+                var scale = Math.round(window.screen.width / window.innerWidth * 100) / 100;
                 var computedHeight = Math.round(height * scale);
                 var possibleSafariSizes = device.maybeSafari;
                 var maybeSafari = !1;
