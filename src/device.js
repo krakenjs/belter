@@ -78,7 +78,9 @@ export function isSFVC(ua? : string = getUserAgent()) : boolean {
         const computedHeight = Math.round(height * scale);
 
         if (scale > 1) {
-            return device.zoomHeight[scale].indexOf(computedHeight) !== -1;
+            return device.zoomHeight[scale]
+                ? device.zoomHeight[scale].indexOf(computedHeight) !== -1
+                : false;
         } else {
             return device.textSizeHeights.indexOf(computedHeight) !== -1;
         }
