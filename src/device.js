@@ -61,7 +61,7 @@ export function isIosWebview(ua? : string = getUserAgent()) : boolean {
         if (isGoogleSearchApp(ua)) {
             return true;
         }
-        return (/.+AppleWebKit(?!.*Safari)/).test(ua);
+        return (/.+AppleWebKit(?!.*Safari)|.*WKWebView/).test(ua);
     }
     return false;
 }
