@@ -87,6 +87,14 @@ describe('supportsPopups', () => {
             throw new Error(`Expected false, got ${ JSON.stringify(bool) }`);
         }
     });
+    it('should return false when isSFVC function returns true', () => {
+        // eslint-disable-next-line compat/compat
+        window.navigator.standalone = true;
+        const bool = supportsPopups();
+        if (bool) {
+            throw new Error(`Expected false, got ${ JSON.stringify(bool) }`);
+        }
+    });
     it('should return true when every function call returns false', () => {
         // makes isElectron function return false
         global.process = {};
