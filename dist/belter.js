@@ -832,7 +832,7 @@
         }
         function supportsPopups(ua) {
             void 0 === ua && (ua = getUserAgent());
-            return !(isSFVC(ua) || isIosWebview(ua) || isAndroidWebview(ua) || isOperaMini(ua) || isFirefoxIOS(ua) || isEdgeIOS(ua) || isFacebookWebView(ua) || isQQBrowser(ua) || isElectron() || isMacOsCna() || isStandAlone());
+            return !(isIosWebview(ua) || isAndroidWebview(ua) || isOperaMini(ua) || isFirefoxIOS(ua) || isEdgeIOS(ua) || isFacebookWebView(ua) || isQQBrowser(ua) || isElectron() || isMacOsCna() || isStandAlone());
         }
         function isChrome(ua) {
             void 0 === ua && (ua = getUserAgent());
