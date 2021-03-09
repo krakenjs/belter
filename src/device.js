@@ -183,7 +183,7 @@ export function isMacOsCna() : boolean {
 }
 
 export function supportsPopups(ua? : string = getUserAgent()) : boolean {
-    return !(isSFVC(ua) || isIosWebview(ua) || isAndroidWebview(ua) || isOperaMini(ua) ||
+    return !(isIosWebview(ua) || isAndroidWebview(ua) || isOperaMini(ua) ||
         isFirefoxIOS(ua) || isEdgeIOS(ua) || isFacebookWebView(ua) || isQQBrowser(ua) || isElectron() || isMacOsCna() || isStandAlone());
 }
 
