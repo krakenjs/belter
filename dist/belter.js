@@ -2423,7 +2423,7 @@
             })).filter(Boolean).join(",");
             var win;
             try {
-                win = window.open(url, name, params, !0);
+                win = window.open(url, name, params);
             } catch (err) {
                 throw new dom_PopupOpenError("Can not open popup window - " + (err.stack || err.message));
             }

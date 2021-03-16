@@ -455,7 +455,7 @@ export function popup(url, options) {
   var win;
 
   try {
-    win = window.open(url, name, params, true);
+    win = window.open(url, name, params);
   } catch (err) {
     throw new PopupOpenError("Can not open popup window - " + (err.stack || err.message));
   }
