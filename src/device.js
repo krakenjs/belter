@@ -25,7 +25,7 @@ export function isStandAlone() : boolean {
 }
 
 export function isFacebookWebView(ua? : string = getUserAgent()) : boolean {
-    return (ua.indexOf('FBAN') !== -1) || (ua.indexOf('FBAV') !== -1);
+    return (/FBAN/).test(ua) || (/FBAV/).test(ua);
 }
 
 export function isFirefoxIOS(ua? : string = getUserAgent()) : boolean {
@@ -37,7 +37,7 @@ export function isEdgeIOS(ua? : string = getUserAgent()) : boolean {
 }
 
 export function isOperaMini(ua? : string = getUserAgent()) : boolean {
-    return ua.indexOf('Opera Mini') > -1;
+    return (/Opera Mini/i).test(ua);
 }
 
 export function isAndroid(ua? : string = getUserAgent()) : boolean {
@@ -193,4 +193,12 @@ export function isChrome(ua? : string = getUserAgent()) : boolean {
 
 export function isSafari(ua? : string = getUserAgent()) : boolean {
     return (/Safari/).test(ua) && !isChrome(ua);
+}
+
+export function isApplePaySupported() : boolean {
+    if (window.ApplePaySession && window.ApplePaySession.canMakePayments()) {
+        return true;
+    }
+
+    return false;
 }

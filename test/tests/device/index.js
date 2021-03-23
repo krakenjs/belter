@@ -25,3 +25,4 @@ import './isChrome';
 import './isSafari';
 import './isSFVC';
 import './isSFVCorSafari';
+import './isApplePaySupported';
