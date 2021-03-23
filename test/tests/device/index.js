@@ -26,4 +26,3 @@ import './isSafari';
 import './isSFVC';
 import './isSFVCorSafari';
 import './isApplePaySupported';
-import './isSupportedNativeBrowser';
