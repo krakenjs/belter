@@ -134,6 +134,9 @@
         __webpack_require__.d(__webpack_exports__, "isSafari", (function() {
             return isSafari;
         }));
+        __webpack_require__.d(__webpack_exports__, "isApplePaySupported", (function() {
+            return isApplePaySupported;
+        }));
         __webpack_require__.d(__webpack_exports__, "isDocumentReady", (function() {
             return isDocumentReady;
         }));
@@ -735,7 +738,7 @@
         }
         function isFacebookWebView(ua) {
             void 0 === ua && (ua = getUserAgent());
-            return -1 !== ua.indexOf("FBAN") || -1 !== ua.indexOf("FBAV");
+            return /FBAN/.test(ua) || /FBAV/.test(ua);
         }
         function isFirefoxIOS(ua) {
             void 0 === ua && (ua = getUserAgent());
@@ -747,7 +750,7 @@
         }
         function isOperaMini(ua) {
             void 0 === ua && (ua = getUserAgent());
-            return ua.indexOf("Opera Mini") > -1;
+            return /Opera Mini/i.test(ua);
         }
         function isAndroid(ua) {
             void 0 === ua && (ua = getUserAgent());
@@ -841,6 +844,9 @@
         function isSafari(ua) {
             void 0 === ua && (ua = getUserAgent());
             return /Safari/.test(ua) && !isChrome(ua);
+        }
+        function isApplePaySupported() {
+            return !(!window.ApplePaySession || !window.ApplePaySession.canMakePayments());
         }
         function _setPrototypeOf(o, p) {
             return (_setPrototypeOf = Object.setPrototypeOf || function(o, p) {

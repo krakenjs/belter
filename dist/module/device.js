@@ -25,7 +25,7 @@ export function isFacebookWebView(ua) {
     ua = getUserAgent();
   }
 
-  return ua.indexOf('FBAN') !== -1 || ua.indexOf('FBAV') !== -1;
+  return /FBAN/.test(ua) || /FBAV/.test(ua);
 }
 export function isFirefoxIOS(ua) {
   if (ua === void 0) {
@@ -46,7 +46,7 @@ export function isOperaMini(ua) {
     ua = getUserAgent();
   }
 
-  return ua.indexOf('Opera Mini') > -1;
+  return /Opera Mini/i.test(ua);
 }
 export function isAndroid(ua) {
   if (ua === void 0) {
@@ -226,4 +226,11 @@ export function isSafari(ua) {
   }
 
   return /Safari/.test(ua) && !isChrome(ua);
+}
+export function isApplePaySupported() {
+  if (window.ApplePaySession && window.ApplePaySession.canMakePayments()) {
+    return true;
+  }
+
+  return false;
 }
