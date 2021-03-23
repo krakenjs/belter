@@ -194,3 +194,31 @@ export function isChrome(ua? : string = getUserAgent()) : boolean {
 export function isSafari(ua? : string = getUserAgent()) : boolean {
     return (/Safari/).test(ua) && !isChrome(ua);
 }
+
+export function isSupportedNativeBrowser() : boolean {
+    if (typeof window === 'undefined') {
+        return false;
+    }
+
+    if (!supportsPopups()) {
+        return false;
+    }
+
+    if (isIos() && isSafari()) {
+        return true;
+    }
+
+    if (isAndroid() && isChrome()) {
+        return true;
+    }
+
+    return false;
+}
+
+export function isApplePaySupported() : boolean {
+    if (window.ApplePaySession && window.ApplePaySession.canMakePayments()) {
+        return true;
+    }
+
+    return false;
+}
