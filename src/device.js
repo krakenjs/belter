@@ -196,8 +196,13 @@ export function isSafari(ua? : string = getUserAgent()) : boolean {
 }
 
 export function isApplePaySupported() : boolean {
-    if (window.ApplePaySession && window.ApplePaySession.canMakePayments()) {
-        return true;
+    try {
+        if (window.ApplePaySession && window.ApplePaySession.canMakePayments()) {
+            return true;
+        }
+    } catch (e) {
+        // eslint-disable-next-line no-console
+        console.warn(e);
     }
 
     return false;
