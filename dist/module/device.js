@@ -228,8 +228,12 @@ export function isSafari(ua) {
   return /Safari/.test(ua) && !isChrome(ua);
 }
 export function isApplePaySupported() {
-  if (window.ApplePaySession && window.ApplePaySession.canMakePayments()) {
-    return true;
+  try {
+    if (window.ApplePaySession && window.ApplePaySession.canMakePayments()) {
+      return true;
+    }
+  } catch (e) {
+    return false;
   }
 
   return false;

@@ -846,7 +846,12 @@
             return /Safari/.test(ua) && !isChrome(ua);
         }
         function isApplePaySupported() {
-            return !(!window.ApplePaySession || !window.ApplePaySession.canMakePayments());
+            try {
+                if (window.ApplePaySession && window.ApplePaySession.canMakePayments()) return !0;
+            } catch (e) {
+                return !1;
+            }
+            return !1;
         }
         function _setPrototypeOf(o, p) {
             return (_setPrototypeOf = Object.setPrototypeOf || function(o, p) {
