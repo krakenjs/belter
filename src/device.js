@@ -201,8 +201,7 @@ export function isApplePaySupported() : boolean {
             return true;
         }
     } catch (e) {
-        // eslint-disable-next-line no-console
-        console.warn(e);
+        return false;
     }
 
     return false;
