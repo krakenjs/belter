@@ -229,7 +229,7 @@ export function isSafari(ua) {
 }
 export function isApplePaySupported() {
   try {
-    if (window.ApplePaySession && window.ApplePaySession.canMakePayments()) {
+    if (window.ApplePaySession && window.ApplePaySession.supportsVersion(3) && window.ApplePaySession.canMakePayments()) {
       return true;
     }
   } catch (e) {

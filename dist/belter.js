@@ -847,7 +847,7 @@
         }
         function isApplePaySupported() {
             try {
-                if (window.ApplePaySession && window.ApplePaySession.canMakePayments()) return !0;
+                if (window.ApplePaySession && window.ApplePaySession.supportsVersion(3) && window.ApplePaySession.canMakePayments()) return !0;
             } catch (e) {
                 return !1;
             }
