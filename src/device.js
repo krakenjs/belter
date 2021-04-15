@@ -28,6 +28,10 @@ export function isFacebookWebView(ua? : string = getUserAgent()) : boolean {
     return (/FBAN/).test(ua) || (/FBAV/).test(ua);
 }
 
+export function isFirefox(ua? : string = getUserAgent()) : boolean {
+    return (/Firefox/i).test(ua);
+}
+
 export function isFirefoxIOS(ua? : string = getUserAgent()) : boolean {
     return (/FxiOS/i).test(ua);
 }
