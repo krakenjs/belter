@@ -27,6 +27,13 @@ export function isFacebookWebView(ua) {
 
   return /FBAN/.test(ua) || /FBAV/.test(ua);
 }
+export function isFirefox(ua) {
+  if (ua === void 0) {
+    ua = getUserAgent();
+  }
+
+  return /Firefox/i.test(ua);
+}
 export function isFirefoxIOS(ua) {
   if (ua === void 0) {
     ua = getUserAgent();

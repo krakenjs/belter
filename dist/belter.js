@@ -77,6 +77,9 @@
         __webpack_require__.d(__webpack_exports__, "isFacebookWebView", (function() {
             return isFacebookWebView;
         }));
+        __webpack_require__.d(__webpack_exports__, "isFirefox", (function() {
+            return isFirefox;
+        }));
         __webpack_require__.d(__webpack_exports__, "isFirefoxIOS", (function() {
             return isFirefoxIOS;
         }));
@@ -739,6 +742,10 @@
         function isFacebookWebView(ua) {
             void 0 === ua && (ua = getUserAgent());
             return /FBAN/.test(ua) || /FBAV/.test(ua);
+        }
+        function isFirefox(ua) {
+            void 0 === ua && (ua = getUserAgent());
+            return /Firefox/i.test(ua);
         }
         function isFirefoxIOS(ua) {
             void 0 === ua && (ua = getUserAgent());
