@@ -27,11 +27,11 @@ export function base64encode(str : string) : string {
     if (typeof btoa === 'function') {
         return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (m, p1) => {
             return String.fromCharCode(parseInt(p1, 16));
-        }));
+        })).replace(/[=]/g, '');
     }
 
     if (typeof Buffer !== 'undefined') {
-        return Buffer.from(str, 'utf8').toString('base64');
+        return Buffer.from(str, 'utf8').toString('base64').replace(/[=]/g, '');
     }
 
     throw new Error(`Can not find window.btoa or Buffer`);

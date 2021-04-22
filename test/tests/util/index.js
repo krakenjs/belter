@@ -10,4 +10,4 @@ import './identity';
 import './stringifyErrorMessage';
 import './isRegex';
 import './isDefined';
-
+import './base64encode';
