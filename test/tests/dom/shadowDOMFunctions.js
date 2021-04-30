@@ -1,16 +1,43 @@
+
 /* @flow */
+
 import { isShadowElement } from '../../../src';
 
+const body = document.body;
+
+before(() => {
+    customElements.define('custom-web-component', class extends HTMLElement {
+        constructor() {
+            super();
+            const shadow = this.attachShadow({ mode: 'open' });
+            const text = document.createElement('span');
+            text.textContent = 'test';
+            // Append it to the shadow root
+            shadow.appendChild(text);
+        }
+    });
+
+    if (!body) {
+        throw new Error('Body not found');
+    }
+    
+    const customComponent = document.createElement('custom-web-component');
+    body.appendChild(customComponent);
+});
 
 describe('isShadowElement cases', () => {
-    it('should return true if parent node is shadow root', () => {
-        const shadowHost = document.createElement('div');
-        shadowHost.attachShadow({ mode: 'open' });
+  
+    it('should return true if parent node is shadow root',  () => {
+        
+        const nestedElement = document.querySelector('custom-web-component');
+        
+        if (!nestedElement || !nestedElement.shadowRoot) {
+            throw new Error('shadow root');
+        }
 
-        const innerDiv = document.createElement('div');
-        shadowHost.appendChild(innerDiv);
+        nestedElement.shadowRoot.querySelector('span');
 
-        const result = isShadowElement(innerDiv);
+        const result = isShadowElement(nestedElement);
 
         if (!result) {
             throw new Error(`Expected result to be true, got ${ String(result) }`);
