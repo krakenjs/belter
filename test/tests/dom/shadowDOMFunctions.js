@@ -1,6 +1,3 @@
-// eslint-disable-next-line eslint-comments/disable-enable-pair
-/* eslint-disable no-console */
-
 /* @flow */
 
 import { isShadowElement, getShadowRoot, getShadowHost, insertShadowSlot } from '../../../src';
@@ -125,7 +122,6 @@ describe('insertShadowSlot cases', () => {
         try {
             insertShadowSlot(testElement);
         } catch (error) {
-            console.log(error.message);
             if (!error.message.match(/Element is not in shadow dom/i)) {
                 throw new Error(`should have thrown 'Element is not in shadow dom' exception, gotten: ${ error.message }`);
             }
@@ -150,7 +146,6 @@ describe('insertShadowSlot cases', () => {
         // Get the div within custom-wrapper that will be used as inner host for a new shadow DOM
         const hostDiv =  customWrapper.shadowRoot?.querySelector('#inner-host-div');
 
-        console.log('hostDiv is:', hostDiv);
         const nestedShadow = hostDiv?.attachShadow({ mode: 'open' });
         const innerSpan = document.createElement('span');
         innerSpan.setAttribute('id', 'inner-span');
@@ -184,5 +179,21 @@ describe('insertShadowSlot cases', () => {
     });
 
 
-    it.skip('should return slotProvider ');
+    it('should return slotProvider ', () => {
+        const innerElement = document.querySelector('custom-web-component')?.shadowRoot?.querySelector('#inner-span');
+        
+        if (!innerElement) {
+            throw new Error('unable to find inner element');
+        }
+
+        const result = insertShadowSlot(innerElement);
+
+        if (!result) {
+            throw new Error('should have returned an element, gotten undefined');
+        }
+
+        if (!result?.getAttribute('slot')?.match(/shadow-slot-/i)) {
+            throw new Error('should have returned an valid slot element');
+        }
+    });
 });
