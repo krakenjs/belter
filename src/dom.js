@@ -119,7 +119,7 @@ export function urlWillRedirectPage(url : string) : boolean {
 }
 
 type Query = {
-    [ string ] : boolean | string
+    [ string ] : string
 };
 
 export function formatQuery(obj : Query = {}) : string {
