@@ -1094,7 +1094,6 @@ export function getShadowRoot(element : Node) : ?Node {
 export function getShadowHost(element : Node) : ?HTMLElement {
     const shadowRoot = getShadowRoot(element);
 
-    // $FlowFixMe
     if (shadowRoot && shadowRoot.host) {
         // $FlowFixMe
         return shadowRoot.host;

@@ -42,7 +42,7 @@ describe('isShadowElement cases', () => {
         const innerElement = document.querySelector('custom-web-component')?.shadowRoot?.querySelector('#inner-span');
 
         if (!innerElement) {
-            throw new Error('there is not inner element');
+            throw new Error('unable to find inner element');
         }
         
         const result = isShadowElement(innerElement);
@@ -67,7 +67,7 @@ describe('getShadowRoot cases', () => {
         const innerElement = document.querySelector('custom-web-component')?.shadowRoot?.querySelector('#inner-span');
 
         if (!innerElement) {
-            throw new Error('there is not inner element');
+            throw new Error('unable to find inner element');
         }
         const result = getShadowRoot(innerElement);
 
@@ -87,7 +87,7 @@ describe('getShadowHost cases', () => {
         const innerElement = document.querySelector('custom-web-component')?.shadowRoot?.querySelector('#inner-span');
 
         if (!innerElement) {
-            throw new Error('there is not inner element');
+            throw new Error('unable to find inner element');
         }
 
         const result = getShadowHost(innerElement);
@@ -125,7 +125,7 @@ describe('insertShadowSlot cases', () => {
         const innerElement = document.querySelector('custom-web-component')?.shadowRoot?.querySelector('#inner-span');
         
         if (!innerElement) {
-            throw new Error('there is not inner element');
+            throw new Error('unable to find inner element');
         }
         
         const shadowHost = getShadowHost(innerElement);
@@ -143,6 +143,6 @@ describe('insertShadowSlot cases', () => {
         }
     });
 
-    
+
     it.skip('should return slotProvider ');
 });
