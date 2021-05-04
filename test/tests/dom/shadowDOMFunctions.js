@@ -169,13 +169,16 @@ describe('Web components', () => {
              * </html>
              */
              
-    
+            let insertShadowSlotError = '';
+
             try {
                 insertShadowSlot(innerSpan);
             } catch (error) {
-                if (!error.message.match(/Host element is also in shadow dom/)) {
-                    throw new Error(`should have thrown 'Host element is also in shadow dom' exception, got '${ error.message }'`);
-                }
+                insertShadowSlotError = error?.message;
+            }
+
+            if (!insertShadowSlotError.match(/Host element is also in shadow dom/)) {
+                throw new Error(`should have thrown 'Host element is also in shadow dom' exception, got '${ insertShadowSlotError }'`);
             }
         });
     
