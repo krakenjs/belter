@@ -86,7 +86,7 @@ describe('getShadowRoot cases', () => {
         }
 
         if (!result.toString() === '[object ShadowRoot]') {
-            throw new Error(`should have returned '[object ShadowRoot]', gotten ${ result.toString() }`);
+            throw new Error(`should have returned '[object ShadowRoot]', got ${ result.toString() }`);
         }
         
     });
@@ -103,13 +103,13 @@ describe('getShadowHost cases', () => {
         const result = getShadowHost(innerElement);
         
         if (!result) {
-            throw new Error(`should have returned the inner element, but gotten undefined`);
+            throw new Error(`should have returned the inner element, got undefined`);
         }
 
         const hostId = result.getAttribute('id');
 
         if (hostId && hostId !== 'shadow-host') {
-            throw new Error(`should have returned> shadow-host but gotten ${ hostId }`);
+            throw new Error(`should have returned 'shadow-host', got ${ hostId }`);
         }
 
     });
@@ -123,7 +123,7 @@ describe('insertShadowSlot cases', () => {
             insertShadowSlot(testElement);
         } catch (error) {
             if (!error.message.match(/Element is not in shadow dom/i)) {
-                throw new Error(`should have thrown 'Element is not in shadow dom' exception, gotten: ${ error.message }`);
+                throw new Error(`should have thrown 'Element is not in shadow dom' exception, got: ${ error.message }`);
             }
         }
 
@@ -173,7 +173,7 @@ describe('insertShadowSlot cases', () => {
             insertShadowSlot(innerSpan);
         } catch (error) {
             if (!error.message.match(/Host element is also in shadow dom/)) {
-                throw new Error(`should have thrown 'Host element is also in shadow dom' exception, gotten '${ error.message }'`);
+                throw new Error(`should have thrown 'Host element is also in shadow dom' exception, got '${ error.message }'`);
             }
         }
     });
@@ -189,7 +189,7 @@ describe('insertShadowSlot cases', () => {
         const result = insertShadowSlot(innerElement);
 
         if (!result) {
-            throw new Error('should have returned an element, gotten undefined');
+            throw new Error('should have returned an element, got undefined');
         }
 
         if (!result?.getAttribute('slot')?.match(/shadow-slot-/i)) {
