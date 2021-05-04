@@ -122,13 +122,16 @@ describe('Web components', () => {
     describe('insertShadowSlot cases', () => {
         it('should throw exception if element is not in shadow DOM', () => {
             const testElement = document.createElement('div');
-    
+            let insertShadowSlotError = '';
+
             try {
                 insertShadowSlot(testElement);
             } catch (error) {
-                if (!error.message.match(/Element is not in shadow dom/i)) {
-                    throw new Error(`should have thrown 'Element is not in shadow dom' exception, got: ${ error.message }`);
-                }
+                insertShadowSlotError = error?.message;
+            }
+
+            if (!insertShadowSlotError.match(/Element is not in shadow dom/i)) {
+                throw new Error(`should have thrown 'Element is not in shadow dom' exception, got: ${ insertShadowSlotError }`);
             }
     
         });
