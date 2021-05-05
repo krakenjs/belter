@@ -200,7 +200,7 @@ describe('Web components', () => {
             }
     
             if (!result?.getAttribute('slot')?.match(/shadow-slot-/i)) {
-                throw new Error('should have returned an valid slot element');
+                throw new Error('should have returned a valid slot element');
             }
         });
     });
