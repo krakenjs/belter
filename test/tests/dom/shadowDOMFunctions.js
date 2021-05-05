@@ -140,21 +140,19 @@ describe('Web components', () => {
     
             // TestCase components setup
             const customWrapper = document.createElement('custom-wrapper');
-            customWrapper.setAttribute('id', 'custom-wrapper');
+            customWrapper.setAttribute('id', 'custom-wrapper-id');
     
-            const customComponent = document.createElement('second-custom-web-component');
-            customComponent.setAttribute('id', 'shadow-host');
+            const customComponent = document.createElement('custom-web-component');
+            customComponent.setAttribute('id', 'custom-component-id');
     
-            // Get the div within custom-wrapper that will be used as inner host for a new shadow DOM
-            const hostDiv =  customWrapper.shadowRoot?.querySelector('#inner-host-div');
-    
-            const nestedShadow = hostDiv?.attachShadow({ mode: 'open' });
             const innerSpan = document.createElement('span');
             innerSpan.setAttribute('id', 'inner-span');
+            
             // $FlowFixMe
-            nestedShadow.appendChild(innerSpan);
+            customComponent.shadowRoot.appendChild(innerSpan);
             // $FlowFixMe
-            customWrapper.appendChild(customComponent);
+            customWrapper.shadowRoot.appendChild(customComponent);
+            
             // $FlowFixMe
             document.body.appendChild(customWrapper);
 
@@ -162,12 +160,12 @@ describe('Web components', () => {
              * At this point the HTML structure looks like this:
              * <html>
              *    ...
-             *    <custom-wrapper>
+             *    <custom-wrapper id="custom-wrapper-id">
              *         #shadow-root (open)
-             *           <div id="wrapper-div">
+             *           <custom-web-component id="custom-component-id">
              *              #shadow-root (open)
              *                <span id="inner-span"></span>
-             *           </div>
+             *           </custom-web-component>
              *    </custom-wrapper>
              * </html>
              */
