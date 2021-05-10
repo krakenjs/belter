@@ -1102,13 +1102,13 @@ export function getShadowHost(element : Node) : ?HTMLElement {
 
   
 export function getRootNode(element : Node) : Node {
-    while (element.parentNode) {
-        element = element.parentNode;
+    if (element.parentNode) {
+
+        return getRootNode(element.parentNode);
     }
-  
+
     return element;
 }
-
 export function insertShadowSlot(element : HTMLElement, styles? : HTMLElement) : HTMLElement {
     const DEFAULT_STYLESHEET_INDEX = 0;
     const shadowHost = getShadowHost(element);
@@ -1117,8 +1117,13 @@ export function insertShadowSlot(element : HTMLElement, styles? : HTMLElement) :
         throw new Error(`Element is not in shadow dom`);
     }
 
-    // $FlowFixMe
-    let styleNode = getRootNode(element).querySelector('style');
+    const rootNode = getRootNode(element);
+    let styleNode;
+
+    if (rootNode) {
+        // $FlowFixMe
+        styleNode = getRootNode(element).querySelector('style');
+    }
 
     const slotName = `shadow-slot-${ uniqueID() }`;
     const slot = document.createElement('slot');
