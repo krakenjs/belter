@@ -2194,12 +2194,7 @@
             SPACE: 32
         };
         var ATTRIBUTES = {
-            UID: "data-uid",
-            NONE: "csp-nonce",
-            TOKEN: "data-client-token",
-            ORDER: "data-order-id",
-            PAGE: "data-page-type",
-            PARTNER: "data-partner-attribution-id"
+            UID: "data-uid"
         };
         function isDocumentReady() {
             return Boolean(document.body) && "complete" === document.readyState;
@@ -2862,16 +2857,7 @@
             var uid = script.getAttribute(ATTRIBUTES.UID);
             if (uid && "string" == typeof uid) return uid;
             if ((uid = script.getAttribute(ATTRIBUTES.UID + "-auto")) && "string" == typeof uid) return uid;
-            if (script.src) {
-                var stringToHash = script.src;
-                Object.keys(ATTRIBUTES).forEach((function(key) {
-                    if ("UID" !== key) {
-                        var attr = script.getAttribute(ATTRIBUTES[key]);
-                        attr && (stringToHash += "" + attr);
-                    }
-                }));
-                uid = "UID_" + hashStr(stringToHash);
-            } else uid = uniqueID();
+            uid = uniqueID();
             script.setAttribute(ATTRIBUTES.UID + "-auto", uid);
             return uid;
         }));

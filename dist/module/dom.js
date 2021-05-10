@@ -5,7 +5,7 @@ import _extends from "@babel/runtime/helpers/esm/extends";
 import { ZalgoPromise } from 'zalgo-promise/src';
 import { linkFrameWindow, isWindowClosed, assertSameDomain } from 'cross-domain-utils/src';
 import { WeakMap } from 'cross-domain-safe-weakmap/src';
-import { inlineMemoize, memoize, noop, stringify, capitalizeFirstLetter, once, extend, safeInterval, uniqueID, arrayFrom, ExtendableError, hashStr } from './util';
+import { inlineMemoize, memoize, noop, stringify, capitalizeFirstLetter, once, extend, safeInterval, uniqueID, arrayFrom, ExtendableError } from './util';
 import { isDevice } from './device';
 import { KEY_CODES, ATTRIBUTES } from './constants';
 export function isDocumentReady() {
@@ -1134,25 +1134,7 @@ export var getCurrentScriptUID = memoize(function () {
     return uid;
   }
 
-  if (script.src) {
-    var stringToHash = script.src;
-    Object.keys(ATTRIBUTES).forEach(function (key) {
-      if (key === 'UID') {
-        return;
-      }
-
-      var attr = script.getAttribute(ATTRIBUTES[key]);
-
-      if (attr) {
-        stringToHash += "" + attr;
-      }
-    });
-    var hashedString = hashStr(stringToHash);
-    uid = "UID_" + hashedString;
-  } else {
-    uid = uniqueID();
-  }
-
+  uid = uniqueID();
   script.setAttribute(ATTRIBUTES.UID + "-auto", uid);
   return uid;
 });
