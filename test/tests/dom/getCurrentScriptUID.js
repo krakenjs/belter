@@ -5,7 +5,7 @@ import { getCurrentScriptUID, getCurrentScript, memoize, ATTRIBUTES } from '../.
 
 beforeEach(() => {
     const script = getCurrentScript();
-    script.setAttribute(`${ ATTRIBUTES.NONE }`, '654321');
+    script.setAttribute(`${ ATTRIBUTES.NONCE }`, '654321');
 });
 
 afterEach(() => {
@@ -26,7 +26,7 @@ describe('get current script UID', () => {
 
         if (!uidAttr) {
             throw new Error(
-                `Expected result have a 'data-uid-auto' attribute, got none`
+                `Should have a 'data-uid-auto' attribute, got undefined`
             );
         }
     });
@@ -37,7 +37,7 @@ describe('get current script UID', () => {
 
         if (!uidString.startsWith('UID_')) {
             throw new Error(
-                `Expected result should be a data-uid-auto starting with UID_, got ${ uidString }`
+                `Should have a data-uid-auto attribute starting with UID_, got ${ uidString }`
             );
         }
     });
@@ -53,7 +53,7 @@ describe('get current script UID', () => {
 
         if (uidString !== '123456') {
             throw new Error(
-                `Expected result should be '123456', got ${ uidString }`
+                `Should have returned a data-uid with '123456', got ${ uidString }`
             );
         }
     });
