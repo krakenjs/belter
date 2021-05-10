@@ -1099,30 +1099,13 @@ export function getShadowHost(element : Node) : ?HTMLElement {
         return shadowRoot.host;
     }
 }
-
   
-export function getRootNode(element : Node) : Node {
-    if (element.parentNode) {
 
-        return getRootNode(element.parentNode);
-    }
-
-    return element;
-}
-export function insertShadowSlot(element : HTMLElement, styles? : HTMLElement) : HTMLElement {
-    const DEFAULT_STYLESHEET_INDEX = 0;
+export function insertShadowSlot(element : HTMLElement) : HTMLElement {
     const shadowHost = getShadowHost(element);
 
     if (!shadowHost) {
         throw new Error(`Element is not in shadow dom`);
-    }
-
-    const rootNode = getRootNode(element);
-    let styleNode;
-
-    if (rootNode) {
-        // $FlowFixMe
-        styleNode = getRootNode(element).querySelector('style');
     }
 
     const slotName = `shadow-slot-${ uniqueID() }`;
@@ -1134,21 +1117,8 @@ export function insertShadowSlot(element : HTMLElement, styles? : HTMLElement) :
     slotProvider.setAttribute('slot', slotName);
     shadowHost.appendChild(slotProvider);
 
-    if (styles) {
-        if (!styleNode) {
-            styleNode = document.createElement('style');
-            element.appendChild(styleNode);
-        }
-    
-        const cssRule = `::slotted([slot="${  slotName  }"]) { ${  styles.toString()  } }`;
-        
-        if (styleNode.sheet) {
-            styleNode.sheet.insertRule(cssRule, DEFAULT_STYLESHEET_INDEX);
-        }
-    }
-
     if (isShadowElement(shadowHost)) {
-        return insertShadowSlot(slotProvider, styles);
+        return insertShadowSlot(slotProvider);
     }
 
     return slotProvider;
