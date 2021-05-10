@@ -1,6 +1,5 @@
 /* @flow */
 /* eslint max-lines: off */
-
 import { ZalgoPromise } from 'zalgo-promise/src';
 import { linkFrameWindow, isWindowClosed, assertSameDomain,
     type SameDomainWindowType, type CrossDomainWindowType } from 'cross-domain-utils/src';
@@ -1101,26 +1100,51 @@ export function getShadowHost(element : Node) : ?HTMLElement {
     }
 }
 
-export function insertShadowSlot(element : HTMLElement) : HTMLElement {
+  
+export function getRootNode(element : Node) : Node {
+    while (element.parentNode) {
+        element = element.parentNode;
+    }
+  
+    return element;
+}
+
+export function insertShadowSlot(element : HTMLElement, styles? : HTMLElement) : HTMLElement {
+    const DEFAULT_STYLESHEET_INDEX = 0;
     const shadowHost = getShadowHost(element);
 
     if (!shadowHost) {
         throw new Error(`Element is not in shadow dom`);
     }
 
-    if (isShadowElement(shadowHost)) {
-        throw new Error(`Host element is also in shadow dom`);
-    }
+    // $FlowFixMe
+    let styleNode = getRootNode(element).querySelector('style');
 
     const slotName = `shadow-slot-${ uniqueID() }`;
-
     const slot = document.createElement('slot');
     slot.setAttribute('name', slotName);
     element.appendChild(slot);
-    
+
     const slotProvider = document.createElement('div');
     slotProvider.setAttribute('slot', slotName);
     shadowHost.appendChild(slotProvider);
+
+    if (styles) {
+        if (!styleNode) {
+            styleNode = document.createElement('style');
+            element.appendChild(styleNode);
+        }
+    
+        const cssRule = `::slotted([slot="${  slotName  }"]) { ${  styles.toString()  } }`;
+        
+        if (styleNode.sheet) {
+            styleNode.sheet.insertRule(cssRule, DEFAULT_STYLESHEET_INDEX);
+        }
+    }
+
+    if (isShadowElement(shadowHost)) {
+        return insertShadowSlot(slotProvider, styles);
+    }
 
     return slotProvider;
 }

@@ -1,5 +1,4 @@
 /* @flow */
-
 import { isShadowElement, getShadowRoot, getShadowHost, insertShadowSlot } from '../../../src';
 
 // This component is needed for testing the case when shadowRoot and shadowDOM are the same
@@ -36,13 +35,15 @@ describe('Web components', () => {
         if (!document?.body) {
             throw new Error('Body not found');
         }
+        
+        const customElement = document.createElement('custom-web-component');
 
         // Clean the DOM
-        document.body.innerHTML = '';
+        if (document.body) {
+            document.body.innerHTML = '';
+            document.body.appendChild(customElement);
+        }
 
-        const customElement = document.createElement('custom-web-component');
-        // $FlowFixMe
-        document.body.appendChild(customElement);
     
         if (!customElement || !customElement.shadowRoot) {
             throw new Error('custom element does not have shadow root');
@@ -136,54 +137,6 @@ describe('Web components', () => {
     
         });
     
-        it('should throw exception if Host element is also in shadow dom', () => {
-    
-            // TestCase components setup
-            const customWrapper = document.createElement('custom-wrapper');
-            customWrapper.setAttribute('id', 'custom-wrapper-id');
-    
-            const customComponent = document.createElement('custom-web-component');
-            customComponent.setAttribute('id', 'custom-component-id');
-    
-            const innerSpan = document.createElement('span');
-            innerSpan.setAttribute('id', 'inner-span');
-            
-            // $FlowFixMe
-            customComponent.shadowRoot.appendChild(innerSpan);
-            // $FlowFixMe
-            customWrapper.shadowRoot.appendChild(customComponent);
-            
-            // $FlowFixMe
-            document.body.appendChild(customWrapper);
-
-            /**
-             * At this point the HTML structure looks like this:
-             * <html>
-             *    ...
-             *    <custom-wrapper id="custom-wrapper-id">
-             *         #shadow-root (open)
-             *           <custom-web-component id="custom-component-id">
-             *              #shadow-root (open)
-             *                <span id="inner-span"></span>
-             *           </custom-web-component>
-             *    </custom-wrapper>
-             * </html>
-             */
-             
-            let insertShadowSlotError = '';
-
-            try {
-                insertShadowSlot(innerSpan);
-            } catch (error) {
-                insertShadowSlotError = error?.message;
-            }
-
-            if (!insertShadowSlotError.match(/Host element is also in shadow dom/)) {
-                throw new Error(`should have thrown 'Host element is also in shadow dom' exception, got '${ insertShadowSlotError }'`);
-            }
-        });
-    
-    
         it('should return slotProvider ', () => {
             const innerElement = document.querySelector('custom-web-component')?.shadowRoot?.querySelector('#inner-span');
             
@@ -198,6 +151,57 @@ describe('Web components', () => {
             }
     
             if (!result?.getAttribute('slot')?.match(/shadow-slot-/i)) {
+                throw new Error('should have returned a valid slot element');
+            }
+        });
+
+        it('should return a nested slotProvider ', () => {
+            // TestCase components setup
+            const customWrapper = document.createElement('custom-wrapper');
+            customWrapper.setAttribute('id', 'custom-wrapper-id');
+    
+            const customComponent = document.createElement('custom-web-component');
+            customComponent.setAttribute('id', 'custom-component-id');
+    
+            const innerSpan = document.createElement('span');
+            innerSpan.setAttribute('id', 'inner-span');
+            
+            const customComponentShadowRoot = customComponent.shadowRoot;
+            const customWrapperShadowRoot = customWrapper.shadowRoot;
+            
+            if (customComponentShadowRoot) {
+                customComponentShadowRoot.appendChild(innerSpan);
+            }
+
+            if (customWrapperShadowRoot) {
+                customWrapperShadowRoot.appendChild(customComponent);
+            }
+
+            if (document.body) {
+                document.body.appendChild(customWrapper);
+            }
+
+            /**
+             * At this point the HTML structure looks like this:
+             * <html>
+             *    ...
+             *    <custom-wrapper id="custom-wrapper-id">
+             *         #shadow-root (open)
+             *           <custom-web-component id="custom-component-id">
+             *              #shadow-root (open)
+             *                <span id="inner-span"></span>
+             *           </custom-web-component>
+             *    </custom-wrapper>
+             * </html>
+             */
+
+            const slotProvider =  insertShadowSlot(innerSpan);
+
+            if (!slotProvider) {
+                throw new Error('should have returned an element, got undefined');
+            }
+    
+            if (!slotProvider?.getAttribute('slot')?.match(/shadow-slot-/i)) {
                 throw new Error('should have returned a valid slot element');
             }
         });
