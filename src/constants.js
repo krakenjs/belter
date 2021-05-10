@@ -6,5 +6,10 @@ export const KEY_CODES = {
 };
 
 export const ATTRIBUTES = {
-    UID: 'data-uid'
+    UID:     'data-uid',
+    NONE:    'csp-nonce',
+    TOKEN:   'data-client-token',
+    ORDER:   'data-order-id',
+    PAGE:    'data-page-type',
+    PARTNER: 'data-partner-attribution-id'
 };

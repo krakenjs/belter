@@ -7,3 +7,4 @@ import './isDocumentInteractive';
 import './waitForWindowReady';
 import './waitForDocumentReady';
 import './waitForDocumentBody';
+import './getCurrentScriptUID';

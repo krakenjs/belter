@@ -7,7 +7,7 @@ import { linkFrameWindow, isWindowClosed, assertSameDomain,
 import { WeakMap } from 'cross-domain-safe-weakmap/src';
 
 import { inlineMemoize, memoize, noop, stringify, capitalizeFirstLetter,
-    once, extend, safeInterval, uniqueID, arrayFrom, ExtendableError } from './util';
+    once, extend, safeInterval, uniqueID, arrayFrom, ExtendableError, hashStr } from './util';
 import { isDevice } from './device';
 import { KEY_CODES, ATTRIBUTES } from './constants';
 import type { CancelableType } from './types';
@@ -1215,7 +1215,28 @@ export const getCurrentScriptUID : GetCurrentScriptUID = memoize(() => {
         return uid;
     }
 
-    uid = uniqueID();
+    if (script.src) {
+
+        let stringToHash = script.src;
+
+        Object.keys(ATTRIBUTES).forEach(key => {
+            if (key === 'UID') {
+                return;
+            }
+            const attr = script.getAttribute(ATTRIBUTES[key]);
+            
+            if (attr) {
+                stringToHash += `${ attr }`;
+            }
+        });
+
+        const hashedString = hashStr(stringToHash);
+
+        uid = `UID_${ hashedString }`;
+    } else {
+        uid = uniqueID();
+    }
+
     script.setAttribute(`${ ATTRIBUTES.UID }-auto`, uid);
 
     return uid;
