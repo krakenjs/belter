@@ -6,5 +6,5 @@ export const KEY_CODES = {
 };
 
 export const ATTRIBUTES = {
-    UID:     'data-uid'
+    UID: 'data-uid'
 };
