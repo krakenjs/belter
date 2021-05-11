@@ -5,13 +5,9 @@ import { getCurrentScriptUID, getCurrentScript, memoize, ATTRIBUTES } from '../.
 
 beforeEach(() => {
     const script = getCurrentScript();
-    script.setAttribute('data-csp-nonce', '654321');
-});
-
-afterEach(() => {
-    const script = getCurrentScript();
     script.removeAttribute(`${ ATTRIBUTES.UID }`);
     script.removeAttribute(`${ ATTRIBUTES.UID }-auto`);
+    script.setAttribute('data-csp-nonce', '654321');
     memoize.clear();
 });
 
