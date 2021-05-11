@@ -1219,15 +1219,11 @@ export const getCurrentScriptUID : GetCurrentScriptUID = memoize(() => {
 
         let stringToHash = script.src;
 
-        Object.keys(ATTRIBUTES).forEach(key => {
+        Object.keys(script.dataset).forEach(key => {
             if (key === 'UID') {
                 return;
             }
-            const attr = script.getAttribute(ATTRIBUTES[key]);
-            
-            if (attr) {
-                stringToHash += `${ attr }`;
-            }
+            stringToHash += script.dataset[key];
         });
 
         const hashedString = hashStr(stringToHash);
