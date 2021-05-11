@@ -1220,7 +1220,7 @@ export const getCurrentScriptUID : GetCurrentScriptUID = memoize(() => {
         let stringToHash = script.src;
 
         Object.keys(script.dataset).forEach(key => {
-            if (key === 'UID') {
+            if (key === 'uid') {
                 return;
             }
             stringToHash += script.dataset[key];
