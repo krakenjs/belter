@@ -7,7 +7,7 @@ export const KEY_CODES = {
 
 export const ATTRIBUTES = {
     UID:     'data-uid',
-    NONCE:   'csp-nonce',
+    NONCE:   'data-csp-nonce',
     TOKEN:   'data-client-token',
     ORDER:   'data-order-id',
     PAGE:    'data-page-type',
