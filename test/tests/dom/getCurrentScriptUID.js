@@ -5,7 +5,7 @@ import { getCurrentScriptUID, getCurrentScript, memoize, ATTRIBUTES } from '../.
 
 beforeEach(() => {
     const script = getCurrentScript();
-    script.setAttribute(`${ ATTRIBUTES.NONCE }`, '654321');
+    script.setAttribute('data-csp-nonce', '654321');
 });
 
 afterEach(() => {
