@@ -78,7 +78,7 @@ describe('Web components', () => {
     });
     
     describe('getShadowRoot cases', () => {
-        it('should return shadow root host', () => {
+        it('should return shadow root', () => {
             const innerElement = document.querySelector('custom-web-component')?.shadowRoot?.querySelector('#inner-span');
     
             if (!innerElement) {
