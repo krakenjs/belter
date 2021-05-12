@@ -1217,18 +1217,11 @@ export const getCurrentScriptUID : GetCurrentScriptUID = memoize(() => {
 
     if (script.src) {
 
-        let stringToHash = script.src;
-
-        Object.keys(script.dataset).forEach(key => {
-            if (key === 'uid') {
-                return;
-            }
-            stringToHash += script.dataset[key];
-        });
-
+        const { src, dataset } = script;
+        const stringToHash = JSON.stringify({ src, dataset });
         const hashedString = hashStr(stringToHash);
 
-        uid = `UID_${ hashedString }`;
+        uid = `uid_${ hashedString }`;
     } else {
         uid = uniqueID();
     }

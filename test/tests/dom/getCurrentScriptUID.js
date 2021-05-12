@@ -1,6 +1,6 @@
 /* @flow */
 
-import { getCurrentScriptUID, getCurrentScript, memoize, ATTRIBUTES } from '../../../src';
+import { getCurrentScriptUID, getCurrentScript, memoize, ATTRIBUTES, hashStr } from '../../../src';
 
 
 beforeEach(() => {
@@ -29,11 +29,17 @@ describe('get current script UID', () => {
   
     it('should use script\'s src and attributes to create the script UID', () => {
 
+        const currentScript : HTMLScriptElement = getCurrentScript();
+        const { src, dataset } = currentScript;
+        const stringToHash = JSON.stringify({ src, dataset });
+        const hashedString = hashStr(stringToHash);
+        const uidToCompare = `uid_${ hashedString }`;
+        
         const uidString : string = getCurrentScriptUID();
 
-        if (!uidString.startsWith('UID_')) {
+        if (uidString !== uidToCompare) {
             throw new Error(
-                `Should have a data-uid-auto attribute starting with UID_, got ${ uidString }`
+                `Should have a data-uid-auto attribute ${ uidToCompare }, got ${ uidString }`
             );
         }
     });
