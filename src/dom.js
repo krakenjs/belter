@@ -1218,7 +1218,7 @@ export const getCurrentScriptUID : GetCurrentScriptUID = memoize(() => {
 
         const { src, dataset } = script;
         const stringToHash = JSON.stringify({ src, dataset });
-        const hashedString = strHashStr(stringToHash).slice(20);
+        const hashedString = strHashStr(stringToHash).slice(0, 20);
 
         uid = `uid_${ hashedString }`;
     } else {
