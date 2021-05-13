@@ -5,7 +5,7 @@ import _extends from "@babel/runtime/helpers/esm/extends";
 import { ZalgoPromise } from 'zalgo-promise/src';
 import { linkFrameWindow, isWindowClosed, assertSameDomain } from 'cross-domain-utils/src';
 import { WeakMap } from 'cross-domain-safe-weakmap/src';
-import { inlineMemoize, memoize, noop, stringify, capitalizeFirstLetter, once, extend, safeInterval, uniqueID, arrayFrom, ExtendableError } from './util';
+import { inlineMemoize, memoize, noop, stringify, capitalizeFirstLetter, once, extend, safeInterval, uniqueID, arrayFrom, ExtendableError, hashStr } from './util';
 import { isDevice } from './device';
 import { KEY_CODES, ATTRIBUTES } from './constants';
 export function isDocumentReady() {
@@ -1028,7 +1028,7 @@ export function getShadowRoot(element) {
 export function getShadowHost(element) {
   var shadowRoot = getShadowRoot(element); // $FlowFixMe
 
-  if (shadowRoot.host) {
+  if (shadowRoot && shadowRoot.host) {
     // $FlowFixMe
     return shadowRoot.host;
   }
@@ -1040,10 +1040,6 @@ export function insertShadowSlot(element) {
     throw new Error("Element is not in shadow dom");
   }
 
-  if (isShadowElement(shadowHost)) {
-    throw new Error("Host element is also in shadow dom");
-  }
-
   var slotName = "shadow-slot-" + uniqueID();
   var slot = document.createElement('slot');
   slot.setAttribute('name', slotName);
@@ -1051,6 +1047,11 @@ export function insertShadowSlot(element) {
   var slotProvider = document.createElement('div');
   slotProvider.setAttribute('slot', slotName);
   shadowHost.appendChild(slotProvider);
+
+  if (isShadowElement(shadowHost)) {
+    return insertShadowSlot(slotProvider);
+  }
+
   return slotProvider;
 }
 export function preventClickFocus(el) {
@@ -1134,7 +1135,20 @@ export var getCurrentScriptUID = memoize(function () {
     return uid;
   }
 
-  uid = uniqueID();
+  if (script.src) {
+    var _script = script,
+        src = _script.src,
+        dataset = _script.dataset;
+    var stringToHash = JSON.stringify({
+      src: src,
+      dataset: dataset
+    });
+    var hashedString = hashStr(stringToHash);
+    uid = "uid_" + hashedString;
+  } else {
+    uid = uniqueID();
+  }
+
   script.setAttribute(ATTRIBUTES.UID + "-auto", uid);
   return uid;
 });

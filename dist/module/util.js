@@ -51,7 +51,7 @@ export function uniqueID() {
     return chars.charAt(Math.floor(Math.random() * chars.length));
   });
   var timeID = base64encode(new Date().toISOString().slice(11, 19).replace('T', '.')).replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
-  return randomID + "_" + timeID;
+  return "uid_" + randomID + "_" + timeID;
 }
 export function getGlobal() {
   if (typeof window !== 'undefined') {

@@ -1545,7 +1545,7 @@
         }
         function uniqueID() {
             var chars = "0123456789abcdef";
-            return "xxxxxxxxxx".replace(/./g, (function() {
+            return "uid_" + "xxxxxxxxxx".replace(/./g, (function() {
                 return chars.charAt(Math.floor(Math.random() * chars.length));
             })) + "_" + base64encode((new Date).toISOString().slice(11, 19).replace("T", ".")).replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
         }
@@ -2793,12 +2793,11 @@
         }
         function getShadowHost(element) {
             var shadowRoot = getShadowRoot(element);
-            if (shadowRoot.host) return shadowRoot.host;
+            if (shadowRoot && shadowRoot.host) return shadowRoot.host;
         }
         function insertShadowSlot(element) {
             var shadowHost = getShadowHost(element);
             if (!shadowHost) throw new Error("Element is not in shadow dom");
-            if (isShadowElement(shadowHost)) throw new Error("Host element is also in shadow dom");
             var slotName = "shadow-slot-" + uniqueID();
             var slot = document.createElement("slot");
             slot.setAttribute("name", slotName);
@@ -2806,7 +2805,7 @@
             var slotProvider = document.createElement("div");
             slotProvider.setAttribute("slot", slotName);
             shadowHost.appendChild(slotProvider);
-            return slotProvider;
+            return isShadowElement(shadowHost) ? insertShadowSlot(slotProvider) : slotProvider;
         }
         function preventClickFocus(el) {
             var onFocus = function onFocus(event) {
@@ -2857,7 +2856,10 @@
             var uid = script.getAttribute(ATTRIBUTES.UID);
             if (uid && "string" == typeof uid) return uid;
             if ((uid = script.getAttribute(ATTRIBUTES.UID + "-auto")) && "string" == typeof uid) return uid;
-            uid = uniqueID();
+            uid = script.src ? "uid_" + hashStr(JSON.stringify({
+                src: script.src,
+                dataset: script.dataset
+            })) : uniqueID();
             script.setAttribute(ATTRIBUTES.UID + "-auto", uid);
             return uid;
         }));
