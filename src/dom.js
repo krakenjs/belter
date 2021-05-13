@@ -1,6 +1,5 @@
 /* @flow */
 /* eslint max-lines: off */
-
 import { ZalgoPromise } from 'zalgo-promise/src';
 import { linkFrameWindow, isWindowClosed, assertSameDomain,
     type SameDomainWindowType, type CrossDomainWindowType } from 'cross-domain-utils/src';
@@ -1095,11 +1094,12 @@ export function getShadowHost(element : Node) : ?HTMLElement {
     const shadowRoot = getShadowRoot(element);
 
     // $FlowFixMe
-    if (shadowRoot.host) {
+    if (shadowRoot && shadowRoot.host) {
         // $FlowFixMe
         return shadowRoot.host;
     }
 }
+  
 
 export function insertShadowSlot(element : HTMLElement) : HTMLElement {
     const shadowHost = getShadowHost(element);
@@ -1108,19 +1108,18 @@ export function insertShadowSlot(element : HTMLElement) : HTMLElement {
         throw new Error(`Element is not in shadow dom`);
     }
 
-    if (isShadowElement(shadowHost)) {
-        throw new Error(`Host element is also in shadow dom`);
-    }
-
     const slotName = `shadow-slot-${ uniqueID() }`;
-
     const slot = document.createElement('slot');
     slot.setAttribute('name', slotName);
     element.appendChild(slot);
-    
+
     const slotProvider = document.createElement('div');
     slotProvider.setAttribute('slot', slotName);
     shadowHost.appendChild(slotProvider);
+
+    if (isShadowElement(shadowHost)) {
+        return insertShadowSlot(slotProvider);
+    }
 
     return slotProvider;
 }
