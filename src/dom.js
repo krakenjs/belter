@@ -6,7 +6,7 @@ import { linkFrameWindow, isWindowClosed, assertSameDomain,
 import { WeakMap } from 'cross-domain-safe-weakmap/src';
 
 import { inlineMemoize, memoize, noop, stringify, capitalizeFirstLetter,
-    once, extend, safeInterval, uniqueID, arrayFrom, ExtendableError, hashStr } from './util';
+    once, extend, safeInterval, uniqueID, arrayFrom, ExtendableError, strHashStr } from './util';
 import { isDevice } from './device';
 import { KEY_CODES, ATTRIBUTES } from './constants';
 import type { CancelableType } from './types';
@@ -226,7 +226,7 @@ export function getPageRenderTime() : ZalgoPromise<?number> {
         if (!performance) {
             return;
         }
-        
+
         const timing = performance.timing;
 
         if (timing.connectEnd && timing.domInteractive) {
@@ -1021,7 +1021,7 @@ export function onResize(el : HTMLElement, handler : ({| width : number, height 
     let timeout;
 
     win.addEventListener('resize', check);
-    
+
     if (typeof win.ResizeObserver !== 'undefined') {
         observer = new win.ResizeObserver(check);
         observer.observe(el);
@@ -1099,7 +1099,7 @@ export function getShadowHost(element : Node) : ?HTMLElement {
         return shadowRoot.host;
     }
 }
-  
+
 
 export function insertShadowSlot(element : HTMLElement) : HTMLElement {
     const shadowHost = getShadowHost(element);
@@ -1218,7 +1218,7 @@ export const getCurrentScriptUID : GetCurrentScriptUID = memoize(() => {
 
         const { src, dataset } = script;
         const stringToHash = JSON.stringify({ src, dataset });
-        const hashedString = hashStr(stringToHash);
+        const hashedString = strHashStr(stringToHash).slice(20);
 
         uid = `uid_${ hashedString }`;
     } else {
