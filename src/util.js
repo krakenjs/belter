@@ -64,7 +64,7 @@ export function uniqueID() : string {
         new Date().toISOString().slice(11, 19).replace('T', '.')
     ).replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
 
-    return `${ randomID }_${ timeID }`;
+    return `uid_${ randomID }_${ timeID }`;
 }
 
 export function getGlobal() : Object {
