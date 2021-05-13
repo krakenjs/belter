@@ -32,7 +32,8 @@ describe('get current script UID', () => {
         const currentScript : HTMLScriptElement = getCurrentScript();
         const { src, dataset } = currentScript;
         const stringToHash = JSON.stringify({ src, dataset });
-        const hashedString = strHashStr(stringToHash).slice(20);
+        const maxLengthForHashString = 20;
+        const hashedString = strHashStr(stringToHash).slice(maxLengthForHashString);
         const uidToCompare = `uid_${ hashedString }`;
 
         const uidString : string = getCurrentScriptUID();
