@@ -2856,10 +2856,10 @@
             var uid = script.getAttribute(ATTRIBUTES.UID);
             if (uid && "string" == typeof uid) return uid;
             if ((uid = script.getAttribute(ATTRIBUTES.UID + "-auto")) && "string" == typeof uid) return uid;
-            uid = script.src ? "uid_" + hashStr(JSON.stringify({
+            uid = script.src ? "uid_" + strHashStr(JSON.stringify({
                 src: script.src,
                 dataset: script.dataset
-            })) : uniqueID();
+            })).slice(0, 20) : uniqueID();
             script.setAttribute(ATTRIBUTES.UID + "-auto", uid);
             return uid;
         }));
