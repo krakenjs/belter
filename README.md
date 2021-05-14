@@ -1,6 +1,20 @@
 belter
 ------
 
+[![build status][build-badge]][build]
+[![code coverage][coverage-badge]][coverage]
+[![npm version][version-badge]][package]
+[![apache license][license-badge]][license]
+
+[build-badge]: https://img.shields.io/github/workflow/status/krakenjs/belter/build?logo=github&style=flat-square
+[build]: https://github.com/krakenjs/belter/actions?query=workflow%3Abuild
+[coverage-badge]: https://img.shields.io/codecov/c/github/krakenjs/belter.svg?style=flat-square
+[coverage]: https://codecov.io/github/krakenjs/belter/
+[version-badge]: https://img.shields.io/npm/v/belter.svg?style=flat-square
+[package]: https://www.npmjs.com/package/belter
+[license-badge]: https://img.shields.io/npm/l/belter.svg?style=flat-square
+[license]: https://github.com/krakenjs/belter/blob/master/LICENSE
+
 Miscellaneous browser utils and tools.
 
 Quick Start
