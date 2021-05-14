@@ -8,7 +8,7 @@ import { WeakMap } from 'cross-domain-safe-weakmap/src';
 import { inlineMemoize, memoize, noop, stringify, capitalizeFirstLetter,
     once, extend, safeInterval, uniqueID, arrayFrom, ExtendableError, strHashStr } from './util';
 import { isDevice } from './device';
-import { KEY_CODES, ATTRIBUTES } from './constants';
+import { KEY_CODES, ATTRIBUTES, UID_HASH_LENGTH } from './constants';
 import type { CancelableType } from './types';
 
 type ElementRefType = string | HTMLElement;
@@ -1218,9 +1218,16 @@ export const getCurrentScriptUID : GetCurrentScriptUID = memoize(() => {
 
         const { src, dataset } = script;
         const stringToHash = JSON.stringify({ src, dataset });
-        const hashedString = strHashStr(stringToHash).slice(0, 20);
+        const hashedString = strHashStr(stringToHash);
 
-        uid = `uid_${ hashedString }`;
+        let hashResult : string;
+        if (hashedString.length > UID_HASH_LENGTH) {
+            hashResult = hashedString.slice(hashedString.length - UID_HASH_LENGTH);
+        } else {
+            hashResult = hashedString;
+        }
+
+        uid = `uid_${ hashResult }`;
     } else {
         uid = uniqueID();
     }

@@ -32,15 +32,25 @@ describe('get current script UID', () => {
         const currentScript : HTMLScriptElement = getCurrentScript();
         const { src, dataset } = currentScript;
         const stringToHash = JSON.stringify({ src, dataset });
-        const maxLengthForHashString = 20;
-        const hashedString = strHashStr(stringToHash).slice(0, maxLengthForHashString);
-        const uidToCompare = `uid_${ hashedString }`;
+        const hashedString = strHashStr(stringToHash);
 
         const uidString : string = getCurrentScriptUID();
+        const uidStringWithoutPrefix = uidString.split('uid_')[1];
 
-        if (uidString !== uidToCompare) {
+        if (!hashedString.includes(uidStringWithoutPrefix)) {
             throw new Error(
-                `Should have a data-uid-auto attribute ${ uidToCompare }, got ${ uidString }`
+                `Should have generated a data-uid-auto hash value from ${ stringToHash }`
+            );
+        }
+
+        currentScript.removeAttribute(`${ ATTRIBUTES.UID }-auto`);
+        currentScript.setAttribute('data-custom-attribute', '123456');
+        memoize.clear();
+        const uidString2 : string = getCurrentScriptUID();
+
+        if (uidString === uidString2) {
+            throw new Error(
+                `Should have generated a new data-uid-auto hash value when the attributes change, got ${ uidString2 }`
             );
         }
     });

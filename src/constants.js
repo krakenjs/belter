@@ -8,3 +8,5 @@ export const KEY_CODES = {
 export const ATTRIBUTES = {
     UID: 'data-uid'
 };
+
+export const UID_HASH_LENGTH = 30;
