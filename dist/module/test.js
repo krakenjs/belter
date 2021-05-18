@@ -10,16 +10,25 @@ export function wrapPromise(method, _temp) {
   return new ZalgoPromise(function (resolve, reject) {
     var timer = setTimeout(function () {
       if (expected.length) {
-        reject(new Error("Expected " + expected[0] + " to be called"));
+        reject(new Error("Expected " + expected[0].name + " to be called in " + timeout + "ms"));
+      }
+
+      if (promises.length) {
+        reject(new Error("Expected " + promises[0].name + " promise to complete in " + timeout + "ms"));
       }
     }, timeout);
 
-    var expect = function expect(name, fn) {
-      if (fn === void 0) {
-        fn = noop;
+    var expect = function expect(name, handler) {
+      if (handler === void 0) {
+        handler = noop;
       }
 
-      expected.push(name); // $FlowFixMe
+      var exp = {
+        name: name,
+        handler: handler
+      }; // $FlowFixMe
+
+      expected.push(exp); // $FlowFixMe
 
       return function expectWrapper() {
         var _this = this;
@@ -28,22 +37,28 @@ export function wrapPromise(method, _temp) {
           args[_key] = arguments[_key];
         }
 
-        removeFromArray(expected, name); // $FlowFixMe
+        removeFromArray(expected, exp); // $FlowFixMe
 
         var _tryCatch = tryCatch(function () {
-          var _fn;
+          var _handler;
 
-          return (_fn = fn).call.apply(_fn, [_this].concat(args));
+          return (_handler = handler).call.apply(_handler, [_this].concat(args));
         }),
             result = _tryCatch.result,
             error = _tryCatch.error;
 
         if (error) {
-          promises.push(ZalgoPromise.asyncReject(error));
+          promises.push({
+            name: name,
+            promise: ZalgoPromise.asyncReject(error)
+          });
           throw error;
         }
 
-        promises.push(ZalgoPromise.resolve(result));
+        promises.push({
+          name: name,
+          promise: ZalgoPromise.resolve(result)
+        });
         return result;
       };
     };
@@ -55,24 +70,32 @@ export function wrapPromise(method, _temp) {
 
       // $FlowFixMe
       return function avoidWrapper() {
-        var _fn2;
+        var _fn;
 
-        promises.push(ZalgoPromise.asyncReject(new Error("Expected " + name + " to not be called"))); // $FlowFixMe
+        promises.push({
+          name: name,
+          promise: ZalgoPromise.asyncReject(new Error("Expected " + name + " to not be called"))
+        }); // $FlowFixMe
 
         for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
           args[_key2] = arguments[_key2];
         }
 
-        return (_fn2 = fn).call.apply(_fn2, [this].concat(args));
+        return (_fn = fn).call.apply(_fn, [this].concat(args));
       };
     };
 
-    var expectError = function expectError(name, fn) {
-      if (fn === void 0) {
-        fn = noop;
+    var expectError = function expectError(name, handler) {
+      if (handler === void 0) {
+        handler = noop;
       }
 
-      expected.push(name); // $FlowFixMe
+      var exp = {
+        name: name,
+        handler: handler
+      }; // $FlowFixMe
+
+      expected.push(exp); // $FlowFixMe
 
       return function expectErrorWrapper() {
         var _this2 = this;
@@ -81,12 +104,12 @@ export function wrapPromise(method, _temp) {
           args[_key3] = arguments[_key3];
         }
 
-        removeFromArray(expected, name); // $FlowFixMe
+        removeFromArray(expected, exp); // $FlowFixMe
 
         var _tryCatch2 = tryCatch(function () {
-          var _fn3;
+          var _handler2;
 
-          return (_fn3 = fn).call.apply(_fn3, [_this2].concat(args));
+          return (_handler2 = handler).call.apply(_handler2, [_this2].concat(args));
         }),
             result = _tryCatch2.result,
             error = _tryCatch2.error;
@@ -95,9 +118,12 @@ export function wrapPromise(method, _temp) {
           throw error;
         }
 
-        promises.push(ZalgoPromise.resolve(result).then(function () {
-          throw new Error("Expected " + name + " to throw an error");
-        }, noop));
+        promises.push({
+          name: name,
+          promise: ZalgoPromise.resolve(result).then(function () {
+            throw new Error("Expected " + name + " to throw an error");
+          }, noop)
+        });
         return result;
       };
     };
@@ -105,28 +131,32 @@ export function wrapPromise(method, _temp) {
     var wait = function wait() {
       return ZalgoPromise.try(function () {
         if (promises.length) {
-          return promises.pop();
+          var prom = promises[0];
+          return prom.promise.finally(function () {
+            removeFromArray(promises, prom);
+          }).then(wait);
         }
       }).then(function () {
-        if (promises.length) {
-          return wait();
-        }
-
         if (expected.length) {
           return ZalgoPromise.delay(10).then(wait);
         }
       });
     };
 
-    promises.push(ZalgoPromise.try(function () {
-      return method({
-        expect: expect,
-        avoid: avoid,
-        expectError: expectError,
-        error: avoid,
-        wait: wait
-      });
-    }));
+    promises.push({
+      name: 'wrapPromise handler',
+      promise: ZalgoPromise.try(function () {
+        return method({
+          expect: expect,
+          avoid: avoid,
+          expectError: expectError,
+          error: avoid,
+          wait: function wait() {
+            return ZalgoPromise.resolve();
+          }
+        });
+      })
+    });
     wait().finally(function () {
       clearTimeout(timer);
     }).then(resolve, reject);
