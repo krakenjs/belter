@@ -117,7 +117,7 @@ export function urlWillRedirectPage(url : string) : boolean {
     return true;
 }
 
-type Query = {
+export type Query = {
     [ string ] : boolean | string
 };
 
