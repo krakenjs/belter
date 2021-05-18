@@ -10,32 +10,38 @@ type Handler = <T, A : $ReadOnlyArray<mixed>>(name : string, fn? : (...args : A)
 type Wrapper<T> = ({| expect : Handler, avoid : Handler, expectError : Handler, error : Handler, wait : () => Prom<void> |}) => (Prom<T> | void);
 
 export function wrapPromise<T>(method : Wrapper<T>, { timeout = 5000 } : {| timeout? : number |} = {}) : ZalgoPromise<void> {
-    const expected : Array<string> = [];
-    const promises : Array<ZalgoPromise<*>> = [];
+    const expected : Array<{| name : string, handler : Handler |}> = [];
+    const promises : Array<{| name : string, promise : ZalgoPromise<*> |}> = [];
 
     return new ZalgoPromise((resolve, reject) => {
         const timer = setTimeout(() => {
             if (expected.length) {
-                reject(new Error(`Expected ${ expected[0] } to be called`));
+                reject(new Error(`Expected ${ expected[0].name } to be called in ${ timeout }ms`));
+            }
+
+            if (promises.length) {
+                reject(new Error(`Expected ${ promises[0].name } promise to complete in ${ timeout }ms`));
             }
         }, timeout);
 
-        const expect : Handler = (name, fn = noop) => {
-            expected.push(name);
+        const expect : Handler = (name, handler = noop) => {
+            const exp = { name, handler };
+            // $FlowFixMe
+            expected.push(exp);
             
             // $FlowFixMe
             return function expectWrapper(...args) : * {
-                removeFromArray(expected, name);
+                removeFromArray(expected, exp);
 
                 // $FlowFixMe
-                const { result, error } = tryCatch(() => fn.call(this, ...args));
+                const { result, error } = tryCatch(() => handler.call(this, ...args));
 
                 if (error) {
-                    promises.push(ZalgoPromise.asyncReject(error));
+                    promises.push({ name, promise: ZalgoPromise.asyncReject(error) });
                     throw error;
                 }
 
-                promises.push(ZalgoPromise.resolve(result));
+                promises.push({ name, promise: ZalgoPromise.resolve(result) });
                 return result;
             };
         };
@@ -44,29 +50,35 @@ export function wrapPromise<T>(method : Wrapper<T>, { timeout = 5000 } : {| time
 
             // $FlowFixMe
             return function avoidWrapper(...args) : * {
-                promises.push(ZalgoPromise.asyncReject(new Error(`Expected ${ name } to not be called`)));
+                promises.push({ name, promise: ZalgoPromise.asyncReject(new Error(`Expected ${ name } to not be called`)) });
                 // $FlowFixMe
                 return fn.call(this, ...args);
             };
         };
 
-        const expectError : Handler = (name, fn = noop) => {
-            expected.push(name);
+        const expectError : Handler = (name, handler = noop) => {
+            const exp = { name, handler };
+            // $FlowFixMe
+            expected.push(exp);
 
             // $FlowFixMe
             return function expectErrorWrapper(...args) : * {
-                removeFromArray(expected, name);
+                removeFromArray(expected, exp);
 
                 // $FlowFixMe
-                const { result, error } = tryCatch(() => fn.call(this, ...args));
+                const { result, error } = tryCatch(() => handler.call(this, ...args));
 
                 if (error) {
                     throw error;
                 }
 
-                promises.push(ZalgoPromise.resolve(result).then(() => {
-                    throw new Error(`Expected ${ name } to throw an error`);
-                }, noop));
+                promises.push({
+                    name,
+                    promise: ZalgoPromise.resolve(result).then(() => {
+                        throw new Error(`Expected ${ name } to throw an error`);
+                    }, noop)
+                });
+
                 return result;
             };
         };
@@ -74,19 +86,23 @@ export function wrapPromise<T>(method : Wrapper<T>, { timeout = 5000 } : {| time
         const wait = () => {
             return ZalgoPromise.try(() => {
                 if (promises.length) {
-                    return promises.pop();
+                    const prom = promises[0];
+                    return prom.promise.finally(() => {
+                        removeFromArray(promises, prom);
+                    }).then(wait);
                 }
             }).then(() => {
-                if (promises.length) {
-                    return wait();
-                }
                 if (expected.length) {
                     return ZalgoPromise.delay(10).then(wait);
                 }
             });
         };
 
-        promises.push(ZalgoPromise.try(() => method({ expect, avoid, expectError, error: avoid, wait })));
+        promises.push({
+            name:    'wrapPromise handler',
+            promise: ZalgoPromise.try(() =>
+                method({ expect, avoid, expectError, error: avoid, wait: () => ZalgoPromise.resolve() }))
+        });
 
         wait().finally(() => {
             clearTimeout(timer);
