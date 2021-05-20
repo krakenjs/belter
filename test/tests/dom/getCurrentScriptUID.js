@@ -8,6 +8,7 @@ beforeEach(() => {
     script.removeAttribute(`${ ATTRIBUTES.UID }`);
     script.removeAttribute(`${ ATTRIBUTES.UID }-auto`);
     script.setAttribute('data-csp-nonce', '654321');
+    script.setAttribute('src', 'https://www.paypal.com/sdk/js?client-id=test');
     memoize.clear();
 });
 
