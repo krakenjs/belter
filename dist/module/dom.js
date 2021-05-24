@@ -7,7 +7,7 @@ import { linkFrameWindow, isWindowClosed, assertSameDomain } from 'cross-domain-
 import { WeakMap } from 'cross-domain-safe-weakmap/src';
 import { inlineMemoize, memoize, noop, stringify, capitalizeFirstLetter, once, extend, safeInterval, uniqueID, arrayFrom, ExtendableError, strHashStr } from './util';
 import { isDevice } from './device';
-import { KEY_CODES, ATTRIBUTES } from './constants';
+import { KEY_CODES, ATTRIBUTES, UID_HASH_LENGTH } from './constants';
 export function isDocumentReady() {
   return Boolean(document.body) && document.readyState === 'complete';
 }
@@ -1143,8 +1143,9 @@ export var getCurrentScriptUID = memoize(function () {
       src: src,
       dataset: dataset
     });
-    var hashedString = strHashStr(stringToHash).slice(0, 20);
-    uid = "uid_" + hashedString;
+    var hashedString = strHashStr(stringToHash);
+    var hashResult = hashedString.slice(hashedString.length - UID_HASH_LENGTH);
+    uid = "uid_" + hashResult;
   } else {
     uid = uniqueID();
   }

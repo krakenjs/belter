@@ -611,6 +611,9 @@
         __webpack_require__.d(__webpack_exports__, "ATTRIBUTES", (function() {
             return ATTRIBUTES;
         }));
+        __webpack_require__.d(__webpack_exports__, "UID_HASH_LENGTH", (function() {
+            return UID_HASH_LENGTH;
+        }));
         __webpack_require__.d(__webpack_exports__, "iPhoneScreenHeightMatrix", (function() {
             return iPhoneScreenHeightMatrix;
         }));
@@ -2196,6 +2199,7 @@
         var ATTRIBUTES = {
             UID: "data-uid"
         };
+        var UID_HASH_LENGTH = 30;
         function isDocumentReady() {
             return Boolean(document.body) && "complete" === document.readyState;
         }
@@ -2856,10 +2860,13 @@
             var uid = script.getAttribute(ATTRIBUTES.UID);
             if (uid && "string" == typeof uid) return uid;
             if ((uid = script.getAttribute(ATTRIBUTES.UID + "-auto")) && "string" == typeof uid) return uid;
-            uid = script.src ? "uid_" + strHashStr(JSON.stringify({
-                src: script.src,
-                dataset: script.dataset
-            })).slice(0, 20) : uniqueID();
+            if (script.src) {
+                var hashedString = strHashStr(JSON.stringify({
+                    src: script.src,
+                    dataset: script.dataset
+                }));
+                uid = "uid_" + hashedString.slice(hashedString.length - UID_HASH_LENGTH);
+            } else uid = uniqueID();
             script.setAttribute(ATTRIBUTES.UID + "-auto", uid);
             return uid;
         }));
