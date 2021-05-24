@@ -7,7 +7,7 @@ beforeEach(() => {
     const script = getCurrentScript();
     script.removeAttribute(`${ ATTRIBUTES.UID }`);
     script.removeAttribute(`${ ATTRIBUTES.UID }-auto`);
-    script.setAttribute('data-csp-nonce', '654321');
+    script.setAttribute('src', 'https://www.paypal.com/sdk/js?client-id=test');
     memoize.clear();
 });
 
@@ -30,6 +30,7 @@ describe('get current script UID', () => {
     it('should use script\'s src and attributes to create the script UID', () => {
 
         const currentScript : HTMLScriptElement = getCurrentScript();
+        currentScript.setAttribute('data-csp-nonce', '654321');
         const { src, dataset } = currentScript;
         const stringToHash = JSON.stringify({ src, dataset });
         const hashedString = strHashStr(stringToHash);
