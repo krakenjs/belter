@@ -16,7 +16,7 @@ export function wrapPromise(method, _temp) {
       if (promises.length) {
         reject(new Error("Expected " + promises[0].name + " promise to complete in " + timeout + "ms"));
       }
-    }, timeout);
+    }, timeout); // $FlowFixMe[escaped-generic]
 
     var expect = function expect(name, handler) {
       if (handler === void 0) {
@@ -53,15 +53,18 @@ export function wrapPromise(method, _temp) {
             promise: ZalgoPromise.asyncReject(error)
           });
           throw error;
-        }
+        } // $FlowFixMe[escaped-generic]
+
 
         promises.push({
           name: name,
           promise: ZalgoPromise.resolve(result)
-        });
+        }); // $FlowFixMe[escaped-generic]
+
         return result;
       };
-    };
+    }; // $FlowFixMe[escaped-generic]
+
 
     var avoid = function avoid(name, fn) {
       if (fn === void 0) {
@@ -83,7 +86,8 @@ export function wrapPromise(method, _temp) {
 
         return (_fn = fn).call.apply(_fn, [this].concat(args));
       };
-    };
+    }; // $FlowFixMe[escaped-generic]
+
 
     var expectError = function expectError(name, handler) {
       if (handler === void 0) {
@@ -120,10 +124,12 @@ export function wrapPromise(method, _temp) {
 
         promises.push({
           name: name,
+          // $FlowFixMe[escaped-generic]
           promise: ZalgoPromise.resolve(result).then(function () {
             throw new Error("Expected " + name + " to throw an error");
           }, noop)
-        });
+        }); // $FlowFixMe[escaped-generic]
+
         return result;
       };
     };

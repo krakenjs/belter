@@ -69,7 +69,7 @@ export function experiment(_ref) {
   } catch (err) {// pass
   }
 
-  return {
+  var exp = {
     isEnabled: function isEnabled() {
       return group === THROTTLE_GROUP.TEST || forced;
     },
@@ -85,7 +85,7 @@ export function experiment(_ref) {
       }
 
       if (!started) {
-        return this;
+        return exp;
       }
 
       if (isEventUnique(treatment + "_" + JSON.stringify(payload))) {
@@ -107,7 +107,7 @@ export function experiment(_ref) {
         });
       }
 
-      return this;
+      return exp;
     },
     logStart: function logStart(payload) {
       if (payload === void 0) {
@@ -115,14 +115,15 @@ export function experiment(_ref) {
       }
 
       started = true;
-      return this.log("start", payload);
+      return exp.log("start", payload);
     },
     logComplete: function logComplete(payload) {
       if (payload === void 0) {
         payload = {};
       }
 
-      return this.log("complete", payload);
+      return exp.log("complete", payload);
     }
   };
+  return exp;
 }

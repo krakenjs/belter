@@ -225,6 +225,7 @@ export function querySelectorAll(selector, doc) {
     doc = window.document;
   }
 
+  // $FlowFixMe[method-unbinding]
   return Array.prototype.slice.call(doc.querySelectorAll(selector));
 }
 export function onClick(element, handler) {
@@ -245,7 +246,8 @@ export function getScript(_ref) {
       _ref$reverse = _ref.reverse,
       reverse = _ref$reverse === void 0 ? false : _ref$reverse;
   return inlineMemoize(getScript, function () {
-    var url = "" + host + path;
+    var url = "" + host + path; // $FlowFixMe[method-unbinding]
+
     var scripts = Array.prototype.slice.call(document.getElementsByTagName('script'));
 
     if (reverse) {
@@ -382,8 +384,9 @@ export function elementReady(id) {
       el = getElementSafe(id);
 
       if (el) {
+        resolve(el);
         clearInterval(interval);
-        return resolve(el);
+        return;
       }
 
       if (isDocumentReady()) {
@@ -993,7 +996,8 @@ export function getResourceLoadTime(url) {
 
   if (!performance) {
     return;
-  }
+  } // $FlowFixMe[method-unbinding]
+
 
   if (typeof performance.getEntries !== 'function') {
     return;
@@ -1085,7 +1089,8 @@ function inferCurrentScript() {
 
     if (!scriptLocation) {
       return;
-    }
+    } // $FlowFixMe[method-unbinding]
+
 
     for (var _i22 = 0, _Array$prototype$slic2 = Array.prototype.slice.call(document.getElementsByTagName('script')).reverse(); _i22 < _Array$prototype$slic2.length; _i22++) {
       var script = _Array$prototype$slic2[_i22];

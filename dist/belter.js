@@ -1033,8 +1033,9 @@
                             }
                         }
                         if (_result2 instanceof ZalgoPromise && (_result2.resolved || _result2.rejected)) {
-                            _result2.resolved ? promise.resolve(_result2.value) : promise.reject(_result2.error);
-                            _result2.errorHandled = !0;
+                            var promiseResult = _result2;
+                            promiseResult.resolved ? promise.resolve(promiseResult.value) : promise.reject(promiseResult.error);
+                            promiseResult.errorHandled = !0;
                         } else utils_isPromise(_result2) ? _result2 instanceof ZalgoPromise && (_result2.resolved || _result2.rejected) ? _result2.resolved ? promise.resolve(_result2.value) : promise.reject(_result2.error) : chain(_result2, promise) : promise.resolve(_result2);
                     }
                     handlers.length = 0;
@@ -1099,7 +1100,7 @@
             ZalgoPromise.all = function(promises) {
                 var promise = new ZalgoPromise;
                 var count = promises.length;
-                var results = [];
+                var results = [].slice();
                 if (!count) {
                     promise.resolve(results);
                     return promise;
@@ -1753,12 +1754,12 @@
             for (var key in source) source.hasOwnProperty(key) && (obj[key] = source[key]);
             return obj;
         }
-        var util_values = function(obj) {
+        function util_values(obj) {
             if (Object.values) return Object.values(obj);
             var result = [];
             for (var key in obj) obj.hasOwnProperty(key) && result.push(obj[key]);
             return result;
-        };
+        }
         var memoizedValues = memoize(util_values);
         function perc(pixels, percentage) {
             return Math.round(pixels * percentage / 100);
@@ -1877,7 +1878,7 @@
         function eventEmitter() {
             var triggered = {};
             var handlers = {};
-            return {
+            var emitter = {
                 on: function(eventName, handler) {
                     var handlerList = handlers[eventName] = handlers[eventName] || [];
                     handlerList.push(handler);
@@ -1892,7 +1893,7 @@
                     };
                 },
                 once: function(eventName, handler) {
-                    var listener = this.on(eventName, (function() {
+                    var listener = emitter.on(eventName, (function() {
                         listener.cancel();
                         handler();
                     }));
@@ -1917,12 +1918,13 @@
                     if (triggered[eventName]) return promise_ZalgoPromise.resolve();
                     triggered[eventName] = !0;
                     for (var _len4 = arguments.length, args = new Array(_len4 > 1 ? _len4 - 1 : 0), _key4 = 1; _key4 < _len4; _key4++) args[_key4 - 1] = arguments[_key4];
-                    return this.trigger.apply(this, [ eventName ].concat(args));
+                    return emitter.trigger.apply(emitter, [ eventName ].concat(args));
                 },
                 reset: function() {
                     handlers = {};
                 }
             };
+            return emitter;
         }
         function camelToDasherize(string) {
             return string.replace(/([A-Z])/g, (function(g) {
@@ -2109,11 +2111,11 @@
             var tasks = [];
             var cleaned = !1;
             var cleanErr;
-            return {
+            var cleaner = {
                 set: function(name, item) {
                     if (!cleaned) {
                         obj[name] = item;
-                        this.register((function() {
+                        cleaner.register((function() {
                             delete obj[name];
                         }));
                     }
@@ -2135,6 +2137,7 @@
                     return promise_ZalgoPromise.all(results).then(src_util_noop);
                 }
             };
+            return cleaner;
         }
         function tryCatch(fn) {
             var result;
@@ -2404,10 +2407,9 @@
                 if (isDocumentReady()) return reject(new Error("Document is ready and element " + name + " does not exist"));
                 var interval = setInterval((function() {
                     if (el = getElementSafe(id)) {
+                        resolve(el);
                         clearInterval(interval);
-                        return resolve(el);
-                    }
-                    if (isDocumentReady()) {
+                    } else if (isDocumentReady()) {
                         clearInterval(interval);
                         return reject(new Error("Document is ready and element " + name + " does not exist"));
                     }
@@ -2970,7 +2972,7 @@
             try {
                 window.localStorage && window.localStorage.getItem(name) && (forced = !0);
             } catch (err) {}
-            return {
+            var exp = {
                 isEnabled: function() {
                     return "test" === group || forced;
                 },
@@ -2982,7 +2984,7 @@
                 },
                 log: function(checkpoint, payload) {
                     void 0 === payload && (payload = {});
-                    if (!started) return this;
+                    if (!started) return exp;
                     isEventUnique(treatment + "_" + JSON.stringify(payload)) && logTreatment({
                         name: name,
                         treatment: treatment,
@@ -2996,18 +2998,19 @@
                         payload: payload,
                         throttle: throttle
                     });
-                    return this;
+                    return exp;
                 },
                 logStart: function(payload) {
                     void 0 === payload && (payload = {});
                     started = !0;
-                    return this.log("start", payload);
+                    return exp.log("start", payload);
                 },
                 logComplete: function(payload) {
                     void 0 === payload && (payload = {});
-                    return this.log("complete", payload);
+                    return exp.log("complete", payload);
                 }
             };
+            return exp;
         }
         function getGlobalNameSpace(_ref) {
             var name = _ref.name, _ref$version = _ref.version, version = void 0 === _ref$version ? "latest" : _ref$version;

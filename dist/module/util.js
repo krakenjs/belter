@@ -33,6 +33,7 @@ export function base64encode(str) {
 }
 export function base64decode(str) {
   if (typeof atob === 'function') {
+    // $FlowFixMe[method-unbinding]
     return decodeURIComponent(Array.prototype.map.call(atob(str), function (c) {
       // eslint-disable-next-line prefer-template
       return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
@@ -88,6 +89,7 @@ export function getObjectID(obj) {
 
 function serializeArgs(args) {
   try {
+    // $FlowFixMe[method-unbinding]
     return JSON.stringify(Array.prototype.slice.call(args), function (subkey, val) {
       if (typeof val === 'function') {
         return "memoize[" + getObjectID(val) + "]";
@@ -338,6 +340,7 @@ export function stringifyError(err, level) {
 
   try {
     if (!err) {
+      // $FlowFixMe[method-unbinding]
       return "<unknown error: " + Object.prototype.toString.call(err) + ">";
     }
 
@@ -365,7 +368,8 @@ export function stringifyError(err, level) {
     if (err && err.toString && typeof err.toString === 'function') {
       // $FlowFixMe
       return err.toString();
-    }
+    } // $FlowFixMe[method-unbinding]
+
 
     return Object.prototype.toString.call(err);
   } catch (newErr) {
@@ -373,6 +377,7 @@ export function stringifyError(err, level) {
   }
 }
 export function stringifyErrorMessage(err) {
+  // $FlowFixMe[method-unbinding]
   var defaultMessage = "<unknown error: " + Object.prototype.toString.call(err) + ">";
 
   if (!err) {
@@ -397,7 +402,8 @@ export function stringify(item) {
   if (item && item.toString && typeof item.toString === 'function') {
     // $FlowFixMe
     return item.toString();
-  }
+  } // $FlowFixMe[method-unbinding]
+
 
   return Object.prototype.toString.call(item);
 }
@@ -415,6 +421,7 @@ export function patchMethod(obj, name, handler) {
 
     return handler({
       context: this,
+      // $FlowFixMe[method-unbinding]
       args: Array.prototype.slice.call(arguments),
       original: original,
       callOriginal: function callOriginal() {
@@ -439,9 +446,8 @@ export function extend(obj, source) {
   }
 
   return obj;
-} // eslint-disable-next-line no-undef
-
-export var values = function values(obj) {
+}
+export function values(obj) {
   if (Object.values) {
     // $FlowFixMe
     return Object.values(obj);
@@ -451,13 +457,15 @@ export var values = function values(obj) {
 
   for (var key in obj) {
     if (obj.hasOwnProperty(key)) {
+      // $FlowFixMe[escaped-generic]
       result.push(obj[key]);
     }
   } // $FlowFixMe
 
 
   return result;
-};
+} // eslint-disable-next-line no-undef
+
 export var memoizedValues = memoize(values);
 export function perc(pixels, percentage) {
   return Math.round(pixels * percentage / 100);
@@ -650,7 +658,7 @@ export function undotify(obj) {
 export function eventEmitter() {
   var triggered = {};
   var handlers = {};
-  return {
+  var emitter = {
     on: function on(eventName, handler) {
       var handlerList = handlers[eventName] = handlers[eventName] || [];
       handlerList.push(handler);
@@ -665,7 +673,7 @@ export function eventEmitter() {
       };
     },
     once: function once(eventName, handler) {
-      var listener = this.on(eventName, function () {
+      var listener = emitter.on(eventName, function () {
         listener.cancel();
         handler();
       });
@@ -705,12 +713,13 @@ export function eventEmitter() {
         args[_key4 - 1] = arguments[_key4];
       }
 
-      return this.trigger.apply(this, [eventName].concat(args));
+      return emitter.trigger.apply(emitter, [eventName].concat(args));
     },
     reset: function reset() {
       handlers = {};
     }
   };
+  return emitter;
 }
 export function camelToDasherize(string) {
   return string.replace(/([A-Z])/g, function (g) {
@@ -786,12 +795,14 @@ export function defineLazyProp(obj, key, getter) {
 }
 export function arrayFrom(item) {
   // eslint-disable-line no-undef
+  // $FlowFixMe[method-unbinding]
   return Array.prototype.slice.call(item);
 }
 export function isObject(item) {
   return typeof item === 'object' && item !== null;
 }
 export function isObjectObject(obj) {
+  // $FlowFixMe[method-unbinding]
   return isObject(obj) && Object.prototype.toString.call(obj) === '[object Object]';
 }
 export function isPlainObject(obj) {
@@ -971,6 +982,7 @@ export function debounce(method, time) {
   return setFunctionName(debounceWrapper, getFunctionName(method) + "::debounced");
 }
 export function isRegex(item) {
+  // $FlowFixMe[method-unbinding]
   return Object.prototype.toString.call(item) === '[object RegExp]';
 }
 // eslint-disable-next-line flowtype/no-weak-types
@@ -1012,11 +1024,11 @@ export function cleanup(obj) {
   var tasks = [];
   var cleaned = false;
   var cleanErr;
-  return {
+  var cleaner = {
     set: function set(name, item) {
       if (!cleaned) {
         obj[name] = item;
-        this.register(function () {
+        cleaner.register(function () {
           delete obj[name];
         });
       }
@@ -1045,6 +1057,7 @@ export function cleanup(obj) {
       return ZalgoPromise.all(results).then(noop);
     }
   };
+  return cleaner;
 }
 export function tryCatch(fn) {
   var result;
