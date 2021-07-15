@@ -24,6 +24,7 @@ export function wrapPromise<T>(method : Wrapper<T>, { timeout = 5000 } : {| time
             }
         }, timeout);
 
+        // $FlowFixMe[escaped-generic]
         const expect : Handler = (name, handler = noop) => {
             const exp = { name, handler };
             // $FlowFixMe
@@ -41,11 +42,15 @@ export function wrapPromise<T>(method : Wrapper<T>, { timeout = 5000 } : {| time
                     throw error;
                 }
 
+                // $FlowFixMe[escaped-generic]
                 promises.push({ name, promise: ZalgoPromise.resolve(result) });
+
+                // $FlowFixMe[escaped-generic]
                 return result;
             };
         };
 
+        // $FlowFixMe[escaped-generic]
         const avoid : Handler = (name : string, fn = noop) => {
 
             // $FlowFixMe
@@ -56,6 +61,7 @@ export function wrapPromise<T>(method : Wrapper<T>, { timeout = 5000 } : {| time
             };
         };
 
+        // $FlowFixMe[escaped-generic]
         const expectError : Handler = (name, handler = noop) => {
             const exp = { name, handler };
             // $FlowFixMe
@@ -74,11 +80,13 @@ export function wrapPromise<T>(method : Wrapper<T>, { timeout = 5000 } : {| time
 
                 promises.push({
                     name,
+                    // $FlowFixMe[escaped-generic]
                     promise: ZalgoPromise.resolve(result).then(() => {
                         throw new Error(`Expected ${ name } to throw an error`);
                     }, noop)
                 });
 
+                // $FlowFixMe[escaped-generic]
                 return result;
             };
         };

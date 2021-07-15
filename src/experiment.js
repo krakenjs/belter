@@ -88,7 +88,7 @@ export function experiment({ name, sample = 50, logTreatment = noop, logCheckpoi
         // pass
     }
 
-    return {
+    const exp = {
 
         isEnabled() : boolean {
             return (group === THROTTLE_GROUP.TEST) || forced;
@@ -104,7 +104,7 @@ export function experiment({ name, sample = 50, logTreatment = noop, logCheckpoi
 
         log(checkpoint : string, payload? : Payload = {}) : Experiment {
             if (!started) {
-                return this;
+                return exp;
             }
 
             if (isEventUnique(`${ treatment }_${ JSON.stringify(payload) }`)) {
@@ -115,16 +115,18 @@ export function experiment({ name, sample = 50, logTreatment = noop, logCheckpoi
                 logCheckpoint({ name, treatment, checkpoint, payload, throttle });
             }
 
-            return this;
+            return exp;
         },
 
         logStart(payload? : Payload = {}) : Experiment {
             started = true;
-            return this.log(`start`, payload);
+            return exp.log(`start`, payload);
         },
 
         logComplete(payload? : Payload = {}) : Experiment {
-            return this.log(`complete`, payload);
+            return exp.log(`complete`, payload);
         }
     };
+
+    return exp;
 }

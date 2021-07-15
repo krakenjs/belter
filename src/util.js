@@ -39,6 +39,7 @@ export function base64encode(str : string) : string {
 
 export function base64decode(str : string) : string {
     if (typeof atob === 'function') {
+        // $FlowFixMe[method-unbinding]
         return decodeURIComponent(Array.prototype.map.call(atob(str), c => {
             // eslint-disable-next-line prefer-template
             return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
@@ -102,6 +103,7 @@ export function getObjectID(obj : Object) : string {
 
 function serializeArgs<T>(args : $ReadOnlyArray<T>) : string {
     try {
+        // $FlowFixMe[method-unbinding]
         return JSON.stringify(Array.prototype.slice.call(args), (subkey, val) => {
             if (typeof val === 'function') {
                 return `memoize[${ getObjectID(val) }]`;
@@ -351,6 +353,7 @@ export function stringifyError(err : mixed, level : number = 1) : string {
 
     try {
         if (!err) {
+            // $FlowFixMe[method-unbinding]
             return `<unknown error: ${ Object.prototype.toString.call(err) }>`;
         }
 
@@ -380,6 +383,7 @@ export function stringifyError(err : mixed, level : number = 1) : string {
             return err.toString();
         }
 
+        // $FlowFixMe[method-unbinding]
         return Object.prototype.toString.call(err);
 
     } catch (newErr) {
@@ -389,6 +393,7 @@ export function stringifyError(err : mixed, level : number = 1) : string {
 
 export function stringifyErrorMessage(err : mixed) : string {
 
+    // $FlowFixMe[method-unbinding]
     const defaultMessage = `<unknown error: ${ Object.prototype.toString.call(err) }>`;
 
     if (!err) {
@@ -416,6 +421,7 @@ export function stringify(item : mixed) : string {
         return item.toString();
     }
 
+    // $FlowFixMe[method-unbinding]
     return Object.prototype.toString.call(item);
 }
 
@@ -431,6 +437,7 @@ export function patchMethod(obj : Object, name : string, handler : Function) {
     obj[name] = function patchedMethod() : mixed {
         return handler({
             context:      this,
+            // $FlowFixMe[method-unbinding]
             args:         Array.prototype.slice.call(arguments),
             original,
             callOriginal: () => original.apply(this, arguments)
@@ -456,27 +463,26 @@ export function extend<T : Object | Function>(obj : T, source : Object) : T {
     return obj;
 }
 
-// eslint-disable-next-line no-undef
-type Values = <T>({ [string] : T }) => $ReadOnlyArray<T>;
-
-export const values : Values = (obj) => {
+export function values<T>(obj : { [string] : T }) : $ReadOnlyArray<T> {
     if (Object.values) {
         // $FlowFixMe
         return Object.values(obj);
     }
 
-    const result = [];
+    const result : Array<T> = [];
     for (const key in obj) {
         if (obj.hasOwnProperty(key)) {
+            // $FlowFixMe[escaped-generic]
             result.push(obj[key]);
         }
     }
 
     // $FlowFixMe
     return result;
-};
+}
 
-export const memoizedValues : Values = memoize(values);
+// eslint-disable-next-line no-undef
+export const memoizedValues : <T>({ [string] : T }) => $ReadOnlyArray<T> = memoize(values);
 
 export function perc(pixels : number, percentage : number) : number {
     return Math.round((pixels * percentage) / 100);
@@ -684,7 +690,7 @@ export function eventEmitter() : EventEmitterType {
     const triggered = {};
     let handlers = {};
 
-    return {
+    const emitter = {
 
         on(eventName : string, handler : Function) : CancelableType {
             const handlerList = handlers[eventName] = handlers[eventName] || [];
@@ -706,7 +712,7 @@ export function eventEmitter() : EventEmitterType {
 
         once(eventName : string, handler : Function) : CancelableType {
 
-            const listener = this.on(eventName, () => {
+            const listener = emitter.on(eventName, () => {
                 listener.cancel();
                 handler();
             });
@@ -735,13 +741,15 @@ export function eventEmitter() : EventEmitterType {
             }
 
             triggered[eventName] = true;
-            return this.trigger(eventName, ...args);
+            return emitter.trigger(eventName, ...args);
         },
 
         reset() {
             handlers = {};
         }
     };
+
+    return emitter;
 }
 
 export function camelToDasherize(string : string) : string {
@@ -830,6 +838,7 @@ export function defineLazyProp<T>(obj : Object | $ReadOnlyArray<mixed>, key : st
 }
 
 export function arrayFrom<T>(item : Iterable<T>) : $ReadOnlyArray<T> { // eslint-disable-line no-undef
+    // $FlowFixMe[method-unbinding]
     return Array.prototype.slice.call(item);
 }
 
@@ -838,6 +847,7 @@ export function isObject(item : mixed) : boolean {
 }
 
 export function isObjectObject(obj : mixed) : boolean {
+    // $FlowFixMe[method-unbinding]
     return isObject(obj) && Object.prototype.toString.call(obj) === '[object Object]';
 }
 
@@ -1023,6 +1033,7 @@ export function debounce<T>(method : (...args : $ReadOnlyArray<mixed>) => T, tim
 }
 
 export function isRegex(item : mixed) : boolean {
+    // $FlowFixMe[method-unbinding]
     return Object.prototype.toString.call(item) === '[object RegExp]';
 }
 
@@ -1077,11 +1088,11 @@ export function cleanup(obj : Object) : CleanupType {
     let cleaned = false;
     let cleanErr;
 
-    return {
+    const cleaner = {
         set<T : mixed>(name : string, item : T) : T {
             if (!cleaned) {
                 obj[name] = item;
-                this.register(() => {
+                cleaner.register(() => {
                     delete obj[name];
                 });
             }
@@ -1110,6 +1121,8 @@ export function cleanup(obj : Object) : CleanupType {
             return ZalgoPromise.all(results).then(noop);
         }
     };
+
+    return cleaner;
 }
 
 export function tryCatch<T>(fn : () => T) : {| result : T, error : void |} | {| result : void, error : mixed |} {

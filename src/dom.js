@@ -250,6 +250,7 @@ export function isBrowser() : boolean {
 }
 
 export function querySelectorAll(selector : string, doc : HTMLElement = window.document) : $ReadOnlyArray<HTMLElement> {
+    // $FlowFixMe[method-unbinding]
     return Array.prototype.slice.call(doc.querySelectorAll(selector));
 }
 
@@ -268,6 +269,7 @@ export function getScript({ host = window.location.host, path, reverse = false }
     return inlineMemoize(getScript, () : ?HTMLScriptElement => {
 
         const url = `${ host }${ path }`;
+        // $FlowFixMe[method-unbinding]
         const scripts = Array.prototype.slice.call(document.getElementsByTagName('script'));
 
         if (reverse) {
@@ -402,8 +404,9 @@ export function elementReady(id : ElementRefType) : ZalgoPromise<HTMLElement> {
             el = getElementSafe(id);
 
             if (el) {
+                resolve(el);
                 clearInterval(interval);
-                return resolve(el);
+                return;
             }
 
             if (isDocumentReady()) {
@@ -1057,6 +1060,7 @@ export function getResourceLoadTime(url : string) : ?number {
         return;
     }
 
+    // $FlowFixMe[method-unbinding]
     if (typeof performance.getEntries !== 'function') {
         return;
     }
@@ -1159,6 +1163,7 @@ function inferCurrentScript() : ?HTMLScriptElement {
             return;
         }
 
+        // $FlowFixMe[method-unbinding]
         for (const script of Array.prototype.slice.call(document.getElementsByTagName('script')).reverse()) {
             if (script.src && script.src === scriptLocation) {
                 return script;
