@@ -9,3 +9,5 @@ import './waitForWindowReady';
 import './waitForDocumentReady';
 import './waitForDocumentBody';
 import './getCurrentScriptUID';
+import './submitForm';
+import './getBody';

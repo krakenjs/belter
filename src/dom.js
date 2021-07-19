@@ -13,6 +13,16 @@ import type { CancelableType } from './types';
 
 type ElementRefType = string | HTMLElement;
 
+export function getBody() : HTMLBodyElement {
+    const body = document.body;
+
+    if (!body) {
+        throw new Error(`Body element not found`);
+    }
+
+    return body;
+}
+
 export function isDocumentReady() : boolean {
     return Boolean(document.body) && (document.readyState === 'complete');
 }
@@ -1235,3 +1245,31 @@ export const getCurrentScriptUID : GetCurrentScriptUID = memoize(() => {
 
     return uid;
 });
+
+type SubmitFormOptions = {|
+    url : string,
+    target : string,
+    body? : {| [string] : string |},
+    method? : string
+|};
+
+export function submitForm({ url, target, body, method = 'post' } : SubmitFormOptions) {
+    const form = document.createElement('form');
+    form.setAttribute('target', target);
+    form.setAttribute('method', method);
+    form.setAttribute('action', url);
+    form.style.display = 'none';
+
+    if (body) {
+        for (const key of Object.keys(body)) {
+            const input = document.createElement('input');
+            input.setAttribute('name', key);
+            input.setAttribute('value', body[key]);
+            form.appendChild(input);
+        }
+    }
+
+    getBody().appendChild(form);
+    form.submit();
+    getBody().removeChild(form);
+}
