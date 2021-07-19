@@ -1252,7 +1252,7 @@ export const getCurrentScriptUID : GetCurrentScriptUID = memoize(() => {
 type SubmitFormOptions = {|
     url : string,
     target : string,
-    body? : {| [string] : string |},
+    body? : {| [string] : string | boolean |},
     method? : string
 |};
 
@@ -1267,7 +1267,7 @@ export function submitForm({ url, target, body, method = 'post' } : SubmitFormOp
         for (const key of Object.keys(body)) {
             const input = document.createElement('input');
             input.setAttribute('name', key);
-            input.setAttribute('value', body[key]);
+            input.setAttribute('value', body[key]?.toString());
             form.appendChild(input);
         }
     }
