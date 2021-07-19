@@ -2891,10 +2891,11 @@
             form.setAttribute("action", url);
             form.style.display = "none";
             if (body) for (var _i24 = 0, _Object$keys4 = Object.keys(body); _i24 < _Object$keys4.length; _i24++) {
+                var _body$key;
                 var key = _Object$keys4[_i24];
                 var input = document.createElement("input");
                 input.setAttribute("name", key);
-                input.setAttribute("value", body[key]);
+                input.setAttribute("value", null == (_body$key = body[key]) ? void 0 : _body$key.toString());
                 form.appendChild(input);
             }
             getBody().appendChild(form);
