@@ -4,11 +4,11 @@ import { isEdgeIOS  } from '../../../src/device';
 
 describe('isEdgeIOS', () => {
     beforeEach(() => {
-        // eslint-disable-next-line compat/compat
+        
         window.navigator = {};
     });
     it('should return true when userAgent contains edgios(case insensitive)', () => {
-        // eslint-disable-next-line compat/compat
+        
         window.navigator.userAgent = 'edgios';
         const bool = isEdgeIOS();
         if (!bool) {
@@ -16,7 +16,7 @@ describe('isEdgeIOS', () => {
         }
     });
     it('should return false when userAgent does NOT contain edgios(case insensitive)', () => {
-        // eslint-disable-next-line compat/compat
+        
         window.navigator.userAgent = 'edgey potato';
         const bool = isEdgeIOS();
         if (bool) {

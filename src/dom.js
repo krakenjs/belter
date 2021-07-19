@@ -14,6 +14,7 @@ import type { CancelableType } from './types';
 type ElementRefType = string | HTMLElement;
 
 export function getBody() : HTMLBodyElement {
+    // eslint-disable-next-line compat/compat
     const body = document.body;
 
     if (!body) {
@@ -24,10 +25,12 @@ export function getBody() : HTMLBodyElement {
 }
 
 export function isDocumentReady() : boolean {
+    // eslint-disable-next-line compat/compat
     return Boolean(document.body) && (document.readyState === 'complete');
 }
 
 export function isDocumentInteractive() : boolean {
+    // eslint-disable-next-line compat/compat
     return Boolean(document.body) && (document.readyState === 'interactive');
 }
 
@@ -324,7 +327,7 @@ export function isLocalStorageEnabled() : boolean {
 }
 
 export function getBrowserLocales() : $ReadOnlyArray<{| country? : string, lang : string |}> {
-    const nav = window.navigator; // eslint-disable-line compat/compat
+    const nav = window.navigator;
 
     const locales = nav.languages
         ? [ ...nav.languages ]
@@ -712,7 +715,7 @@ export function iframe(options : IframeElementOptionsType = getDefaultIframeOpti
         class:      options.class
     });
 
-    const isIE = window.navigator.userAgent.match(/MSIE|Edge/i); // eslint-disable-line compat/compat
+    const isIE = window.navigator.userAgent.match(/MSIE|Edge/i);
 
     if (!frame.hasAttribute('id')) {
         frame.setAttribute('id', uniqueID());

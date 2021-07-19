@@ -4,11 +4,11 @@ import { isMacOsCna } from '../../../src/device';
 
 describe('isMacOsCna', () => {
     beforeEach(() => {
-        // eslint-disable-next-line compat/compat
+        
         window.navigator = {};
     });
     it('should return true when userAgent is valid', () => {
-        // eslint-disable-next-line compat/compat
+        
         window.navigator.userAgent = 'macintosh.potatoAppleWebKit';
         const bool = isMacOsCna();
         if (!bool) {
@@ -16,7 +16,7 @@ describe('isMacOsCna', () => {
         }
     });
     it('should return false when userAgent is invalid', () => {
-        // eslint-disable-next-line compat/compat
+        
         window.navigator.userAgent = 'potat0';
         const bool = isMacOsCna();
         if (bool) {

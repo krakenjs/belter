@@ -17,6 +17,7 @@ Object.defineProperty(document, 'readyState', {
     }
 });
 
+// eslint-disable-next-line compat/compat
 let oldBody = document.body;
 
 Object.defineProperty(document, 'body', {

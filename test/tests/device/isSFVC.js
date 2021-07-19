@@ -13,7 +13,7 @@ describe('isSFVC', () => {
         describe(`${ device }`, () => {
             textSizeHeights.forEach(textSize => {
                 it(`${ textSize } text size should not be a web view`, () => {
-                    // eslint-disable-next-line compat/compat
+                    
                     window.navigator.userAgent = 'iPhone';
                     const sfvc = isSFVC();
                     if (sfvc) {
@@ -25,7 +25,7 @@ describe('isSFVC', () => {
     });
 
     it('should return false when isIos function returns false', () => {
-        // eslint-disable-next-line compat/compat
+        
         window.navigator.userAgent = 'potatoIOS';
         const sfvc = isSFVC();
         if (sfvc) {

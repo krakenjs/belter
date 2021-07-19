@@ -4,7 +4,7 @@ import { isQQBrowser } from '../../../src/device';
 
 describe('isQQBrowser', () => {
     it('should return true when userAgent contains QQBrowser', () => {
-        // eslint-disable-next-line compat/compat
+        
         window.navigator.userAgent = 'QQBrowser';
         const bool = isQQBrowser();
         if (!bool) {
@@ -12,7 +12,7 @@ describe('isQQBrowser', () => {
         }
     });
     it('should return false when userAgent does NOT contain QQBrowser', () => {
-        // eslint-disable-next-line compat/compat
+        
         window.navigator.userAgent = 'QQPotato';
         const bool = isQQBrowser();
         if (bool) {
