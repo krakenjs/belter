@@ -140,6 +140,9 @@
         __webpack_require__.d(__webpack_exports__, "isApplePaySupported", (function() {
             return isApplePaySupported;
         }));
+        __webpack_require__.d(__webpack_exports__, "getBody", (function() {
+            return getBody;
+        }));
         __webpack_require__.d(__webpack_exports__, "isDocumentReady", (function() {
             return isDocumentReady;
         }));
@@ -334,6 +337,9 @@
         }));
         __webpack_require__.d(__webpack_exports__, "getCurrentScriptUID", (function() {
             return getCurrentScriptUID;
+        }));
+        __webpack_require__.d(__webpack_exports__, "submitForm", (function() {
+            return submitForm;
         }));
         __webpack_require__.d(__webpack_exports__, "experiment", (function() {
             return experiment;
@@ -2203,6 +2209,11 @@
             UID: "data-uid"
         };
         var UID_HASH_LENGTH = 30;
+        function getBody() {
+            var body = document.body;
+            if (!body) throw new Error("Body element not found");
+            return body;
+        }
         function isDocumentReady() {
             return Boolean(document.body) && "complete" === document.readyState;
         }
@@ -2872,6 +2883,24 @@
             script.setAttribute(ATTRIBUTES.UID + "-auto", uid);
             return uid;
         }));
+        function submitForm(_ref3) {
+            var url = _ref3.url, target = _ref3.target, body = _ref3.body, _ref3$method = _ref3.method, method = void 0 === _ref3$method ? "post" : _ref3$method;
+            var form = document.createElement("form");
+            form.setAttribute("target", target);
+            form.setAttribute("method", method);
+            form.setAttribute("action", url);
+            form.style.display = "none";
+            if (body) for (var _i24 = 0, _Object$keys4 = Object.keys(body); _i24 < _Object$keys4.length; _i24++) {
+                var key = _Object$keys4[_i24];
+                var input = document.createElement("input");
+                input.setAttribute("name", key);
+                input.setAttribute("value", body[key]);
+                form.appendChild(input);
+            }
+            getBody().appendChild(form);
+            form.submit();
+            getBody().removeChild(form);
+        }
         function getStorage(_ref) {
             var name = _ref.name, _ref$lifetime = _ref.lifetime, lifetime = void 0 === _ref$lifetime ? 12e5 : _ref$lifetime;
             return inlineMemoize(getStorage, (function() {

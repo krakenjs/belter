@@ -8,10 +8,22 @@ import { WeakMap } from 'cross-domain-safe-weakmap/src';
 import { inlineMemoize, memoize, noop, stringify, capitalizeFirstLetter, once, extend, safeInterval, uniqueID, arrayFrom, ExtendableError, strHashStr } from './util';
 import { isDevice } from './device';
 import { KEY_CODES, ATTRIBUTES, UID_HASH_LENGTH } from './constants';
+export function getBody() {
+  // eslint-disable-next-line compat/compat
+  var body = document.body;
+
+  if (!body) {
+    throw new Error("Body element not found");
+  }
+
+  return body;
+}
 export function isDocumentReady() {
+  // eslint-disable-next-line compat/compat
   return Boolean(document.body) && document.readyState === 'complete';
 }
 export function isDocumentInteractive() {
+  // eslint-disable-next-line compat/compat
   return Boolean(document.body) && document.readyState === 'interactive';
 }
 export function urlEncode(str) {
@@ -293,8 +305,7 @@ export function isLocalStorageEnabled() {
   });
 }
 export function getBrowserLocales() {
-  var nav = window.navigator; // eslint-disable-line compat/compat
-
+  var nav = window.navigator;
   var locales = nav.languages ? [].concat(nav.languages) : [];
 
   if (nav.language) {
@@ -650,7 +661,7 @@ export function iframe(options, container) {
     html: options.html,
     class: options.class
   });
-  var isIE = window.navigator.userAgent.match(/MSIE|Edge/i); // eslint-disable-line compat/compat
+  var isIE = window.navigator.userAgent.match(/MSIE|Edge/i);
 
   if (!frame.hasAttribute('id')) {
     frame.setAttribute('id', uniqueID());
@@ -1158,3 +1169,29 @@ export var getCurrentScriptUID = memoize(function () {
   script.setAttribute(ATTRIBUTES.UID + "-auto", uid);
   return uid;
 });
+export function submitForm(_ref3) {
+  var url = _ref3.url,
+      target = _ref3.target,
+      body = _ref3.body,
+      _ref3$method = _ref3.method,
+      method = _ref3$method === void 0 ? 'post' : _ref3$method;
+  var form = document.createElement('form');
+  form.setAttribute('target', target);
+  form.setAttribute('method', method);
+  form.setAttribute('action', url);
+  form.style.display = 'none';
+
+  if (body) {
+    for (var _i24 = 0, _Object$keys4 = Object.keys(body); _i24 < _Object$keys4.length; _i24++) {
+      var key = _Object$keys4[_i24];
+      var input = document.createElement('input');
+      input.setAttribute('name', key);
+      input.setAttribute('value', body[key]);
+      form.appendChild(input);
+    }
+  }
+
+  getBody().appendChild(form);
+  form.submit();
+  getBody().removeChild(form);
+}

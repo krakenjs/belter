@@ -1,6 +1,6 @@
 import { iPhoneScreenHeightMatrix } from './screenHeights';
 export function getUserAgent() {
-  return window.navigator.mockUserAgent || window.navigator.userAgent; // eslint-disable-line compat/compat
+  return window.navigator.mockUserAgent || window.navigator.userAgent;
 }
 export function isDevice(userAgent) {
   if (userAgent === void 0) {
@@ -18,7 +18,7 @@ export function isWebView() {
   return /(iPhone|iPod|iPad|Macintosh).*AppleWebKit(?!.*Safari)|.*WKWebView/i.test(userAgent) || /\bwv\b/.test(userAgent) || /Android.*Version\/(\d)\.(\d)/i.test(userAgent);
 }
 export function isStandAlone() {
-  return window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches; // eslint-disable-line compat/compat
+  return window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
 }
 export function isFacebookWebView(ua) {
   if (ua === void 0) {
@@ -167,10 +167,7 @@ export function isIE() {
     return true;
   }
 
-  return Boolean(window.navigator && // eslint-disable-line compat/compat
-  window.navigator.userAgent && // eslint-disable-line compat/compat
-  /Edge|MSIE|rv:11/i.test(window.navigator.userAgent) // eslint-disable-line compat/compat
-  );
+  return Boolean(window.navigator && window.navigator.userAgent && /Edge|MSIE|rv:11/i.test(window.navigator.userAgent));
 }
 export function isIECompHeader() {
   var mHttp = window.document.querySelector('meta[http-equiv="X-UA-Compatible"]');
