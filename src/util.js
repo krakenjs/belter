@@ -1078,7 +1078,7 @@ export function getOrSet<O : Object, T : mixed>(obj : O, key : string, getter : 
 
 export type CleanupType = {|
     set : <T : mixed>(string, T) => T, // eslint-disable-line no-undef
-    register : (Function) => void,
+    register : (Function) => {| cancel : () => void |},
     all : (err? : mixed) => ZalgoPromise<void>
 |};
 
@@ -1099,12 +1099,23 @@ export function cleanup(obj : Object) : CleanupType {
             return item;
         },
 
-        register(method : Function) {
+        register(method : Function) : {| cancel : () => void |} {
+            const task = once(() => method(cleanErr));
+
             if (cleaned) {
                 method(cleanErr);
             } else {
-                tasks.push(once(() => method(cleanErr)));
+                tasks.push(task);
             }
+
+            return {
+                cancel: () => {
+                    const index = tasks.indexOf(task);
+                    if (index !== -1) {
+                        tasks.splice(index, 1);
+                    }
+                }
+            };
         },
 
         all(err? : mixed) : ZalgoPromise<void> {
