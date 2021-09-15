@@ -5,12 +5,18 @@ export function getUserAgent() : string {
     return window.navigator.mockUserAgent || window.navigator.userAgent;
 }
 
+const TABLET_PATTERN = /ip(a|ro)d|silk|xoom|playbook|tablet|kindle|Nexus 7|GT-P10|SC-01C|SHW-M180S|SM-T320|SGH-T849|SCH-I800|SHW-M180L|SPH-P100|SGH-I987|zt180|HTC( Flyer|_Flyer)|Sprint ATP51|ViewPad7|pandigital(sprnova|nova)|Ideos S7|Dell Streak 7|Advent Vega|A101IT|A70BHT|MID7015|Next2|nook|FOLIO|MB511.*RUTEM|Mac OS.*Silk/i;
+
 export function isDevice(userAgent? : string = getUserAgent()) : boolean {
     if (userAgent.match(/Android|webOS|iPhone|iPad|iPod|bada|Symbian|Palm|CriOS|BlackBerry|IEMobile|WindowsMobile|Opera Mini/i)) {
         return true;
     }
 
     return false;
+}
+
+export function isTablet(userAgent? : string = getUserAgent()) : boolean {
+    return TABLET_PATTERN.test(userAgent);
 }
 
 export function isWebView() : boolean {
