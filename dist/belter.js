@@ -2128,9 +2128,16 @@
                     return item;
                 },
                 register: function(method) {
-                    cleaned ? method(cleanErr) : tasks.push(once((function() {
+                    var task = once((function() {
                         return method(cleanErr);
-                    })));
+                    }));
+                    cleaned ? method(cleanErr) : tasks.push(task);
+                    return {
+                        cancel: function() {
+                            var index = tasks.indexOf(task);
+                            -1 !== index && tasks.splice(index, 1);
+                        }
+                    };
                 },
                 all: function(err) {
                     cleanErr = err;

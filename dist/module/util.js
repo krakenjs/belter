@@ -1036,13 +1036,25 @@ export function cleanup(obj) {
       return item;
     },
     register: function register(method) {
+      var task = once(function () {
+        return method(cleanErr);
+      });
+
       if (cleaned) {
         method(cleanErr);
       } else {
-        tasks.push(once(function () {
-          return method(cleanErr);
-        }));
+        tasks.push(task);
       }
+
+      return {
+        cancel: function cancel() {
+          var index = tasks.indexOf(task);
+
+          if (index !== -1) {
+            tasks.splice(index, 1);
+          }
+        }
+      };
     },
     all: function all(err) {
       cleanErr = err;
