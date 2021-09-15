@@ -68,6 +68,9 @@
         __webpack_require__.d(__webpack_exports__, "isDevice", (function() {
             return isDevice;
         }));
+        __webpack_require__.d(__webpack_exports__, "isTablet", (function() {
+            return isTablet;
+        }));
         __webpack_require__.d(__webpack_exports__, "isWebView", (function() {
             return isWebView;
         }));
@@ -737,9 +740,14 @@
         function getUserAgent() {
             return window.navigator.mockUserAgent || window.navigator.userAgent;
         }
+        var TABLET_PATTERN = /ip(a|ro)d|silk|xoom|playbook|tablet|kindle|Nexus 7|GT-P10|SC-01C|SHW-M180S|SM-T320|SGH-T849|SCH-I800|SHW-M180L|SPH-P100|SGH-I987|zt180|HTC( Flyer|_Flyer)|Sprint ATP51|ViewPad7|pandigital(sprnova|nova)|Ideos S7|Dell Streak 7|Advent Vega|A101IT|A70BHT|MID7015|Next2|nook|FOLIO|MB511.*RUTEM|Mac OS.*Silk/i;
         function isDevice(userAgent) {
             void 0 === userAgent && (userAgent = getUserAgent());
             return !!userAgent.match(/Android|webOS|iPhone|iPad|iPod|bada|Symbian|Palm|CriOS|BlackBerry|IEMobile|WindowsMobile|Opera Mini/i);
+        }
+        function isTablet(userAgent) {
+            void 0 === userAgent && (userAgent = getUserAgent());
+            return TABLET_PATTERN.test(userAgent);
         }
         function isWebView() {
             var userAgent = getUserAgent();
