@@ -1,5 +1,7 @@
+import _objectWithoutPropertiesLoose from "@babel/runtime/helpers/esm/objectWithoutPropertiesLoose";
 import _inheritsLoose from "@babel/runtime/helpers/esm/inheritsLoose";
 import _extends from "@babel/runtime/helpers/esm/extends";
+var _excluded = ["closeOnUnload", "name"];
 
 /* eslint max-lines: off */
 import { ZalgoPromise } from 'zalgo-promise/src';
@@ -420,9 +422,17 @@ export var PopupOpenError = /*#__PURE__*/function (_ExtendableError) {
 export function popup(url, options) {
   // $FlowFixMe
   options = options || {};
+
   var _options = options,
-      width = _options.width,
-      height = _options.height;
+      _options$closeOnUnloa = _options.closeOnUnload,
+      closeOnUnload = _options$closeOnUnloa === void 0 ? 1 : _options$closeOnUnloa,
+      _options$name = _options.name,
+      name = _options$name === void 0 ? '' : _options$name,
+      restOptions = _objectWithoutPropertiesLoose(_options, _excluded);
+
+  var _restOptions = restOptions,
+      width = _restOptions.width,
+      height = _restOptions.height;
   var top = 0;
   var left = 0;
 
@@ -444,7 +454,7 @@ export function popup(url, options) {
 
   if (width && height) {
     // $FlowFixMe
-    options = _extends({
+    restOptions = _extends({
       top: top,
       left: left,
       width: width,
@@ -454,13 +464,11 @@ export function popup(url, options) {
       menubar: 0,
       resizable: 1,
       scrollbars: 1
-    }, options);
-  }
+    }, restOptions);
+  } // eslint-disable-next-line array-callback-return
 
-  var name = options.name || '';
-  delete options.name; // eslint-disable-next-line array-callback-return
 
-  var params = Object.keys(options).map(function (key) {
+  var params = Object.keys(restOptions).map(function (key) {
     // $FlowFixMe
     if (options[key] !== null && options[key] !== undefined) {
       return key + "=" + stringify(options[key]);
@@ -479,9 +487,12 @@ export function popup(url, options) {
     throw err;
   }
 
-  window.addEventListener('unload', function () {
-    return win.close();
-  });
+  if (closeOnUnload) {
+    window.addEventListener('unload', function () {
+      return win.close();
+    });
+  }
+
   return win;
 }
 export function writeToWindow(win, html) {

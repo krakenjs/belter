@@ -2224,6 +2224,7 @@
             UID: "data-uid"
         };
         var UID_HASH_LENGTH = 30;
+        var _excluded = [ "closeOnUnload", "name" ];
         function getBody() {
             var body = document.body;
             if (!body) throw new Error("Body element not found");
@@ -2450,12 +2451,20 @@
             return PopupOpenError;
         }(util_ExtendableError);
         function popup(url, options) {
-            var width = (options = options || {}).width, height = options.height;
+            var _options$closeOnUnloa = (options = options || {}).closeOnUnload, closeOnUnload = void 0 === _options$closeOnUnloa ? 1 : _options$closeOnUnloa, _options$name = options.name, name = void 0 === _options$name ? "" : _options$name, restOptions = function(source, excluded) {
+                if (null == source) return {};
+                var target = {};
+                var sourceKeys = Object.keys(source);
+                var key, i;
+                for (i = 0; i < sourceKeys.length; i++) excluded.indexOf(key = sourceKeys[i]) >= 0 || (target[key] = source[key]);
+                return target;
+            }(options, _excluded);
+            var width = restOptions.width, height = restOptions.height;
             var top = 0;
             var left = 0;
             width && (window.outerWidth ? left = Math.round((window.outerWidth - width) / 2) + window.screenX : window.screen.width && (left = Math.round((window.screen.width - width) / 2)));
             height && (window.outerHeight ? top = Math.round((window.outerHeight - height) / 2) + window.screenY : window.screen.height && (top = Math.round((window.screen.height - height) / 2)));
-            width && height && (options = _extends({
+            width && height && (restOptions = _extends({
                 top: top,
                 left: left,
                 width: width,
@@ -2465,10 +2474,8 @@
                 menubar: 0,
                 resizable: 1,
                 scrollbars: 1
-            }, options));
-            var name = options.name || "";
-            delete options.name;
-            var params = Object.keys(options).map((function(key) {
+            }, restOptions));
+            var params = Object.keys(restOptions).map((function(key) {
                 if (null != options[key]) return key + "=" + stringify(options[key]);
             })).filter(Boolean).join(",");
             var win;
@@ -2481,7 +2488,7 @@
                 var err;
                 throw new dom_PopupOpenError("Can not open popup window - blocked");
             }
-            window.addEventListener("unload", (function() {
+            closeOnUnload && window.addEventListener("unload", (function() {
                 return win.close();
             }));
             return win;
