@@ -1,6 +1,6 @@
 {
   "name": "belter",
-  "version": "1.0.176",
+  "version": "1.0.177",
   "description": "Utilities.",
   "main": "index.js",
   "scripts": {
