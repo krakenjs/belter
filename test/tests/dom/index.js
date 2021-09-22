@@ -11,3 +11,4 @@ import './waitForDocumentBody';
 import './getCurrentScriptUID';
 import './submitForm';
 import './getBody';
+import './popup';
