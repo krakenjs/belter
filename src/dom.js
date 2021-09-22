@@ -443,7 +443,8 @@ type PopupOptions = {|
     resizable? : 0 | 1,
     toolbar? : 0 | 1,
     menubar? : 0 | 1,
-    scrollbars? : 0 | 1
+    scrollbars? : 0 | 1,
+    closeOnUnload? : 0 | 1
 |};
 
 export function popup(url : string, options? : PopupOptions) : CrossDomainWindowType {
@@ -451,7 +452,7 @@ export function popup(url : string, options? : PopupOptions) : CrossDomainWindow
     // $FlowFixMe
     options = options || {};
 
-    const { width, height } = options;
+    const { width, height, closeOnUnload = 1 } = options;
 
     let top = 0;
     let left = 0;
@@ -512,7 +513,9 @@ export function popup(url : string, options? : PopupOptions) : CrossDomainWindow
         throw err;
     }
 
-    window.addEventListener('unload', () => win.close());
+    if (closeOnUnload) {
+        window.addEventListener('unload', () => win.close());
+    }
 
     return win;
 }
