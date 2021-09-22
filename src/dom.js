@@ -452,7 +452,8 @@ export function popup(url : string, options? : PopupOptions) : CrossDomainWindow
     // $FlowFixMe
     options = options || {};
 
-    const { width, height, closeOnUnload = 1 } = options;
+    let { closeOnUnload = 1, name = '', ...restOptions } = options;
+    const { width, height } = restOptions;
 
     let top = 0;
     let left = 0;
@@ -475,7 +476,7 @@ export function popup(url : string, options? : PopupOptions) : CrossDomainWindow
 
     if (width && height) {
         // $FlowFixMe
-        options = {
+        restOptions = {
             top,
             left,
             width,
@@ -485,15 +486,12 @@ export function popup(url : string, options? : PopupOptions) : CrossDomainWindow
             menubar:    0,
             resizable:  1,
             scrollbars: 1,
-            ...options
+            ...restOptions
         };
     }
 
-    const name = options.name || '';
-    delete options.name;
-
     // eslint-disable-next-line array-callback-return
-    const params = Object.keys(options).map(key => {
+    const params = Object.keys(restOptions).map(key => {
         // $FlowFixMe
         if (options[key] !== null && options[key] !== undefined) {
             return `${ key }=${ stringify(options[key]) }`;
