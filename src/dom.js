@@ -474,7 +474,8 @@ export function popup(url : string, options? : PopupOptions) : CrossDomainWindow
     }
 
     delete options.closeOnUnload;
-    
+    delete options.name;
+
     if (width && height) {
         // $FlowFixMe
         options = {
