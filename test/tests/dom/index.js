@@ -12,3 +12,4 @@ import './getCurrentScriptUID';
 import './submitForm';
 import './getBody';
 import './popup';
+import './onResize';
