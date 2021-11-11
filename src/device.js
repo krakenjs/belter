@@ -62,6 +62,10 @@ export function isGoogleSearchApp(ua? : string = getUserAgent()) : boolean {
     return (/\bGSA\b/).test(ua);
 }
 
+export function isEpicGamesLauncher(ua? : string = getUserAgent()) : boolean {
+    return (/EpicGamesLauncher/i).test(ua);
+}
+
 export function isQQBrowser(ua? : string = getUserAgent()) : boolean {
     return (/QQBrowser/).test(ua);
 }
@@ -115,7 +119,7 @@ export function isSFVCorSafari(ua? : string = getUserAgent()) : boolean {
         if (scale > 1 &&
             possibleSafariSizes[scale] &&
             possibleSafariSizes[scale].indexOf(computedHeight) !== -1) {
-                
+
             maybeSafari = true;
         }
 
@@ -194,7 +198,7 @@ export function isMacOsCna() : boolean {
 
 export function supportsPopups(ua? : string = getUserAgent()) : boolean {
     return !(isIosWebview(ua) || isAndroidWebview(ua) || isOperaMini(ua) ||
-        isFirefoxIOS(ua) || isEdgeIOS(ua) || isFacebookWebView(ua) || isQQBrowser(ua) || isElectron() || isMacOsCna() || isStandAlone());
+        isFirefoxIOS(ua) || isEdgeIOS(ua) || isFacebookWebView(ua) || isQQBrowser(ua) || isElectron() || isMacOsCna() || isStandAlone() || isEpicGamesLauncher());
 }
 
 export function isChrome(ua? : string = getUserAgent()) : boolean {
