@@ -201,8 +201,12 @@ export function isChrome(ua? : string = getUserAgent()) : boolean {
     return (/Chrome|Chromium|CriOS/).test(ua);
 }
 
+export function isYandex(ua? : string = getUserAgent()) : boolean {
+    return (/YaBrowser/).test(ua);
+}
+
 export function isSafari(ua? : string = getUserAgent()) : boolean {
-    return (/Safari/).test(ua) && !isChrome(ua);
+    return (/Safari/).test(ua) && !isChrome(ua) && !isYandex(ua);
 }
 
 export function isApplePaySupported() : boolean {
