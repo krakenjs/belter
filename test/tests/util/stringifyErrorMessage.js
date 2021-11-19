@@ -22,6 +22,7 @@ describe('stringifyErrorMessage', () => {
     });
 
     it('should return default message if Error instance without a message is passed', () => {
+        // eslint-disable-next-line unicorn/error-message
         const error = new Error();
         // $FlowFixMe method-unbinding
         const expectedMessage =  `<unknown error: ${ Object.prototype.toString.call(error) }>`;
