@@ -198,7 +198,7 @@ export function supportsPopups(ua? : string = getUserAgent()) : boolean {
 }
 
 export function isChrome(ua? : string = getUserAgent()) : boolean {
-    return (/Chrome|Chromium|CriOS/).test(ua);
+    return (/Chrome|Chromium|CriOS/).test(ua) && !(/SamsungBrowser|Silk|EdgA|FxiOS|EdgiOS|Safari/).test(ua);
 }
 
 export function isSafari(ua? : string = getUserAgent()) : boolean {
