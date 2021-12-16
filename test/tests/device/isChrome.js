@@ -40,9 +40,6 @@ describe('isChrome', () => {
         const ineligibleUserAgents = [
             'Mozilla/5.0 (Android 4.4; Mobile; rv:70.0) Gecko/70.0 Firefox/70.0', // Firefox - Android mobile
             'Mozilla/5.0 (Android 4.4; Tablet; rv:70.0) Gecko/70.0 Firefox/70.0', // Firefox - Android tablet
-            'Mozilla/5.0 (iPhone; CPU iPhone OS 8_3 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) FxiOS/1.0 Mobile/12F69 Safari/600.1.4', // Firefox - iPhone
-            'Mozilla/5.0 (iPad; CPU iPhone OS 8_3 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) FxiOS/1.0 Mobile/12F69 Safari/600.1.4', // Firefox - iPad
-            'Mozilla/5.0 (iPhone; CPU iPhone OS 12_3_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1.1 EdgiOS/44.5.0.10 Mobile/15E148 Safari/604.1', // Microsoft Edge - iPhone
             'Mozilla/5.0 (Linux; Android 8.1.0; Pixel Build/OPM4.171019.021.D1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.109 Mobile Safari/537.36 EdgA/42.0.0.2057', // Microsoft Edge - Android mobile
             'Opera/12.02 (Android 4.1; Linux; Opera Mobi/ADR-1111101157; U; en-US) Presto/2.9.201 Version/12.02', // Opera - Android mobile
             'Opera/9.80 (iPhone; Opera Mini/8.0.0/34.2336; U; en) Presto/2.8.119 Version/11.10', // Opera mini - iOS
@@ -53,7 +50,7 @@ describe('isChrome', () => {
         ];
         for (const userAgent of ineligibleUserAgents) {
             it(`should return false when userAgent is ${ userAgent } `, () => {
-                // eslint-disable-next-line compat/compat
+                 
                 window.navigator.userAgent = userAgent;
                 const bool = isChrome();
                 if (bool) {
