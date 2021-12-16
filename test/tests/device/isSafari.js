@@ -3,14 +3,6 @@
 import { isSafari } from '../../../src/device';
 
 describe('isSafari', () => {
-    it('should return true when userAgent contains Safari and isChrome function returns false', () => {
-        
-        window.navigator.userAgent = 'Safari';
-        const bool = isSafari();
-        if (!bool) {
-            throw new Error(`Expected true, got ${ JSON.stringify(bool) }`);
-        }
-    });
     it('should return false when userAgent contains Safari and isChrome function returns true', () => {
         
         window.navigator.userAgent = 'SafariChrome';
@@ -28,7 +20,7 @@ describe('isSafari', () => {
         }
     });
 
-    describe('user agents other than chrome', () => {
+    describe('user agents other than safari', () => {
         const ineligibleUserAgents = [
             'Mozilla/5.0 (iPhone; CPU iPhone OS 8_3 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) FxiOS/1.0 Mobile/12F69 Safari/600.1.4', // Firefox - iPhone
             'Mozilla/5.0 (iPad; CPU iPhone OS 8_3 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) FxiOS/1.0 Mobile/12F69 Safari/600.1.4', // Firefox - iPad
