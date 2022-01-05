@@ -246,7 +246,6 @@ export function onClick(element, handler) {
   element.addEventListener('keypress', function (event) {
     // $FlowFixMe
     if (event.keyCode === KEY_CODES.ENTER || event.keyCode === KEY_CODES.SPACE) {
-      // eslint-disable-line unicorn/prefer-event-key
       return handler(event);
     }
   });

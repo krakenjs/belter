@@ -230,14 +230,14 @@ export function isChrome(ua) {
     ua = getUserAgent();
   }
 
-  return /Chrome|Chromium|CriOS/.test(ua);
+  return /Chrome|Chromium|CriOS/.test(ua) && !/SamsungBrowser|Silk|EdgA|Safari/.test(ua);
 }
 export function isSafari(ua) {
   if (ua === void 0) {
     ua = getUserAgent();
   }
 
-  return /Safari/.test(ua) && !isChrome(ua);
+  return /Safari/.test(ua) && !isChrome(ua) && !/|Silk|FxiOS|EdgiOS/.test(ua);
 }
 export function isApplePaySupported() {
   try {
