@@ -1,4 +1,4 @@
-import { iPhoneScreenHeightMatrix } from './screenHeights';
+import { iOS14 } from './screenHeights';
 export function getUserAgent() {
   return window.navigator.mockUserAgent || window.navigator.userAgent;
 }
@@ -77,6 +77,13 @@ export function isIos(ua) {
 
   return /iPhone|iPod|iPad/.test(ua);
 }
+export function isIOS14(ua) {
+  if (ua === void 0) {
+    ua = getUserAgent();
+  }
+
+  return /iPhone.*OS.*(1)?(?:(1)[0-4]| [0-9])_/.test(ua);
+}
 export function isGoogleSearchApp(ua) {
   if (ua === void 0) {
     ua = getUserAgent();
@@ -112,7 +119,7 @@ export function isSFVC(ua) {
   }
 
   if (isIos(ua)) {
-    var device = iPhoneScreenHeightMatrix[window.outerHeight];
+    var device = isIOS14(ua) ? iOS14[window.outerHeight] : null;
 
     if (!device) {
       return false;
@@ -138,7 +145,7 @@ export function isSFVCorSafari(ua) {
 
   if (isIos(ua)) {
     var sfvc = isSFVC(ua);
-    var device = iPhoneScreenHeightMatrix[window.outerHeight];
+    var device = isIOS14(ua) ? iOS14[window.outerHeight] : null;
 
     if (!device) {
       return false;

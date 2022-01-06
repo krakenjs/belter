@@ -1,4 +1,4 @@
-export var iPhoneScreenHeightMatrix = {
+export var iOS14 = {
   '926': {
     device: 'iPhone 12 Pro Max',
     textSizeHeights: [752, 748, 744, 738],

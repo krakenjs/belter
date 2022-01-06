@@ -98,6 +98,9 @@
         __webpack_require__.d(__webpack_exports__, "isIos", (function() {
             return isIos;
         }));
+        __webpack_require__.d(__webpack_exports__, "isIOS14", (function() {
+            return isIOS14;
+        }));
         __webpack_require__.d(__webpack_exports__, "isGoogleSearchApp", (function() {
             return isGoogleSearchApp;
         }));
@@ -623,10 +626,10 @@
         __webpack_require__.d(__webpack_exports__, "UID_HASH_LENGTH", (function() {
             return UID_HASH_LENGTH;
         }));
-        __webpack_require__.d(__webpack_exports__, "iPhoneScreenHeightMatrix", (function() {
-            return iPhoneScreenHeightMatrix;
+        __webpack_require__.d(__webpack_exports__, "iOS14", (function() {
+            return iOS14;
         }));
-        var iPhoneScreenHeightMatrix = {
+        var iOS14 = {
             926: {
                 device: "iPhone 12 Pro Max",
                 textSizeHeights: [ 752, 748, 744, 738 ],
@@ -784,6 +787,10 @@
             void 0 === ua && (ua = getUserAgent());
             return /iPhone|iPod|iPad/.test(ua);
         }
+        function isIOS14(ua) {
+            void 0 === ua && (ua = getUserAgent());
+            return /iPhone.*OS.*(1)?(?:(1)[0-4]| [0-9])_/.test(ua);
+        }
         function isGoogleSearchApp(ua) {
             void 0 === ua && (ua = getUserAgent());
             return /\bGSA\b/.test(ua);
@@ -799,7 +806,7 @@
         function isSFVC(ua) {
             void 0 === ua && (ua = getUserAgent());
             if (isIos(ua)) {
-                var device = iPhoneScreenHeightMatrix[window.outerHeight];
+                var device = isIOS14(ua) ? iOS14[window.outerHeight] : null;
                 if (!device) return !1;
                 var height = window.innerHeight;
                 var scale = Math.round(window.screen.width / window.innerWidth * 100) / 100;
@@ -812,7 +819,7 @@
             void 0 === ua && (ua = getUserAgent());
             if (isIos(ua)) {
                 var sfvc = isSFVC(ua);
-                var device = iPhoneScreenHeightMatrix[window.outerHeight];
+                var device = isIOS14(ua) ? iOS14[window.outerHeight] : null;
                 if (!device) return !1;
                 var height = window.innerHeight;
                 var scale = Math.round(window.screen.width / window.innerWidth * 100) / 100;
