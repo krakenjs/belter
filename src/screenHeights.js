@@ -1,6 +1,6 @@
 /* @flow */
 
-export const iPhoneScreenHeightMatrix = {
+export const iOS14 = {
     '926': {
         device:          'iPhone 12 Pro Max',
         textSizeHeights: [
