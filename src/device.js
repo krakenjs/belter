@@ -1,5 +1,5 @@
 /* @flow */
-import { iOS14, iOS15 } from './screenHeights';
+import { iOS14 } from './screenHeights';
 
 export function getUserAgent() : string {
     return window.navigator.mockUserAgent || window.navigator.userAgent;
