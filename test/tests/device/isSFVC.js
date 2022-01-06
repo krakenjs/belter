@@ -3,7 +3,7 @@
 /* @flow */
 
 import { isSFVC } from '../../../src/device';
-import { iOS14, iOS15 } from '../../../src/screenHeights';
+import { iOS14 } from '../../../src/screenHeights';
 
 describe('isSFVC', () => {
     Object.keys(iOS14).forEach(height => {
@@ -15,24 +15,6 @@ describe('isSFVC', () => {
                 it(`iOS14: ${ textSize } text size should not be a web view`, () => {
                     
                     window.navigator.userAgent = 'iPhone OS 14_2';
-                    const sfvc = isSFVC();
-                    if (sfvc) {
-                        throw new Error(`Expected text size, ${ textSize }, to not be a web view.`);
-                    }
-                });
-            });
-        });
-    });
-
-    Object.keys(iOS15).forEach(height => {
-        const device = iOS14[height].device;
-        const textSizeHeights = iOS14[height].textSizeHeights;
-
-        describe(`iOS15 ${ device }`, () => {
-            textSizeHeights.forEach(textSize => {
-                it(`iOS15: ${ textSize } text size should not be a web view`, () => {
-                    
-                    window.navigator.userAgent = 'iPhone OS 15_1';
                     const sfvc = isSFVC();
                     if (sfvc) {
                         throw new Error(`Expected text size, ${ textSize }, to not be a web view.`);

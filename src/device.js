@@ -84,7 +84,7 @@ export function isSFVC(ua? : string = getUserAgent()) : boolean {
     if (isIos(ua)) {
         const device = isIOS14(ua)
             ? iOS14[window.outerHeight]
-            : iOS15[window.outerHeight];
+            : null;
 
         if (!device) {
             return false;
@@ -109,7 +109,7 @@ export function isSFVCorSafari(ua? : string = getUserAgent()) : boolean {
 
         const device = isIOS14(ua)
             ? iOS14[window.outerHeight]
-            : iOS15[window.outerHeight];
+            : null;
 
         if (!device) {
             return false;

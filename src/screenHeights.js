@@ -115,9 +115,7 @@ export const iOS14 = {
 export const iOS15 = {
     '926': {
         device:          'iPhone 13 Pro Max, iPhone 12 Pro Max',
-        textSizeHeights: [
-            752, 748, 744               // 738 removed because same as Safari
-        ],
+        textSizeHeights: ([] : $ReadOnlyArray<empty>),
         zoomHeight: {
             '1.15': [ 654, 650, 647 ],      // 641 removed because same as Safari
             '1.25': [ 601, 598, 595 ],      // 590 removed because same as Safari
@@ -126,7 +124,7 @@ export const iOS15 = {
             '2':    [ 376, 374, 372, 369 ]  // 372, 369 removed because same as Safari
         },
         maybeSafari: {
-            '1':    [ 738 ],
+            '1':    [ 752, 748, 738 ],
             '1.15': [ 641 ],
             '1.25': [ 590 ],
             '1.5':  [ 495, 491 ],
@@ -136,9 +134,7 @@ export const iOS15 = {
     },
     '896': {
         device:          'iPhone XS Max, iPhone 11 Pro Max, iPhone XR, iPhone 11',
-        textSizeHeights: [
-            721, 717, 713          // 707 removed as same in Safari
-        ],
+        textSizeHeights: ([] : $ReadOnlyArray<empty>),
         zoomHeight: {
             '1.15': [ 721, 716, 713, 707 ],
             '1.25': [ 721, 718, 713, 708 ],
@@ -147,15 +143,13 @@ export const iOS15 = {
             '2':    [ 722, 718, 714, 708 ]
         },
         maybeSafari: {
-            '1':    [ 707 ],
+            '1':    [ 721, 717, 713, 707 ],
             '1.5':  [ 707 ]
         }
     },
     '844': {
         device:          'iPhone 13, iPhone 13 Pro, iPhone 12, iPhone 12 Pro',
-        textSizeHeights: [
-            670, 666, 662                   // 656 removed as same in Safari
-        ],
+        textSizeHeights: ([] : $ReadOnlyArray<empty>),
         zoomHeight: {
             '1.15': [ 582, 579 ],           // 575, 570 removed as same in Safari
             '1.25': [ 536, 533, 530 ],      // 525
@@ -164,7 +158,7 @@ export const iOS15 = {
             '2':    [ 335, 333, 331, 328 ]  // 331, 328
         },
         maybeSafari: {
-            '1':    [ 656 ],
+            '1':    [ 670, 666, 662, 656 ],
             '1.15': [ 575, 570 ],
             '1.25': [ 525 ],
             '1.75': [ 378, 375 ],
@@ -173,10 +167,8 @@ export const iOS15 = {
     },
     '812': {
         device:          'iPhone 13 mini, iPhone 12 Mini, iPhone 11 Pro, iPhone X, iPhone XS',
-        textSizeHeights: [
-            641, 637, 633, 627
-        ],
-        zoomHeight: {
+        textSizeHeights: ([] : $ReadOnlyArray<empty>),
+        zoomHeight:      {
             '1.15': [ 641, 637, 633, 627 ],
             '1.25': [ 641, 638, 633, 628 ],
             '1.5':  [ 641, 638, 633, 627 ],
@@ -186,16 +178,15 @@ export const iOS15 = {
             '3':    [ 642, 633 ] // 636, 627 removed as same in Safari
         },
         maybeSafari: {
+            '1':    [ 641, 637, 633, 627 ],
             '1.75': [ 627 ],
             '3':    [ 636, 627 ]
         }
     },
     '736': {
         device:          'iPhone 6 Plus, iPhone 6S Plus, iPhone 7 Plus, iPhone 8 Plus',
-        textSizeHeights: [
-            628, 624, 620, 614
-        ],
-        zoomHeight: {
+        textSizeHeights: ([] : $ReadOnlyArray<empty>),
+        zoomHeight:      {
             '1.15': [ 628, 624, 620, 614 ],
             '1.25': [ 628, 624, 620, 614 ],
             '1.5':  [ 629, 624, 620 ], // 614
@@ -205,6 +196,7 @@ export const iOS15 = {
             '3':    [ 627, 624, 615 ] // 621
         },
         maybeSafari: {
+            '1':    [ 628, 624, 620, 614 ],
             '1.5':  [ 614 ],
             '2':    [ 614 ],
             '3':    [ 621 ]
@@ -212,10 +204,8 @@ export const iOS15 = {
     },
     '667': {
         device:          'iPhone 6, iPhone 6S, iPhone 7, iPhone 8,  iPhone SE2',
-        textSizeHeights: [
-            559, 555, 551, 545
-        ],
-        zoomHeight: {
+        textSizeHeights: ([] : $ReadOnlyArray<empty>),
+        zoomHeight:      {
             '1.15': [ 559, 555, 551, 545 ],
             '1.25': [ 559, 555, 551, 545 ],
             '1.5':  [ 560, 555, 551 ], // 545
@@ -225,6 +215,7 @@ export const iOS15 = {
             '3':    [ 558, 555, 546 ] // 552
         },
         maybeSafari: {
+            '1':    [ 559, 555, 551, 545 ],
             '1.5':  [ 545 ],
             '1.75': [ 544 ],
             '2.5':  [ 545 ],
