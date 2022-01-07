@@ -1,6 +1,6 @@
 /* @flow */
 
-import { isIos, isIOS14, isIOS15 } from '../../../src/device';
+import { isIos, isIOS14 } from '../../../src/device';
 
 describe('isIos', () => {
     beforeEach(() => {
@@ -75,24 +75,24 @@ describe('isIos', () => {
         });
         it('should return true when userAgent contains iPhone OS 15_', () => {
             
-            window.navigator.userAgent = 'iPhone OS 14_2';
-            const bool = isIOS14();
+            window.navigator.userAgent = 'iPhone OS 15_2';
+            const bool = !isIOS14();
             if (!bool) {
                 throw new Error(`Expected true, got ${ JSON.stringify(bool) }`);
             }
         });
         it('should return true when userAgent contains iPhone OS 16_', () => {
             
-            window.navigator.userAgent = 'iPhone OS 7_1';
-            const bool = isIOS14();
+            window.navigator.userAgent = 'iPhone OS 16_1';
+            const bool = !isIOS14();
             if (!bool) {
                 throw new Error(`Expected true, got ${ JSON.stringify(bool) }`);
             }
         });
-        it('should return false if when userAgent is above iOS 14', () => {
+        it('should return false if when userAgent is below iOS 15', () => {
             
-            window.navigator.userAgent = 'iPhone OS 15_1';
-            const bool = isIOS14();
+            window.navigator.userAgent = 'iPhone OS 14_1';
+            const bool = !isIOS14();
             if (bool) {
                 throw new Error(`Expected false, got ${ JSON.stringify(bool) }`);
             }
