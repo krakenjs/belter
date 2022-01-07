@@ -1,5 +1,5 @@
 /* @flow */
-import { iOS14 } from './screenHeights';
+import { iOS14, iOS15 } from './screenHeights';
 
 export function getUserAgent() : string {
     return window.navigator.mockUserAgent || window.navigator.userAgent;
@@ -82,9 +82,12 @@ export function isIosWebview(ua? : string = getUserAgent()) : boolean {
 
 export function isSFVC(ua? : string = getUserAgent()) : boolean {
     if (isIos(ua)) {
-        const device = isIOS14(ua)
-            ? iOS14[window.outerHeight]
-            : null;
+        let device = null;
+        if (isIOS14(ua)) {
+            device = iOS14[window.outerHeight];
+        } else {
+            device = window.pageYOffset !== 0 ? null : iOS15[window.outerHeight];
+        }
 
         if (!device) {
             return false;
@@ -94,7 +97,7 @@ export function isSFVC(ua? : string = getUserAgent()) : boolean {
         const scale = Math.round(window.screen.width / window.innerWidth * 100) / 100;
         const computedHeight = Math.round(height * scale);
 
-        if (scale > 1 && device.zoomHeight[scale]) {
+        if (scale > 1 && device.zoomHeight && device.zoomHeight[scale]) {
             return device.zoomHeight[scale].indexOf(computedHeight) !== -1;
         } else {
             return device.textSizeHeights.indexOf(computedHeight) !== -1;
