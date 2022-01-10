@@ -1,6 +1,6 @@
 export var iOS14 = {
   '926': {
-    device: 'iPhone 12 Pro Max',
+    device: 'iPhone 12/13 Pro Max',
     textSizeHeights: [752, 748, 744, 738],
     zoomHeight: {
       '1.15': [752, 747, 744, 738],
@@ -126,5 +126,31 @@ export var iOS14 = {
       '2.5': [545],
       '3': [552]
     }
+  }
+};
+export var iOS15 = {
+  '926': {
+    device: 'iPhone 12/13 Pro Max',
+    textSizeHeights: [752, 748, 744, 738]
+  },
+  '896': {
+    device: 'iPhone XS Max, iPhone 11 Pro Max, iPhone XR, iPhone 11',
+    textSizeHeights: [721, 717, 713, 707]
+  },
+  '844': {
+    device: 'iPhone 12/13, iPhone 12/13 Pro',
+    textSizeHeights: [670, 666, 662, 656]
+  },
+  '812': {
+    device: 'iPhone X, iPhone XS, iPhone 11 Pro, iPhone 12/13 Mini',
+    textSizeHeights: [641, 637, 633, 627]
+  },
+  '736': {
+    device: 'iPhone 6 Plus, iPhone 6S Plus, iPhone 7 Plus, iPhone 8 Plus',
+    textSizeHeights: [628, 624, 620, 614]
+  },
+  '667': {
+    device: 'iPhone 6, iPhone 6S, iPhone 7, iPhone 8,  iPhone SE2',
+    textSizeHeights: [559, 555, 551, 545]
   }
 };

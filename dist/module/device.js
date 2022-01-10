@@ -1,4 +1,4 @@
-import { iOS14 } from './screenHeights';
+import { iOS14, iOS15 } from './screenHeights';
 export function getUserAgent() {
   return window.navigator.mockUserAgent || window.navigator.userAgent;
 }
@@ -119,7 +119,13 @@ export function isSFVC(ua) {
   }
 
   if (isIos(ua)) {
-    var device = isIOS14(ua) ? iOS14[window.outerHeight] : null;
+    var device = null;
+
+    if (isIOS14(ua)) {
+      device = iOS14[window.outerHeight];
+    } else {
+      device = window.pageYOffset !== 0 ? null : iOS15[window.outerHeight];
+    }
 
     if (!device) {
       return false;
@@ -129,7 +135,7 @@ export function isSFVC(ua) {
     var scale = Math.round(window.screen.width / window.innerWidth * 100) / 100;
     var computedHeight = Math.round(height * scale);
 
-    if (scale > 1 && device.zoomHeight[scale]) {
+    if (scale > 1 && device.zoomHeight && device.zoomHeight[scale]) {
       return device.zoomHeight[scale].indexOf(computedHeight) !== -1;
     } else {
       return device.textSizeHeights.indexOf(computedHeight) !== -1;
