@@ -215,7 +215,7 @@ export function isChrome(ua? : string = getUserAgent()) : boolean {
 }
 
 export function isSafari(ua? : string = getUserAgent()) : boolean {
-    return (/Safari/).test(ua) && !isChrome(ua) && !(/|Silk|FxiOS|EdgiOS/).test(ua);
+    return (/Safari/).test(ua) && !isChrome(ua) && !(/Silk|FxiOS|EdgiOS/).test(ua);
 }
 
 export function isApplePaySupported() : boolean {
