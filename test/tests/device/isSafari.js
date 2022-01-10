@@ -3,11 +3,11 @@
 import { isSafari } from '../../../src/device';
 
 describe('isSafari', () => {
-    it('should return false when userAgent contains Safari and isChrome function returns true', () => {
+    it('should return false when userAgent contains Safari and isChrome function returns false', () => {
         
         window.navigator.userAgent = 'SafariChrome';
         const bool = isSafari();
-        if (bool) {
+        if (!bool) {
             throw new Error(`Expected false, got ${ JSON.stringify(bool) }`);
         }
     });
