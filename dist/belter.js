@@ -899,7 +899,7 @@
         }
         function isChrome(ua) {
             void 0 === ua && (ua = getUserAgent());
-            return /Chrome|Chromium|CriOS/.test(ua) && !/SamsungBrowser|Silk|EdgA|Safari/.test(ua);
+            return /Chrome|Chromium|CriOS/.test(ua) && !/SamsungBrowser|Silk|EdgA/.test(ua);
         }
         function isSafari(ua) {
             void 0 === ua && (ua = getUserAgent());
