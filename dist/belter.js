@@ -903,7 +903,7 @@
         }
         function isSafari(ua) {
             void 0 === ua && (ua = getUserAgent());
-            return /Safari/.test(ua) && !isChrome(ua) && !/|Silk|FxiOS|EdgiOS/.test(ua);
+            return /Safari/.test(ua) && !isChrome(ua) && !/Silk|FxiOS|EdgiOS/.test(ua);
         }
         function isApplePaySupported() {
             try {

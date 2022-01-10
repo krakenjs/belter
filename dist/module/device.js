@@ -250,7 +250,7 @@ export function isSafari(ua) {
     ua = getUserAgent();
   }
 
-  return /Safari/.test(ua) && !isChrome(ua) && !/|Silk|FxiOS|EdgiOS/.test(ua);
+  return /Safari/.test(ua) && !isChrome(ua) && !/Silk|FxiOS|EdgiOS/.test(ua);
 }
 export function isApplePaySupported() {
   try {
