@@ -6,6 +6,14 @@ import { isSFVC } from '../../../src/device';
 import { iOS14, iOS15 } from '../../../src/screenHeights';
 
 describe('isSFVC', () => {
+    beforeEach(() => {
+        window.pageYOffset = 0;
+        window.screen = {
+            width:      428,
+            innerWidth: 428
+        };
+    });
+
     Object.keys(iOS14).forEach(height => {
         const device = iOS14[height].device;
         const textSizeHeights = iOS14[height].textSizeHeights;
