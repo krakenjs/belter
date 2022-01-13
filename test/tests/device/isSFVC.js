@@ -12,12 +12,12 @@ describe('isSFVC', () => {
 
         describe(`iOS 14 ${ device }`, () => {
             textSizeHeights.forEach(textSize => {
-                it(`iOS14: ${ textSize } text size should not be a web view`, () => {
+                it(`iOS14: ${ textSize } text size should be a SFVC`, () => {
                     
                     window.navigator.userAgent = 'iPhone OS 14_2';
                     const sfvc = isSFVC();
-                    if (sfvc) {
-                        throw new Error(`Expected text size, ${ textSize }, to not be a web view.`);
+                    if (!sfvc) {
+                        throw new Error(`Expected text size, ${ textSize }, to be a SFVC.`);
                     }
                 });
             });
@@ -30,7 +30,7 @@ describe('isSFVC', () => {
 
         describe(`iOS 15 ${ device }`, () => {
             textSizeHeights.forEach(textSize => {
-                it(`iOS15: ${ textSize } text size should not be a SFVC`, () => {
+                it(`iOS15: ${ textSize } text size should be a SFVC`, () => {
                     
                     window.navigator.userAgent = 'iPhone OS 15_2';
                     const sfvc = isSFVC();
