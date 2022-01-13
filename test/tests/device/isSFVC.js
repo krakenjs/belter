@@ -8,9 +8,9 @@ import { iOS14, iOS15 } from '../../../src/screenHeights';
 describe('isSFVC', () => {
     beforeEach(() => {
         window.pageYOffset = 0;
+        window.innerWidth = 428;
         window.screen = {
-            width:      428,
-            innerWidth: 428
+            width:      428
         };
     });
 
@@ -62,9 +62,9 @@ describe('isSFVC', () => {
 
     it('should return true if browser scale is greater than 1 for iOS 15', () => {
         window.navigator.userAgent = 'iPhone OS 15_2';
+        window.innerWidth = 372;
         window.screen = {
-            width:      428,
-            innerWidth: 372
+            width:      428
         };
 
         const sfvc = isSFVC();
@@ -73,11 +73,13 @@ describe('isSFVC', () => {
         }
     });
 
-    it('should calculate SFVC based on browser zoom for iOS 14', () => {
+    it.only('should calculate SFVC based on browser zoom for iOS 14', () => {
         window.navigator.userAgent = 'iPhone OS 14_2';
+        window.outerHeight = 926;
+        window.innerHeight = 650;
+        window.innerWidth = 372;
         window.screen = {
-            width:      428,
-            innerWidth: 372
+            width:      428
         };
 
         const sfvc = isSFVC();

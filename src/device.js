@@ -97,7 +97,7 @@ export function isSFVC(ua? : string = getUserAgent()) : boolean {
             if (scale !== 1) {
                 return true;
             }
-            
+
             device = iOS15[window.outerHeight];
         }
 
