@@ -119,21 +119,28 @@ export function isSFVC(ua) {
   }
 
   if (isIos(ua)) {
-    var device = null;
-
-    if (isIOS14(ua)) {
-      device = iOS14[window.outerHeight];
-    } else {
-      device = window.pageYOffset !== 0 ? null : iOS15[window.outerHeight];
-    }
-
-    if (!device) {
-      return false;
+    if (window.pageYOffset !== 0) {
+      return true;
     }
 
     var height = window.innerHeight;
     var scale = Math.round(window.screen.width / window.innerWidth * 100) / 100;
     var computedHeight = Math.round(height * scale);
+    var device = null;
+
+    if (isIOS14(ua)) {
+      device = iOS14[window.outerHeight];
+    } else {
+      if (scale !== 1) {
+        return true;
+      }
+
+      device = iOS15[window.outerHeight];
+    }
+
+    if (!device) {
+      return false;
+    }
 
     if (scale > 1 && device.zoomHeight && device.zoomHeight[scale]) {
       return device.zoomHeight[scale].indexOf(computedHeight) !== -1;

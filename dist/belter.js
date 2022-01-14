@@ -835,12 +835,16 @@
         function isSFVC(ua) {
             void 0 === ua && (ua = getUserAgent());
             if (isIos(ua)) {
-                var device = null;
-                if (!(device = isIOS14(ua) ? iOS14[window.outerHeight] : 0 !== window.pageYOffset ? null : iOS15[window.outerHeight])) return !1;
+                if (0 !== window.pageYOffset) return !0;
                 var height = window.innerHeight;
                 var scale = Math.round(window.screen.width / window.innerWidth * 100) / 100;
                 var computedHeight = Math.round(height * scale);
-                return scale > 1 && device.zoomHeight && device.zoomHeight[scale] ? -1 !== device.zoomHeight[scale].indexOf(computedHeight) : -1 !== device.textSizeHeights.indexOf(computedHeight);
+                var device = null;
+                if (isIOS14(ua)) device = iOS14[window.outerHeight]; else {
+                    if (1 !== scale) return !0;
+                    device = iOS15[window.outerHeight];
+                }
+                return !!device && (scale > 1 && device.zoomHeight && device.zoomHeight[scale] ? -1 !== device.zoomHeight[scale].indexOf(computedHeight) : -1 !== device.textSizeHeights.indexOf(computedHeight));
             }
             return !1;
         }
