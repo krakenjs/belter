@@ -82,20 +82,28 @@ export function isIosWebview(ua? : string = getUserAgent()) : boolean {
 
 export function isSFVC(ua? : string = getUserAgent()) : boolean {
     if (isIos(ua)) {
-        let device = null;
-        if (isIOS14(ua)) {
-            device = iOS14[window.outerHeight];
-        } else {
-            device = window.pageYOffset !== 0 ? null : iOS15[window.outerHeight];
-        }
-
-        if (!device) {
-            return false;
+        if (window.pageYOffset !== 0) {
+            return true;
         }
 
         const height = window.innerHeight;
         const scale = Math.round(window.screen.width / window.innerWidth * 100) / 100;
         const computedHeight = Math.round(height * scale);
+
+        let device = null;
+        if (isIOS14(ua)) {
+            device = iOS14[window.outerHeight];
+        } else {
+            if (scale !== 1) {
+                return true;
+            }
+
+            device = iOS15[window.outerHeight];
+        }
+
+        if (!device) {
+            return false;
+        }
 
         if (scale > 1 && device.zoomHeight && device.zoomHeight[scale]) {
             return device.zoomHeight[scale].indexOf(computedHeight) !== -1;
