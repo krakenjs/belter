@@ -6,14 +6,6 @@ import { isSFVC } from '../../../src/device';
 import { iOS14, iOS15 } from '../../../src/screenHeights';
 
 describe('isSFVC', () => {
-    beforeEach(() => {
-        window.pageYOffset = 0;
-        window.innerWidth = 428;
-        window.screen = {
-            width:      428
-        };
-    });
-
     Object.keys(iOS14).forEach(height => {
         const device = iOS14[height].device;
         const textSizeHeights = iOS14[height].textSizeHeights;
@@ -21,8 +13,8 @@ describe('isSFVC', () => {
         describe(`iOS 14 ${ device }`, () => {
             textSizeHeights.forEach(textSize => {
                 it(`iOS14: ${ textSize } text size should be a SFVC`, () => {
-                    
                     window.navigator.userAgent = 'iPhone OS 14_2';
+
                     const sfvc = isSFVC();
                     if (!sfvc) {
                         throw new Error(`Expected text size, ${ textSize }, to be a SFVC.`);
@@ -73,7 +65,7 @@ describe('isSFVC', () => {
         }
     });
 
-    it.only('should calculate SFVC based on browser zoom for iOS 14', () => {
+    it('should calculate SFVC based on browser zoom for iOS 14', () => {
         window.navigator.userAgent = 'iPhone OS 14_2';
         window.outerHeight = 926;
         window.innerHeight = 650;
