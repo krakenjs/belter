@@ -91,8 +91,18 @@ function serializeArgs(args) {
   try {
     // $FlowFixMe[method-unbinding]
     return JSON.stringify(Array.prototype.slice.call(args), function (subkey, val) {
+      // Treat each distinct function as unique for purposes of memoization
+      // e.g. even if someFunction.stringify() is the same, we may use a different memoize cache
+      // if the actual function is different.
       if (typeof val === 'function') {
         return "memoize[" + getObjectID(val) + "]";
+      } // Detect DOM elements
+      // By default JSON.stringify(domElement) returns '{}'. This ensures that stays true even for non-standard
+      // elements (e.g. React-rendered dom elements) with custom properties
+
+
+      if (val instanceof window.Element || val !== null && typeof val === 'object' && val.nodeType === 1 && typeof val.style === 'object' && typeof val.ownerDocument === 'object') {
+        return {};
       }
 
       return val;
@@ -149,7 +159,14 @@ export function memoize(method, options) {
       cache = simpleCache = simpleCache || {};
     }
 
-    var cacheKey = serializeArgs(args);
+    var cacheKey;
+
+    try {
+      cacheKey = serializeArgs(args);
+    } catch (_unused) {
+      return method.apply(this, arguments);
+    }
+
     var cacheResult = cache[cacheKey];
 
     if (cacheResult && cacheTime && Date.now() - cacheResult.time < cacheTime) {
