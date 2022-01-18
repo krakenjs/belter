@@ -42,7 +42,7 @@ describe('isSFVC', () => {
         });
     });
 
-    it.only('should return true when user has scrolled', () => {
+    it('should return true when user has scrolled', () => {
         window.navigator.userAgent = 'iPhone OS 15_2';
         window.pageYOffset = 10;
 
