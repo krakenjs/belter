@@ -1,4 +1,5 @@
 /* @flow */
+/* eslint max-lines: off */
 
 import { memoize, inlineMemoize } from '../../../src';
 
@@ -421,6 +422,111 @@ describe('memoize cases', () => {
 
         if (counter !== 22) {
             throw new Error(`Expected counter to be 22, got ${ counter }`);
+        }
+    });
+
+    it('should call a memoized function with an HTML element', () => {
+
+        let counter = 0;
+
+        const add = memoize((arg : {| foo : number, element : HTMLElement |}) => {
+            if (!arg || !arg.element || !arg.foo) {
+                throw new Error(`Expected element to be passed`);
+            }
+
+            counter += 1;
+        });
+
+        const element1 = document.createElement('div');
+        const obj1 = { foo: 1, element: element1 };
+
+        const element2 = document.createElement('div');
+        const obj2 = { foo: 2, element: element2 };
+
+        add(obj1);
+        add(obj1);
+        add(obj1);
+        add(obj1);
+
+        add(obj2);
+        add(obj2);
+        add(obj2);
+
+        add(obj1);
+        add(obj1);
+        add(obj1);
+
+        if (counter !== 2) {
+            throw new Error(`Expected counter to be 2, got ${ counter }`);
+        }
+    });
+
+    it('should call a memoized function with an HTML element with a circular child', () => {
+
+        let counter = 0;
+
+        const add = memoize((arg : {| foo : number, element : HTMLElement |}) => {
+            if (!arg || !arg.element || !arg.foo) {
+                throw new Error(`Expected element to be passed`);
+            }
+
+            counter += 1;
+        });
+
+        const circularObject = {};
+        circularObject.child = circularObject;
+
+        const element1 = document.createElement('div');
+        // $FlowFixMe
+        element1.circularChild = circularObject;
+        const obj1 = { foo: 1, element: element1 };
+
+        const element2 = document.createElement('div');
+        const obj2 = { foo: 2, element: element2 };
+
+        add(obj1);
+        add(obj1);
+        add(obj1);
+        add(obj1);
+
+        add(obj2);
+        add(obj2);
+        add(obj2);
+
+        add(obj1);
+        add(obj1);
+        add(obj1);
+
+        if (counter !== 2) {
+            throw new Error(`Expected counter to be 2, got ${ counter }`);
+        }
+    });
+
+    it('should call a memoized function with a circular element and skip memoization', () => {
+
+        let counter = 0;
+
+        type CircularObject = {| child : CircularObject |};
+
+        // $FlowFixMe
+        const circularObject : CircularObject = {};
+        circularObject.child = circularObject;
+
+        const add = memoize((arg : CircularObject) => {
+            if (arg !== circularObject) {
+                throw new Error(`Expected arg to be circularObject`);
+            }
+
+            counter += 1;
+        });
+
+        add(circularObject);
+        add(circularObject);
+        add(circularObject);
+        add(circularObject);
+
+        if (counter !== 4) {
+            throw new Error(`Expected counter to be 4, got ${ counter }`);
         }
     });
 });
