@@ -16,7 +16,7 @@ describe('isSFVCorSafari', () => {
                     
                     window.navigator.userAgent = 'iPhone OS 14_1';
                     const sfvc = isSFVCorSafari();
-                    if (sfvc) {
+                    if (!sfvc) {
                         throw new Error(`Expected text size, ${ textSize }, to not be a web view.`);
                     }
                 });
