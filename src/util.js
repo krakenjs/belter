@@ -117,7 +117,7 @@ function serializeArgs<T>(args : $ReadOnlyArray<T>) : string {
             // By default JSON.stringify(domElement) returns '{}'. This ensures that stays true even for non-standard
             // elements (e.g. React-rendered dom elements) with custom properties
             if (
-                (val instanceof window.Element) ||
+                (typeof window !== 'undefined' && val instanceof window.Element) ||
                 (val !== null && typeof val === 'object' && val.nodeType === 1 && typeof val.style === 'object' && typeof val.ownerDocument === 'object')
             ) {
                 return {};
@@ -282,7 +282,7 @@ export function inlineMemoize<R>(method : (...args : $ReadOnlyArray<any>) => R, 
     if (cache.hasOwnProperty(key)) {
         return cache[key];
     }
-    
+
     const result = cache[key] = logic(...args);
 
     return result;
@@ -659,7 +659,7 @@ export function dotify(obj : Object, prefix : string = '', newobj : Object = {})
 }
 
 export function undotify(obj : { [string] : string }) : Object {
-    
+
     const result = {};
 
     for (let key in obj) {
@@ -838,7 +838,7 @@ export function defineLazyProp<T>(obj : Object | $ReadOnlyArray<mixed>, key : st
             throw new TypeError(`Object key must be string`);
         }
     }
-    
+
     Object.defineProperty(obj, key, {
         configurable: true,
         enumerable:   true,
@@ -906,7 +906,7 @@ export function replaceObject<T : $ReadOnlyArray<mixed> | Object> (item : T, rep
 
         for (let i = 0; i < length; i++) {
 
-            
+
             defineLazyProp(result, i, () => {
                 const itemKey = fullKey ? `${ fullKey }.${ i }` : `${ i }`;
                 const el = item[i];
@@ -1167,7 +1167,7 @@ export function tryCatch<T>(fn : () => T) : {| result : T, error : void |} | {| 
     } catch (err) {
         error = err;
     }
-    
+
     // $FlowFixMe
     return { result, error };
 }
@@ -1184,7 +1184,7 @@ export function assertExists<T>(name : string, thing : void | null | T) : T {
     if (thing === null || typeof thing === 'undefined') {
         throw new Error(`Expected ${ name } to be present`);
     }
-                            
+
     return thing;
 }
 
@@ -1233,4 +1233,3 @@ export class ExtendableError extends Error {
         }
     }
 }
-  
