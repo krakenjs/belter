@@ -101,7 +101,7 @@ function serializeArgs(args) {
       // elements (e.g. React-rendered dom elements) with custom properties
 
 
-      if (val instanceof window.Element || val !== null && typeof val === 'object' && val.nodeType === 1 && typeof val.style === 'object' && typeof val.ownerDocument === 'object') {
+      if (typeof window !== 'undefined' && val instanceof window.Element || val !== null && typeof val === 'object' && val.nodeType === 1 && typeof val.style === 'object' && typeof val.ownerDocument === 'object') {
         return {};
       }
 
