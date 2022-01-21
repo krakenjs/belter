@@ -1,5 +1,5 @@
 /* @flow */
-import { iOS14, iOS15 } from './screenHeights';
+import { sfvcScreens } from './screenHeights';
 
 export function getUserAgent() : string {
     return window.navigator.mockUserAgent || window.navigator.userAgent;
@@ -82,23 +82,19 @@ export function isIosWebview(ua? : string = getUserAgent()) : boolean {
 
 export function isSFVC(ua? : string = getUserAgent()) : boolean {
     if (isIos(ua)) {
-        if (window.pageYOffset !== 0) {
-            return true;
-        }
-
         const height = window.innerHeight;
         const scale = Math.round(window.screen.width / window.innerWidth * 100) / 100;
         const computedHeight = Math.round(height * scale);
 
         let device = null;
         if (isIOS14(ua)) {
-            device = iOS14[window.outerHeight];
+            device = sfvcScreens[window.outerHeight];
         } else {
             if (scale !== 1) {
                 return true;
             }
 
-            device = iOS15[window.outerHeight];
+            device = sfvcScreens[window.outerHeight];
         }
 
         if (!device) {
@@ -108,7 +104,8 @@ export function isSFVC(ua? : string = getUserAgent()) : boolean {
         if (scale > 1 && device.zoomHeight && device.zoomHeight[scale]) {
             return device.zoomHeight[scale].indexOf(computedHeight) !== -1;
         } else {
-            return device.textSizeHeights.indexOf(computedHeight) !== -1;
+            return device.textSizeHeights.indexOf(computedHeight) !== -1 ||
+                   device.textSizeHeightsNoTabs.indexOf(computedHeight) !== -1;
         }
     }
     return false;
@@ -119,7 +116,7 @@ export function isSFVCorSafari(ua? : string = getUserAgent()) : boolean {
         const sfvc = isSFVC(ua);
 
         const device = isIOS14(ua)
-            ? iOS14[window.outerHeight]
+            ? sfvcScreens[window.outerHeight]
             : null;
 
         if (!device) {

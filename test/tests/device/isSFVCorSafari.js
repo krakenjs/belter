@@ -3,12 +3,12 @@
 /* @flow */
 
 import { isSFVCorSafari } from '../../../src/device';
-import { iOS14 } from '../../../src/screenHeights';
+import { sfvcScreens } from '../../../src/screenHeights';
 
 describe('isSFVCorSafari', () => {
-    Object.keys(iOS14).forEach(height => {
-        const device = iOS14[height].device;
-        const textSizeHeights = iOS14[height].textSizeHeights;
+    Object.keys(sfvcScreens).forEach(height => {
+        const device = sfvcScreens[height].device;
+        const textSizeHeights = sfvcScreens[height].textSizeHeights;
 
         describe(`${ device }`, () => {
             textSizeHeights.forEach(textSize => {
