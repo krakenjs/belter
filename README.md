@@ -13,7 +13,7 @@ belter
 [version-badge]: https://img.shields.io/npm/v/belter.svg?style=flat-square
 [package]: https://www.npmjs.com/package/belter
 [license-badge]: https://img.shields.io/npm/l/belter.svg?style=flat-square
-[license]: https://github.com/krakenjs/belter/blob/master/LICENSE
+[license]: https://github.com/krakenjs/belter/blob/main/LICENSE
 
 Miscellaneous browser utils and tools.
 
