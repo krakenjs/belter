@@ -119,10 +119,6 @@ export function isSFVC(ua) {
   }
 
   if (isIos(ua)) {
-    if (window.pageYOffset !== 0) {
-      return true;
-    }
-
     var height = window.innerHeight;
     var scale = Math.round(window.screen.width / window.innerWidth * 100) / 100;
     var computedHeight = Math.round(height * scale);
