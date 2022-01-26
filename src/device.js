@@ -82,10 +82,6 @@ export function isIosWebview(ua? : string = getUserAgent()) : boolean {
 
 export function isSFVC(ua? : string = getUserAgent()) : boolean {
     if (isIos(ua)) {
-        if (window.pageYOffset !== 0) {
-            return true;
-        }
-
         const height = window.innerHeight;
         const scale = Math.round(window.screen.width / window.innerWidth * 100) / 100;
         const computedHeight = Math.round(height * scale);
