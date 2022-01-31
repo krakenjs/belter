@@ -14,6 +14,12 @@ describe('isSFVC', () => {
             textSizeHeights.forEach(textSize => {
                 it(`iOS14: ${ textSize } text size should be a SFVC`, () => {
                     window.navigator.userAgent = 'iPhone OS 14_2';
+                    window.outerHeight = height;
+                    window.innerHeight = textSize;
+                    window.innerWidth = 372;
+                    window.screen = {
+                        width:      372
+                    };
 
                     const sfvc = isSFVC();
                     if (!sfvc) {
@@ -33,6 +39,13 @@ describe('isSFVC', () => {
                 it(`iOS15: ${ textSize } text size should be a SFVC`, () => {
                     
                     window.navigator.userAgent = 'iPhone OS 15_2';
+                    window.outerHeight = height;
+                    window.innerHeight = textSize;
+                    window.innerWidth = 372;
+                    window.screen = {
+                        width:      372
+                    };
+
                     const sfvc = isSFVC();
                     if (!sfvc) {
                         throw new Error(`Expected text size, ${ textSize }, to be a SFVC.`);
@@ -42,13 +55,57 @@ describe('isSFVC', () => {
         });
     });
 
-    it('should return true when user has scrolled', () => {
+    it('should return false when not iOS device', () => {
+        
+        window.navigator.userAgent = 'potatoIOS';
+        const sfvc = isSFVC();
+        if (sfvc) {
+            throw new Error(`Expected false, got ${ JSON.stringify(sfvc) }`);
+        }
+    });
+
+    it('should return true if device is not supported', () => {
         window.navigator.userAgent = 'iPhone OS 15_2';
-        window.pageYOffset = 10;
+        window.outerHeight = 647;
+        window.innerHeight = 647;
+        window.innerWidth = 372;
+        window.screen = {
+            width:      372
+        };
 
         const sfvc = isSFVC();
         if (!sfvc) {
-            throw new Error(`Expected to be SFVC when user has scrolled.`);
+            throw new Error(`Expected to be SFVC when user device is not supported.`);
+        }
+    });
+
+    it('should return true if device dimension is SFVC dimension with scale=1.0 with tabbar showing', () => {
+        window.navigator.userAgent = 'iPhone OS 15_2';
+        window.outerHeight = 844;
+        window.innerHeight = 670;
+        window.innerWidth = 372;
+        window.screen = {
+            width:      372
+        };
+
+        const sfvc = isSFVC();
+        if (!sfvc) {
+            throw new Error(`Expected to be SFVC when user device is not supported.`);
+        }
+    });
+
+    it('should return true if device dimension is SFVC dimension with scale=1.0 with tabbar not showing', () => {
+        window.navigator.userAgent = 'iPhone OS 15_2';
+        window.outerHeight = 844;
+        window.innerHeight = 778;
+        window.innerWidth = 372;
+        window.screen = {
+            width:      372
+        };
+
+        const sfvc = isSFVC();
+        if (!sfvc) {
+            throw new Error(`Expected to be SFVC when user device is not supported.`);
         }
     });
 
@@ -80,12 +137,48 @@ describe('isSFVC', () => {
         }
     });
 
-    it('should return false when isIos function returns false', () => {
-        
-        window.navigator.userAgent = 'potatoIOS';
+    it('should return false if device is supported but innerHeight does not match SFVC dimensions and scale is 1 for iOS 14', () => {
+        window.navigator.userAgent = 'iPhone OS 14_2';
+        window.outerHeight = 926;
+        window.innerHeight = 740;
+        window.innerWidth = 428;
+        window.screen = {
+            width:      428
+        };
+
         const sfvc = isSFVC();
         if (sfvc) {
-            throw new Error(`Expected false, got ${ JSON.stringify(sfvc) }`);
+            throw new Error(`Expected to not be SFVC when not matching SFVC dimensions.`);
+        }
+    });
+
+    it('should return false if device is supported but innerHeight does not match SFVC dimensions and scale is greater than 1 for iOS 14', () => {
+        window.navigator.userAgent = 'iPhone OS 14_2';
+        window.outerHeight = 926;
+        window.innerHeight = 740;
+        window.innerWidth = 372;
+        window.screen = {
+            width:      428
+        };
+
+        const sfvc = isSFVC();
+        if (sfvc) {
+            throw new Error(`Expected to not be SFVC when not matching SFVC dimensions.`);
+        }
+    });
+
+    it('should return false if device is supported but innerHeight does not match SFVC dimensions and scale is 1 for iOS 15', () => {
+        window.navigator.userAgent = 'iPhone OS 15_2';
+        window.outerHeight = 926;
+        window.innerHeight = 740;
+        window.innerWidth = 428;
+        window.screen = {
+            width:      428
+        };
+
+        const sfvc = isSFVC();
+        if (sfvc) {
+            throw new Error(`Expected to not be SFVC when not matching SFVC dimensions.`);
         }
     });
 });

@@ -98,7 +98,7 @@ export function isSFVC(ua? : string = getUserAgent()) : boolean {
         }
 
         if (!device) {
-            return false;
+            return true;
         }
 
         if (scale > 1 && device.zoomHeight && device.zoomHeight[scale]) {
