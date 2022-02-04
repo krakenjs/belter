@@ -5,7 +5,7 @@ import { linkFrameWindow, isWindowClosed, assertSameDomain,
     type SameDomainWindowType, type CrossDomainWindowType } from 'cross-domain-utils/src';
 import { WeakMap } from 'cross-domain-safe-weakmap/src';
 
-import { inlineMemoize, memoize, noop, stringify, capitalizeFirstLetter,
+import { isElement, inlineMemoize, memoize, noop, stringify, capitalizeFirstLetter,
     once, extend, safeInterval, uniqueID, arrayFrom, ExtendableError, strHashStr } from './util';
 import { isDevice } from './device';
 import { KEY_CODES, ATTRIBUTES, UID_HASH_LENGTH } from './constants';
@@ -360,19 +360,6 @@ export function getBrowserLocales() : $ReadOnlyArray<{| country? : string, lang 
 
 export function appendChild(container : HTMLElement, child : HTMLElement | Text) {
     container.appendChild(child);
-}
-
-export function isElement(element : mixed) : boolean {
-
-    if (element instanceof window.Element) {
-        return true;
-    }
-
-    if (element !== null && typeof element === 'object' && element.nodeType === 1 && typeof element.style === 'object' && typeof element.ownerDocument === 'object') {
-        return true;
-    }
-
-    return false;
 }
 
 export function getElementSafe(id : ElementRefType, doc : Document | HTMLElement = document) : ?HTMLElement {

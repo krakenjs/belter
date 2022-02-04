@@ -7,6 +7,22 @@ import { WeakMap } from 'cross-domain-safe-weakmap/src';
 
 import type { CancelableType } from './types';
 
+export function isElement(element : mixed) : boolean {
+    let passed = false;
+
+    try {
+        if (element instanceof window.Element) {
+            passed = true;
+        } else if (element !== null && typeof element === 'object' && element.nodeType === 1 && typeof element.style === 'object' && typeof element.ownerDocument === 'object') {
+            passed = true;
+        }
+    } catch (_) {
+        // we don't have an element
+    }
+
+    return passed;
+}
+
 export function getFunctionName <T : Function>(fn : T) : string {
     return fn.name || fn.__name__ || fn.displayName || 'anonymous';
 }
@@ -113,13 +129,9 @@ function serializeArgs<T>(args : $ReadOnlyArray<T>) : string {
                 return `memoize[${ getObjectID(val) }]`;
             }
 
-            // Detect DOM elements
             // By default JSON.stringify(domElement) returns '{}'. This ensures that stays true even for non-standard
             // elements (e.g. React-rendered dom elements) with custom properties
-            if (
-                (typeof window !== 'undefined' && val instanceof window.Element) ||
-                (val !== null && typeof val === 'object' && val.nodeType === 1 && typeof val.style === 'object' && typeof val.ownerDocument === 'object')
-            ) {
+            if (isElement(val)) {
                 return {};
             }
 
