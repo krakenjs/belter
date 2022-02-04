@@ -227,9 +227,6 @@
         __webpack_require__.d(__webpack_exports__, "appendChild", (function() {
             return appendChild;
         }));
-        __webpack_require__.d(__webpack_exports__, "isElement", (function() {
-            return isElement;
-        }));
         __webpack_require__.d(__webpack_exports__, "getElementSafe", (function() {
             return getElementSafe;
         }));
@@ -355,6 +352,9 @@
         }));
         __webpack_require__.d(__webpack_exports__, "getStorage", (function() {
             return getStorage;
+        }));
+        __webpack_require__.d(__webpack_exports__, "isElement", (function() {
+            return isElement;
         }));
         __webpack_require__.d(__webpack_exports__, "getFunctionName", (function() {
             return getFunctionName;
@@ -1574,6 +1574,13 @@
                 return _setPrototypeOf(Wrapper, Class);
             })(Class);
         }
+        function isElement(element) {
+            var passed = !1;
+            try {
+                (element instanceof window.Element || null !== element && "object" == typeof element && 1 === element.nodeType && "object" == typeof element.style && "object" == typeof element.ownerDocument) && (passed = !0);
+            } catch (_) {}
+            return passed;
+        }
         function getFunctionName(fn) {
             return fn.name || fn.__name__ || fn.displayName || "anonymous";
         }
@@ -1625,7 +1632,7 @@
         function serializeArgs(args) {
             try {
                 return JSON.stringify([].slice.call(args), (function(subkey, val) {
-                    return "function" == typeof val ? "memoize[" + getObjectID(val) + "]" : "undefined" != typeof window && val instanceof window.Element || null !== val && "object" == typeof val && 1 === val.nodeType && "object" == typeof val.style && "object" == typeof val.ownerDocument ? {} : val;
+                    return "function" == typeof val ? "memoize[" + getObjectID(val) + "]" : isElement(val) ? {} : val;
                 }));
             } catch (err) {
                 throw new Error("Arguments not serializable -- can not be used to memoize");
@@ -2454,9 +2461,6 @@
         }
         function appendChild(container, child) {
             container.appendChild(child);
-        }
-        function isElement(element) {
-            return element instanceof window.Element || null !== element && "object" == typeof element && 1 === element.nodeType && "object" == typeof element.style && "object" == typeof element.ownerDocument;
         }
         function getElementSafe(id, doc) {
             void 0 === doc && (doc = document);

@@ -5,6 +5,20 @@ import _wrapNativeSuper from "@babel/runtime/helpers/esm/wrapNativeSuper";
 /* eslint max-lines: 0 */
 import { ZalgoPromise } from 'zalgo-promise/src';
 import { WeakMap } from 'cross-domain-safe-weakmap/src';
+export function isElement(element) {
+  var passed = false;
+
+  try {
+    if (element instanceof window.Element) {
+      passed = true;
+    } else if (element !== null && typeof element === 'object' && element.nodeType === 1 && typeof element.style === 'object' && typeof element.ownerDocument === 'object') {
+      passed = true;
+    }
+  } catch (_) {// we don't have an element
+  }
+
+  return passed;
+}
 export function getFunctionName(fn) {
   return fn.name || fn.__name__ || fn.displayName || 'anonymous';
 }
@@ -96,12 +110,11 @@ function serializeArgs(args) {
       // if the actual function is different.
       if (typeof val === 'function') {
         return "memoize[" + getObjectID(val) + "]";
-      } // Detect DOM elements
-      // By default JSON.stringify(domElement) returns '{}'. This ensures that stays true even for non-standard
+      } // By default JSON.stringify(domElement) returns '{}'. This ensures that stays true even for non-standard
       // elements (e.g. React-rendered dom elements) with custom properties
 
 
-      if (typeof window !== 'undefined' && val instanceof window.Element || val !== null && typeof val === 'object' && val.nodeType === 1 && typeof val.style === 'object' && typeof val.ownerDocument === 'object') {
+      if (isElement(val)) {
         return {};
       }
 
