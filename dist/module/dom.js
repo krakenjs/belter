@@ -5,7 +5,7 @@ import _extends from "@babel/runtime/helpers/esm/extends";
 import { ZalgoPromise } from 'zalgo-promise/src';
 import { linkFrameWindow, isWindowClosed, assertSameDomain } from 'cross-domain-utils/src';
 import { WeakMap } from 'cross-domain-safe-weakmap/src';
-import { inlineMemoize, memoize, noop, stringify, capitalizeFirstLetter, once, extend, safeInterval, uniqueID, arrayFrom, ExtendableError, strHashStr } from './util';
+import { isElement, inlineMemoize, memoize, noop, stringify, capitalizeFirstLetter, once, extend, safeInterval, uniqueID, arrayFrom, ExtendableError, strHashStr } from './util';
 import { isDevice } from './device';
 import { KEY_CODES, ATTRIBUTES, UID_HASH_LENGTH } from './constants';
 export function getBody() {
@@ -338,17 +338,6 @@ export function getBrowserLocales() {
 }
 export function appendChild(container, child) {
   container.appendChild(child);
-}
-export function isElement(element) {
-  if (element instanceof window.Element) {
-    return true;
-  }
-
-  if (element !== null && typeof element === 'object' && element.nodeType === 1 && typeof element.style === 'object' && typeof element.ownerDocument === 'object') {
-    return true;
-  }
-
-  return false;
 }
 export function getElementSafe(id, doc) {
   if (doc === void 0) {
