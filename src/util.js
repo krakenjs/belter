@@ -2,8 +2,8 @@
 /* @flow */
 /* eslint max-lines: 0 */
 
-import { ZalgoPromise } from 'zalgo-promise/src';
-import { WeakMap } from 'cross-domain-safe-weakmap/src';
+import { ZalgoPromise } from '@krakenjs/zalgo-promise/src';
+import { WeakMap } from '@krakenjs/cross-domain-safe-weakmap/src';
 
 import type { CancelableType } from './types';
 
