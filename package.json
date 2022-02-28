@@ -95,6 +95,6 @@
   "dependencies": {
     "@krakenjs/cross-domain-safe-weakmap": "^2.0.2",
     "@krakenjs/cross-domain-utils": "^3.0.2",
-    "@krakenjs/zalgo-promise": "^1"
+    "@krakenjs/zalgo-promise": "^2.0.0"
   }
 }
