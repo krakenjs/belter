@@ -1,9 +1,9 @@
 /* @flow */
 /* eslint max-lines: off */
-import { ZalgoPromise } from 'zalgo-promise/src';
+import { ZalgoPromise } from '@krakenjs/zalgo-promise/src';
 import { linkFrameWindow, isWindowClosed, assertSameDomain,
-    type SameDomainWindowType, type CrossDomainWindowType } from 'cross-domain-utils/src';
-import { WeakMap } from 'cross-domain-safe-weakmap/src';
+    type SameDomainWindowType, type CrossDomainWindowType } from '@krakenjs/cross-domain-utils/src';
+import { WeakMap } from '@krakenjs/cross-domain-safe-weakmap/src';
 
 import { isElement, inlineMemoize, memoize, noop, stringify, capitalizeFirstLetter,
     once, extend, safeInterval, uniqueID, arrayFrom, ExtendableError, strHashStr } from './util';

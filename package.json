@@ -1,5 +1,5 @@
 {
-  "name": "belter",
+  "name": "@krakenjs/belter",
   "version": "1.0.190",
   "description": "Utilities.",
   "main": "index.js",
@@ -93,8 +93,8 @@
     "standard-version": "^9.3.2"
   },
   "dependencies": {
-    "cross-domain-safe-weakmap": "^1",
-    "cross-domain-utils": "^2",
-    "zalgo-promise": "^1"
+    "@krakenjs/cross-domain-safe-weakmap": "^2.0.2",
+    "@krakenjs/cross-domain-utils": "^3.0.2",
+    "@krakenjs/zalgo-promise": "^1"
   }
 }

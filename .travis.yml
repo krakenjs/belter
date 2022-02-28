@@ -1,8 +1,0 @@
-language: node_js
-node_js:
-  - 'lts/*'
-before_install:
-  - rm -rf node_modules
-before_script:
-  - npm run flow-typed
-script: npm run build

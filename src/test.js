@@ -1,6 +1,6 @@
 /* @flow */
 
-import { ZalgoPromise } from 'zalgo-promise/src';
+import { ZalgoPromise } from '@krakenjs/zalgo-promise/src';
 
 import { noop, tryCatch, removeFromArray } from './util';
 
@@ -29,7 +29,7 @@ export function wrapPromise<T>(method : Wrapper<T>, { timeout = 5000 } : {| time
             const exp = { name, handler };
             // $FlowFixMe
             expected.push(exp);
-            
+
             // $FlowFixMe
             return function expectWrapper(...args) : * {
                 removeFromArray(expected, exp);

@@ -1,7 +1,7 @@
 /* @flow */
 
-import { ZalgoPromise } from 'zalgo-promise/src';
-import { type SameDomainWindowType } from 'cross-domain-utils/src';
+import { ZalgoPromise } from '@krakenjs/zalgo-promise/src';
+import { type SameDomainWindowType } from '@krakenjs/cross-domain-utils/src';
 
 type RequestOptionsType = {|
     url : string,
@@ -74,7 +74,7 @@ export function request({ url, method = 'get', headers = {}, json, data, body, w
             if (!this.status) {
                 return reject(new Error(`Request to ${ method.toLowerCase() } ${ url } failed: no response status code.`));
             }
-            
+
             const contentType = responseHeaders['content-type'];
             const isJSON = contentType && (contentType.indexOf('application/json') === 0 || contentType.indexOf('text/json') === 0);
             let responseBody = this.responseText;
