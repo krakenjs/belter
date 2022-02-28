@@ -1,4 +1,4 @@
-import { ZalgoPromise } from 'zalgo-promise/src';
+import { ZalgoPromise } from '@krakenjs/zalgo-promise/src';
 import { noop, tryCatch, removeFromArray } from './util';
 export function wrapPromise(method, _temp) {
   var _ref = _temp === void 0 ? {} : _temp,

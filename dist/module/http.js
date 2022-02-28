@@ -1,4 +1,4 @@
-import { ZalgoPromise } from 'zalgo-promise/src';
+import { ZalgoPromise } from '@krakenjs/zalgo-promise/src';
 var HEADERS = {
   CONTENT_TYPE: 'content-type',
   ACCEPT: 'accept'

@@ -2,9 +2,9 @@ import _inheritsLoose from "@babel/runtime/helpers/esm/inheritsLoose";
 import _extends from "@babel/runtime/helpers/esm/extends";
 
 /* eslint max-lines: off */
-import { ZalgoPromise } from 'zalgo-promise/src';
-import { linkFrameWindow, isWindowClosed, assertSameDomain } from 'cross-domain-utils/src';
-import { WeakMap } from 'cross-domain-safe-weakmap/src';
+import { ZalgoPromise } from '@krakenjs/zalgo-promise/src';
+import { linkFrameWindow, isWindowClosed, assertSameDomain } from '@krakenjs/cross-domain-utils/src';
+import { WeakMap } from '@krakenjs/cross-domain-safe-weakmap/src';
 import { isElement, inlineMemoize, memoize, noop, stringify, capitalizeFirstLetter, once, extend, safeInterval, uniqueID, arrayFrom, ExtendableError, strHashStr } from './util';
 import { isDevice } from './device';
 import { KEY_CODES, ATTRIBUTES, UID_HASH_LENGTH } from './constants';

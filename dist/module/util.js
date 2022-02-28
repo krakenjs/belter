@@ -3,8 +3,8 @@ import _inheritsLoose from "@babel/runtime/helpers/esm/inheritsLoose";
 import _wrapNativeSuper from "@babel/runtime/helpers/esm/wrapNativeSuper";
 
 /* eslint max-lines: 0 */
-import { ZalgoPromise } from 'zalgo-promise/src';
-import { WeakMap } from 'cross-domain-safe-weakmap/src';
+import { ZalgoPromise } from '@krakenjs/zalgo-promise/src';
+import { WeakMap } from '@krakenjs/cross-domain-safe-weakmap/src';
 export function isElement(element) {
   var passed = false;
 
