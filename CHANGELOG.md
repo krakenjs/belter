@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.1](https://github.com/krakenjs/belter/compare/v2.0.0...v2.0.1) (2022-03-01)
+
+
+* update zalgo-promise to v2 ([#90](https://github.com/krakenjs/belter/issues/90)) ([6e570e5](https://github.com/krakenjs/belter/commit/6e570e5388d6ad752f1ff88f0b3d6fb39f44f08d))
+
 ## [2.0.0](https://github.com/krakenjs/belter/compare/v1.0.190...v2.0.0) (2022-02-28)
 
 
