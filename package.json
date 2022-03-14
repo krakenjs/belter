@@ -90,7 +90,8 @@
     "grumbler-scripts": "^5.0.0",
     "husky": "^7.0.4",
     "mocha": "^4",
-    "standard-version": "^9.3.2"
+    "standard-version": "^9.3.2",
+    "sync-browser-mocks": "^2.0.8"
   },
   "dependencies": {
     "@krakenjs/cross-domain-safe-weakmap": "^2.0.2",
