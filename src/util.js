@@ -557,7 +557,7 @@ export function objFilter<T, R>(obj : { [string] : T }, filter? : (T, ?string) =
     const result = {};
 
     for (const key in obj) {
-        if (!obj.hasOwnProperty(key) || !filter(obj[key], key)) {
+        if (!obj.hasOwnProperty(key) || (filter && !filter(obj[key], key))) {
             continue;
         }
 
