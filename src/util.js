@@ -1,4 +1,3 @@
-
 /* @flow */
 /* eslint max-lines: 0 */
 
@@ -557,7 +556,7 @@ export function objFilter<T, R>(obj : { [string] : T }, filter? : (T, ?string) =
     const result = {};
 
     for (const key in obj) {
-        if (!obj.hasOwnProperty(key) || !filter(obj[key], key)) {
+        if (!obj.hasOwnProperty(key) || (filter && !filter(obj[key], key))) {
             continue;
         }
 
@@ -687,7 +686,7 @@ export function undotify(obj : { [string] : string }) : Object {
         } else {
             value = deserializePrimitive(value);
         }
-
+        
         let keyResult = result;
         const parts = key.split('.');
         for (let i = 0; i < parts.length; i++) {

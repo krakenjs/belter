@@ -5,7 +5,7 @@ import {  stringifyErrorMessage } from '../../../src';
 describe('stringifyErrorMessage', () => {
 
     it('should return default error message when argument is falsy', () => {
-        // $FlowFixMe method-unbinding
+        // $FlowFixMe[method-unbinding]
         const defaultMessage =  `<unknown error: ${ Object.prototype.toString.call() }>`;
         const message = stringifyErrorMessage();
         if (message !== defaultMessage) {
@@ -24,7 +24,7 @@ describe('stringifyErrorMessage', () => {
     it('should return default message if Error instance without a message is passed', () => {
         // eslint-disable-next-line unicorn/error-message
         const error = new Error();
-        // $FlowFixMe method-unbinding
+        // $FlowFixMe[method-unbinding]
         const expectedMessage =  `<unknown error: ${ Object.prototype.toString.call(error) }>`;
         const message = stringifyErrorMessage(error);
         if (message !== expectedMessage) {
@@ -43,7 +43,7 @@ describe('stringifyErrorMessage', () => {
 
     it('should return default message if argument passed has a empty string message field', () => {
         const error = { message: '' };
-        // $FlowFixMe method-unbinding
+        // $FlowFixMe[method-unbinding]
         const expectedMessage =  `<unknown error: ${ Object.prototype.toString.call(error) }>`;
         const message = stringifyErrorMessage(error);
         if (message !== expectedMessage) {
@@ -53,7 +53,7 @@ describe('stringifyErrorMessage', () => {
 
     it('should return default message if a primitive argument is passed or argument has non-string value in message field', () => {
         const error = 42;
-        // $FlowFixMe method-unbinding
+        // $FlowFixMe[method-unbinding]
         const expectedMessage =  `<unknown error: ${ Object.prototype.toString.call(error) }>`;
         const message = stringifyErrorMessage(error);
         if (message !== expectedMessage) {

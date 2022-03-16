@@ -12,6 +12,7 @@ describe('experiment', () => {
         }
         delete window.__goku__latest_global__;
     });
+
     it('should return default value from the namespace', () => {
         const { get } = getGlobalNameSpace({ name: 'goku' });
         const res = get('vegeta', 'testingDatDefaultValue');
