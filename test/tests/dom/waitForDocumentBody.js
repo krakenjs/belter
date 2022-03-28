@@ -26,7 +26,7 @@ describe('waitForDocumentBody cases', () => {
         }
     });
 
-    it('should eventully resolve when document is ready', async () => {
+    it('should eventually resolve when document is ready', async () => {
         document.readyState = 'loading';
         // eslint-disable-next-line compat/compat
         document.body = null;

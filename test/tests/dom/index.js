@@ -1,7 +1,7 @@
 /* @flow */
 import './setup';
 import './extendUrl';
-import './urlEncode';
+import './url';
 import './isDocumentReady';
 import './isDocumentInteractive';
 import './shadowDOMFunctions';
@@ -12,3 +12,11 @@ import './getCurrentScriptUID';
 import './submitForm';
 import './getBody';
 import './popup';
+import './parseQuery';
+import './commons';
+import './isLocalStorageEnabled';
+import './getElementSafe';
+import './elementReady';
+import './writeToWindow';
+import './awaitFrameLoad';
+import './createElement';
