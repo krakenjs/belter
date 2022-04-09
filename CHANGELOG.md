@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.2](https://github.com/krakenjs/belter/compare/v2.0.1...v2.0.2) (2022-04-09)
+
+
+* move devDependencies to [@krakenjs](https://github.com/krakenjs) scope ([#97](https://github.com/krakenjs/belter/issues/97)) ([5136ba3](https://github.com/krakenjs/belter/commit/5136ba33601d6936cbc1290c2d7c5258972d0269))
+
 ### [2.0.1](https://github.com/krakenjs/belter/compare/v2.0.0...v2.0.1) (2022-03-01)
 
 
