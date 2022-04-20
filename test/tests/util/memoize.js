@@ -1,7 +1,9 @@
 /* @flow */
 /* eslint max-lines: off */
 
-import { memoize, inlineMemoize } from '../../../src';
+import { ZalgoPromise } from '@krakenjs/zalgo-promise/dist/zalgo-promise';
+
+import { memoize, inlineMemoize, memoizePromise } from '../../../src';
 
 describe('memoize cases', () => {
 
@@ -527,6 +529,25 @@ describe('memoize cases', () => {
 
         if (counter !== 4) {
             throw new Error(`Expected counter to be 4, got ${ counter }`);
+        }
+    });
+
+    it('inlineMemoize should execute serializeArgs with function type', () => {
+        const result = inlineMemoize(() => true, () => true, [ () => true ]);
+
+        if (!result) {
+            throw new Error(`should return the value "true", but got: ${ result }`);
+        }
+    });
+
+    it('memoizePromise', async () => {
+        const memoizeFunction = memoizePromise(() => ZalgoPromise.resolve(true));
+        // $FlowFixMe[prop-missing]
+        memoizeFunction.reset();
+        const result = await memoizeFunction();
+
+        if (!result) {
+            throw new Error(`should return the value "true", but got: ${ result }`);
         }
     });
 });
