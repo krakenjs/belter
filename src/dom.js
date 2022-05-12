@@ -1001,8 +1001,9 @@ type OnResizeOptions = {|
 |};
 
 export function onResize(el : HTMLElement, handler : ({| width : number, height : number |}) => void, { width = true, height = true, interval = 100, win = window } : OnResizeOptions = {}) : {| cancel : () => void |} {
-    let currentWidth = el.offsetWidth;
-    let currentHeight = el.offsetHeight;
+    const currentRect = el.getBoundingClientRect();
+    let currentWidth = currentRect.width;
+    let currentHeight = currentRect.height;
     let canceled = false;
 
     handler({ width: currentWidth, height: currentHeight });
@@ -1012,8 +1013,9 @@ export function onResize(el : HTMLElement, handler : ({| width : number, height 
             return;
         }
 
-        const newWidth = el.offsetWidth;
-        const newHeight = el.offsetHeight;
+        const newRect = el.getBoundingClientRect();
+        const newWidth = newRect.width;
+        const newHeight = newRect.height;
 
         if ((width && newWidth !== currentWidth) || (height && newHeight !== currentHeight)) {
             handler({ width: newWidth, height: newHeight });
