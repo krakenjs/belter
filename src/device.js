@@ -234,3 +234,7 @@ export function isApplePaySupported() : boolean {
 
     return false;
 }
+
+export function isCrossSiteTrackingEnabled(expectedCookieKey : string) : boolean {
+    return document.cookie.indexOf(expectedCookieKey) !== -1;
+}
