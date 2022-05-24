@@ -266,3 +266,6 @@ export function isApplePaySupported() {
 
   return false;
 }
+export function isCrossSiteTrackingEnabled(expectedCookieKey) {
+  return document.cookie.indexOf(expectedCookieKey) !== -1;
+}
