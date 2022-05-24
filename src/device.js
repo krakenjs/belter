@@ -235,6 +235,6 @@ export function isApplePaySupported() : boolean {
     return false;
 }
 
-export function isCrossSiteTrackingEnabled() : boolean {
-    return document.cookie.indexOf('enforce_policy') !== -1 || document.cookie.indexOf('tsrce') !== -1;
+export function isCrossSiteTrackingEnabled(expectedCookieKey : string) : boolean {
+    return document.cookie.indexOf(expectedCookieKey) !== -1;
 }
