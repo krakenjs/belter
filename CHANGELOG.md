@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/krakenjs/belter/compare/v2.0.2...v2.1.0) (2022-05-24)
+
+
+### Features
+
+* isCrossSiteTrackingEnabled ([#100](https://github.com/krakenjs/belter/issues/100)) ([2c9b08e](https://github.com/krakenjs/belter/commit/2c9b08e89400316846c3c5c802268640ff483808))
+
 ### [2.0.2](https://github.com/krakenjs/belter/compare/v2.0.1...v2.0.2) (2022-04-09)
 
 
