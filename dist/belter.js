@@ -897,7 +897,7 @@
             return !1;
         }
         function isCrossSiteTrackingEnabled(expectedCookieKey) {
-            return -1 !== document.cookie.indexOf(expectedCookieKey);
+            return -1 === window.document.cookie.indexOf(expectedCookieKey);
         }
         function _setPrototypeOf(o, p) {
             return (_setPrototypeOf = Object.setPrototypeOf || function(o, p) {
