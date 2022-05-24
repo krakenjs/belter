@@ -27,3 +27,4 @@ import './isSFVC';
 import './isSFVCorSafari';
 import './isApplePaySupported';
 import './isTablet';
+import './isCrossSiteTrackingEnabled';

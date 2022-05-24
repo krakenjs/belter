@@ -4,7 +4,7 @@ import { isCrossSiteTrackingEnabled  } from '../../../src/device';
 
 describe('isCrossSiteTrackingEnabled', () => {
     it('should return false when expected cookies are present', () => {
-        document.cookie = 'enforce_policy=ccpa';
+        window.document.cookie = 'enforce_policy=ccpa';
 
         const bool = isCrossSiteTrackingEnabled('enforce_policy');
         if (bool) {
@@ -13,7 +13,7 @@ describe('isCrossSiteTrackingEnabled', () => {
     });
 
     it('should return true when expected cookies are not present', () => {
-        document.cookie = '';
+        window.document.cookie = 'enforce_policy=ccpa;expires=Thu, 21 Sep 1979 00:00:01 UTC;';
 
         const bool = isCrossSiteTrackingEnabled('enforce_policy');
         if (!bool) {
