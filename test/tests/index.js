@@ -6,3 +6,4 @@ import './css';
 import './experiment';
 import './global';
 import './device';
+import './decorators';
