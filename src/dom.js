@@ -136,17 +136,11 @@ export type Query = {
 
 export function formatQuery(obj : Query = {}) : string {
 
-    return Object.keys(obj).filter(key => {
-        return typeof obj[key] === 'string' || typeof obj[key] === 'boolean';
-    }).map(key => {
-        const val = obj[key];
-
-        if (typeof val !== 'string' && typeof val !== 'boolean') {
-            throw new TypeError(`Invalid type for query`);
-        }
-
-        return `${ urlEncode(key) }=${ urlEncode(val.toString()) }`;
-    }).join('&');
+    return Object.keys(obj)
+        .filter(key => typeof obj[key] === 'string' ||
+            typeof obj[key] === 'boolean')
+        .map(key => `${ urlEncode(key) }=${ urlEncode(obj[key].toString()) }`)
+        .join('&');
 }
 
 export function extendQuery(originalQuery : string, props : Query = {}) : string {
@@ -270,6 +264,7 @@ export function querySelectorAll(selector : string, doc : HTMLElement = window.d
 export function onClick(element : HTMLElement, handler : (Event) => void) {
     element.addEventListener('touchstart', noop);
     element.addEventListener('click', handler);
+    // NOTE: this event is deprecate and not recommended to use it
     element.addEventListener('keypress', (event : Event) => {
         // $FlowFixMe
         if (event.keyCode === KEY_CODES.ENTER || event.keyCode === KEY_CODES.SPACE) {
@@ -356,7 +351,6 @@ export function getBrowserLocales() : $ReadOnlyArray<{| country? : string, lang 
 
     }).filter(Boolean);
 }
-
 
 export function appendChild(container : HTMLElement, child : HTMLElement | Text) {
     container.appendChild(child);
@@ -603,12 +597,7 @@ export function awaitFrameWindow(frame : HTMLIFrameElement) : ZalgoPromise<Cross
     });
 }
 
-const getDefaultCreateElementOptions = () : ElementOptionsType => {
-    // $FlowFixMe
-    return {};
-};
-
-export function createElement(tag : string = 'div', options : ElementOptionsType = getDefaultCreateElementOptions(), container : ?HTMLElement) : HTMLElement {
+export function createElement(tag : string = 'div', options : ElementOptionsType = { id: '' }, container : ?HTMLElement) : HTMLElement {
 
     tag = tag.toLowerCase();
     const element = document.createElement(tag);
@@ -670,20 +659,10 @@ export type IframeElementOptionsType = {|
     url? : ?string
 |};
 
-const getDefaultIframeOptions = () : IframeElementOptionsType => {
-    // $FlowFixMe
-    return {};
-};
+export function iframe(options : IframeElementOptionsType = { url: '' }, container : ?HTMLElement) : HTMLIFrameElement {
 
-const getDefaultStringMap = () : StringMap => {
-    // $FlowFixMe
-    return {};
-};
-
-export function iframe(options : IframeElementOptionsType = getDefaultIframeOptions(), container : ?HTMLElement) : HTMLIFrameElement {
-
-    const attributes = options.attributes || getDefaultStringMap();
-    const style = options.style || getDefaultStringMap();
+    const attributes : StringMap = options.attributes || {};
+    const style : StringMap = options.style || {};
 
     // $FlowFixMe
     const newAttributes = {

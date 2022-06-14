@@ -62,12 +62,24 @@ describe('get current script UID', () => {
 
         script.removeAttribute(`${ ATTRIBUTES.UID }-auto`);
         script.setAttribute(`${ ATTRIBUTES.UID }`, '123456');
-
         const uidString : string = getCurrentScriptUID();
 
         if (uidString !== '123456') {
             throw new Error(
                 `Should have returned a data-uid with '123456', got ${ uidString }`
+            );
+        }
+    });
+
+    it('should return data-uid if this was set', () => {
+        const script : HTMLScriptElement = getCurrentScript();
+
+        script.removeAttribute('src');
+        const uidString : string = getCurrentScriptUID();
+
+        if (!uidString.startsWith('uid_')) {
+            throw new Error(
+                `Should have returned a data-uid starting with "uid_", got ${ uidString }`
             );
         }
     });
