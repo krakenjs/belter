@@ -1,3 +1,3 @@
 /* @flow */
 
-window.parent.postMessage('loaded', '*');
+window.parent.postMessage("loaded", "*");
