@@ -1,31 +1,39 @@
 /* @flow */
 
-import { dotify, undotify } from '../../../src';
+import { dotify, undotify } from "../../../src";
 
-describe('dotify cases', () => {
+describe("dotify cases", () => {
+  it("should dotify and undotify to give the same result", () => {
+    const data = {
+      foo: "bar",
+      baz: [1, 2, 3],
+      bing: ["aaa", "bbb", "ccc"],
+      bong: [{ a: 1 }, { b: 2 }, { c: 3 }],
+      nested: {
+        obj: {
+          blerf: "foobar",
+          blorf: 555,
+        },
+        zorg: "zerg",
+        berk: "me,erk",
+      },
+    };
 
-    it('should dotify and undotify to give the same result', () => {
+    const dotified = dotify(data);
+    const undotified = undotify(dotified);
 
-        const data = {
-            foo:    'bar',
-            baz:    [ 1, 2, 3 ],
-            bing:   [ 'aaa', 'bbb', 'ccc' ],
-            bong:   [ { a: 1 }, { b: 2 }, { c: 3 } ],
-            nested: {
-                obj: {
-                    blerf: 'foobar',
-                    blorf: 555
-                },
-                zorg: 'zerg',
-                berk: 'me,erk'
-            }
-        };
-
-        const dotified = dotify(data);
-        const undotified = undotify(dotified);
-
-        if (JSON.stringify(data) !== JSON.stringify(undotified)) {
-            throw new Error(`Does not match. Original data:\n\n${ JSON.stringify(data, null, 4) }\n\nDotified:\n\n${ JSON.stringify(dotified, null, 4) }\n\nUndotified:\n\n${ JSON.stringify(undotified, null, 4) }`);
-        }
-    });
+    if (JSON.stringify(data) !== JSON.stringify(undotified)) {
+      throw new Error(
+        `Does not match. Original data:\n\n${JSON.stringify(
+          data,
+          null,
+          4
+        )}\n\nDotified:\n\n${JSON.stringify(
+          dotified,
+          null,
+          4
+        )}\n\nUndotified:\n\n${JSON.stringify(undotified, null, 4)}`
+      );
+    }
+  });
 });

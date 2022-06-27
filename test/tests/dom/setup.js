@@ -7,25 +7,25 @@
 
 let oldReadyState = document.readyState;
 
-Object.defineProperty(document, 'readyState', {
-    get() : string {
-        return oldReadyState;
-    },
+Object.defineProperty(document, "readyState", {
+  get(): string {
+    return oldReadyState;
+  },
 
-    set(newState : string) {
-        oldReadyState = newState;
-    }
+  set(newState: string) {
+    oldReadyState = newState;
+  },
 });
 
 // eslint-disable-next-line compat/compat
 let oldBody = document.body;
 
-Object.defineProperty(document, 'body', {
-    get() : HTMLBodyElement | null {
-        return oldBody;
-    },
+Object.defineProperty(document, "body", {
+  get(): HTMLBodyElement | null {
+    return oldBody;
+  },
 
-    set(newBody : HTMLBodyElement | null) {
-        oldBody = newBody;
-    }
+  set(newBody: HTMLBodyElement | null) {
+    oldBody = newBody;
+  },
 });

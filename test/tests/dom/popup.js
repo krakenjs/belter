@@ -1,49 +1,53 @@
 /* @flow */
 
-import { popup } from '../../../src';
+import { popup } from "../../../src";
 
-describe('popup', () => {
-    let listeners = {};
+describe("popup", () => {
+  let listeners = {};
 
-    beforeEach(() => {
-        window.addEventListener = (name, listener) => {
-            listeners[name] = listener;
-        };
-    });
+  beforeEach(() => {
+    window.addEventListener = (name, listener) => {
+      listeners[name] = listener;
+    };
+  });
 
-    afterEach(() => {
-        listeners = {};
-    });
+  afterEach(() => {
+    listeners = {};
+  });
 
-    it('should close popup if parent is closed and closeOnUnload is true', () => {
-        try {
-            popup('https://www.paypal.com', {
-                width:         100,
-                height:        100,
-                closeOnUnload: 1
-            });
-            
-            if (!listeners.unload) {
-                throw new Error(`Popup should have unload listener registered.`);
-            }
-        } catch (e) {
-            throw new Error(`Test should not fail with closeOnUnload option - ${ e.message }`);
-        }
-    });
+  it("should close popup if parent is closed and closeOnUnload is true", () => {
+    try {
+      popup("https://www.paypal.com", {
+        width: 100,
+        height: 100,
+        closeOnUnload: 1,
+      });
 
-    it('should not close popup if parent is closed and closeOnUnload is false', () => {
-        try {
-            popup('https://www.paypal.com', {
-                width:         100,
-                height:        100,
-                closeOnUnload: 0
-            });
-            
-            if (listeners.unload) {
-                throw new Error(`Popup should not have unload listener registered.`);
-            }
-        } catch (e) {
-            throw new Error(`Test should not fail with closeOnUnload option - ${ e.message }`);
-        }
-    });
+      if (!listeners.unload) {
+        throw new Error(`Popup should have unload listener registered.`);
+      }
+    } catch (e) {
+      throw new Error(
+        `Test should not fail with closeOnUnload option - ${e.message}`
+      );
+    }
+  });
+
+  it("should not close popup if parent is closed and closeOnUnload is false", () => {
+    try {
+      popup("https://www.paypal.com", {
+        width: 100,
+        height: 100,
+        closeOnUnload: 0,
+      });
+
+      if (listeners.unload) {
+        throw new Error(`Popup should not have unload listener registered.`);
+      }
+    } catch (e) {
+      throw new Error(
+        `Test should not fail with closeOnUnload option - ${e.message}`
+      );
+    }
+  });
 });

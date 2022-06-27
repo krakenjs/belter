@@ -1,5 +1,4 @@
-belter
-------
+## belter
 
 [![build status][build-badge]][build]
 [![code coverage][coverage-badge]][coverage]
@@ -17,8 +16,7 @@ belter
 
 Miscellaneous browser utils and tools.
 
-Quick Start
------------
+## Quick Start
 
 #### Getting Started
 
