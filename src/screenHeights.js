@@ -91,7 +91,7 @@ export const sfvcScreens = {
     },
   },
   "844": {
-    device: "iPhone 12, iPhone 12 Pro, iPhone 13",
+    device: "iPhone 12, iPhone 12 Pro, iPhone 13, iPhone 14",
     textSizeHeights: [670, 666, 662, 656],
     textSizeHeightsNoTabs: [778, 776, 774, 772],
     zoomHeight: {
