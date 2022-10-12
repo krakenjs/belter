@@ -66,7 +66,7 @@ export const sfvcScreens = {
   },
   "852": {
     device: "iPhone 14 Pro",
-    textSizeHeights: [666, 662, 658, 652],
+    textSizeHeights: [666, 662, 658], // 652 removed as same in Safari
     textSizeHeightsNoTabs: [774, 772, 770, 768],
     zoomHeight: {
       "1.15": [666, 662, 658], // 652 removed as same in Safari
@@ -79,6 +79,7 @@ export const sfvcScreens = {
       "3": [666, 663], // 657, 651 removed as same in Safari
     },
     maybeSafari: {
+      "1": [652],
       "1.15": [652],
       "1.25": [651],
       "1.5": [653],
