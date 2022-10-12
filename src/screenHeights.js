@@ -113,20 +113,28 @@ export const sfvcScreens = {
   },
   "812": {
     device: "iPhone X, iPhone XS, iPhone 11 Pro, iPhone 12 Mini",
-    textSizeHeights: [641, 637, 633, 627],
-    textSizeHeightsNoTabs: [749, 747, 745, 743],
+    textSizeHeights: [641, 637, 635, 633, 631, 627], // 621 removed as same in Safari
+    textSizeHeightsNoTabs: [749, 747, 745, 743, 741, 739, 737],
     zoomHeight: {
-      "1.15": [641, 637, 633, 627],
-      "1.25": [641, 638, 633, 628],
-      "1.5": [641, 638, 633, 627],
-      "1.75": [641, 637, 634], // 627 removed as same in Safari
-      "2": [642, 638, 634, 628],
-      "2.5": [640, 638, 633, 628],
-      "3": [642, 633], // 636, 627 removed as same in Safari
+      "1.15": [641, 637, 635, 633, 631], // 627, 621 removed as same in Safari
+      "1.25": [641, 638, 635, 633, 631, 628], // 621 removed as same in Safari
+      "1.5": [641, 638, 635, 633, 632, 621], // 627 removed as same in Safari
+      "1.75": [641, 637, 635, 634, 632], // 627, 621 removed as same in Safari
+      "1.99": [642, 638, 634, 633, 629, 628, 625], // 619 removed as same in Safari
+      "2": [642, 638, 634, 633, 629, 628, 625], // 619 removed as same in Safari
+      "2.5": [640, 638, 635, 633], // 630, 628, 620 removed as same in Safari
+      "3": [642, 633], // 636, 630, 627, 621 removed as same in Safari
     },
     maybeSafari: {
-      "1.75": [627],
-      "3": [636, 627],
+      "1": [621],
+      "1.15": [627, 621],
+      "1.25": [621],
+      "1.5": [627],
+      "1.75": [627, 621],
+      "1.99": [619],
+      "2": [619],
+      "2.5": [630, 628, 620],
+      "3": [636, 630, 627, 621],
     },
   },
   "736": {
