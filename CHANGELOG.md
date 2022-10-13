@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.2.0](https://github.com/krakenjs/belter/compare/v2.1.2...v2.2.0) (2022-10-13)
+
+
+### Features
+
+* add new iPhone models to screenHeights.js ([#102](https://github.com/krakenjs/belter/issues/102)) ([7a97097](https://github.com/krakenjs/belter/commit/7a970972babdba385248eb4cdf1d36922f5d39dc))
+
+
+* use prettier for code formatting ([#99](https://github.com/krakenjs/belter/issues/99)) ([c25579b](https://github.com/krakenjs/belter/commit/c25579bd26ad7b80e064125277a67d1989bf429e))
+
 ### [2.1.2](https://github.com/krakenjs/belter/compare/v2.1.1...v2.1.2) (2022-05-24)
 
 
