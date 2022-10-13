@@ -1,8 +1,34 @@
 /* @flow */
 
 export const sfvcScreens = {
+  "932": {
+    device: "iPhone 14 Pro Max",
+    textSizeHeights: [746, 742, 738], // 732 removed as same in Safari
+    textSizeHeightsNoTabs: [854, 852, 850, 848],
+    zoomHeight: {
+      "1.15": [746, 742, 738], // 733 removed as same in Safari
+      "1.25": [746, 743], // 738, 733 removed as same in Safari
+      "1.5": [746, 743], // 738, 732 removed as same in Safari
+      "1.75": [746, 742, 739], // 732 removed as same in Safari
+      "2": [746, 742], // 738, 732 removed as same in Safari
+      "2.5": [745, 743], // 738, 733 removed as same in Safari
+      "3": [749], // 743, 740, 734 removed as same in Safari
+      "3.01": [749], // 743, 740, 734 removed as same in Safari
+    },
+    maybeSafari: {
+      "1": [732],
+      "1.15": [733],
+      "1.25": [738, 733],
+      "1.5": [738, 732],
+      "1.75": [732],
+      "2": [738, 732],
+      "2.5": [738, 733],
+      "3": [743, 740, 734],
+      "3.01": [743, 740, 734],
+    },
+  },
   "926": {
-    device: "iPhone 12/13 Pro Max",
+    device: "iPhone 12/13 Pro Max, iPhone 14 Plus",
     textSizeHeights: [752, 748, 744, 738],
     textSizeHeightsNoTabs: [860, 858, 856, 854],
     zoomHeight: {
@@ -38,8 +64,34 @@ export const sfvcScreens = {
       "3": [714],
     },
   },
+  "852": {
+    device: "iPhone 14 Pro",
+    textSizeHeights: [666, 662, 658], // 652 removed as same in Safari
+    textSizeHeightsNoTabs: [774, 772, 770, 768],
+    zoomHeight: {
+      "1.15": [666, 662, 658], // 652 removed as same in Safari
+      "1.25": [665, 661, 658], // 651 removed as same in Safari
+      "1.5": [666, 662, 659], // 653 removed as same in Safari
+      "1.75": [667, 662], // 658, 653 removed as same in Safari
+      "1.99": [663, 659], // 655, 649 removed as same in Safari
+      "2": [663, 659], // 655, 649 removed as same in Safari
+      "2.5": [665, 663], // 658, 653 removed as same in Safari
+      "3": [666, 663], // 657, 651 removed as same in Safari
+    },
+    maybeSafari: {
+      "1": [652],
+      "1.15": [652],
+      "1.25": [651],
+      "1.5": [653],
+      "1.75": [658, 653],
+      "1.99": [655, 649],
+      "2": [655, 649],
+      "2.5": [658, 653],
+      "3": [657, 651],
+    },
+  },
   "844": {
-    device: "iPhone 12, iPhone 12 Pro",
+    device: "iPhone 12, iPhone 12 Pro, iPhone 13, iPhone 14",
     textSizeHeights: [670, 666, 662, 656],
     textSizeHeightsNoTabs: [778, 776, 774, 772],
     zoomHeight: {
