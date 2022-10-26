@@ -32,7 +32,7 @@ describe("isSFVC", () => {
   Object.keys(sfvcScreens).forEach((height) => {
     const textSizeHeights = sfvcScreens[height].textSizeHeights;
 
-    describe(`iOS 15 with an outerHeight of ${height}`, () => {
+    describe(`iOS 15 device with an outerHeight of ${height}`, () => {
       textSizeHeights.forEach((textSize) => {
         it(`iOS15: ${textSize} text size should be a SFVC`, () => {
           window.navigator.userAgent = "iPhone OS 15_2";
