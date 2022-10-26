@@ -7,10 +7,9 @@ import { sfvcScreens } from "../../../src/screenHeights";
 
 describe("isSFVCorSafari", () => {
   Object.keys(sfvcScreens).forEach((height) => {
-    const device = sfvcScreens[height].device;
     const textSizeHeights = sfvcScreens[height].textSizeHeights;
 
-    describe(`${device}`, () => {
+    describe(`Device with an outerHeight of ${height}`, () => {
       textSizeHeights.forEach((textSize) => {
         it(`iOS 14: ${textSize} text size should not be a web view`, () => {
           window.navigator.userAgent = "iPhone OS 14_1";

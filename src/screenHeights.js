@@ -1,8 +1,10 @@
 /* @flow */
 
 export const sfvcScreens = {
+  /*
+   * iPhone 14 Pro Max
+   */
   "932": {
-    device: "iPhone 14 Pro Max",
     textSizeHeights: [746, 742, 738], // 732 removed as same in Safari
     textSizeHeightsNoTabs: [854, 852, 850, 848],
     zoomHeight: {
@@ -27,8 +29,13 @@ export const sfvcScreens = {
       "3.01": [743, 740, 734],
     },
   },
+
+  /*
+   * iPhone 12 Pro Max
+   * iPhone 13 Pro Max
+   * iPhone 14 Plus
+   */
   "926": {
-    device: "iPhone 12/13 Pro Max, iPhone 14 Plus",
     textSizeHeights: [752, 748, 744, 738],
     textSizeHeightsNoTabs: [860, 858, 856, 854],
     zoomHeight: {
@@ -46,8 +53,14 @@ export const sfvcScreens = {
       "3": [747, 738],
     },
   },
+
+  /*
+   * iPhone XS Max
+   * iPhone 11 Pro Max
+   * iPhone XR
+   * iPhone 11
+   */
   "896": {
-    device: "iPhone XS Max, iPhone 11 Pro Max, iPhone XR, iPhone 11",
     textSizeHeights: [721, 717, 713, 707],
     textSizeHeightsNoTabs: [829, 827, 825, 823],
     zoomHeight: {
@@ -64,8 +77,11 @@ export const sfvcScreens = {
       "3": [714],
     },
   },
+
+  /*
+   * iPhone 14 Pro
+   */
   "852": {
-    device: "iPhone 14 Pro",
     textSizeHeights: [666, 662, 658], // 652 removed as same in Safari
     textSizeHeightsNoTabs: [774, 772, 770, 768],
     zoomHeight: {
@@ -90,8 +106,14 @@ export const sfvcScreens = {
       "3": [657, 651],
     },
   },
+
+  /*
+   * iPhone 12
+   * iPhone 12 Pro
+   * iPhone 13
+   * iPhone 14
+   */
   "844": {
-    device: "iPhone 12, iPhone 12 Pro, iPhone 13, iPhone 14",
     textSizeHeights: [670, 666, 662, 656],
     textSizeHeightsNoTabs: [778, 776, 774, 772],
     zoomHeight: {
@@ -111,8 +133,14 @@ export const sfvcScreens = {
       "3": [663],
     },
   },
+
+  /*
+   * iPhone X
+   * iPhone XS
+   * iPhone 11 Pro
+   * iPhone 12 Mini
+   */
   "812": {
-    device: "iPhone X, iPhone XS, iPhone 11 Pro, iPhone 12 Mini",
     textSizeHeights: [641, 637, 633, 627],
     textSizeHeightsNoTabs: [749, 747, 745, 743],
     zoomHeight: {
@@ -129,8 +157,14 @@ export const sfvcScreens = {
       "3": [636, 627],
     },
   },
+
+  /*
+   * iPhone 6 Plus
+   * iPhone 6S Plus
+   * iPhone 7 Plus
+   * iPhone 8 Plus
+   */
   "736": {
-    device: "iPhone 6 Plus, iPhone 6S Plus, iPhone 7 Plus, iPhone 8 Plus",
     textSizeHeights: [628, 624, 620, 614],
     textSizeHeightsNoTabs: [736, 734, 732, 730],
     zoomHeight: {
@@ -148,8 +182,15 @@ export const sfvcScreens = {
       "3": [621],
     },
   },
+
+  /*
+   * iPhone 6
+   * iPhone 6S
+   * iPhone 7
+   * iPhone 8
+   * iPhone SE2
+   */
   "667": {
-    device: "iPhone 6, iPhone 6S, iPhone 7, iPhone 8,  iPhone SE2",
     textSizeHeights: [559, 555, 551, 545],
     textSizeHeightsNoTabs: [667, 665, 663, 661],
     zoomHeight: {

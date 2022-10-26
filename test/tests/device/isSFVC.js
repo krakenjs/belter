@@ -7,10 +7,9 @@ import { sfvcScreens } from "../../../src/screenHeights";
 
 describe("isSFVC", () => {
   Object.keys(sfvcScreens).forEach((height) => {
-    const device = sfvcScreens[height].device;
     const textSizeHeights = sfvcScreens[height].textSizeHeights;
 
-    describe(`iOS 14 ${device}`, () => {
+    describe(`iOS 14 device with an outerHeight of ${height}`, () => {
       textSizeHeights.forEach((textSize) => {
         it(`iOS14: ${textSize} text size should be a SFVC`, () => {
           window.navigator.userAgent = "iPhone OS 14_2";
@@ -31,10 +30,9 @@ describe("isSFVC", () => {
   });
 
   Object.keys(sfvcScreens).forEach((height) => {
-    const device = sfvcScreens[height].device;
     const textSizeHeights = sfvcScreens[height].textSizeHeights;
 
-    describe(`iOS 15 ${device}`, () => {
+    describe(`iOS 15 with an outerHeight of ${height}`, () => {
       textSizeHeights.forEach((textSize) => {
         it(`iOS15: ${textSize} text size should be a SFVC`, () => {
           window.navigator.userAgent = "iPhone OS 15_2";
