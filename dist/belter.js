@@ -2466,7 +2466,9 @@
             return [].slice.call(doc.querySelectorAll(selector));
         }
         function onClick(element, handler) {
-            element.addEventListener("touchstart", src_util_noop);
+            element.addEventListener("touchstart", src_util_noop, {
+                passive: !0
+            });
             element.addEventListener("click", handler);
             element.addEventListener("keypress", (function(event) {
                 if (event.keyCode === KEY_CODES.ENTER || event.keyCode === KEY_CODES.SPACE) return handler(event);

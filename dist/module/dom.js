@@ -203,8 +203,18 @@ export function querySelectorAll(selector, doc) {
   // $FlowFixMe[method-unbinding]
   return Array.prototype.slice.call(doc.querySelectorAll(selector));
 }
+
+/**
+ * Sets up event handlers for click events and
+ * enter/space keypresses.
+ * @callback handler
+ * @param {HTMLElement} element
+ * @param {handler} handler
+ */
 export function onClick(element, handler) {
-  element.addEventListener("touchstart", noop);
+  element.addEventListener("touchstart", noop, {
+    passive: true
+  });
   element.addEventListener("click", handler);
   element.addEventListener("keypress", function (event) {
     if (
