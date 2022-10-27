@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.2.2](https://github.com/krakenjs/belter/compare/v2.2.1...v2.2.2) (2022-10-27)
+
+
+* make device names comments ([#104](https://github.com/krakenjs/belter/issues/104)) ([b25fd50](https://github.com/krakenjs/belter/commit/b25fd50220c2b3eb7047f7fe1d7347f159187102))
+
 ### [2.2.1](https://github.com/krakenjs/belter/compare/v2.2.0...v2.2.1) (2022-10-26)
 
 
