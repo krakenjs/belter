@@ -2,7 +2,7 @@
 /* eslint import/no-nodejs-modules: off, import/no-default-export: off */
 
 import type { WebpackConfig } from "@krakenjs/webpack-config-grumbler/index.flow";
-import { getWebpackConfig } from "@krakenjs/grumbler-scripts/config/webpack.config";
+import { getWebpackConfig } from "@krakenjs/webpack-config-grumbler";
 
 const FILE_NAME = "belter";
 const MODULE_NAME = "belter";
