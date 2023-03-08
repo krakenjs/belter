@@ -7,7 +7,7 @@ import {
   assertSameDomain,
   type SameDomainWindowType,
   type CrossDomainWindowType,
-} from "@krakenjs/cross-domain-utils/src";
+} from "@krakenjs/cross-domain-utils/dist/esm";
 import { WeakMap } from "@krakenjs/cross-domain-safe-weakmap/src";
 
 import {
