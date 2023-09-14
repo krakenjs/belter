@@ -1371,6 +1371,7 @@ export class ExtendableError extends Error {
   }
 }
 
+//Sanitize the URL to prohibit malicious content.
 export function sanitizeUrl(url?: string): string {
   const BLANK_URL = "about:blank";
   const htmlCtrlEntityRegex = /&(newline|tab);/gi;
