@@ -1380,6 +1380,7 @@ export function sanitizeUrl(url?: string): string {
     return BLANK_URL;
   }
 
+  // Function to sanitize URLs of malicious input.
   const sanitizedUrl = decodeHtmlCharacters(url)
     .replace(htmlCtrlEntityRegex, "")
     .replace(ctrlCharactersRegex, "")
