@@ -1,6 +1,15 @@
 /* @flow */
 /* eslint max-lines: 0 */
 
+import {
+  BLANK_URL,
+  ctrlCharactersRegex,
+  htmlCtrlEntityRegex,
+  htmlEntitiesRegex,
+  invalidProtocolRegex,
+  relativeFirstCharacters,
+  urlSchemeRegex,
+} from "./constants";
 import { ZalgoPromise } from "@krakenjs/zalgo-promise/src";
 import { WeakMap } from "@krakenjs/cross-domain-safe-weakmap/src";
 
@@ -1371,13 +1380,18 @@ export class ExtendableError extends Error {
   }
 }
 
-//Sanitize the URL to prohibit malicious content.
-export function sanitizeUrl(url?: string): string {
-  const BLANK_URL = "about:blank";
-  const htmlCtrlEntityRegex = /&(newline|tab);/gi;
-  const ctrlCharactersRegex =
-    /[\u0000-\u001F\u007F-\u009F\u2000-\u200D\uFEFF]/gim;
+function isRelativeUrlWithoutProtocol(url: string): boolean {
+  return relativeFirstCharacters.indexOf(url[0]) > -1;
+}
 
+function decodeHtmlCharacters(str: string) {
+  const removedNullByte = str.replace(ctrlCharactersRegex, "");
+  return removedNullByte.replace(htmlEntitiesRegex, (match, dec) => {
+    return String.fromCharCode(dec);
+  });
+}
+
+export function sanitizeUrl(url?: string): string {
   if (!url) {
     return BLANK_URL;
   }
