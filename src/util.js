@@ -1,5 +1,7 @@
 /* @flow */
 /* eslint max-lines: 0 */
+import { ZalgoPromise } from "@krakenjs/zalgo-promise/src";
+import { WeakMap } from "@krakenjs/cross-domain-safe-weakmap/src";
 
 import {
   BLANK_URL,
@@ -10,9 +12,6 @@ import {
   relativeFirstCharacters,
   urlSchemeRegex,
 } from "./constants";
-import { ZalgoPromise } from "@krakenjs/zalgo-promise/src";
-import { WeakMap } from "@krakenjs/cross-domain-safe-weakmap/src";
-
 import type { CancelableType } from "./types";
 
 export function isElement(element: mixed): boolean {
@@ -1384,9 +1383,9 @@ function isRelativeUrlWithoutProtocol(url: string): boolean {
   return relativeFirstCharacters.indexOf(url[0]) > -1;
 }
 
-function decodeHtmlCharacters(str: string) {
-  const removedNullByte = str.replace(ctrlCharactersRegex, "");
-  return removedNullByte.replace(htmlEntitiesRegex, (match, dec) => {
+function decodeHtmlCharacters(str: string): string {
+  const removedNullByte: string = str.replace(ctrlCharactersRegex, "");
+  return removedNullByte.replace(htmlEntitiesRegex, (matchRegex, dec) => {
     return String.fromCharCode(dec);
   });
 }

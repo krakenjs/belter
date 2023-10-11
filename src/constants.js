@@ -11,11 +11,14 @@ export const ATTRIBUTES = {
 
 export const UID_HASH_LENGTH = 30;
 
-export const invalidProtocolRegex = /^([^\w]*)(javascript|data|vbscript)/im;
-export const htmlEntitiesRegex = /&#(\w+)(^\w|;)?/g;
-export const htmlCtrlEntityRegex = /&(newline|tab);/gi;
-export const ctrlCharactersRegex =
+/* eslint-disable no-control-regex*/
+export const invalidProtocolRegex: RegExp =
+  /([^\w]*)(javascript|data|vbscript)/im;
+export const htmlEntitiesRegex: RegExp = /&#(\w+)(^\w|;)?/g;
+export const htmlCtrlEntityRegex: RegExp = /&(newline|tab);/gi;
+export const ctrlCharactersRegex: RegExp =
   /[\u0000-\u001F\u007F-\u009F\u2000-\u200D\uFEFF]/gim;
-export const urlSchemeRegex = /^.+(:|&colon;)/gim;
+export const urlSchemeRegex: RegExp = /^.+(:|&colon;)/gim;
 export const relativeFirstCharacters = [".", "/"];
 export const BLANK_URL = "about:blank";
+/* eslint-enable no-control-regex*/

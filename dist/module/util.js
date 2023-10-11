@@ -5,6 +5,7 @@ import _wrapNativeSuper from "@babel/runtime/helpers/esm/wrapNativeSuper";
 
 import { ZalgoPromise } from "@krakenjs/zalgo-promise/src";
 import { WeakMap } from "@krakenjs/cross-domain-safe-weakmap/src";
+import { BLANK_URL, ctrlCharactersRegex, htmlCtrlEntityRegex, htmlEntitiesRegex, invalidProtocolRegex, relativeFirstCharacters, urlSchemeRegex } from "./constants";
 export function isElement(element) {
   var passed = false;
   try {
@@ -1054,4 +1055,34 @@ export var ExtendableError = /*#__PURE__*/function (_Error) {
     return _this6;
   }
   return ExtendableError;
-}( /*#__PURE__*/_wrapNativeSuper(Error));
+}(_wrapNativeSuper(Error));
+function isRelativeUrlWithoutProtocol(url) {
+  return relativeFirstCharacters.indexOf(url[0]) > -1;
+}
+function decodeHtmlCharacters(str) {
+  var removedNullByte = str.replace(ctrlCharactersRegex, "");
+  return removedNullByte.replace(htmlEntitiesRegex, function (matchRegex, dec) {
+    return String.fromCharCode(dec);
+  });
+}
+export function sanitizeUrl(url) {
+  if (!url) {
+    return BLANK_URL;
+  }
+  var sanitizedUrl = decodeHtmlCharacters(url).replace(htmlCtrlEntityRegex, "").replace(ctrlCharactersRegex, "").trim();
+  if (!sanitizedUrl) {
+    return BLANK_URL;
+  }
+  if (isRelativeUrlWithoutProtocol(sanitizedUrl)) {
+    return sanitizedUrl;
+  }
+  var urlSchemeParseResults = sanitizedUrl.match(urlSchemeRegex);
+  if (!urlSchemeParseResults) {
+    return sanitizedUrl;
+  }
+  var urlScheme = urlSchemeParseResults[0];
+  if (invalidProtocolRegex.test(urlScheme)) {
+    return BLANK_URL;
+  }
+  return sanitizedUrl;
+}
