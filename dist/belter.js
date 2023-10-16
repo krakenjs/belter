@@ -581,9 +581,6 @@
         __webpack_require__.d(__webpack_exports__, "ExtendableError", (function() {
             return util_ExtendableError;
         }));
-        __webpack_require__.d(__webpack_exports__, "sanitizeUrl", (function() {
-            return sanitizeUrl;
-        }));
         __webpack_require__.d(__webpack_exports__, "request", (function() {
             return request;
         }));
@@ -631,27 +628,6 @@
         }));
         __webpack_require__.d(__webpack_exports__, "UID_HASH_LENGTH", (function() {
             return UID_HASH_LENGTH;
-        }));
-        __webpack_require__.d(__webpack_exports__, "invalidProtocolRegex", (function() {
-            return invalidProtocolRegex;
-        }));
-        __webpack_require__.d(__webpack_exports__, "htmlEntitiesRegex", (function() {
-            return htmlEntitiesRegex;
-        }));
-        __webpack_require__.d(__webpack_exports__, "htmlCtrlEntityRegex", (function() {
-            return htmlCtrlEntityRegex;
-        }));
-        __webpack_require__.d(__webpack_exports__, "ctrlCharactersRegex", (function() {
-            return ctrlCharactersRegex;
-        }));
-        __webpack_require__.d(__webpack_exports__, "urlSchemeRegex", (function() {
-            return urlSchemeRegex;
-        }));
-        __webpack_require__.d(__webpack_exports__, "relativeFirstCharacters", (function() {
-            return relativeFirstCharacters;
-        }));
-        __webpack_require__.d(__webpack_exports__, "BLANK_URL", (function() {
-            return BLANK_URL;
         }));
         __webpack_require__.d(__webpack_exports__, "sfvcScreens", (function() {
             return sfvcScreens;
@@ -1648,21 +1624,6 @@
                 return _setPrototypeOf(Wrapper, Class);
             })(Class);
         }
-        var KEY_CODES = {
-            ENTER: 13,
-            SPACE: 32
-        };
-        var ATTRIBUTES = {
-            UID: "data-uid"
-        };
-        var UID_HASH_LENGTH = 30;
-        var invalidProtocolRegex = /^([^\w]*)(javascript|data|vbscript)/im;
-        var htmlEntitiesRegex = /&#(\w+)(^\w|;)?/g;
-        var htmlCtrlEntityRegex = /&(newline|tab);/gi;
-        var ctrlCharactersRegex = /[\u0000-\u001F\u007F-\u009F\u2000-\u200D\uFEFF]/gim;
-        var urlSchemeRegex = /^.+(:|&colon;)/gim;
-        var relativeFirstCharacters = [ ".", "/" ];
-        var BLANK_URL = "about:blank";
         function isElement(element) {
             var passed = !1;
             try {
@@ -2355,19 +2316,14 @@
             }
             return ExtendableError;
         }(wrapNativeSuper_wrapNativeSuper(Error));
-        function sanitizeUrl(url) {
-            if (!url) return BLANK_URL;
-            var sanitizedUrl = (str = url, str.replace(ctrlCharactersRegex, "").replace(htmlEntitiesRegex, (function(matchRegex, dec) {
-                return String.fromCharCode(dec);
-            }))).replace(htmlCtrlEntityRegex, "").replace(ctrlCharactersRegex, "").trim();
-            var str;
-            if (!sanitizedUrl) return BLANK_URL;
-            if (function(url) {
-                return relativeFirstCharacters.indexOf(url[0]) > -1;
-            }(sanitizedUrl)) return sanitizedUrl;
-            var urlSchemeParseResults = sanitizedUrl.match(urlSchemeRegex);
-            return urlSchemeParseResults && invalidProtocolRegex.test(urlSchemeParseResults[0]) ? BLANK_URL : sanitizedUrl;
-        }
+        var KEY_CODES = {
+            ENTER: 13,
+            SPACE: 32
+        };
+        var ATTRIBUTES = {
+            UID: "data-uid"
+        };
+        var UID_HASH_LENGTH = 30;
         function getBody() {
             var body = document.body;
             if (!body) throw new Error("Body element not found");
