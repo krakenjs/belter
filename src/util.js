@@ -1,9 +1,17 @@
 /* @flow */
 /* eslint max-lines: 0 */
-
 import { ZalgoPromise } from "@krakenjs/zalgo-promise/src";
 import { WeakMap } from "@krakenjs/cross-domain-safe-weakmap/src";
 
+import {
+  BLANK_URL,
+  ctrlCharactersRegex,
+  htmlCtrlEntityRegex,
+  htmlEntitiesRegex,
+  invalidProtocolRegex,
+  relativeFirstCharacters,
+  urlSchemeRegex,
+} from "./constants";
 import type { CancelableType } from "./types";
 
 export function isElement(element: mixed): boolean {
@@ -1369,4 +1377,48 @@ export class ExtendableError extends Error {
       this.stack = new Error(message).stack;
     }
   }
+}
+
+function isRelativeUrlWithoutProtocol(url: string): boolean {
+  return relativeFirstCharacters.indexOf(url[0]) > -1;
+}
+
+function decodeHtmlCharacters(str: string): string {
+  const removedNullByte: string = str.replace(ctrlCharactersRegex, "");
+  return removedNullByte.replace(htmlEntitiesRegex, (matchRegex, dec) => {
+    return String.fromCharCode(dec);
+  });
+}
+
+export function sanitizeUrl(url?: string): string {
+  if (!url) {
+    return BLANK_URL;
+  }
+
+  const sanitizedUrl = decodeHtmlCharacters(url)
+    .replace(htmlCtrlEntityRegex, "")
+    .replace(ctrlCharactersRegex, "")
+    .trim();
+
+  if (!sanitizedUrl) {
+    return BLANK_URL;
+  }
+
+  if (isRelativeUrlWithoutProtocol(sanitizedUrl)) {
+    return sanitizedUrl;
+  }
+
+  const urlSchemeParseResults = sanitizedUrl.match(urlSchemeRegex);
+
+  if (!urlSchemeParseResults) {
+    return sanitizedUrl;
+  }
+
+  const urlScheme = urlSchemeParseResults[0];
+
+  if (invalidProtocolRegex.test(urlScheme)) {
+    return BLANK_URL;
+  }
+
+  return sanitizedUrl;
 }
