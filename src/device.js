@@ -94,20 +94,30 @@ export function isIosWebview(ua?: string = getUserAgent()): boolean {
 
 export function isSFVC(ua?: string = getUserAgent()): boolean {
   if (isIos(ua)) {
-    const height = window.innerHeight;
-    const scale =
-      Math.round((window.screen.width / window.innerWidth) * 100) / 100;
-    const computedHeight = Math.round(height * scale);
+    let height;
+    let scale;
+
+    if (window.outerHeight > window.outerWidth) { // portrait
+      height = screen.height;
+      scale =
+        Math.round((window.screen.width / window.outerWidth) * 100) / 100;
+    } else { // landscape
+      height = window.outerHeight;
+      scale =
+        Math.round((window.screen.width / window.outerHeight) * 100) / 100;
+    }
+      
+    const computedHeight = Math.round(screen.height * scale); // calculate as if portrait
 
     let device = null;
     if (isIOS14(ua)) {
-      device = sfvcScreens[window.outerHeight];
+      device = sfvcScreens[screen.height];
     } else {
       if (scale !== 1) {
         return true;
       }
 
-      device = sfvcScreens[window.outerHeight];
+      device = sfvcScreens[screen.height];
     }
 
     if (!device) {
