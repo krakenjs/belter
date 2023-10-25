@@ -50,4 +50,28 @@ describe("isWebView", () => {
       throw new Error(`Expected false, got ${JSON.stringify(bool)}`);
     }
   });
+  it("should return true when userAgent is valid and contains the wv field", () => {
+    window.navigator.userAgent =
+      "dkdfsna/5.25.638 Dalvik/2.1.0 (Linux; U; Android 13; SM-S908U1 Build/TP1A.220624.014; wv )";
+    const bool = isWebView();
+    if (!bool) {
+      throw new Error(`Expected true, got ${JSON.stringify(bool)}`);
+    }
+  });
+  it("should return false when userAgent is valid and contains 'wv' in the words only", () => {
+    window.navigator.userAgent = `dkdfsna/5.25.638 Dalwvik/2.1.0 (Linux; U; Android 13; SM-S908U1 Build/TP1A.220624.014;)`;
+    const bool = isWebView();
+    if (bool) {
+      throw new Error(`Expected false, got ${JSON.stringify(bool)}`);
+    }
+  });
+  it("should return true when it is a valid WebView UA in Android 10 and above", () => {
+    window.navigator.userAgent = `Mozilla/5.0 (Linux; U; Android 10; SM-G960F Build/QP1A.190711.020; wv)
+    AppleWebKit/537.36 (KHTML, like Gecko) 
+    Version/4.0 Chrome/95.0.4638.50 Mobile Safari/537.36 OPR/60.0.2254.59405`;
+    const bool = isWebView();
+    if (!bool) {
+      throw new Error(`Expected true, got ${JSON.stringify(bool)}`);
+    }
+  });
 });
