@@ -58,7 +58,7 @@ describe("isWebView", () => {
       throw new Error(`Expected true, got ${JSON.stringify(bool)}`);
     }
   });
-  it("should return false when userAgent is valid and contains 'wv' in the words only", () => {
+  it("should return false when userAgent is valid and contains 'wv' in the word 'Dalwvik' only", () => {
     window.navigator.userAgent = `dkdfsna/5.25.638 Dalwvik/2.1.0 (Linux; U; Android 13; SM-S908U1 Build/TP1A.220624.014;)`;
     const bool = isWebView();
     if (bool) {
