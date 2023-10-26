@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.3.0](https://github.com/krakenjs/belter/compare/v2.2.2...v2.3.0) (2023-10-26)
+
+
+### Features
+
+* added url-sanitization function ([#110](https://github.com/krakenjs/belter/issues/110)) ([6dfe213](https://github.com/krakenjs/belter/commit/6dfe2134888682b745330887f03ae8504470e2e7))
+* upgrade to grumbler-scripts@8 ([#105](https://github.com/krakenjs/belter/issues/105)) ([3724ba9](https://github.com/krakenjs/belter/commit/3724ba95101250e638d294ab2d95a8c4e442bf75))
+
+
+* **docs:** update github actions badge url ([#106](https://github.com/krakenjs/belter/issues/106)) ([de56fb9](https://github.com/krakenjs/belter/commit/de56fb977468c09212dcacda936d453322b28e00))
+* remove token from publish action ([#108](https://github.com/krakenjs/belter/issues/108)) ([6b054d8](https://github.com/krakenjs/belter/commit/6b054d83d2be457dd5c652549ee9f3c4a5a4b42d))
+
 ### [2.2.2](https://github.com/krakenjs/belter/compare/v2.2.1...v2.2.2) (2022-10-27)
 
 
