@@ -1,5 +1,3 @@
-
-
 import { noop } from "./util";
 import { getStorage } from "./storage";
 function getBelterExperimentStorage() {
@@ -58,9 +56,7 @@ export function experiment(_ref) {
     if (window.localStorage && window.localStorage.getItem(name)) {
       forced = true;
     }
-  } catch (err) {
-    // pass
-  }
+  } catch (err) {}
   var exp = {
     isEnabled: function isEnabled() {
       return group === THROTTLE_GROUP.TEST || forced;

@@ -1,5 +1,3 @@
-
-
 import { ZalgoPromise } from "@krakenjs/zalgo-promise/src";
 import { noop, tryCatch, removeFromArray } from "./util";
 export function wrapPromise(method, _temp) {
@@ -17,8 +15,6 @@ export function wrapPromise(method, _temp) {
         reject(new Error("Expected " + promises[0].name + " promise to complete in " + timeout + "ms"));
       }
     }, timeout);
-
-    // $FlowFixMe[escaped-generic]
     var expect = function expect(name, handler) {
       if (handler === void 0) {
         handler = noop;
@@ -27,18 +23,13 @@ export function wrapPromise(method, _temp) {
         name: name,
         handler: handler
       };
-      // $FlowFixMe
       expected.push(exp);
-
-      // $FlowFixMe
       return function expectWrapper() {
         var _this = this;
         for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
           args[_key] = arguments[_key];
         }
         removeFromArray(expected, exp);
-
-        // $FlowFixMe
         var _tryCatch = tryCatch(function () {
             var _handler;
             return (_handler = handler).call.apply(_handler, [_this].concat(args));
@@ -52,39 +43,29 @@ export function wrapPromise(method, _temp) {
           });
           throw error;
         }
-
-        // $FlowFixMe[escaped-generic]
         promises.push({
           name: name,
           promise: ZalgoPromise.resolve(result)
         });
-
-        // $FlowFixMe[escaped-generic]
         return result;
       };
     };
-
-    // $FlowFixMe[escaped-generic]
     var avoid = function avoid(name, fn) {
       if (fn === void 0) {
         fn = noop;
       }
-      // $FlowFixMe
       return function avoidWrapper() {
         var _fn;
         promises.push({
           name: name,
           promise: ZalgoPromise.asyncReject(new Error("Expected " + name + " to not be called"))
         });
-        // $FlowFixMe
         for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
           args[_key2] = arguments[_key2];
         }
         return (_fn = fn).call.apply(_fn, [this].concat(args));
       };
     };
-
-    // $FlowFixMe[escaped-generic]
     var expectError = function expectError(name, handler) {
       if (handler === void 0) {
         handler = noop;
@@ -93,18 +74,13 @@ export function wrapPromise(method, _temp) {
         name: name,
         handler: handler
       };
-      // $FlowFixMe
       expected.push(exp);
-
-      // $FlowFixMe
       return function expectErrorWrapper() {
         var _this2 = this;
         for (var _len3 = arguments.length, args = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
           args[_key3] = arguments[_key3];
         }
         removeFromArray(expected, exp);
-
-        // $FlowFixMe
         var _tryCatch2 = tryCatch(function () {
             var _handler2;
             return (_handler2 = handler).call.apply(_handler2, [_this2].concat(args));
@@ -116,13 +92,10 @@ export function wrapPromise(method, _temp) {
         }
         promises.push({
           name: name,
-          // $FlowFixMe[escaped-generic]
           promise: ZalgoPromise.resolve(result).then(function () {
             throw new Error("Expected " + name + " to throw an error");
           }, noop)
         });
-
-        // $FlowFixMe[escaped-generic]
         return result;
       };
     };

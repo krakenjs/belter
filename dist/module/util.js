@@ -1,10 +1,9 @@
 import _assertThisInitialized from "@babel/runtime/helpers/esm/assertThisInitialized";
 import _inheritsLoose from "@babel/runtime/helpers/esm/inheritsLoose";
 import _wrapNativeSuper from "@babel/runtime/helpers/esm/wrapNativeSuper";
-/* eslint max-lines: 0 */
-
 import { ZalgoPromise } from "@krakenjs/zalgo-promise/src";
 import { WeakMap } from "@krakenjs/cross-domain-safe-weakmap/src";
+import { BLANK_URL, ctrlCharactersRegex, htmlCtrlEntityRegex, htmlEntitiesRegex, invalidProtocolRegex, relativeFirstCharacters, urlSchemeRegex } from "./constants";
 export function isElement(element) {
   var passed = false;
   try {
@@ -13,9 +12,7 @@ export function isElement(element) {
     } else if (element !== null && typeof element === "object" && element.nodeType === 1 && typeof element.style === "object" && typeof element.ownerDocument === "object") {
       passed = true;
     }
-  } catch (_) {
-    // we don't have an element
-  }
+  } catch (_) {}
   return passed;
 }
 export function getFunctionName(fn) {
@@ -25,9 +22,7 @@ export function setFunctionName(fn, name) {
   try {
     delete fn.name;
     fn.name = name;
-  } catch (err) {
-    // pass
-  }
+  } catch (err) {}
   fn.__name__ = fn.displayName = name;
   return fn;
 }
@@ -44,10 +39,7 @@ export function base64encode(str) {
 }
 export function base64decode(str) {
   if (typeof atob === "function") {
-    return decodeURIComponent(
-    // $FlowFixMe[method-unbinding]
-    Array.prototype.map.call(atob(str), function (c) {
-      // eslint-disable-next-line prefer-template
+    return decodeURIComponent(Array.prototype.map.call(atob(str), function (c) {
       return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
     }).join(""));
   }
@@ -91,17 +83,10 @@ export function getObjectID(obj) {
 }
 function serializeArgs(args) {
   try {
-    // $FlowFixMe[method-unbinding]
     return JSON.stringify(Array.prototype.slice.call(args), function (subkey, val) {
-      // Treat each distinct function as unique for purposes of memoization
-      // e.g. even if someFunction.stringify() is the same, we may use a different memoize cache
-      // if the actual function is different.
       if (typeof val === "function") {
         return "memoize[" + getObjectID(val) + "]";
       }
-
-      // By default JSON.stringify(domElement) returns '{}'. This ensures that stays true even for non-standard
-      // elements (e.g. React-rendered dom elements) with custom properties
       if (isElement(val)) {
         return {};
       }
@@ -112,11 +97,9 @@ function serializeArgs(args) {
   }
 }
 export function getEmptyObject() {
-  // $FlowFixMe
   return {};
 }
 var getDefaultMemoizeOptions = function getDefaultMemoizeOptions() {
-  // $FlowFixMe
   return {};
 };
 var memoizeGlobalIndex = 0;
@@ -176,8 +159,6 @@ export function memoize(method, options) {
     simpleCache = null;
     thisCache = null;
   };
-
-  // $FlowFixMe
   var result = memoizedFunction;
   return setFunctionName(result, (options.name || getFunctionName(method)) + "::memoized");
 }
@@ -185,12 +166,9 @@ memoize.clear = function () {
   memoizeGlobalIndexValidFrom = memoizeGlobalIndex;
 };
 export function promiseIdentity(item) {
-  // $FlowFixMe
   return ZalgoPromise.resolve(item);
 }
-export function memoizePromise(
-// eslint-disable-next-line flowtype/no-weak-types
-method) {
+export function memoizePromise(method) {
   var cache = {};
   function memoizedPromiseFunction() {
     var _arguments = arguments,
@@ -215,14 +193,9 @@ method) {
   return setFunctionName(memoizedPromiseFunction, getFunctionName(method) + "::promiseMemoized");
 }
 var getDefaultPromisifyOptions = function getDefaultPromisifyOptions() {
-  // $FlowFixMe
   return {};
 };
-export function promisify(
-// eslint-disable-next-line flowtype/no-weak-types
-method, options
-// eslint-disable-next-line flowtype/no-weak-types
-) {
+export function promisify(method, options) {
   if (options === void 0) {
     options = getDefaultPromisifyOptions();
   }
@@ -234,20 +207,11 @@ method, options
   }
   return setFunctionName(promisifiedFunction, getFunctionName(method) + "::promisified");
 }
-export function inlineMemoize(
-// eslint-disable-next-line flowtype/no-weak-types
-method,
-// eslint-disable-next-line flowtype/no-weak-types
-logic,
-// eslint-disable-next-line flowtype/no-weak-types
-args) {
+export function inlineMemoize(method, logic, args) {
   if (args === void 0) {
     args = [];
   }
-  // $FlowFixMe
-  var cache = method.__inline_memoize_cache__ =
-  // $FlowFixMe
-  method.__inline_memoize_cache__ || {};
+  var cache = method.__inline_memoize_cache__ = method.__inline_memoize_cache__ || {};
   var key = serializeArgs(args);
   if (cache.hasOwnProperty(key)) {
     return cache[key];
@@ -255,11 +219,7 @@ args) {
   var result = cache[key] = logic.apply(void 0, args);
   return result;
 }
-
-// eslint-disable-next-line no-unused-vars
-export function noop() {
-  // pass
-}
+export function noop() {}
 export function once(method) {
   var called = false;
   var onceFunction = function onceFunction() {
@@ -324,7 +284,6 @@ export function stringifyError(err, level) {
   }
   try {
     if (!err) {
-      // $FlowFixMe[method-unbinding]
       return "<unknown error: " + Object.prototype.toString.call(err) + ">";
     }
     if (typeof err === "string") {
@@ -346,18 +305,14 @@ export function stringifyError(err, level) {
       }
     }
     if (err && err.toString && typeof err.toString === "function") {
-      // $FlowFixMe
       return err.toString();
     }
-
-    // $FlowFixMe[method-unbinding]
     return Object.prototype.toString.call(err);
   } catch (newErr) {
     return "Error while stringifying error: " + stringifyError(newErr, level + 1);
   }
 }
 export function stringifyErrorMessage(err) {
-  // $FlowFixMe[method-unbinding]
   var defaultMessage = "<unknown error: " + Object.prototype.toString.call(err) + ">";
   if (!err) {
     return defaultMessage;
@@ -375,11 +330,8 @@ export function stringify(item) {
     return item;
   }
   if (item && item.toString && typeof item.toString === "function") {
-    // $FlowFixMe
     return item.toString();
   }
-
-  // $FlowFixMe[method-unbinding]
   return Object.prototype.toString.call(item);
 }
 export function domainMatches(hostname, domain) {
@@ -394,7 +346,6 @@ export function patchMethod(obj, name, handler) {
       _this2 = this;
     return handler({
       context: this,
-      // $FlowFixMe[method-unbinding]
       args: Array.prototype.slice.call(arguments),
       original: original,
       callOriginal: function callOriginal() {
@@ -419,22 +370,16 @@ export function extend(obj, source) {
 }
 export function values(obj) {
   if (Object.values) {
-    // $FlowFixMe
     return Object.values(obj);
   }
   var result = [];
   for (var key in obj) {
     if (obj.hasOwnProperty(key)) {
-      // $FlowFixMe[escaped-generic]
       result.push(obj[key]);
     }
   }
-
-  // $FlowFixMe
   return result;
 }
-
-// eslint-disable-next-line no-undef
 export var memoizedValues = memoize(values);
 export function perc(pixels, percentage) {
   return Math.round(pixels * percentage / 100);
@@ -451,13 +396,9 @@ export function roundUp(num, nearest) {
 }
 export function regexMap(str, regexp, handler) {
   var results = [];
-
-  // $FlowFixMe
   str.replace(regexp, function regexMapMatcher(item) {
     results.push(handler ? handler.apply(null, arguments) : item);
   });
-
-  // $FlowFixMe
   return results;
 }
 export function svgToBase64(svg) {
@@ -594,10 +535,8 @@ export function undotify(obj) {
         throw new Error("Disallowed key: " + part);
       }
       if (isLast) {
-        // $FlowFixMe
         keyResult[part] = value;
       } else {
-        // $FlowFixMe
         keyResult = keyResult[part] = keyResult[part] || (isIndex ? [] : {});
       }
     }
@@ -635,14 +574,14 @@ export function eventEmitter() {
       var handlerList = handlers[eventName];
       var promises = [];
       if (handlerList) {
-        var _loop = function _loop(_i2) {
+        var _loop = function _loop() {
           var handler = handlerList[_i2];
           promises.push(ZalgoPromise.try(function () {
             return handler.apply(void 0, args);
           }));
         };
         for (var _i2 = 0; _i2 < handlerList.length; _i2++) {
-          _loop(_i2);
+          _loop();
         }
       }
       return ZalgoPromise.all(promises).then(noop);
@@ -681,22 +620,13 @@ export function get(item, path, def) {
     return def;
   }
   var pathParts = path.split(".");
-
-  // Loop through each section of our key path
-
   for (var i = 0; i < pathParts.length; i++) {
-    // If we have an object, we can get the key
     if (typeof item === "object" && item !== null) {
       item = item[pathParts[i]];
-
-      // Otherwise, we should return the default (undefined if not provided)
     } else {
       return def;
     }
   }
-
-  // If our final result is undefined, we should return the default
-
   return item === undefined ? def : item;
 }
 export function safeTimeout(method, time) {
@@ -722,42 +652,30 @@ export function defineLazyProp(obj, key, getter) {
     configurable: true,
     enumerable: true,
     get: function get() {
-      // $FlowFixMe
       delete obj[key];
       var value = getter();
-      // $FlowFixMe
       obj[key] = value;
       return value;
     },
     set: function set(value) {
-      // $FlowFixMe
       delete obj[key];
-      // $FlowFixMe
       obj[key] = value;
     }
   });
 }
-
-// eslint-disable-next-line no-undef
 export function arrayFrom(item) {
-  // $FlowFixMe[method-unbinding]
   return Array.prototype.slice.call(item);
 }
 export function isObject(item) {
   return typeof item === "object" && item !== null;
 }
 export function isObjectObject(obj) {
-  return (
-    // $FlowFixMe[method-unbinding]
-    isObject(obj) && Object.prototype.toString.call(obj) === "[object Object]"
-  );
+  return isObject(obj) && Object.prototype.toString.call(obj) === "[object Object]";
 }
 export function isPlainObject(obj) {
   if (!isObjectObject(obj)) {
     return false;
   }
-
-  // $FlowFixMe
   var constructor = obj.constructor;
   if (typeof constructor !== "function") {
     return false;
@@ -784,7 +702,6 @@ export function replaceObject(item, replacer, fullKey) {
         var el = item[i];
         var child = replacer(el, i, itemKey);
         if (isPlainObject(child) || Array.isArray(child)) {
-          // $FlowFixMe
           child = replaceObject(child, replacer, itemKey);
         }
         return child;
@@ -793,33 +710,26 @@ export function replaceObject(item, replacer, fullKey) {
     for (var i = 0; i < length; i++) {
       _loop2(i);
     }
-
-    // $FlowFixMe
     return result;
   } else if (isPlainObject(item)) {
     var _result = {};
     var _loop3 = function _loop3(key) {
       if (!item.hasOwnProperty(key)) {
-        return "continue";
+        return 1;
       }
       defineLazyProp(_result, key, function () {
         var itemKey = fullKey ? fullKey + "." + key : "" + key;
-        // $FlowFixMe
         var el = item[key];
         var child = replacer(el, key, itemKey);
         if (isPlainObject(child) || Array.isArray(child)) {
-          // $FlowFixMe
           child = replaceObject(child, replacer, itemKey);
         }
         return child;
       });
     };
     for (var key in item) {
-      var _ret = _loop3(key);
-      if (_ret === "continue") continue;
+      if (_loop3(key)) continue;
     }
-
-    // $FlowFixMe
     return _result;
   } else {
     throw new Error("Pass an object or array");
@@ -828,7 +738,6 @@ export function replaceObject(item, replacer, fullKey) {
 export function copyProp(source, target, name, def) {
   if (source.hasOwnProperty(name)) {
     var descriptor = Object.getOwnPropertyDescriptor(source, name);
-    // $FlowFixMe
     Object.defineProperty(target, name, descriptor);
   } else {
     target[name] = def;
@@ -839,15 +748,12 @@ export function regex(pattern, string, start) {
     start = 0;
   }
   if (typeof pattern === "string") {
-    // eslint-disable-next-line security/detect-non-literal-regexp
     pattern = new RegExp(pattern);
   }
   var result = string.slice(start).match(pattern);
   if (!result) {
     return;
   }
-
-  // $FlowFixMe
   var index = result.index;
   var regmatch = result[0];
   return {
@@ -867,8 +773,6 @@ export function regex(pattern, string, start) {
 export function regexAll(pattern, string) {
   var matches = [];
   var start = 0;
-
-  // eslint-disable-next-line no-constant-condition
   while (true) {
     var regmatch = regex(pattern, string, start);
     if (!regmatch) {
@@ -903,13 +807,10 @@ export function debounce(method, time) {
   return setFunctionName(debounceWrapper, getFunctionName(method) + "::debounced");
 }
 export function isRegex(item) {
-  // $FlowFixMe[method-unbinding]
   return Object.prototype.toString.call(item) === "[object RegExp]";
 }
 export var weakMapMemoize = function weakMapMemoize(method) {
   var weakmap = new WeakMap();
-
-  // eslint-disable-next-line flowtype/no-weak-types
   return function weakmapMemoized(arg) {
     var _this4 = this;
     return weakmap.getOrSet(arg, function () {
@@ -919,8 +820,6 @@ export var weakMapMemoize = function weakMapMemoize(method) {
 };
 export var weakMapMemoizePromise = function weakMapMemoizePromise(method) {
   var weakmap = new WeakMap();
-
-  // eslint-disable-next-line flowtype/no-weak-types
   return function weakmapMemoizedPromise(arg) {
     var _this5 = this;
     return weakmap.getOrSet(arg, function () {
@@ -991,15 +890,11 @@ export function tryCatch(fn) {
   } catch (err) {
     error = err;
   }
-
-  // $FlowFixMe
   return {
     result: result,
     error: error
   };
 }
-
-// eslint-disable-next-line flowtype/no-mutable-array
 export function removeFromArray(arr, item) {
   var index = arr.indexOf(item);
   if (index !== -1) {
@@ -1039,12 +934,11 @@ export function dedupeErrors(handler) {
     return handler(err);
   };
 }
-export var ExtendableError = /*#__PURE__*/function (_Error) {
+export var ExtendableError = function (_Error) {
   _inheritsLoose(ExtendableError, _Error);
   function ExtendableError(message) {
     var _this6;
     _this6 = _Error.call(this, message) || this;
-    // eslint-disable-next-line unicorn/custom-error-definition
     _this6.name = _this6.constructor.name;
     if (typeof Error.captureStackTrace === "function") {
       Error.captureStackTrace(_assertThisInitialized(_this6), _this6.constructor);
@@ -1054,4 +948,34 @@ export var ExtendableError = /*#__PURE__*/function (_Error) {
     return _this6;
   }
   return ExtendableError;
-}( /*#__PURE__*/_wrapNativeSuper(Error));
+}(_wrapNativeSuper(Error));
+function isRelativeUrlWithoutProtocol(url) {
+  return relativeFirstCharacters.indexOf(url[0]) > -1;
+}
+function decodeHtmlCharacters(str) {
+  var removedNullByte = str.replace(ctrlCharactersRegex, "");
+  return removedNullByte.replace(htmlEntitiesRegex, function (matchRegex, dec) {
+    return String.fromCharCode(dec);
+  });
+}
+export function sanitizeUrl(url) {
+  if (!url) {
+    return BLANK_URL;
+  }
+  var sanitizedUrl = decodeHtmlCharacters(url).replace(htmlCtrlEntityRegex, "").replace(ctrlCharactersRegex, "").trim();
+  if (!sanitizedUrl) {
+    return BLANK_URL;
+  }
+  if (isRelativeUrlWithoutProtocol(sanitizedUrl)) {
+    return sanitizedUrl;
+  }
+  var urlSchemeParseResults = sanitizedUrl.match(urlSchemeRegex);
+  if (!urlSchemeParseResults) {
+    return sanitizedUrl;
+  }
+  var urlScheme = urlSchemeParseResults[0];
+  if (invalidProtocolRegex.test(urlScheme)) {
+    return BLANK_URL;
+  }
+  return sanitizedUrl;
+}

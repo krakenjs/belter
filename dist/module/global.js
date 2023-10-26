@@ -1,5 +1,3 @@
-
-
 import { getGlobal } from "./util";
 export function getGlobalNameSpace(_ref) {
   var name = _ref.name,
@@ -10,7 +8,6 @@ export function getGlobalNameSpace(_ref) {
   var namespace = global[globalKey] = global[globalKey] || {};
   return {
     get: function get(key, defValue) {
-      // $FlowFixMe
       defValue = defValue || {};
       var item = namespace[key] = namespace[key] || defValue;
       return item;

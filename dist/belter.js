@@ -581,6 +581,9 @@
         __webpack_require__.d(__webpack_exports__, "ExtendableError", (function() {
             return util_ExtendableError;
         }));
+        __webpack_require__.d(__webpack_exports__, "sanitizeUrl", (function() {
+            return sanitizeUrl;
+        }));
         __webpack_require__.d(__webpack_exports__, "request", (function() {
             return request;
         }));
@@ -628,6 +631,27 @@
         }));
         __webpack_require__.d(__webpack_exports__, "UID_HASH_LENGTH", (function() {
             return UID_HASH_LENGTH;
+        }));
+        __webpack_require__.d(__webpack_exports__, "invalidProtocolRegex", (function() {
+            return invalidProtocolRegex;
+        }));
+        __webpack_require__.d(__webpack_exports__, "htmlEntitiesRegex", (function() {
+            return htmlEntitiesRegex;
+        }));
+        __webpack_require__.d(__webpack_exports__, "htmlCtrlEntityRegex", (function() {
+            return htmlCtrlEntityRegex;
+        }));
+        __webpack_require__.d(__webpack_exports__, "ctrlCharactersRegex", (function() {
+            return ctrlCharactersRegex;
+        }));
+        __webpack_require__.d(__webpack_exports__, "urlSchemeRegex", (function() {
+            return urlSchemeRegex;
+        }));
+        __webpack_require__.d(__webpack_exports__, "relativeFirstCharacters", (function() {
+            return relativeFirstCharacters;
+        }));
+        __webpack_require__.d(__webpack_exports__, "BLANK_URL", (function() {
+            return BLANK_URL;
         }));
         __webpack_require__.d(__webpack_exports__, "sfvcScreens", (function() {
             return sfvcScreens;
@@ -805,9 +829,9 @@
             void 0 === userAgent && (userAgent = getUserAgent());
             return TABLET_PATTERN.test(userAgent);
         }
-        function isWebView() {
-            var userAgent = getUserAgent();
-            return /(iPhone|iPod|iPad|Macintosh).*AppleWebKit(?!.*Safari)|.*WKWebView/i.test(userAgent) || /\bwv\b/.test(userAgent) || /Android.*Version\/(\d)\.(\d)/i.test(userAgent);
+        function isWebView(ua) {
+            void 0 === ua && (ua = getUserAgent());
+            return /(iPhone|iPod|iPad|Macintosh).*AppleWebKit(?!.*Safari)|.*WKWebView/i.test(ua) || /\bwv\b/.test(ua) || /Android.*Version\/(\d)\.(\d)/i.test(ua);
         }
         function isStandAlone() {
             return !0 === window.navigator.standalone || window.matchMedia("(display-mode: standalone)").matches;
@@ -922,7 +946,7 @@
         }
         function supportsPopups(ua) {
             void 0 === ua && (ua = getUserAgent());
-            return !(isIosWebview(ua) || isAndroidWebview(ua) || isOperaMini(ua) || isFirefoxIOS(ua) || isEdgeIOS(ua) || isFacebookWebView(ua) || isQQBrowser(ua) || isElectron() || isMacOsCna() || isStandAlone());
+            return !(isWebView(ua) || isIosWebview(ua) || isAndroidWebview(ua) || isOperaMini(ua) || isFirefoxIOS(ua) || isEdgeIOS(ua) || isFacebookWebView(ua) || isQQBrowser(ua) || isElectron() || isMacOsCna() || isStandAlone());
         }
         function isChrome(ua) {
             void 0 === ua && (ua = getUserAgent());
@@ -1624,6 +1648,21 @@
                 return _setPrototypeOf(Wrapper, Class);
             })(Class);
         }
+        var KEY_CODES = {
+            ENTER: 13,
+            SPACE: 32
+        };
+        var ATTRIBUTES = {
+            UID: "data-uid"
+        };
+        var UID_HASH_LENGTH = 30;
+        var invalidProtocolRegex = /([^\w]*)(javascript|data|vbscript)/im;
+        var htmlEntitiesRegex = /&#(\w+)(^\w|;)?/g;
+        var htmlCtrlEntityRegex = /&(newline|tab);/gi;
+        var ctrlCharactersRegex = /[\u0000-\u001F\u007F-\u009F\u2000-\u200D\uFEFF]/gim;
+        var urlSchemeRegex = /^.+(:|&colon;)/gim;
+        var relativeFirstCharacters = [ ".", "/" ];
+        var BLANK_URL = "about:blank";
         function isElement(element) {
             var passed = !1;
             try {
@@ -2018,13 +2057,13 @@
                     var handlerList = handlers[eventName];
                     var promises = [];
                     if (handlerList) {
-                        var _loop = function(_i2) {
+                        var _loop = function() {
                             var handler = handlerList[_i2];
                             promises.push(promise_ZalgoPromise.try((function() {
                                 return handler.apply(void 0, args);
                             })));
                         };
-                        for (var _i2 = 0; _i2 < handlerList.length; _i2++) _loop(_i2);
+                        for (var _i2 = 0; _i2 < handlerList.length; _i2++) _loop();
                     }
                     return promise_ZalgoPromise.all(promises).then(src_util_noop);
                 },
@@ -2124,7 +2163,7 @@
             if (isPlainObject(item)) {
                 var _result = {};
                 var _loop3 = function(key) {
-                    if (!item.hasOwnProperty(key)) return "continue";
+                    if (!item.hasOwnProperty(key)) return 1;
                     defineLazyProp(_result, key, (function() {
                         var itemKey = fullKey ? fullKey + "." + key : "" + key;
                         var child = replacer(item[key], key, itemKey);
@@ -2316,14 +2355,19 @@
             }
             return ExtendableError;
         }(wrapNativeSuper_wrapNativeSuper(Error));
-        var KEY_CODES = {
-            ENTER: 13,
-            SPACE: 32
-        };
-        var ATTRIBUTES = {
-            UID: "data-uid"
-        };
-        var UID_HASH_LENGTH = 30;
+        function sanitizeUrl(url) {
+            if (!url) return BLANK_URL;
+            var sanitizedUrl = (str = url, str.replace(ctrlCharactersRegex, "").replace(htmlEntitiesRegex, (function(matchRegex, dec) {
+                return String.fromCharCode(dec);
+            }))).replace(htmlCtrlEntityRegex, "").replace(ctrlCharactersRegex, "").trim();
+            var str;
+            if (!sanitizedUrl) return BLANK_URL;
+            if (function(url) {
+                return relativeFirstCharacters.indexOf(url[0]) > -1;
+            }(sanitizedUrl)) return sanitizedUrl;
+            var urlSchemeParseResults = sanitizedUrl.match(urlSchemeRegex);
+            return urlSchemeParseResults && invalidProtocolRegex.test(urlSchemeParseResults[0]) ? BLANK_URL : sanitizedUrl;
+        }
         function getBody() {
             var body = document.body;
             if (!body) throw new Error("Body element not found");

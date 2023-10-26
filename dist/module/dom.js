@@ -1,6 +1,5 @@
 import _inheritsLoose from "@babel/runtime/helpers/esm/inheritsLoose";
 import _extends from "@babel/runtime/helpers/esm/extends";
-/* eslint max-lines: off */
 import { ZalgoPromise } from "@krakenjs/zalgo-promise/src";
 import { linkFrameWindow, isWindowClosed, assertSameDomain } from "@krakenjs/cross-domain-utils/src";
 import { WeakMap } from "@krakenjs/cross-domain-safe-weakmap/src";
@@ -8,7 +7,6 @@ import { isElement, inlineMemoize, memoize, noop, stringify, capitalizeFirstLett
 import { isDevice } from "./device";
 import { KEY_CODES, ATTRIBUTES, UID_HASH_LENGTH } from "./constants";
 export function getBody() {
-  // eslint-disable-next-line compat/compat
   var body = document.body;
   if (!body) {
     throw new Error("Body element not found");
@@ -16,11 +14,9 @@ export function getBody() {
   return body;
 }
 export function isDocumentReady() {
-  // eslint-disable-next-line compat/compat
   return Boolean(document.body) && document.readyState === "complete";
 }
 export function isDocumentInteractive() {
-  // eslint-disable-next-line compat/compat
   return Boolean(document.body) && document.readyState === "interactive";
 }
 export function urlEncode(str) {
@@ -200,28 +196,15 @@ export function querySelectorAll(selector, doc) {
   if (doc === void 0) {
     doc = window.document;
   }
-  // $FlowFixMe[method-unbinding]
   return Array.prototype.slice.call(doc.querySelectorAll(selector));
 }
-
-/**
- * Sets up event handlers for click events and
- * enter/space keypresses.
- * @callback handler
- * @param {HTMLElement} element
- * @param {handler} handler
- */
 export function onClick(element, handler) {
   element.addEventListener("touchstart", noop, {
     passive: true
   });
   element.addEventListener("click", handler);
   element.addEventListener("keypress", function (event) {
-    if (
-    // $FlowFixMe
-    event.keyCode === KEY_CODES.ENTER ||
-    // $FlowFixMe
-    event.keyCode === KEY_CODES.SPACE) {
+    if (event.keyCode === KEY_CODES.ENTER || event.keyCode === KEY_CODES.SPACE) {
       return handler(event);
     }
   });
@@ -234,7 +217,6 @@ export function getScript(_ref) {
     reverse = _ref$reverse === void 0 ? false : _ref$reverse;
   return inlineMemoize(getScript, function () {
     var url = "" + host + path;
-    // $FlowFixMe[method-unbinding]
     var scripts = Array.prototype.slice.call(document.getElementsByTagName("script"));
     if (reverse) {
       scripts.reverse();
@@ -266,9 +248,7 @@ export function isLocalStorageEnabled() {
           return true;
         }
       }
-    } catch (err) {
-      // pass
-    }
+    } catch (err) {}
     return false;
   });
 }
@@ -307,7 +287,6 @@ export function getElementSafe(id, doc) {
     doc = document;
   }
   if (isElement(id)) {
-    // $FlowFixMe
     return id;
   }
   if (typeof id === "string") {
@@ -348,9 +327,7 @@ export function elementReady(id) {
     }, 10);
   });
 }
-
-// eslint-disable-next-line unicorn/custom-error-definition
-export var PopupOpenError = /*#__PURE__*/function (_ExtendableError) {
+export var PopupOpenError = function (_ExtendableError) {
   _inheritsLoose(PopupOpenError, _ExtendableError);
   function PopupOpenError() {
     return _ExtendableError.apply(this, arguments) || this;
@@ -358,7 +335,6 @@ export var PopupOpenError = /*#__PURE__*/function (_ExtendableError) {
   return PopupOpenError;
 }(ExtendableError);
 export function popup(url, options) {
-  // $FlowFixMe
   options = options || {};
   var _options = options,
     _options$closeOnUnloa = _options.closeOnUnload,
@@ -386,7 +362,6 @@ export function popup(url, options) {
   delete options.closeOnUnload;
   delete options.name;
   if (width && height) {
-    // $FlowFixMe
     options = _extends({
       top: top,
       left: left,
@@ -399,10 +374,7 @@ export function popup(url, options) {
       scrollbars: 1
     }, options);
   }
-  var params = Object.keys(options)
-  // eslint-disable-next-line array-callback-return
-  .map(function (key) {
-    // $FlowFixMe
+  var params = Object.keys(options).map(function (key) {
     if (options[key] !== null && options[key] !== undefined) {
       return key + "=" + stringify(options[key]);
     }
@@ -432,9 +404,7 @@ export function writeToWindow(win, html) {
   } catch (err) {
     try {
       win.location = "javascript: document.open(); document.write(" + JSON.stringify(html) + "); document.close();";
-    } catch (err2) {
-      // pass
-    }
+    } catch (err2) {}
   }
 }
 export function writeElementToWindow(win, el) {
@@ -456,9 +426,7 @@ export function setStyle(el, styleText, doc) {
   if (doc === void 0) {
     doc = window.document;
   }
-  // $FlowFixMe
   if (el.styleSheet) {
-    // $FlowFixMe
     el.styleSheet.cssText = styleText;
   } else {
     el.appendChild(doc.createTextNode(styleText));
@@ -498,7 +466,6 @@ export function awaitFrameWindow(frame) {
   });
 }
 var getDefaultCreateElementOptions = function getDefaultCreateElementOptions() {
-  // $FlowFixMe
   return {};
 };
 export function createElement(tag, options, container) {
@@ -533,12 +500,9 @@ export function createElement(tag, options, container) {
   }
   if (options.html) {
     if (tag === "iframe") {
-      // $FlowFixMe
       if (!container || !element.contentWindow) {
         throw new Error("Iframe html can not be written unless container provided and iframe in DOM");
       }
-
-      // $FlowFixMe
       writeToWindow(element.contentWindow, options.html);
     } else {
       element.innerHTML = options.html;
@@ -547,11 +511,9 @@ export function createElement(tag, options, container) {
   return element;
 }
 var getDefaultIframeOptions = function getDefaultIframeOptions() {
-  // $FlowFixMe
   return {};
 };
 var getDefaultStringMap = function getDefaultStringMap() {
-  // $FlowFixMe
   return {};
 };
 export function iframe(options, container) {
@@ -560,13 +522,9 @@ export function iframe(options, container) {
   }
   var attributes = options.attributes || getDefaultStringMap();
   var style = options.style || getDefaultStringMap();
-
-  // $FlowFixMe
   var newAttributes = _extends({
     allowTransparency: "true"
   }, attributes);
-
-  // $FlowFixMe
   var newStyle = _extends({
     backgroundColor: "transparent",
     border: "none"
@@ -581,8 +539,6 @@ export function iframe(options, container) {
   if (!frame.hasAttribute("id")) {
     frame.setAttribute("id", uniqueID());
   }
-
-  // $FlowFixMe
   awaitFrameLoad(frame);
   if (container) {
     var el = getElement(container);
@@ -591,8 +547,6 @@ export function iframe(options, container) {
   if (options.url || isIE) {
     frame.setAttribute("src", options.url || "about:blank");
   }
-
-  // $FlowFixMe
   return frame;
 }
 export function addEventListener(obj, event, handler) {
@@ -620,12 +574,10 @@ export function bindEvents(element, eventNames, handler) {
 }
 var VENDOR_PREFIXES = ["webkit", "moz", "ms", "o"];
 export function setVendorCSS(element, name, value) {
-  // $FlowFixMe
   element.style[name] = value;
   var capitalizedName = capitalizeFirstLetter(name);
   for (var _i16 = 0; _i16 < VENDOR_PREFIXES.length; _i16++) {
     var prefix = VENDOR_PREFIXES[_i16];
-    // $FlowFixMe
     element.style["" + prefix + capitalizedName] = value;
   }
 }
@@ -641,13 +593,9 @@ export function animate(element, name, clean, timeout) {
       return resolve();
     }
     var hasStarted = false;
-
-    // eslint-disable-next-line prefer-const
     var startTimeout;
     var endTimeout;
-    // eslint-disable-next-line prefer-const
     var startEvent;
-    // eslint-disable-next-line prefer-const
     var endEvent;
     function cleanUp() {
       clearTimeout(startTimeout);
@@ -656,7 +604,6 @@ export function animate(element, name, clean, timeout) {
       endEvent.cancel();
     }
     startEvent = bindEvents(el, ANIMATION_START_EVENTS, function (event) {
-      // $FlowFixMe
       if (event.target !== el || event.animationName !== name) {
         return;
       }
@@ -670,14 +617,11 @@ export function animate(element, name, clean, timeout) {
       }, timeout);
     });
     endEvent = bindEvents(el, ANIMATION_END_EVENTS, function (event) {
-      // $FlowFixMe
       if (event.target !== el || event.animationName !== name) {
         return;
       }
       cleanUp();
-      if (
-      // $FlowFixMe
-      typeof event.animationName === "string" && event.animationName !== name) {
+      if (typeof event.animationName === "string" && event.animationName !== name) {
         return reject("Expected animation name to be " + name + ", found " + event.animationName);
       }
       return resolve();
@@ -737,9 +681,7 @@ export function watchElementForClose(element, handler) {
   handler = once(handler);
   var cancelled = false;
   var mutationObservers = [];
-  // eslint-disable-next-line prefer-const
   var interval;
-  // eslint-disable-next-line prefer-const
   var sacrificialFrame;
   var sacrificialFrameWin;
   var cancel = function cancel() {
@@ -752,7 +694,6 @@ export function watchElementForClose(element, handler) {
       interval.cancel();
     }
     if (sacrificialFrameWin) {
-      // eslint-disable-next-line no-use-before-define
       sacrificialFrameWin.removeEventListener("unload", elementClosed);
     }
     if (sacrificialFrame) {
@@ -771,9 +712,6 @@ export function watchElementForClose(element, handler) {
       cancel: cancel
     };
   }
-
-  // Strategy 1: Mutation observer
-
   if (window.MutationObserver) {
     var mutationElement = element.parentElement;
     while (mutationElement) {
@@ -789,9 +727,6 @@ export function watchElementForClose(element, handler) {
       mutationElement = mutationElement.parentElement;
     }
   }
-
-  // Strategy 2: Sacrificial iframe
-
   sacrificialFrame = document.createElement("iframe");
   sacrificialFrame.setAttribute("name", "__detect_close_" + uniqueID() + "__");
   sacrificialFrame.style.display = "none";
@@ -800,9 +735,6 @@ export function watchElementForClose(element, handler) {
     sacrificialFrameWin.addEventListener("unload", elementClosed);
   });
   element.appendChild(sacrificialFrame);
-
-  // Strategy 3: Poller
-
   var check = function check() {
     if (isElementClosed(element)) {
       elementClosed();
@@ -893,8 +825,6 @@ export function getResourceLoadTime(url) {
   if (!performance) {
     return;
   }
-
-  // $FlowFixMe[method-unbinding]
   if (typeof performance.getEntries !== "function") {
     return;
   }
@@ -922,10 +852,7 @@ export function getShadowRoot(element) {
 }
 export function getShadowHost(element) {
   var shadowRoot = getShadowRoot(element);
-
-  // $FlowFixMe
   if (shadowRoot && shadowRoot.host) {
-    // $FlowFixMe
     return shadowRoot.host;
   }
 }
@@ -975,21 +902,15 @@ function inferCurrentScript() {
     if (!scriptLocation) {
       return;
     }
-
-    // $FlowFixMe[method-unbinding]
     for (var _i22 = 0, _Array$prototype$slic2 = Array.prototype.slice.call(document.getElementsByTagName("script")).reverse(); _i22 < _Array$prototype$slic2.length; _i22++) {
       var script = _Array$prototype$slic2[_i22];
       if (script.src && script.src === scriptLocation) {
         return script;
       }
     }
-  } catch (err) {
-    // pass
-  }
+  } catch (err) {}
 }
-var currentScript =
-// eslint-disable-next-line compat/compat
-typeof document !== "undefined" ? document.currentScript : null;
+var currentScript = typeof document !== "undefined" ? document.currentScript : null;
 export var getCurrentScript = memoize(function () {
   if (currentScript) {
     return currentScript;

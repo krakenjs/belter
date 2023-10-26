@@ -1,5 +1,3 @@
-
-
 export function isPerc(str) {
   return typeof str === "string" && /^[0-9]+%$/.test(str);
 }

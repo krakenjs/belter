@@ -1,5 +1,3 @@
-
-
 import { memoize, promisify } from "./util";
 export function memoized(target, name, descriptor) {
   descriptor.value = memoize(descriptor.value, {

@@ -1,4 +1,3 @@
-
 import { sfvcScreens } from "./screenHeights";
 export function getUserAgent() {
   return window.navigator.mockUserAgent || window.navigator.userAgent;
@@ -19,9 +18,11 @@ export function isTablet(userAgent) {
   }
   return TABLET_PATTERN.test(userAgent);
 }
-export function isWebView() {
-  var userAgent = getUserAgent();
-  return /(iPhone|iPod|iPad|Macintosh).*AppleWebKit(?!.*Safari)|.*WKWebView/i.test(userAgent) || /\bwv\b/.test(userAgent) || /Android.*Version\/(\d)\.(\d)/i.test(userAgent);
+export function isWebView(ua) {
+  if (ua === void 0) {
+    ua = getUserAgent();
+  }
+  return /(iPhone|iPod|iPad|Macintosh).*AppleWebKit(?!.*Safari)|.*WKWebView/i.test(ua) || /\bwv\b/.test(ua) || /Android.*Version\/(\d)\.(\d)/i.test(ua);
 }
 export function isStandAlone() {
   return window.navigator.standalone === true || window.matchMedia("(display-mode: standalone)").matches;
@@ -178,8 +179,6 @@ export function isElectron() {
   return false;
 }
 export function isIEIntranet() {
-  // This status check only works for older versions of IE with document.documentMode set
-
   if (window.document.documentMode) {
     try {
       var status = window.status;
@@ -203,7 +202,7 @@ export function supportsPopups(ua) {
   if (ua === void 0) {
     ua = getUserAgent();
   }
-  return !(isIosWebview(ua) || isAndroidWebview(ua) || isOperaMini(ua) || isFirefoxIOS(ua) || isEdgeIOS(ua) || isFacebookWebView(ua) || isQQBrowser(ua) || isElectron() || isMacOsCna() || isStandAlone());
+  return !(isWebView(ua) || isIosWebview(ua) || isAndroidWebview(ua) || isOperaMini(ua) || isFirefoxIOS(ua) || isEdgeIOS(ua) || isFacebookWebView(ua) || isQQBrowser(ua) || isElectron() || isMacOsCna() || isStandAlone());
 }
 export function isChrome(ua) {
   if (ua === void 0) {

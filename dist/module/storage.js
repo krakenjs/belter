@@ -1,5 +1,3 @@
-
-
 import { uniqueID, getGlobal, inlineMemoize } from "./util";
 import { isLocalStorageEnabled } from "./dom";
 var DEFAULT_SESSION_STORAGE = 20 * 60 * 1000;
