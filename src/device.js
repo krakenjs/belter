@@ -24,14 +24,13 @@ export function isTablet(userAgent?: string = getUserAgent()): boolean {
   return TABLET_PATTERN.test(userAgent);
 }
 
-export function isWebView(): boolean {
-  const userAgent = getUserAgent();
+export function isWebView(ua?: string = getUserAgent()): boolean {
   return (
     /(iPhone|iPod|iPad|Macintosh).*AppleWebKit(?!.*Safari)|.*WKWebView/i.test(
-      userAgent
+      ua
     ) ||
-    /\bwv\b/.test(userAgent) ||
-    /Android.*Version\/(\d)\.(\d)/i.test(userAgent)
+    /\bwv\b/.test(ua) ||
+    /Android.*Version\/(\d)\.(\d)/i.test(ua)
   );
 }
 
@@ -229,6 +228,7 @@ export function isMacOsCna(): boolean {
 
 export function supportsPopups(ua?: string = getUserAgent()): boolean {
   return !(
+    isWebView(ua) ||
     isIosWebview(ua) ||
     isAndroidWebview(ua) ||
     isOperaMini(ua) ||
