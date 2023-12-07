@@ -4,7 +4,8 @@ var DEFAULT_SESSION_STORAGE = 20 * 60 * 1000;
 export function getStorage(_ref) {
   var name = _ref.name,
     _ref$lifetime = _ref.lifetime,
-    lifetime = _ref$lifetime === void 0 ? DEFAULT_SESSION_STORAGE : _ref$lifetime;
+    lifetime = _ref$lifetime === void 0 ? DEFAULT_SESSION_STORAGE : _ref$lifetime,
+    stickySessionId = _ref.stickySessionId;
   return inlineMemoize(getStorage, function () {
     var STORAGE_KEY = "__" + name + "_storage__";
     var newStateID = uniqueID();
@@ -59,7 +60,7 @@ export function getStorage(_ref) {
         }
         if (!session) {
           session = {
-            guid: uniqueID(),
+            guid: stickySessionId || uniqueID(),
             created: now
           };
         }

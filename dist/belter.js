@@ -3061,7 +3061,7 @@
             getBody().removeChild(form);
         }
         function getStorage(_ref) {
-            var name = _ref.name, _ref$lifetime = _ref.lifetime, lifetime = void 0 === _ref$lifetime ? 12e5 : _ref$lifetime;
+            var name = _ref.name, _ref$lifetime = _ref.lifetime, lifetime = void 0 === _ref$lifetime ? 12e5 : _ref$lifetime, stickySessionId = _ref.stickySessionId;
             return inlineMemoize(getStorage, (function() {
                 var STORAGE_KEY = "__" + name + "_storage__";
                 var newStateID = uniqueID();
@@ -3096,7 +3096,7 @@
                         var now = Date.now();
                         session && now - session.created > lifetime && (session = null);
                         session || (session = {
-                            guid: uniqueID(),
+                            guid: stickySessionId || uniqueID(),
                             created: now
                         });
                         storage.__session__ = session;
