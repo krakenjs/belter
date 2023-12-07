@@ -18,9 +18,13 @@ const DEFAULT_SESSION_STORAGE = 20 * 60 * 1000;
 export function getStorage({
   name,
   lifetime = DEFAULT_SESSION_STORAGE,
+  // a sticky session id helps to identify sdk sessions that were created by other sdks
+  // like the situation where the Braintree SDK loads the PP SDK
+  stickySessionId,
 }: {|
   name: string,
   lifetime?: number,
+  stickySessionId?: string,
 |}): Storage {
   return inlineMemoize(
     getStorage,
@@ -94,7 +98,7 @@ export function getStorage({
 
           if (!session) {
             session = {
-              guid: uniqueID(),
+              guid: stickySessionId || uniqueID(),
               created: now,
             };
           }
