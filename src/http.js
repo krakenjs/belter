@@ -1,7 +1,7 @@
 /* @flow */
 
 import { ZalgoPromise } from "@krakenjs/zalgo-promise/src";
-import { type SameDomainWindowType } from "@krakenjs/cross-domain-utils/src";
+import { type SameDomainWindowType } from "@krakenjs/cross-domain-utils/dist/esm";
 
 type RequestOptionsType = {|
   url: string,
