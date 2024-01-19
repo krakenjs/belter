@@ -69,6 +69,14 @@ export function isIos(ua?: string = getUserAgent()): boolean {
   return /iPhone|iPod|iPad/.test(ua);
 }
 
+export function isIpadOs(ua?: string = getUserAgent()): boolean {
+  if (!/iPhone|iPod/.test(ua)){
+    if(/iPad/.test(ua) || isSafari(ua) && navigator.maxTouchPoints > 1){
+      return true;
+      }
+  }
+  return false;
+}
 export function isIOS14(ua?: string = getUserAgent()): boolean {
   return /iPhone.*OS.*(1)?(?:(1)[0-4]| [0-9])_/.test(ua);
 }
