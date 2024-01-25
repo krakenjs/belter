@@ -69,14 +69,6 @@ export function isIos(ua?: string = getUserAgent()): boolean {
   return /iPhone|iPod|iPad/.test(ua);
 }
 
-export function isIpadOs(ua?: string = getUserAgent()): boolean {
-  if (!/iPhone|iPod/.test(ua)){
-    if(/iPad/.test(ua) || isSafari(ua) && navigator.maxTouchPoints > 1){
-      return true;
-      }
-  }
-  return false;
-}
 export function isIOS14(ua?: string = getUserAgent()): boolean {
   return /iPhone.*OS.*(1)?(?:(1)[0-4]| [0-9])_/.test(ua);
 }
@@ -258,6 +250,17 @@ export function isChrome(ua?: string = getUserAgent()): boolean {
 
 export function isSafari(ua?: string = getUserAgent()): boolean {
   return /Safari/.test(ua) && !isChrome(ua) && !/Silk|FxiOS|EdgiOS/.test(ua);
+}
+
+export function isIpadOs(ua?: string = getUserAgent()): boolean {
+  // Safari on iOS13+ on an iPad will return a useragent that is the same as Safari on MacOS
+  // Adding the maxTouchPoints will determine that it is a touch device
+  if (!/iPhone|iPod/.test(ua)) {
+    if (/iPad/.test(ua) || (isSafari(ua) && navigator.maxTouchPoints >= 1)) {
+      return true;
+    }
+  }
+  return false;
 }
 
 export function isApplePaySupported(): boolean {
