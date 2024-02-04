@@ -1,10 +1,8 @@
-
-
 import { noop } from "./util";
 import { getStorage } from "./storage";
 function getBelterExperimentStorage() {
   return getStorage({
-    name: "belter_experiment"
+    name: "belter_experiment",
   });
 }
 function isEventUnique(name) {
@@ -23,14 +21,15 @@ function getRandomInteger(range) {
 function getThrottlePercentile(name) {
   return getBelterExperimentStorage().getState(function (state) {
     state.throttlePercentiles = state.throttlePercentiles || {};
-    state.throttlePercentiles[name] = state.throttlePercentiles[name] || getRandomInteger(100);
+    state.throttlePercentiles[name] =
+      state.throttlePercentiles[name] || getRandomInteger(100);
     return state.throttlePercentiles[name];
   });
 }
 var THROTTLE_GROUP = {
   TEST: "test",
   CONTROL: "control",
-  THROTTLE: "throttle"
+  THROTTLE: "throttle",
 };
 export function experiment(_ref) {
   var name = _ref.name,
@@ -46,7 +45,7 @@ export function experiment(_ref) {
   var group;
   if (throttle < sample && !__TEST__) {
     group = THROTTLE_GROUP.TEST;
-  } else if (sample >= 50 || sample <= throttle && throttle < sample * 2) {
+  } else if (sample >= 50 || (sample <= throttle && throttle < sample * 2)) {
     group = THROTTLE_GROUP.CONTROL;
   } else {
     group = THROTTLE_GROUP.THROTTLE;
@@ -83,16 +82,20 @@ export function experiment(_ref) {
           name: name,
           treatment: treatment,
           payload: payload,
-          throttle: throttle
+          throttle: throttle,
         });
       }
-      if (isEventUnique(treatment + "_" + checkpoint + "_" + JSON.stringify(payload))) {
+      if (
+        isEventUnique(
+          treatment + "_" + checkpoint + "_" + JSON.stringify(payload)
+        )
+      ) {
         logCheckpoint({
           name: name,
           treatment: treatment,
           checkpoint: checkpoint,
           payload: payload,
-          throttle: throttle
+          throttle: throttle,
         });
       }
       return exp;
@@ -109,7 +112,7 @@ export function experiment(_ref) {
         payload = {};
       }
       return exp.log("complete", payload);
-    }
+    },
   };
   return exp;
 }

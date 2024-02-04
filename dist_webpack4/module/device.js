@@ -1,14 +1,18 @@
-
 import { sfvcScreens } from "./screenHeights";
 export function getUserAgent() {
   return window.navigator.mockUserAgent || window.navigator.userAgent;
 }
-var TABLET_PATTERN = /ip(a|ro)d|silk|xoom|playbook|tablet|kindle|Nexus 7|GT-P10|SC-01C|SHW-M180S|SM-T320|SGH-T849|SCH-I800|SHW-M180L|SPH-P100|SGH-I987|zt180|HTC( Flyer|_Flyer)|Sprint ATP51|ViewPad7|pandigital(sprnova|nova)|Ideos S7|Dell Streak 7|Advent Vega|A101IT|A70BHT|MID7015|Next2|nook|FOLIO|MB511.*RUTEM|Mac OS.*Silk/i;
+var TABLET_PATTERN =
+  /ip(a|ro)d|silk|xoom|playbook|tablet|kindle|Nexus 7|GT-P10|SC-01C|SHW-M180S|SM-T320|SGH-T849|SCH-I800|SHW-M180L|SPH-P100|SGH-I987|zt180|HTC( Flyer|_Flyer)|Sprint ATP51|ViewPad7|pandigital(sprnova|nova)|Ideos S7|Dell Streak 7|Advent Vega|A101IT|A70BHT|MID7015|Next2|nook|FOLIO|MB511.*RUTEM|Mac OS.*Silk/i;
 export function isDevice(userAgent) {
   if (userAgent === void 0) {
     userAgent = getUserAgent();
   }
-  if (userAgent.match(/Android|webOS|iPhone|iPad|iPod|bada|Symbian|Palm|CriOS|BlackBerry|IEMobile|WindowsMobile|Opera Mini/i)) {
+  if (
+    userAgent.match(
+      /Android|webOS|iPhone|iPad|iPod|bada|Symbian|Palm|CriOS|BlackBerry|IEMobile|WindowsMobile|Opera Mini/i
+    )
+  ) {
     return true;
   }
   return false;
@@ -21,10 +25,19 @@ export function isTablet(userAgent) {
 }
 export function isWebView() {
   var userAgent = getUserAgent();
-  return /(iPhone|iPod|iPad|Macintosh).*AppleWebKit(?!.*Safari)|.*WKWebView/i.test(userAgent) || /\bwv\b/.test(userAgent) || /Android.*Version\/(\d)\.(\d)/i.test(userAgent);
+  return (
+    /(iPhone|iPod|iPad|Macintosh).*AppleWebKit(?!.*Safari)|.*WKWebView/i.test(
+      userAgent
+    ) ||
+    /\bwv\b/.test(userAgent) ||
+    /Android.*Version\/(\d)\.(\d)/i.test(userAgent)
+  );
 }
 export function isStandAlone() {
-  return window.navigator.standalone === true || window.matchMedia("(display-mode: standalone)").matches;
+  return (
+    window.navigator.standalone === true ||
+    window.matchMedia("(display-mode: standalone)").matches
+  );
 }
 export function isFacebookWebView(ua) {
   if (ua === void 0) {
@@ -104,7 +117,8 @@ export function isSFVC(ua) {
   }
   if (isIos(ua)) {
     var height = window.innerHeight;
-    var scale = Math.round(window.screen.width / window.innerWidth * 100) / 100;
+    var scale =
+      Math.round((window.screen.width / window.innerWidth) * 100) / 100;
     var computedHeight = Math.round(height * scale);
     var device = null;
     if (isIOS14(ua)) {
@@ -121,7 +135,10 @@ export function isSFVC(ua) {
     if (scale > 1 && device.zoomHeight && device.zoomHeight[scale]) {
       return device.zoomHeight[scale].indexOf(computedHeight) !== -1;
     } else {
-      return device.textSizeHeights.indexOf(computedHeight) !== -1 || device.textSizeHeightsNoTabs.indexOf(computedHeight) !== -1;
+      return (
+        device.textSizeHeights.indexOf(computedHeight) !== -1 ||
+        device.textSizeHeightsNoTabs.indexOf(computedHeight) !== -1
+      );
     }
   }
   return false;
@@ -137,11 +154,16 @@ export function isSFVCorSafari(ua) {
       return false;
     }
     var height = window.innerHeight;
-    var scale = Math.round(window.screen.width / window.innerWidth * 100) / 100;
+    var scale =
+      Math.round((window.screen.width / window.innerWidth) * 100) / 100;
     var computedHeight = Math.round(height * scale);
     var possibleSafariSizes = device.maybeSafari;
     var maybeSafari = false;
-    if (scale > 1 && possibleSafariSizes[scale] && possibleSafariSizes[scale].indexOf(computedHeight) !== -1) {
+    if (
+      scale > 1 &&
+      possibleSafariSizes[scale] &&
+      possibleSafariSizes[scale].indexOf(computedHeight) !== -1
+    ) {
       maybeSafari = true;
     }
     return sfvc || maybeSafari;
@@ -161,10 +183,16 @@ export function isIE() {
   if (window.document.documentMode) {
     return true;
   }
-  return Boolean(window.navigator && window.navigator.userAgent && /Edge|MSIE|rv:11/i.test(window.navigator.userAgent));
+  return Boolean(
+    window.navigator &&
+      window.navigator.userAgent &&
+      /Edge|MSIE|rv:11/i.test(window.navigator.userAgent)
+  );
 }
 export function isIECompHeader() {
-  var mHttp = window.document.querySelector('meta[http-equiv="X-UA-Compatible"]');
+  var mHttp = window.document.querySelector(
+    'meta[http-equiv="X-UA-Compatible"]'
+  );
   var mContent = window.document.querySelector('meta[content="IE=edge"]');
   if (mHttp && mContent) {
     return true;
@@ -172,7 +200,11 @@ export function isIECompHeader() {
   return false;
 }
 export function isElectron() {
-  if (typeof process !== "undefined" && process.versions && process.versions.electron) {
+  if (
+    typeof process !== "undefined" &&
+    process.versions &&
+    process.versions.electron
+  ) {
     return true;
   }
   return false;
@@ -203,13 +235,26 @@ export function supportsPopups(ua) {
   if (ua === void 0) {
     ua = getUserAgent();
   }
-  return !(isIosWebview(ua) || isAndroidWebview(ua) || isOperaMini(ua) || isFirefoxIOS(ua) || isEdgeIOS(ua) || isFacebookWebView(ua) || isQQBrowser(ua) || isElectron() || isMacOsCna() || isStandAlone());
+  return !(
+    isIosWebview(ua) ||
+    isAndroidWebview(ua) ||
+    isOperaMini(ua) ||
+    isFirefoxIOS(ua) ||
+    isEdgeIOS(ua) ||
+    isFacebookWebView(ua) ||
+    isQQBrowser(ua) ||
+    isElectron() ||
+    isMacOsCna() ||
+    isStandAlone()
+  );
 }
 export function isChrome(ua) {
   if (ua === void 0) {
     ua = getUserAgent();
   }
-  return /Chrome|Chromium|CriOS/.test(ua) && !/SamsungBrowser|Silk|EdgA/.test(ua);
+  return (
+    /Chrome|Chromium|CriOS/.test(ua) && !/SamsungBrowser|Silk|EdgA/.test(ua)
+  );
 }
 export function isSafari(ua) {
   if (ua === void 0) {
@@ -219,7 +264,11 @@ export function isSafari(ua) {
 }
 export function isApplePaySupported() {
   try {
-    if (window.ApplePaySession && window.ApplePaySession.supportsVersion(3) && window.ApplePaySession.canMakePayments()) {
+    if (
+      window.ApplePaySession &&
+      window.ApplePaySession.supportsVersion(3) &&
+      window.ApplePaySession.canMakePayments()
+    ) {
       return true;
     }
   } catch (e) {

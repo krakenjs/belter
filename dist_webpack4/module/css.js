@@ -1,5 +1,3 @@
-
-
 export function isPerc(str) {
   return typeof str === "string" && /^[0-9]+%$/.test(str);
 }
@@ -26,7 +24,7 @@ export function toCSS(val) {
   return isPerc(val) ? val : toPx(val);
 }
 export function percOf(num, perc) {
-  return parseInt(num * toNum(perc) / 100, 10);
+  return parseInt((num * toNum(perc)) / 100, 10);
 }
 export function normalizeDimension(dim, max) {
   if (typeof dim === "number") {

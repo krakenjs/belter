@@ -1,26 +1,17 @@
 !function(root, factory) {
     "object" == typeof exports && "object" == typeof module ? module.exports = factory() : "function" == typeof define && define.amd ? define("belter", [], factory) : "object" == typeof exports ? exports.belter = factory() : root.belter = factory();
 }("undefined" != typeof self ? self : this, (function() {
-    return function(modules) {
-        var installedModules = {};
-        function __webpack_require__(moduleId) {
-            if (installedModules[moduleId]) return installedModules[moduleId].exports;
-            var module = installedModules[moduleId] = {
-                i: moduleId,
-                l: !1,
-                exports: {}
-            };
-            modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-            module.l = !0;
-            return module.exports;
-        }
-        __webpack_require__.m = modules;
-        __webpack_require__.c = installedModules;
-        __webpack_require__.d = function(exports, name, getter) {
-            __webpack_require__.o(exports, name) || Object.defineProperty(exports, name, {
+    return function() {
+        "use strict";
+        var __webpack_require__ = {};
+        __webpack_require__.d = function(exports, definition) {
+            for (var key in definition) __webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key) && Object.defineProperty(exports, key, {
                 enumerable: !0,
-                get: getter
+                get: definition[key]
             });
+        };
+        __webpack_require__.o = function(obj, prop) {
+            return {}.hasOwnProperty.call(obj, prop);
         };
         __webpack_require__.r = function(exports) {
             "undefined" != typeof Symbol && Symbol.toStringTag && Object.defineProperty(exports, Symbol.toStringTag, {
@@ -30,608 +21,580 @@
                 value: !0
             });
         };
-        __webpack_require__.t = function(value, mode) {
-            1 & mode && (value = __webpack_require__(value));
-            if (8 & mode) return value;
-            if (4 & mode && "object" == typeof value && value && value.__esModule) return value;
-            var ns = Object.create(null);
-            __webpack_require__.r(ns);
-            Object.defineProperty(ns, "default", {
-                enumerable: !0,
-                value: value
-            });
-            if (2 & mode && "string" != typeof value) for (var key in value) __webpack_require__.d(ns, key, function(key) {
-                return value[key];
-            }.bind(null, key));
-            return ns;
-        };
-        __webpack_require__.n = function(module) {
-            var getter = module && module.__esModule ? function() {
-                return module.default;
-            } : function() {
-                return module;
-            };
-            __webpack_require__.d(getter, "a", getter);
-            return getter;
-        };
-        __webpack_require__.o = function(object, property) {
-            return {}.hasOwnProperty.call(object, property);
-        };
-        __webpack_require__.p = "";
-        return __webpack_require__(__webpack_require__.s = 0);
-    }([ function(module, __webpack_exports__, __webpack_require__) {
-        "use strict";
+        var __webpack_exports__ = {};
         __webpack_require__.r(__webpack_exports__);
-        __webpack_require__.d(__webpack_exports__, "getUserAgent", (function() {
-            return getUserAgent;
-        }));
-        __webpack_require__.d(__webpack_exports__, "isDevice", (function() {
-            return isDevice;
-        }));
-        __webpack_require__.d(__webpack_exports__, "isTablet", (function() {
-            return isTablet;
-        }));
-        __webpack_require__.d(__webpack_exports__, "isWebView", (function() {
-            return isWebView;
-        }));
-        __webpack_require__.d(__webpack_exports__, "isStandAlone", (function() {
-            return isStandAlone;
-        }));
-        __webpack_require__.d(__webpack_exports__, "isFacebookWebView", (function() {
-            return isFacebookWebView;
-        }));
-        __webpack_require__.d(__webpack_exports__, "isFirefox", (function() {
-            return isFirefox;
-        }));
-        __webpack_require__.d(__webpack_exports__, "isFirefoxIOS", (function() {
-            return isFirefoxIOS;
-        }));
-        __webpack_require__.d(__webpack_exports__, "isEdgeIOS", (function() {
-            return isEdgeIOS;
-        }));
-        __webpack_require__.d(__webpack_exports__, "isOperaMini", (function() {
-            return isOperaMini;
-        }));
-        __webpack_require__.d(__webpack_exports__, "isAndroid", (function() {
-            return isAndroid;
-        }));
-        __webpack_require__.d(__webpack_exports__, "isIos", (function() {
-            return isIos;
-        }));
-        __webpack_require__.d(__webpack_exports__, "isIOS14", (function() {
-            return isIOS14;
-        }));
-        __webpack_require__.d(__webpack_exports__, "isGoogleSearchApp", (function() {
-            return isGoogleSearchApp;
-        }));
-        __webpack_require__.d(__webpack_exports__, "isQQBrowser", (function() {
-            return isQQBrowser;
-        }));
-        __webpack_require__.d(__webpack_exports__, "isIosWebview", (function() {
-            return isIosWebview;
-        }));
-        __webpack_require__.d(__webpack_exports__, "isSFVC", (function() {
-            return isSFVC;
-        }));
-        __webpack_require__.d(__webpack_exports__, "isSFVCorSafari", (function() {
-            return isSFVCorSafari;
-        }));
-        __webpack_require__.d(__webpack_exports__, "isAndroidWebview", (function() {
-            return isAndroidWebview;
-        }));
-        __webpack_require__.d(__webpack_exports__, "isIE", (function() {
-            return device_isIE;
-        }));
-        __webpack_require__.d(__webpack_exports__, "isIECompHeader", (function() {
-            return isIECompHeader;
-        }));
-        __webpack_require__.d(__webpack_exports__, "isElectron", (function() {
-            return isElectron;
-        }));
-        __webpack_require__.d(__webpack_exports__, "isIEIntranet", (function() {
-            return isIEIntranet;
-        }));
-        __webpack_require__.d(__webpack_exports__, "isMacOsCna", (function() {
-            return isMacOsCna;
-        }));
-        __webpack_require__.d(__webpack_exports__, "supportsPopups", (function() {
-            return supportsPopups;
-        }));
-        __webpack_require__.d(__webpack_exports__, "isChrome", (function() {
-            return isChrome;
-        }));
-        __webpack_require__.d(__webpack_exports__, "isSafari", (function() {
-            return isSafari;
-        }));
-        __webpack_require__.d(__webpack_exports__, "isApplePaySupported", (function() {
-            return isApplePaySupported;
-        }));
-        __webpack_require__.d(__webpack_exports__, "isCrossSiteTrackingEnabled", (function() {
-            return isCrossSiteTrackingEnabled;
-        }));
-        __webpack_require__.d(__webpack_exports__, "getBody", (function() {
-            return getBody;
-        }));
-        __webpack_require__.d(__webpack_exports__, "isDocumentReady", (function() {
-            return isDocumentReady;
-        }));
-        __webpack_require__.d(__webpack_exports__, "isDocumentInteractive", (function() {
-            return isDocumentInteractive;
-        }));
-        __webpack_require__.d(__webpack_exports__, "urlEncode", (function() {
-            return urlEncode;
-        }));
-        __webpack_require__.d(__webpack_exports__, "waitForWindowReady", (function() {
-            return waitForWindowReady;
-        }));
-        __webpack_require__.d(__webpack_exports__, "waitForDocumentReady", (function() {
-            return waitForDocumentReady;
-        }));
-        __webpack_require__.d(__webpack_exports__, "waitForDocumentBody", (function() {
-            return waitForDocumentBody;
-        }));
-        __webpack_require__.d(__webpack_exports__, "parseQuery", (function() {
-            return parseQuery;
-        }));
-        __webpack_require__.d(__webpack_exports__, "getQueryParam", (function() {
-            return getQueryParam;
-        }));
-        __webpack_require__.d(__webpack_exports__, "urlWillRedirectPage", (function() {
-            return urlWillRedirectPage;
-        }));
-        __webpack_require__.d(__webpack_exports__, "formatQuery", (function() {
-            return formatQuery;
-        }));
-        __webpack_require__.d(__webpack_exports__, "extendQuery", (function() {
-            return extendQuery;
-        }));
-        __webpack_require__.d(__webpack_exports__, "extendUrl", (function() {
-            return extendUrl;
-        }));
-        __webpack_require__.d(__webpack_exports__, "redirect", (function() {
-            return redirect;
-        }));
-        __webpack_require__.d(__webpack_exports__, "hasMetaViewPort", (function() {
-            return hasMetaViewPort;
-        }));
-        __webpack_require__.d(__webpack_exports__, "isElementVisible", (function() {
-            return isElementVisible;
-        }));
-        __webpack_require__.d(__webpack_exports__, "getPerformance", (function() {
-            return getPerformance;
-        }));
-        __webpack_require__.d(__webpack_exports__, "enablePerformance", (function() {
-            return enablePerformance;
-        }));
-        __webpack_require__.d(__webpack_exports__, "getPageRenderTime", (function() {
-            return getPageRenderTime;
-        }));
-        __webpack_require__.d(__webpack_exports__, "htmlEncode", (function() {
-            return htmlEncode;
-        }));
-        __webpack_require__.d(__webpack_exports__, "isBrowser", (function() {
-            return dom_isBrowser;
-        }));
-        __webpack_require__.d(__webpack_exports__, "querySelectorAll", (function() {
-            return querySelectorAll;
-        }));
-        __webpack_require__.d(__webpack_exports__, "onClick", (function() {
-            return onClick;
-        }));
-        __webpack_require__.d(__webpack_exports__, "getScript", (function() {
-            return getScript;
-        }));
-        __webpack_require__.d(__webpack_exports__, "isLocalStorageEnabled", (function() {
-            return isLocalStorageEnabled;
-        }));
-        __webpack_require__.d(__webpack_exports__, "getBrowserLocales", (function() {
-            return getBrowserLocales;
-        }));
-        __webpack_require__.d(__webpack_exports__, "appendChild", (function() {
-            return appendChild;
-        }));
-        __webpack_require__.d(__webpack_exports__, "getElementSafe", (function() {
-            return getElementSafe;
-        }));
-        __webpack_require__.d(__webpack_exports__, "getElement", (function() {
-            return getElement;
-        }));
-        __webpack_require__.d(__webpack_exports__, "elementReady", (function() {
-            return elementReady;
-        }));
-        __webpack_require__.d(__webpack_exports__, "PopupOpenError", (function() {
-            return dom_PopupOpenError;
-        }));
-        __webpack_require__.d(__webpack_exports__, "popup", (function() {
-            return popup;
-        }));
-        __webpack_require__.d(__webpack_exports__, "writeToWindow", (function() {
-            return writeToWindow;
-        }));
-        __webpack_require__.d(__webpack_exports__, "writeElementToWindow", (function() {
-            return writeElementToWindow;
-        }));
-        __webpack_require__.d(__webpack_exports__, "setStyle", (function() {
-            return setStyle;
-        }));
-        __webpack_require__.d(__webpack_exports__, "awaitFrameLoad", (function() {
-            return awaitFrameLoad;
-        }));
-        __webpack_require__.d(__webpack_exports__, "awaitFrameWindow", (function() {
-            return awaitFrameWindow;
-        }));
-        __webpack_require__.d(__webpack_exports__, "createElement", (function() {
-            return createElement;
-        }));
-        __webpack_require__.d(__webpack_exports__, "iframe", (function() {
-            return iframe;
-        }));
-        __webpack_require__.d(__webpack_exports__, "addEventListener", (function() {
-            return addEventListener;
-        }));
-        __webpack_require__.d(__webpack_exports__, "bindEvents", (function() {
-            return bindEvents;
-        }));
-        __webpack_require__.d(__webpack_exports__, "setVendorCSS", (function() {
-            return setVendorCSS;
-        }));
-        __webpack_require__.d(__webpack_exports__, "animate", (function() {
-            return animate;
-        }));
-        __webpack_require__.d(__webpack_exports__, "makeElementVisible", (function() {
-            return makeElementVisible;
-        }));
-        __webpack_require__.d(__webpack_exports__, "makeElementInvisible", (function() {
-            return makeElementInvisible;
-        }));
-        __webpack_require__.d(__webpack_exports__, "showElement", (function() {
-            return showElement;
-        }));
-        __webpack_require__.d(__webpack_exports__, "hideElement", (function() {
-            return hideElement;
-        }));
-        __webpack_require__.d(__webpack_exports__, "destroyElement", (function() {
-            return destroyElement;
-        }));
-        __webpack_require__.d(__webpack_exports__, "showAndAnimate", (function() {
-            return showAndAnimate;
-        }));
-        __webpack_require__.d(__webpack_exports__, "animateAndHide", (function() {
-            return animateAndHide;
-        }));
-        __webpack_require__.d(__webpack_exports__, "addClass", (function() {
-            return addClass;
-        }));
-        __webpack_require__.d(__webpack_exports__, "removeClass", (function() {
-            return removeClass;
-        }));
-        __webpack_require__.d(__webpack_exports__, "isElementClosed", (function() {
-            return isElementClosed;
-        }));
-        __webpack_require__.d(__webpack_exports__, "watchElementForClose", (function() {
-            return watchElementForClose;
-        }));
-        __webpack_require__.d(__webpack_exports__, "fixScripts", (function() {
-            return fixScripts;
-        }));
-        __webpack_require__.d(__webpack_exports__, "onResize", (function() {
-            return onResize;
-        }));
-        __webpack_require__.d(__webpack_exports__, "getResourceLoadTime", (function() {
-            return getResourceLoadTime;
-        }));
-        __webpack_require__.d(__webpack_exports__, "isShadowElement", (function() {
-            return isShadowElement;
-        }));
-        __webpack_require__.d(__webpack_exports__, "getShadowRoot", (function() {
-            return getShadowRoot;
-        }));
-        __webpack_require__.d(__webpack_exports__, "getShadowHost", (function() {
-            return getShadowHost;
-        }));
-        __webpack_require__.d(__webpack_exports__, "insertShadowSlot", (function() {
-            return insertShadowSlot;
-        }));
-        __webpack_require__.d(__webpack_exports__, "preventClickFocus", (function() {
-            return preventClickFocus;
-        }));
-        __webpack_require__.d(__webpack_exports__, "getStackTrace", (function() {
-            return getStackTrace;
-        }));
-        __webpack_require__.d(__webpack_exports__, "getCurrentScript", (function() {
-            return getCurrentScript;
-        }));
-        __webpack_require__.d(__webpack_exports__, "getCurrentScriptUID", (function() {
-            return getCurrentScriptUID;
-        }));
-        __webpack_require__.d(__webpack_exports__, "submitForm", (function() {
-            return submitForm;
-        }));
-        __webpack_require__.d(__webpack_exports__, "experiment", (function() {
-            return experiment;
-        }));
-        __webpack_require__.d(__webpack_exports__, "getGlobalNameSpace", (function() {
-            return getGlobalNameSpace;
-        }));
-        __webpack_require__.d(__webpack_exports__, "getStorage", (function() {
-            return getStorage;
-        }));
-        __webpack_require__.d(__webpack_exports__, "isElement", (function() {
-            return isElement;
-        }));
-        __webpack_require__.d(__webpack_exports__, "getFunctionName", (function() {
-            return getFunctionName;
-        }));
-        __webpack_require__.d(__webpack_exports__, "setFunctionName", (function() {
-            return setFunctionName;
-        }));
-        __webpack_require__.d(__webpack_exports__, "base64encode", (function() {
-            return base64encode;
-        }));
-        __webpack_require__.d(__webpack_exports__, "base64decode", (function() {
-            return base64decode;
-        }));
-        __webpack_require__.d(__webpack_exports__, "uniqueID", (function() {
-            return uniqueID;
-        }));
-        __webpack_require__.d(__webpack_exports__, "getGlobal", (function() {
-            return getGlobal;
-        }));
-        __webpack_require__.d(__webpack_exports__, "getObjectID", (function() {
-            return getObjectID;
-        }));
-        __webpack_require__.d(__webpack_exports__, "getEmptyObject", (function() {
-            return getEmptyObject;
-        }));
-        __webpack_require__.d(__webpack_exports__, "memoize", (function() {
-            return memoize;
-        }));
-        __webpack_require__.d(__webpack_exports__, "promiseIdentity", (function() {
-            return promiseIdentity;
-        }));
-        __webpack_require__.d(__webpack_exports__, "memoizePromise", (function() {
-            return memoizePromise;
-        }));
-        __webpack_require__.d(__webpack_exports__, "promisify", (function() {
-            return promisify;
-        }));
-        __webpack_require__.d(__webpack_exports__, "inlineMemoize", (function() {
-            return inlineMemoize;
-        }));
-        __webpack_require__.d(__webpack_exports__, "noop", (function() {
-            return src_util_noop;
-        }));
-        __webpack_require__.d(__webpack_exports__, "once", (function() {
-            return once;
-        }));
-        __webpack_require__.d(__webpack_exports__, "hashStr", (function() {
-            return hashStr;
-        }));
-        __webpack_require__.d(__webpack_exports__, "strHashStr", (function() {
-            return strHashStr;
-        }));
-        __webpack_require__.d(__webpack_exports__, "match", (function() {
-            return match;
-        }));
-        __webpack_require__.d(__webpack_exports__, "awaitKey", (function() {
-            return awaitKey;
-        }));
-        __webpack_require__.d(__webpack_exports__, "stringifyError", (function() {
-            return stringifyError;
-        }));
-        __webpack_require__.d(__webpack_exports__, "stringifyErrorMessage", (function() {
-            return stringifyErrorMessage;
-        }));
-        __webpack_require__.d(__webpack_exports__, "stringify", (function() {
-            return stringify;
-        }));
-        __webpack_require__.d(__webpack_exports__, "domainMatches", (function() {
-            return domainMatches;
-        }));
-        __webpack_require__.d(__webpack_exports__, "patchMethod", (function() {
-            return patchMethod;
-        }));
-        __webpack_require__.d(__webpack_exports__, "extend", (function() {
-            return extend;
-        }));
-        __webpack_require__.d(__webpack_exports__, "values", (function() {
-            return util_values;
-        }));
-        __webpack_require__.d(__webpack_exports__, "memoizedValues", (function() {
-            return memoizedValues;
-        }));
-        __webpack_require__.d(__webpack_exports__, "perc", (function() {
-            return perc;
-        }));
-        __webpack_require__.d(__webpack_exports__, "min", (function() {
-            return min;
-        }));
-        __webpack_require__.d(__webpack_exports__, "max", (function() {
-            return max;
-        }));
-        __webpack_require__.d(__webpack_exports__, "roundUp", (function() {
-            return roundUp;
-        }));
-        __webpack_require__.d(__webpack_exports__, "regexMap", (function() {
-            return regexMap;
-        }));
-        __webpack_require__.d(__webpack_exports__, "svgToBase64", (function() {
-            return svgToBase64;
-        }));
-        __webpack_require__.d(__webpack_exports__, "objFilter", (function() {
-            return objFilter;
-        }));
-        __webpack_require__.d(__webpack_exports__, "identity", (function() {
-            return identity;
-        }));
-        __webpack_require__.d(__webpack_exports__, "regexTokenize", (function() {
-            return regexTokenize;
-        }));
-        __webpack_require__.d(__webpack_exports__, "promiseDebounce", (function() {
-            return promiseDebounce;
-        }));
-        __webpack_require__.d(__webpack_exports__, "safeInterval", (function() {
-            return safeInterval;
-        }));
-        __webpack_require__.d(__webpack_exports__, "isInteger", (function() {
-            return isInteger;
-        }));
-        __webpack_require__.d(__webpack_exports__, "isFloat", (function() {
-            return isFloat;
-        }));
-        __webpack_require__.d(__webpack_exports__, "serializePrimitive", (function() {
-            return serializePrimitive;
-        }));
-        __webpack_require__.d(__webpack_exports__, "deserializePrimitive", (function() {
-            return deserializePrimitive;
-        }));
-        __webpack_require__.d(__webpack_exports__, "dotify", (function() {
-            return dotify;
-        }));
-        __webpack_require__.d(__webpack_exports__, "undotify", (function() {
-            return undotify;
-        }));
-        __webpack_require__.d(__webpack_exports__, "eventEmitter", (function() {
-            return eventEmitter;
-        }));
-        __webpack_require__.d(__webpack_exports__, "camelToDasherize", (function() {
-            return camelToDasherize;
-        }));
-        __webpack_require__.d(__webpack_exports__, "dasherizeToCamel", (function() {
-            return dasherizeToCamel;
-        }));
-        __webpack_require__.d(__webpack_exports__, "capitalizeFirstLetter", (function() {
-            return capitalizeFirstLetter;
-        }));
-        __webpack_require__.d(__webpack_exports__, "get", (function() {
-            return util_get;
-        }));
-        __webpack_require__.d(__webpack_exports__, "safeTimeout", (function() {
-            return safeTimeout;
-        }));
-        __webpack_require__.d(__webpack_exports__, "defineLazyProp", (function() {
-            return defineLazyProp;
-        }));
-        __webpack_require__.d(__webpack_exports__, "arrayFrom", (function() {
-            return arrayFrom;
-        }));
-        __webpack_require__.d(__webpack_exports__, "isObject", (function() {
-            return isObject;
-        }));
-        __webpack_require__.d(__webpack_exports__, "isObjectObject", (function() {
-            return isObjectObject;
-        }));
-        __webpack_require__.d(__webpack_exports__, "isPlainObject", (function() {
-            return isPlainObject;
-        }));
-        __webpack_require__.d(__webpack_exports__, "replaceObject", (function() {
-            return replaceObject;
-        }));
-        __webpack_require__.d(__webpack_exports__, "copyProp", (function() {
-            return copyProp;
-        }));
-        __webpack_require__.d(__webpack_exports__, "regex", (function() {
-            return regex;
-        }));
-        __webpack_require__.d(__webpack_exports__, "regexAll", (function() {
-            return regexAll;
-        }));
-        __webpack_require__.d(__webpack_exports__, "isDefined", (function() {
-            return isDefined;
-        }));
-        __webpack_require__.d(__webpack_exports__, "cycle", (function() {
-            return cycle;
-        }));
-        __webpack_require__.d(__webpack_exports__, "debounce", (function() {
-            return debounce;
-        }));
-        __webpack_require__.d(__webpack_exports__, "isRegex", (function() {
-            return util_isRegex;
-        }));
-        __webpack_require__.d(__webpack_exports__, "weakMapMemoize", (function() {
-            return util_weakMapMemoize;
-        }));
-        __webpack_require__.d(__webpack_exports__, "weakMapMemoizePromise", (function() {
-            return util_weakMapMemoizePromise;
-        }));
-        __webpack_require__.d(__webpack_exports__, "getOrSet", (function() {
-            return getOrSet;
-        }));
-        __webpack_require__.d(__webpack_exports__, "cleanup", (function() {
-            return cleanup;
-        }));
-        __webpack_require__.d(__webpack_exports__, "tryCatch", (function() {
-            return tryCatch;
-        }));
-        __webpack_require__.d(__webpack_exports__, "removeFromArray", (function() {
-            return removeFromArray;
-        }));
-        __webpack_require__.d(__webpack_exports__, "assertExists", (function() {
-            return assertExists;
-        }));
-        __webpack_require__.d(__webpack_exports__, "unique", (function() {
-            return unique;
-        }));
-        __webpack_require__.d(__webpack_exports__, "constHas", (function() {
-            return constHas;
-        }));
-        __webpack_require__.d(__webpack_exports__, "dedupeErrors", (function() {
-            return dedupeErrors;
-        }));
-        __webpack_require__.d(__webpack_exports__, "ExtendableError", (function() {
-            return util_ExtendableError;
-        }));
-        __webpack_require__.d(__webpack_exports__, "request", (function() {
-            return request;
-        }));
-        __webpack_require__.d(__webpack_exports__, "addHeaderBuilder", (function() {
-            return addHeaderBuilder;
-        }));
-        __webpack_require__.d(__webpack_exports__, "TYPES", (function() {
-            return types_TYPES;
-        }));
-        __webpack_require__.d(__webpack_exports__, "memoized", (function() {
-            return memoized;
-        }));
-        __webpack_require__.d(__webpack_exports__, "promise", (function() {
-            return decorators_promise;
-        }));
-        __webpack_require__.d(__webpack_exports__, "isPerc", (function() {
-            return isPerc;
-        }));
-        __webpack_require__.d(__webpack_exports__, "isPx", (function() {
-            return isPx;
-        }));
-        __webpack_require__.d(__webpack_exports__, "toNum", (function() {
-            return toNum;
-        }));
-        __webpack_require__.d(__webpack_exports__, "toPx", (function() {
-            return toPx;
-        }));
-        __webpack_require__.d(__webpack_exports__, "toCSS", (function() {
-            return toCSS;
-        }));
-        __webpack_require__.d(__webpack_exports__, "percOf", (function() {
-            return percOf;
-        }));
-        __webpack_require__.d(__webpack_exports__, "normalizeDimension", (function() {
-            return normalizeDimension;
-        }));
-        __webpack_require__.d(__webpack_exports__, "wrapPromise", (function() {
-            return wrapPromise;
-        }));
-        __webpack_require__.d(__webpack_exports__, "KEY_CODES", (function() {
-            return KEY_CODES;
-        }));
-        __webpack_require__.d(__webpack_exports__, "ATTRIBUTES", (function() {
-            return ATTRIBUTES;
-        }));
-        __webpack_require__.d(__webpack_exports__, "UID_HASH_LENGTH", (function() {
-            return UID_HASH_LENGTH;
-        }));
-        __webpack_require__.d(__webpack_exports__, "sfvcScreens", (function() {
-            return sfvcScreens;
-        }));
+        __webpack_require__.d(__webpack_exports__, {
+            ATTRIBUTES: function() {
+                return ATTRIBUTES;
+            },
+            ExtendableError: function() {
+                return ExtendableError;
+            },
+            KEY_CODES: function() {
+                return KEY_CODES;
+            },
+            PopupOpenError: function() {
+                return PopupOpenError;
+            },
+            TYPES: function() {
+                return TYPES;
+            },
+            UID_HASH_LENGTH: function() {
+                return UID_HASH_LENGTH;
+            },
+            addClass: function() {
+                return addClass;
+            },
+            addEventListener: function() {
+                return addEventListener;
+            },
+            addHeaderBuilder: function() {
+                return addHeaderBuilder;
+            },
+            animate: function() {
+                return animate;
+            },
+            animateAndHide: function() {
+                return animateAndHide;
+            },
+            appendChild: function() {
+                return appendChild;
+            },
+            arrayFrom: function() {
+                return arrayFrom;
+            },
+            assertExists: function() {
+                return assertExists;
+            },
+            awaitFrameLoad: function() {
+                return awaitFrameLoad;
+            },
+            awaitFrameWindow: function() {
+                return awaitFrameWindow;
+            },
+            awaitKey: function() {
+                return awaitKey;
+            },
+            base64decode: function() {
+                return base64decode;
+            },
+            base64encode: function() {
+                return base64encode;
+            },
+            bindEvents: function() {
+                return bindEvents;
+            },
+            camelToDasherize: function() {
+                return camelToDasherize;
+            },
+            capitalizeFirstLetter: function() {
+                return capitalizeFirstLetter;
+            },
+            cleanup: function() {
+                return cleanup;
+            },
+            constHas: function() {
+                return constHas;
+            },
+            copyProp: function() {
+                return copyProp;
+            },
+            createElement: function() {
+                return createElement;
+            },
+            cycle: function() {
+                return cycle;
+            },
+            dasherizeToCamel: function() {
+                return dasherizeToCamel;
+            },
+            debounce: function() {
+                return debounce;
+            },
+            dedupeErrors: function() {
+                return dedupeErrors;
+            },
+            defineLazyProp: function() {
+                return defineLazyProp;
+            },
+            deserializePrimitive: function() {
+                return deserializePrimitive;
+            },
+            destroyElement: function() {
+                return destroyElement;
+            },
+            domainMatches: function() {
+                return domainMatches;
+            },
+            dotify: function() {
+                return dotify;
+            },
+            elementReady: function() {
+                return elementReady;
+            },
+            enablePerformance: function() {
+                return enablePerformance;
+            },
+            eventEmitter: function() {
+                return eventEmitter;
+            },
+            experiment: function() {
+                return experiment;
+            },
+            extend: function() {
+                return extend;
+            },
+            extendQuery: function() {
+                return extendQuery;
+            },
+            extendUrl: function() {
+                return extendUrl;
+            },
+            fixScripts: function() {
+                return fixScripts;
+            },
+            formatQuery: function() {
+                return formatQuery;
+            },
+            get: function() {
+                return get;
+            },
+            getBody: function() {
+                return getBody;
+            },
+            getBrowserLocales: function() {
+                return getBrowserLocales;
+            },
+            getCurrentScript: function() {
+                return getCurrentScript;
+            },
+            getCurrentScriptUID: function() {
+                return getCurrentScriptUID;
+            },
+            getElement: function() {
+                return getElement;
+            },
+            getElementSafe: function() {
+                return getElementSafe;
+            },
+            getEmptyObject: function() {
+                return getEmptyObject;
+            },
+            getFunctionName: function() {
+                return getFunctionName;
+            },
+            getGlobal: function() {
+                return getGlobal;
+            },
+            getGlobalNameSpace: function() {
+                return getGlobalNameSpace;
+            },
+            getObjectID: function() {
+                return getObjectID;
+            },
+            getOrSet: function() {
+                return getOrSet;
+            },
+            getPageRenderTime: function() {
+                return getPageRenderTime;
+            },
+            getPerformance: function() {
+                return getPerformance;
+            },
+            getQueryParam: function() {
+                return getQueryParam;
+            },
+            getResourceLoadTime: function() {
+                return getResourceLoadTime;
+            },
+            getScript: function() {
+                return getScript;
+            },
+            getShadowHost: function() {
+                return getShadowHost;
+            },
+            getShadowRoot: function() {
+                return getShadowRoot;
+            },
+            getStackTrace: function() {
+                return getStackTrace;
+            },
+            getStorage: function() {
+                return getStorage;
+            },
+            getUserAgent: function() {
+                return getUserAgent;
+            },
+            hasMetaViewPort: function() {
+                return hasMetaViewPort;
+            },
+            hashStr: function() {
+                return hashStr;
+            },
+            hideElement: function() {
+                return hideElement;
+            },
+            htmlEncode: function() {
+                return htmlEncode;
+            },
+            identity: function() {
+                return identity;
+            },
+            iframe: function() {
+                return iframe;
+            },
+            inlineMemoize: function() {
+                return inlineMemoize;
+            },
+            insertShadowSlot: function() {
+                return insertShadowSlot;
+            },
+            isAndroid: function() {
+                return isAndroid;
+            },
+            isAndroidWebview: function() {
+                return isAndroidWebview;
+            },
+            isApplePaySupported: function() {
+                return isApplePaySupported;
+            },
+            isBrowser: function() {
+                return dom_isBrowser;
+            },
+            isChrome: function() {
+                return isChrome;
+            },
+            isCrossSiteTrackingEnabled: function() {
+                return isCrossSiteTrackingEnabled;
+            },
+            isDefined: function() {
+                return isDefined;
+            },
+            isDevice: function() {
+                return isDevice;
+            },
+            isDocumentInteractive: function() {
+                return isDocumentInteractive;
+            },
+            isDocumentReady: function() {
+                return isDocumentReady;
+            },
+            isEdgeIOS: function() {
+                return isEdgeIOS;
+            },
+            isElectron: function() {
+                return isElectron;
+            },
+            isElement: function() {
+                return isElement;
+            },
+            isElementClosed: function() {
+                return isElementClosed;
+            },
+            isElementVisible: function() {
+                return isElementVisible;
+            },
+            isFacebookWebView: function() {
+                return isFacebookWebView;
+            },
+            isFirefox: function() {
+                return isFirefox;
+            },
+            isFirefoxIOS: function() {
+                return isFirefoxIOS;
+            },
+            isFloat: function() {
+                return isFloat;
+            },
+            isGoogleSearchApp: function() {
+                return isGoogleSearchApp;
+            },
+            isIE: function() {
+                return isIE;
+            },
+            isIECompHeader: function() {
+                return isIECompHeader;
+            },
+            isIEIntranet: function() {
+                return isIEIntranet;
+            },
+            isIOS14: function() {
+                return isIOS14;
+            },
+            isInteger: function() {
+                return isInteger;
+            },
+            isIos: function() {
+                return isIos;
+            },
+            isIosWebview: function() {
+                return isIosWebview;
+            },
+            isLocalStorageEnabled: function() {
+                return isLocalStorageEnabled;
+            },
+            isMacOsCna: function() {
+                return isMacOsCna;
+            },
+            isObject: function() {
+                return isObject;
+            },
+            isObjectObject: function() {
+                return isObjectObject;
+            },
+            isOperaMini: function() {
+                return isOperaMini;
+            },
+            isPerc: function() {
+                return isPerc;
+            },
+            isPlainObject: function() {
+                return isPlainObject;
+            },
+            isPx: function() {
+                return isPx;
+            },
+            isQQBrowser: function() {
+                return isQQBrowser;
+            },
+            isRegex: function() {
+                return src_util_isRegex;
+            },
+            isSFVC: function() {
+                return isSFVC;
+            },
+            isSFVCorSafari: function() {
+                return isSFVCorSafari;
+            },
+            isSafari: function() {
+                return isSafari;
+            },
+            isShadowElement: function() {
+                return isShadowElement;
+            },
+            isStandAlone: function() {
+                return isStandAlone;
+            },
+            isTablet: function() {
+                return isTablet;
+            },
+            isWebView: function() {
+                return isWebView;
+            },
+            makeElementInvisible: function() {
+                return makeElementInvisible;
+            },
+            makeElementVisible: function() {
+                return makeElementVisible;
+            },
+            match: function() {
+                return match;
+            },
+            max: function() {
+                return max;
+            },
+            memoize: function() {
+                return memoize;
+            },
+            memoizePromise: function() {
+                return memoizePromise;
+            },
+            memoized: function() {
+                return memoized;
+            },
+            memoizedValues: function() {
+                return memoizedValues;
+            },
+            min: function() {
+                return min;
+            },
+            noop: function() {
+                return src_util_noop;
+            },
+            normalizeDimension: function() {
+                return normalizeDimension;
+            },
+            objFilter: function() {
+                return objFilter;
+            },
+            onClick: function() {
+                return onClick;
+            },
+            onResize: function() {
+                return onResize;
+            },
+            once: function() {
+                return once;
+            },
+            parseQuery: function() {
+                return parseQuery;
+            },
+            patchMethod: function() {
+                return patchMethod;
+            },
+            perc: function() {
+                return perc;
+            },
+            percOf: function() {
+                return percOf;
+            },
+            popup: function() {
+                return popup;
+            },
+            preventClickFocus: function() {
+                return preventClickFocus;
+            },
+            promise: function() {
+                return promise;
+            },
+            promiseDebounce: function() {
+                return promiseDebounce;
+            },
+            promiseIdentity: function() {
+                return promiseIdentity;
+            },
+            promisify: function() {
+                return promisify;
+            },
+            querySelectorAll: function() {
+                return querySelectorAll;
+            },
+            redirect: function() {
+                return redirect;
+            },
+            regex: function() {
+                return regex;
+            },
+            regexAll: function() {
+                return regexAll;
+            },
+            regexMap: function() {
+                return regexMap;
+            },
+            regexTokenize: function() {
+                return regexTokenize;
+            },
+            removeClass: function() {
+                return removeClass;
+            },
+            removeFromArray: function() {
+                return removeFromArray;
+            },
+            replaceObject: function() {
+                return replaceObject;
+            },
+            request: function() {
+                return request;
+            },
+            roundUp: function() {
+                return roundUp;
+            },
+            safeInterval: function() {
+                return safeInterval;
+            },
+            safeTimeout: function() {
+                return safeTimeout;
+            },
+            serializePrimitive: function() {
+                return serializePrimitive;
+            },
+            setFunctionName: function() {
+                return setFunctionName;
+            },
+            setStyle: function() {
+                return setStyle;
+            },
+            setVendorCSS: function() {
+                return setVendorCSS;
+            },
+            sfvcScreens: function() {
+                return sfvcScreens;
+            },
+            showAndAnimate: function() {
+                return showAndAnimate;
+            },
+            showElement: function() {
+                return showElement;
+            },
+            strHashStr: function() {
+                return strHashStr;
+            },
+            stringify: function() {
+                return stringify;
+            },
+            stringifyError: function() {
+                return stringifyError;
+            },
+            stringifyErrorMessage: function() {
+                return stringifyErrorMessage;
+            },
+            submitForm: function() {
+                return submitForm;
+            },
+            supportsPopups: function() {
+                return supportsPopups;
+            },
+            svgToBase64: function() {
+                return svgToBase64;
+            },
+            toCSS: function() {
+                return toCSS;
+            },
+            toNum: function() {
+                return toNum;
+            },
+            toPx: function() {
+                return toPx;
+            },
+            tryCatch: function() {
+                return tryCatch;
+            },
+            undotify: function() {
+                return undotify;
+            },
+            unique: function() {
+                return unique;
+            },
+            uniqueID: function() {
+                return uniqueID;
+            },
+            urlEncode: function() {
+                return urlEncode;
+            },
+            urlWillRedirectPage: function() {
+                return urlWillRedirectPage;
+            },
+            values: function() {
+                return values;
+            },
+            waitForDocumentBody: function() {
+                return waitForDocumentBody;
+            },
+            waitForDocumentReady: function() {
+                return waitForDocumentReady;
+            },
+            waitForWindowReady: function() {
+                return waitForWindowReady;
+            },
+            watchElementForClose: function() {
+                return watchElementForClose;
+            },
+            weakMapMemoize: function() {
+                return weakMapMemoize;
+            },
+            weakMapMemoizePromise: function() {
+                return weakMapMemoizePromise;
+            },
+            wrapPromise: function() {
+                return wrapPromise;
+            },
+            writeElementToWindow: function() {
+                return writeElementToWindow;
+            },
+            writeToWindow: function() {
+                return writeToWindow;
+            }
+        });
         var sfvcScreens = {
             932: {
                 textSizeHeights: [ 746, 742, 738 ],
@@ -891,7 +854,7 @@
             void 0 === ua && (ua = getUserAgent());
             return !!isAndroid(ua) && /Version\/[\d.]+/.test(ua) && !isOperaMini(ua);
         }
-        function device_isIE() {
+        function isIE() {
             return !!window.document.documentMode || Boolean(window.navigator && window.navigator.userAgent && /Edge|MSIE|rv:11/i.test(window.navigator.userAgent));
         }
         function isIECompHeader() {
@@ -944,10 +907,11 @@
             return -1 === window.document.cookie.indexOf(expectedCookieKey);
         }
         function _setPrototypeOf(o, p) {
-            return (_setPrototypeOf = Object.setPrototypeOf || function(o, p) {
+            _setPrototypeOf = Object.setPrototypeOf || function(o, p) {
                 o.__proto__ = p;
                 return o;
-            })(o, p);
+            };
+            return _setPrototypeOf(o, p);
         }
         function _inheritsLoose(subClass, superClass) {
             subClass.prototype = Object.create(superClass.prototype);
@@ -955,13 +919,14 @@
             _setPrototypeOf(subClass, superClass);
         }
         function _extends() {
-            return (_extends = Object.assign || function(target) {
+            _extends = Object.assign || function(target) {
                 for (var i = 1; i < arguments.length; i++) {
                     var source = arguments[i];
                     for (var key in source) ({}).hasOwnProperty.call(source, key) && (target[key] = source[key]);
                 }
                 return target;
-            }).apply(this, arguments);
+            };
+            return _extends.apply(this, arguments);
         }
         function utils_isPromise(item) {
             try {
@@ -998,7 +963,7 @@
             activeCount -= 1;
             flushActive();
         }
-        var promise_ZalgoPromise = function() {
+        var ZalgoPromise = function() {
             function ZalgoPromise(handler) {
                 var _this = this;
                 this.resolved = void 0;
@@ -1274,6 +1239,11 @@
             };
             return ZalgoPromise;
         }();
+        var constants_PROTOCOL = {
+            MOCK: "mock:",
+            FILE: "file:",
+            ABOUT: "about:"
+        };
         var IE_WIN_ACCESS_ERROR = "Call was rejected by callee.\r\n";
         function getActualProtocol(win) {
             void 0 === win && (win = window);
@@ -1289,7 +1259,7 @@
         }
         function isAboutProtocol(win) {
             void 0 === win && (win = window);
-            return "about:" === getProtocol(win);
+            return getProtocol(win) === constants_PROTOCOL.ABOUT;
         }
         function canReadFromWindow(win) {
             try {
@@ -1303,15 +1273,15 @@
             if (!location) throw new Error("Can not read window location");
             var protocol = getActualProtocol(win);
             if (!protocol) throw new Error("Can not read window protocol");
-            if ("file:" === protocol) return "file://";
-            if ("about:" === protocol) {
+            if (protocol === constants_PROTOCOL.FILE) return constants_PROTOCOL.FILE + "//";
+            if (protocol === constants_PROTOCOL.ABOUT) {
                 var parent = function(win) {
                     void 0 === win && (win = window);
                     if (win) try {
                         if (win.parent && win.parent !== win) return win.parent;
                     } catch (err) {}
                 }(win);
-                return parent && canReadFromWindow() ? getActualDomain(parent) : "about://";
+                return parent && canReadFromWindow() ? getActualDomain(parent) : constants_PROTOCOL.ABOUT + "//";
             }
             var host = location.host;
             if (!host) throw new Error("Can not read window host");
@@ -1320,7 +1290,7 @@
         function getDomain(win) {
             void 0 === win && (win = window);
             var domain = getActualDomain(win);
-            return domain && win.mockDomain && 0 === win.mockDomain.indexOf("mock:") ? win.mockDomain : domain;
+            return domain && win.mockDomain && 0 === win.mockDomain.indexOf(constants_PROTOCOL.MOCK) ? win.mockDomain : domain;
         }
         function isSameDomain(win) {
             if (!function(win) {
@@ -1337,7 +1307,7 @@
                 try {
                     if (function(win) {
                         void 0 === win && (win = window);
-                        return "mock:" === getProtocol(win);
+                        return getProtocol(win) === constants_PROTOCOL.MOCK;
                     }(win) && canReadFromWindow()) return !0;
                 } catch (err) {}
                 try {
@@ -1446,7 +1416,7 @@
             } catch (err) {}
             return -1;
         }
-        var weakmap_CrossDomainSafeWeakMap = function() {
+        var CrossDomainSafeWeakMap = function() {
             function CrossDomainSafeWeakMap() {
                 this.name = void 0;
                 this.weakmap = void 0;
@@ -1576,33 +1546,34 @@
             return CrossDomainSafeWeakMap;
         }();
         function _getPrototypeOf(o) {
-            return (_getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function(o) {
+            _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function(o) {
                 return o.__proto__ || Object.getPrototypeOf(o);
-            })(o);
+            };
+            return _getPrototypeOf(o);
         }
-        function _isNativeReflectConstruct() {
-            if ("undefined" == typeof Reflect || !Reflect.construct) return !1;
-            if (Reflect.construct.sham) return !1;
-            if ("function" == typeof Proxy) return !0;
-            try {
-                Date.prototype.toString.call(Reflect.construct(Date, [], (function() {})));
-                return !0;
-            } catch (e) {
-                return !1;
-            }
-        }
-        function construct_construct(Parent, args, Class) {
-            return (construct_construct = _isNativeReflectConstruct() ? Reflect.construct : function(Parent, args, Class) {
+        function _construct(Parent, args, Class) {
+            _construct = function() {
+                if ("undefined" == typeof Reflect || !Reflect.construct) return !1;
+                if (Reflect.construct.sham) return !1;
+                if ("function" == typeof Proxy) return !0;
+                try {
+                    Date.prototype.toString.call(Reflect.construct(Date, [], (function() {})));
+                    return !0;
+                } catch (e) {
+                    return !1;
+                }
+            }() ? Reflect.construct : function(Parent, args, Class) {
                 var a = [ null ];
                 a.push.apply(a, args);
                 var instance = new (Function.bind.apply(Parent, a));
                 Class && _setPrototypeOf(instance, Class.prototype);
                 return instance;
-            }).apply(null, arguments);
+            };
+            return _construct.apply(null, arguments);
         }
-        function wrapNativeSuper_wrapNativeSuper(Class) {
+        function _wrapNativeSuper(Class) {
             var _cache = "function" == typeof Map ? new Map : void 0;
-            return (wrapNativeSuper_wrapNativeSuper = function(Class) {
+            _wrapNativeSuper = function(Class) {
                 if (null === Class || !(fn = Class, -1 !== Function.toString.call(fn).indexOf("[native code]"))) return Class;
                 var fn;
                 if ("function" != typeof Class) throw new TypeError("Super expression must either be null or a function");
@@ -1611,7 +1582,7 @@
                     _cache.set(Class, Wrapper);
                 }
                 function Wrapper() {
-                    return construct_construct(Class, arguments, _getPrototypeOf(this).constructor);
+                    return _construct(Class, arguments, _getPrototypeOf(this).constructor);
                 }
                 Wrapper.prototype = Object.create(Class.prototype, {
                     constructor: {
@@ -1622,7 +1593,8 @@
                     }
                 });
                 return _setPrototypeOf(Wrapper, Class);
-            })(Class);
+            };
+            return _wrapNativeSuper(Class);
         }
         function isElement(element) {
             var passed = !1;
@@ -1657,9 +1629,8 @@
             throw new Error("Can not find window.atob or Buffer");
         }
         function uniqueID() {
-            var chars = "0123456789abcdef";
             return "uid_" + "xxxxxxxxxx".replace(/./g, (function() {
-                return chars.charAt(Math.floor(Math.random() * chars.length));
+                return "0123456789abcdef".charAt(Math.floor(16 * Math.random()));
             })) + "_" + base64encode((new Date).toISOString().slice(11, 19).replace("T", ".")).replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
         }
         function getGlobal() {
@@ -1670,7 +1641,7 @@
         }
         var objectIDs;
         function getObjectID(obj) {
-            objectIDs = objectIDs || new weakmap_CrossDomainSafeWeakMap;
+            objectIDs = objectIDs || new CrossDomainSafeWeakMap;
             if (null == obj || "object" != typeof obj && "function" != typeof obj) throw new Error("Invalid object");
             var uid = objectIDs.get(obj);
             if (!uid) {
@@ -1691,10 +1662,13 @@
         function getEmptyObject() {
             return {};
         }
+        var getDefaultMemoizeOptions = function() {
+            return {};
+        };
         var memoizeGlobalIndex = 0;
         var memoizeGlobalIndexValidFrom = 0;
         function memoize(method, options) {
-            void 0 === options && (options = {});
+            void 0 === options && (options = getDefaultMemoizeOptions());
             var _options$thisNamespac = options.thisNamespace, thisNamespace = void 0 !== _options$thisNamespac && _options$thisNamespac, cacheTime = options.time;
             var simpleCache;
             var thisCache;
@@ -1709,7 +1683,7 @@
                     memoizeGlobalIndex += 1;
                 }
                 var cache;
-                cache = thisNamespace ? (thisCache = thisCache || new weakmap_CrossDomainSafeWeakMap).getOrSet(this, getEmptyObject) : simpleCache = simpleCache || {};
+                cache = thisNamespace ? (thisCache = thisCache || new CrossDomainSafeWeakMap).getOrSet(this, getEmptyObject) : simpleCache = simpleCache || {};
                 var cacheKey;
                 try {
                     cacheKey = serializeArgs(args);
@@ -1740,7 +1714,7 @@
             memoizeGlobalIndexValidFrom = memoizeGlobalIndex;
         };
         function promiseIdentity(item) {
-            return promise_ZalgoPromise.resolve(item);
+            return ZalgoPromise.resolve(item);
         }
         function memoizePromise(method) {
             var cache = {};
@@ -1749,7 +1723,7 @@
                 for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) args[_key2] = arguments[_key2];
                 var key = serializeArgs(args);
                 if (cache.hasOwnProperty(key)) return cache[key];
-                cache[key] = promise_ZalgoPromise.try((function() {
+                cache[key] = ZalgoPromise.try((function() {
                     return method.apply(_this, _arguments);
                 })).finally((function() {
                     delete cache[key];
@@ -1761,10 +1735,13 @@
             };
             return setFunctionName(memoizedPromiseFunction, getFunctionName(method) + "::promiseMemoized");
         }
+        var getDefaultPromisifyOptions = function() {
+            return {};
+        };
         function promisify(method, options) {
-            void 0 === options && (options = {});
+            void 0 === options && (options = getDefaultPromisifyOptions());
             function promisifiedFunction() {
-                return promise_ZalgoPromise.try(method, this, arguments);
+                return ZalgoPromise.try(method, this, arguments);
             }
             options.name && (promisifiedFunction.displayName = options.name + ":promisified");
             return setFunctionName(promisifiedFunction, getFunctionName(method) + "::promisified");
@@ -1804,7 +1781,7 @@
             if (regmatch) return regmatch[1];
         }
         function awaitKey(obj, key) {
-            return new promise_ZalgoPromise((function(resolve) {
+            return new ZalgoPromise((function(resolve) {
                 var value = obj[key];
                 if (value) return resolve(value);
                 delete obj[key];
@@ -1868,13 +1845,13 @@
             for (var key in source) source.hasOwnProperty(key) && (obj[key] = source[key]);
             return obj;
         }
-        function util_values(obj) {
+        function values(obj) {
             if (Object.values) return Object.values(obj);
             var result = [];
             for (var key in obj) obj.hasOwnProperty(key) && result.push(obj[key]);
             return result;
         }
-        var memoizedValues = memoize(util_values);
+        var memoizedValues = memoize(values);
         function perc(pixels, percentage) {
             return Math.round(pixels * percentage / 100);
         }
@@ -1921,11 +1898,11 @@
             var timeout;
             return setFunctionName((function() {
                 timeout && clearTimeout(timeout);
-                var localPromise = promise = promise || new promise_ZalgoPromise;
+                var localPromise = promise = promise || new ZalgoPromise;
                 timeout = setTimeout((function() {
                     promise = null;
                     timeout = null;
-                    promise_ZalgoPromise.try(method).then((function(result) {
+                    ZalgoPromise.try(method).then((function(result) {
                         localPromise.resolve(result);
                     }), (function(err) {
                         localPromise.reject(err);
@@ -2018,18 +1995,18 @@
                     var handlerList = handlers[eventName];
                     var promises = [];
                     if (handlerList) {
-                        var _loop = function(_i2) {
+                        var _loop = function() {
                             var handler = handlerList[_i2];
-                            promises.push(promise_ZalgoPromise.try((function() {
+                            promises.push(ZalgoPromise.try((function() {
                                 return handler.apply(void 0, args);
                             })));
                         };
-                        for (var _i2 = 0; _i2 < handlerList.length; _i2++) _loop(_i2);
+                        for (var _i2 = 0; _i2 < handlerList.length; _i2++) _loop();
                     }
-                    return promise_ZalgoPromise.all(promises).then(src_util_noop);
+                    return ZalgoPromise.all(promises).then(src_util_noop);
                 },
                 triggerOnce: function(eventName) {
-                    if (triggered[eventName]) return promise_ZalgoPromise.resolve();
+                    if (triggered[eventName]) return ZalgoPromise.resolve();
                     triggered[eventName] = !0;
                     for (var _len4 = arguments.length, args = new Array(_len4 > 1 ? _len4 - 1 : 0), _key4 = 1; _key4 < _len4; _key4++) args[_key4 - 1] = arguments[_key4];
                     return emitter.trigger.apply(emitter, [ eventName ].concat(args));
@@ -2053,7 +2030,7 @@
         function capitalizeFirstLetter(string) {
             return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
         }
-        function util_get(item, path, def) {
+        function get(item, path, def) {
             if (!path) return def;
             var pathParts = path.split(".");
             for (var i = 0; i < pathParts.length; i++) {
@@ -2124,7 +2101,7 @@
             if (isPlainObject(item)) {
                 var _result = {};
                 var _loop3 = function(key) {
-                    if (!item.hasOwnProperty(key)) return "continue";
+                    if (!item.hasOwnProperty(key)) return 1;
                     defineLazyProp(_result, key, (function() {
                         var itemKey = fullKey ? fullKey + "." + key : "" + key;
                         var child = replacer(item[key], key, itemKey);
@@ -2177,7 +2154,7 @@
             return null != value;
         }
         function cycle(method) {
-            return promise_ZalgoPromise.try(method).then((function() {
+            return ZalgoPromise.try(method).then((function() {
                 return cycle(method);
             }));
         }
@@ -2192,11 +2169,11 @@
                 }), time);
             }), getFunctionName(method) + "::debounced");
         }
-        function util_isRegex(item) {
+        function src_util_isRegex(item) {
             return "[object RegExp]" === {}.toString.call(item);
         }
-        var util_weakMapMemoize = function(method) {
-            var weakmap = new weakmap_CrossDomainSafeWeakMap;
+        var weakMapMemoize = function(method) {
+            var weakmap = new CrossDomainSafeWeakMap;
             return function(arg) {
                 var _this4 = this;
                 return weakmap.getOrSet(arg, (function() {
@@ -2204,8 +2181,8 @@
                 }));
             };
         };
-        var util_weakMapMemoizePromise = function(method) {
-            var weakmap = new weakmap_CrossDomainSafeWeakMap;
+        var weakMapMemoizePromise = function(method) {
+            var weakmap = new CrossDomainSafeWeakMap;
             return function(arg) {
                 var _this5 = this;
                 return weakmap.getOrSet(arg, (function() {
@@ -2255,7 +2232,7 @@
                         var task = tasks.shift();
                         results.push(task());
                     }
-                    return promise_ZalgoPromise.all(results).then(src_util_noop);
+                    return ZalgoPromise.all(results).then(src_util_noop);
                 }
             };
             return cleaner;
@@ -2303,7 +2280,7 @@
                 }
             };
         }
-        var util_ExtendableError = function(_Error) {
+        var ExtendableError = function(_Error) {
             _inheritsLoose(ExtendableError, _Error);
             function ExtendableError(message) {
                 var _this6;
@@ -2315,7 +2292,7 @@
                 return _this6;
             }
             return ExtendableError;
-        }(wrapNativeSuper_wrapNativeSuper(Error));
+        }(_wrapNativeSuper(Error));
         var KEY_CODES = {
             ENTER: 13,
             SPACE: 32
@@ -2340,7 +2317,7 @@
         }
         function waitForWindowReady() {
             return inlineMemoize(waitForWindowReady, (function() {
-                return new promise_ZalgoPromise((function(resolve) {
+                return new ZalgoPromise((function(resolve) {
                     isDocumentReady() && resolve();
                     window.addEventListener("load", (function() {
                         return resolve();
@@ -2349,7 +2326,7 @@
             }));
         }
         var waitForDocumentReady = memoize((function() {
-            return new promise_ZalgoPromise((function(resolve) {
+            return new ZalgoPromise((function(resolve) {
                 if (isDocumentReady() || isDocumentInteractive()) return resolve();
                 var interval = setInterval((function() {
                     if (isDocumentReady() || isDocumentInteractive()) {
@@ -2360,7 +2337,7 @@
             }));
         }));
         function waitForDocumentBody() {
-            return promise_ZalgoPromise.try((function() {
+            return ZalgoPromise.try((function() {
                 return document.body ? document.body : waitForDocumentReady().then((function() {
                     if (document.body) return document.body;
                     throw new Error("Document ready but document.body not present");
@@ -2416,7 +2393,7 @@
         }
         function redirect(url, win) {
             void 0 === win && (win = window);
-            return new promise_ZalgoPromise((function(resolve) {
+            return new ZalgoPromise((function(resolve) {
                 win.location = url;
                 urlWillRedirectPage(url) || resolve();
             }));
@@ -2525,7 +2502,7 @@
             throw new Error("Can not find element: " + stringify(id));
         }
         function elementReady(id) {
-            return new promise_ZalgoPromise((function(resolve, reject) {
+            return new ZalgoPromise((function(resolve, reject) {
                 var name = stringify(id);
                 var el = getElementSafe(id);
                 if (el) return resolve(el);
@@ -2541,13 +2518,13 @@
                 }), 10);
             }));
         }
-        var dom_PopupOpenError = function(_ExtendableError) {
+        var PopupOpenError = function(_ExtendableError) {
             _inheritsLoose(PopupOpenError, _ExtendableError);
             function PopupOpenError() {
                 return _ExtendableError.apply(this, arguments) || this;
             }
             return PopupOpenError;
-        }(util_ExtendableError);
+        }(ExtendableError);
         function popup(url, options) {
             var _options$closeOnUnloa = (options = options || {}).closeOnUnload, closeOnUnload = void 0 === _options$closeOnUnloa ? 1 : _options$closeOnUnloa, _options$name = options.name, name = void 0 === _options$name ? "" : _options$name, width = options.width, height = options.height;
             var top = 0;
@@ -2574,11 +2551,11 @@
             try {
                 win = window.open(url, name, params);
             } catch (err) {
-                throw new dom_PopupOpenError("Can not open popup window - " + (err.stack || err.message));
+                throw new PopupOpenError("Can not open popup window - " + (err.stack || err.message));
             }
             if (isWindowClosed(win)) {
                 var err;
-                throw new dom_PopupOpenError("Can not open popup window - blocked");
+                throw new PopupOpenError("Can not open popup window - blocked");
             }
             closeOnUnload && window.addEventListener("unload", (function() {
                 return win.close();
@@ -2609,11 +2586,11 @@
         }
         var awaitFrameLoadPromises;
         function awaitFrameLoad(frame) {
-            if ((awaitFrameLoadPromises = awaitFrameLoadPromises || new weakmap_CrossDomainSafeWeakMap).has(frame)) {
+            if ((awaitFrameLoadPromises = awaitFrameLoadPromises || new CrossDomainSafeWeakMap).has(frame)) {
                 var _promise = awaitFrameLoadPromises.get(frame);
                 if (_promise) return _promise;
             }
-            var promise = new promise_ZalgoPromise((function(resolve, reject) {
+            var promise = new ZalgoPromise((function(resolve, reject) {
                 frame.addEventListener("load", (function() {
                     !function(frame) {
                         !function() {
@@ -2648,9 +2625,12 @@
                 return loadedFrame.contentWindow;
             }));
         }
+        var getDefaultCreateElementOptions = function() {
+            return {};
+        };
         function createElement(tag, options, container) {
             void 0 === tag && (tag = "div");
-            void 0 === options && (options = {});
+            void 0 === options && (options = getDefaultCreateElementOptions());
             tag = tag.toLowerCase();
             var element = document.createElement(tag);
             options.style && extend(element.style, options.style);
@@ -2668,13 +2648,20 @@
             } else element.innerHTML = options.html;
             return element;
         }
+        var getDefaultIframeOptions = function() {
+            return {};
+        };
+        var getDefaultStringMap = function() {
+            return {};
+        };
         function iframe(options, container) {
-            void 0 === options && (options = {});
-            var style = options.style || {};
+            void 0 === options && (options = getDefaultIframeOptions());
+            var attributes = options.attributes || getDefaultStringMap();
+            var style = options.style || getDefaultStringMap();
             var frame = createElement("iframe", {
                 attributes: _extends({
                     allowTransparency: "true"
-                }, options.attributes || {}),
+                }, attributes),
                 style: _extends({
                     backgroundColor: "transparent",
                     border: "none"
@@ -2716,7 +2703,7 @@
         var ANIMATION_END_EVENTS = [ "animationend", "webkitAnimationEnd", "oAnimationEnd", "MSAnimationEnd" ];
         function animate(element, name, clean, timeout) {
             void 0 === timeout && (timeout = 1e3);
-            return new promise_ZalgoPromise((function(resolve, reject) {
+            return new ZalgoPromise((function(resolve, reject) {
                 var el = getElement(element);
                 if (!el) return resolve();
                 var hasStarted = !1;
@@ -3016,8 +3003,9 @@
             form.submit();
             getBody().removeChild(form);
         }
+        var DEFAULT_SESSION_STORAGE = 12e5;
         function getStorage(_ref) {
-            var name = _ref.name, _ref$lifetime = _ref.lifetime, lifetime = void 0 === _ref$lifetime ? 12e5 : _ref$lifetime;
+            var name = _ref.name, _ref$lifetime = _ref.lifetime, lifetime = void 0 === _ref$lifetime ? DEFAULT_SESSION_STORAGE : _ref$lifetime;
             return inlineMemoize(getStorage, (function() {
                 var STORAGE_KEY = "__" + name + "_storage__";
                 var newStateID = uniqueID();
@@ -3100,6 +3088,11 @@
         function getRandomInteger(range) {
             return Math.floor(Math.random() * range);
         }
+        var THROTTLE_GROUP = {
+            TEST: "test",
+            CONTROL: "control",
+            THROTTLE: "throttle"
+        };
         function experiment(_ref) {
             var name = _ref.name, _ref$sample = _ref.sample, sample = void 0 === _ref$sample ? 50 : _ref$sample, _ref$logTreatment = _ref.logTreatment, logTreatment = void 0 === _ref$logTreatment ? src_util_noop : _ref$logTreatment, _ref$logCheckpoint = _ref.logCheckpoint, logCheckpoint = void 0 === _ref$logCheckpoint ? src_util_noop : _ref$logCheckpoint, _ref$sticky = _ref.sticky;
             var throttle = void 0 === _ref$sticky || _ref$sticky ? function(name) {
@@ -3110,7 +3103,7 @@
                 }));
             }(name) : getRandomInteger(100);
             var group;
-            var treatment = name + "_" + (group = throttle < sample ? "test" : sample >= 50 || sample <= throttle && throttle < 2 * sample ? "control" : "throttle");
+            var treatment = name + "_" + (group = throttle < sample ? THROTTLE_GROUP.TEST : sample >= 50 || sample <= throttle && throttle < 2 * sample ? THROTTLE_GROUP.CONTROL : THROTTLE_GROUP.THROTTLE);
             var started = !1;
             var forced = !1;
             try {
@@ -3118,10 +3111,10 @@
             } catch (err) {}
             var exp = {
                 isEnabled: function() {
-                    return "test" === group || forced;
+                    return group === THROTTLE_GROUP.TEST || forced;
                 },
                 isDisabled: function() {
-                    return "test" !== group && !forced;
+                    return group !== THROTTLE_GROUP.TEST && !forced;
                 },
                 getTreatment: function() {
                     return treatment;
@@ -3168,18 +3161,22 @@
                 }
             };
         }
+        var HEADERS = {
+            CONTENT_TYPE: "content-type",
+            ACCEPT: "accept"
+        };
         var headerBuilders = [];
         function request(_ref) {
             var url = _ref.url, _ref$method = _ref.method, method = void 0 === _ref$method ? "get" : _ref$method, _ref$headers = _ref.headers, headers = void 0 === _ref$headers ? {} : _ref$headers, json = _ref.json, data = _ref.data, body = _ref.body, _ref$win = _ref.win, win = void 0 === _ref$win ? window : _ref$win, _ref$timeout = _ref.timeout, timeout = void 0 === _ref$timeout ? 0 : _ref$timeout;
-            return new promise_ZalgoPromise((function(resolve, reject) {
+            return new ZalgoPromise((function(resolve, reject) {
                 if (json && data || json && body || data && json) throw new Error("Only options.json or options.data or options.body should be passed");
                 var normalizedHeaders = {};
                 for (var _i4 = 0, _Object$keys2 = Object.keys(headers); _i4 < _Object$keys2.length; _i4++) {
                     var _key2 = _Object$keys2[_i4];
                     normalizedHeaders[_key2.toLowerCase()] = headers[_key2];
                 }
-                json ? normalizedHeaders["content-type"] = normalizedHeaders["content-type"] || "application/json" : (data || body) && (normalizedHeaders["content-type"] = normalizedHeaders["content-type"] || "application/x-www-form-urlencoded; charset=utf-8");
-                normalizedHeaders.accept = normalizedHeaders.accept || "application/json";
+                json ? normalizedHeaders[HEADERS.CONTENT_TYPE] = normalizedHeaders[HEADERS.CONTENT_TYPE] || "application/json" : (data || body) && (normalizedHeaders[HEADERS.CONTENT_TYPE] = normalizedHeaders[HEADERS.CONTENT_TYPE] || "application/x-www-form-urlencoded; charset=utf-8");
+                normalizedHeaders[HEADERS.ACCEPT] = normalizedHeaders[HEADERS.ACCEPT] || "application/json";
                 for (var _i6 = 0; _i6 < headerBuilders.length; _i6++) {
                     var builtHeaders = (0, headerBuilders[_i6])();
                     for (var _i8 = 0, _Object$keys4 = Object.keys(builtHeaders); _i8 < _Object$keys4.length; _i8++) {
@@ -3231,14 +3228,14 @@
         function addHeaderBuilder(method) {
             headerBuilders.push(method);
         }
-        var types_TYPES = !0;
+        var TYPES = !0;
         function memoized(target, name, descriptor) {
             descriptor.value = memoize(descriptor.value, {
                 name: name,
                 thisNamespace: !0
             });
         }
-        function decorators_promise(target, name, descriptor) {
+        function promise(target, name, descriptor) {
             descriptor.value = promisify(descriptor.value, {
                 name: name
             });
@@ -3274,7 +3271,7 @@
             var _ref$timeout = (void 0 === _temp ? {} : _temp).timeout, timeout = void 0 === _ref$timeout ? 5e3 : _ref$timeout;
             var expected = [];
             var promises = [];
-            return new promise_ZalgoPromise((function(resolve, reject) {
+            return new ZalgoPromise((function(resolve, reject) {
                 var timer = setTimeout((function() {
                     expected.length && reject(new Error("Expected " + expected[0].name + " to be called in " + timeout + "ms"));
                     promises.length && reject(new Error("Expected " + promises[0].name + " promise to complete in " + timeout + "ms"));
@@ -3297,13 +3294,13 @@
                         if (error) {
                             promises.push({
                                 name: name,
-                                promise: promise_ZalgoPromise.asyncReject(error)
+                                promise: ZalgoPromise.asyncReject(error)
                             });
                             throw error;
                         }
                         promises.push({
                             name: name,
-                            promise: promise_ZalgoPromise.resolve(result)
+                            promise: ZalgoPromise.resolve(result)
                         });
                         return result;
                     };
@@ -3314,7 +3311,7 @@
                         var _fn;
                         promises.push({
                             name: name,
-                            promise: promise_ZalgoPromise.asyncReject(new Error("Expected " + name + " to not be called"))
+                            promise: ZalgoPromise.asyncReject(new Error("Expected " + name + " to not be called"))
                         });
                         for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) args[_key2] = arguments[_key2];
                         return (_fn = fn).call.apply(_fn, [ this ].concat(args));
@@ -3338,7 +3335,7 @@
                         if (error) throw error;
                         promises.push({
                             name: name,
-                            promise: promise_ZalgoPromise.resolve(result).then((function() {
+                            promise: ZalgoPromise.resolve(result).then((function() {
                                 throw new Error("Expected " + name + " to throw an error");
                             }), src_util_noop)
                         });
@@ -3347,20 +3344,20 @@
                 };
                 promises.push({
                     name: "wrapPromise handler",
-                    promise: promise_ZalgoPromise.try((function() {
+                    promise: ZalgoPromise.try((function() {
                         return method({
                             expect: expect,
                             avoid: avoid,
                             expectError: expectError,
                             error: avoid,
                             wait: function() {
-                                return promise_ZalgoPromise.resolve();
+                                return ZalgoPromise.resolve();
                             }
                         });
                     }))
                 });
                 (function wait() {
-                    return promise_ZalgoPromise.try((function() {
+                    return ZalgoPromise.try((function() {
                         if (promises.length) {
                             var prom = promises[0];
                             return prom.promise.finally((function() {
@@ -3368,12 +3365,13 @@
                             })).then(wait);
                         }
                     })).then((function() {
-                        if (expected.length) return promise_ZalgoPromise.delay(10).then(wait);
+                        if (expected.length) return ZalgoPromise.delay(10).then(wait);
                     }));
                 })().finally((function() {
                     clearTimeout(timer);
                 })).then(resolve, reject);
             }));
         }
-    } ]);
+        return __webpack_exports__;
+    }();
 }));

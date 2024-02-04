@@ -2,9 +2,27 @@ import _inheritsLoose from "@babel/runtime/helpers/esm/inheritsLoose";
 import _extends from "@babel/runtime/helpers/esm/extends";
 /* eslint max-lines: off */
 import { ZalgoPromise } from "@krakenjs/zalgo-promise/src";
-import { linkFrameWindow, isWindowClosed, assertSameDomain } from "@krakenjs/cross-domain-utils/src";
+import {
+  linkFrameWindow,
+  isWindowClosed,
+  assertSameDomain,
+} from "@krakenjs/cross-domain-utils/src";
 import { WeakMap } from "@krakenjs/cross-domain-safe-weakmap/src";
-import { isElement, inlineMemoize, memoize, noop, stringify, capitalizeFirstLetter, once, extend, safeInterval, uniqueID, arrayFrom, ExtendableError, strHashStr } from "./util";
+import {
+  isElement,
+  inlineMemoize,
+  memoize,
+  noop,
+  stringify,
+  capitalizeFirstLetter,
+  once,
+  extend,
+  safeInterval,
+  uniqueID,
+  arrayFrom,
+  ExtendableError,
+  strHashStr,
+} from "./util";
 import { isDevice } from "./device";
 import { KEY_CODES, ATTRIBUTES, UID_HASH_LENGTH } from "./constants";
 export function getBody() {
@@ -65,23 +83,31 @@ export function waitForDocumentBody() {
   });
 }
 export function parseQuery(queryString) {
-  return inlineMemoize(parseQuery, function () {
-    var params = {};
-    if (!queryString) {
-      return params;
-    }
-    if (queryString.indexOf("=") === -1) {
-      return params;
-    }
-    for (var _i2 = 0, _queryString$split2 = queryString.split("&"); _i2 < _queryString$split2.length; _i2++) {
-      var pair = _queryString$split2[_i2];
-      pair = pair.split("=");
-      if (pair[0] && pair[1]) {
-        params[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1]);
+  return inlineMemoize(
+    parseQuery,
+    function () {
+      var params = {};
+      if (!queryString) {
+        return params;
       }
-    }
-    return params;
-  }, [queryString]);
+      if (queryString.indexOf("=") === -1) {
+        return params;
+      }
+      for (
+        var _i2 = 0, _queryString$split2 = queryString.split("&");
+        _i2 < _queryString$split2.length;
+        _i2++
+      ) {
+        var pair = _queryString$split2[_i2];
+        pair = pair.split("=");
+        if (pair[0] && pair[1]) {
+          params[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1]);
+        }
+      }
+      return params;
+    },
+    [queryString]
+  );
 }
 export function getQueryParam(name) {
   return parseQuery(window.location.search.slice(1))[name];
@@ -102,15 +128,18 @@ export function formatQuery(obj) {
   if (obj === void 0) {
     obj = {};
   }
-  return Object.keys(obj).filter(function (key) {
-    return typeof obj[key] === "string" || typeof obj[key] === "boolean";
-  }).map(function (key) {
-    var val = obj[key];
-    if (typeof val !== "string" && typeof val !== "boolean") {
-      throw new TypeError("Invalid type for query");
-    }
-    return urlEncode(key) + "=" + urlEncode(val.toString());
-  }).join("&");
+  return Object.keys(obj)
+    .filter(function (key) {
+      return typeof obj[key] === "string" || typeof obj[key] === "boolean";
+    })
+    .map(function (key) {
+      var val = obj[key];
+      if (typeof val !== "string" && typeof val !== "boolean") {
+        throw new TypeError("Invalid type for query");
+      }
+      return urlEncode(key) + "=" + urlEncode(val.toString());
+    })
+    .join("&");
 }
 export function extendQuery(originalQuery, props) {
   if (props === void 0) {
@@ -162,12 +191,24 @@ export function hasMetaViewPort() {
   return true;
 }
 export function isElementVisible(el) {
-  return Boolean(el.offsetWidth || el.offsetHeight || el.getClientRects().length);
+  return Boolean(
+    el.offsetWidth || el.offsetHeight || el.getClientRects().length
+  );
 }
 export function getPerformance() {
   return inlineMemoize(getPerformance, function () {
     var performance = window.performance;
-    if (performance && performance.now && performance.timing && performance.timing.connectEnd && performance.timing.navigationStart && Math.abs(performance.now() - Date.now()) > 1000 && performance.now() - (performance.timing.connectEnd - performance.timing.navigationStart) > 0) {
+    if (
+      performance &&
+      performance.now &&
+      performance.timing &&
+      performance.timing.connectEnd &&
+      performance.timing.navigationStart &&
+      Math.abs(performance.now() - Date.now()) > 1000 &&
+      performance.now() -
+        (performance.timing.connectEnd - performance.timing.navigationStart) >
+        0
+    ) {
       return performance;
     }
   });
@@ -191,7 +232,14 @@ export function htmlEncode(html) {
   if (html === void 0) {
     html = "";
   }
-  return html.toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;").replace(/\//g, "&#x2F;");
+  return html
+    .toString()
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;")
+    .replace(/\//g, "&#x2F;");
 }
 export function isBrowser() {
   return typeof window !== "undefined" && window.location !== undefined;
@@ -213,15 +261,16 @@ export function querySelectorAll(selector, doc) {
  */
 export function onClick(element, handler) {
   element.addEventListener("touchstart", noop, {
-    passive: true
+    passive: true,
   });
   element.addEventListener("click", handler);
   element.addEventListener("keypress", function (event) {
     if (
-    // $FlowFixMe
-    event.keyCode === KEY_CODES.ENTER ||
-    // $FlowFixMe
-    event.keyCode === KEY_CODES.SPACE) {
+      // $FlowFixMe
+      event.keyCode === KEY_CODES.ENTER ||
+      // $FlowFixMe
+      event.keyCode === KEY_CODES.SPACE
+    ) {
       return handler(event);
     }
   });
@@ -232,24 +281,30 @@ export function getScript(_ref) {
     path = _ref.path,
     _ref$reverse = _ref.reverse,
     reverse = _ref$reverse === void 0 ? false : _ref$reverse;
-  return inlineMemoize(getScript, function () {
-    var url = "" + host + path;
-    // $FlowFixMe[method-unbinding]
-    var scripts = Array.prototype.slice.call(document.getElementsByTagName("script"));
-    if (reverse) {
-      scripts.reverse();
-    }
-    for (var _i4 = 0; _i4 < scripts.length; _i4++) {
-      var script = scripts[_i4];
-      if (!script.src) {
-        continue;
+  return inlineMemoize(
+    getScript,
+    function () {
+      var url = "" + host + path;
+      // $FlowFixMe[method-unbinding]
+      var scripts = Array.prototype.slice.call(
+        document.getElementsByTagName("script")
+      );
+      if (reverse) {
+        scripts.reverse();
       }
-      var src = script.src.replace(/^https?:\/\//, "").split("?")[0];
-      if (src === url) {
-        return script;
+      for (var _i4 = 0; _i4 < scripts.length; _i4++) {
+        var script = scripts[_i4];
+        if (!script.src) {
+          continue;
+        }
+        var src = script.src.replace(/^https?:\/\//, "").split("?")[0];
+        if (src === url) {
+          return script;
+        }
       }
-    }
-  }, [path]);
+    },
+    [path]
+  );
 }
 export function isLocalStorageEnabled() {
   return inlineMemoize(isLocalStorageEnabled, function () {
@@ -281,23 +336,25 @@ export function getBrowserLocales() {
   if (nav.userLanguage) {
     locales.push(nav.userLanguage);
   }
-  return locales.map(function (locale) {
-    if (locale && locale.match(/^[a-z]{2}[-_][A-Z]{2}$/)) {
-      var _locale$split = locale.split(/[-_]/),
-        lang = _locale$split[0],
-        country = _locale$split[1];
-      return {
-        country: country,
-        lang: lang
-      };
-    }
-    if (locale && locale.match(/^[a-z]{2}$/)) {
-      return {
-        lang: locale
-      };
-    }
-    return null;
-  }).filter(Boolean);
+  return locales
+    .map(function (locale) {
+      if (locale && locale.match(/^[a-z]{2}[-_][A-Z]{2}$/)) {
+        var _locale$split = locale.split(/[-_]/),
+          lang = _locale$split[0],
+          country = _locale$split[1];
+        return {
+          country: country,
+          lang: lang,
+        };
+      }
+      if (locale && locale.match(/^[a-z]{2}$/)) {
+        return {
+          lang: locale,
+        };
+      }
+      return null;
+    })
+    .filter(Boolean);
 }
 export function appendChild(container, child) {
   container.appendChild(child);
@@ -332,7 +389,9 @@ export function elementReady(id) {
       return resolve(el);
     }
     if (isDocumentReady()) {
-      return reject(new Error("Document is ready and element " + name + " does not exist"));
+      return reject(
+        new Error("Document is ready and element " + name + " does not exist")
+      );
     }
     var interval = setInterval(function () {
       el = getElementSafe(id);
@@ -343,26 +402,29 @@ export function elementReady(id) {
       }
       if (isDocumentReady()) {
         clearInterval(interval);
-        return reject(new Error("Document is ready and element " + name + " does not exist"));
+        return reject(
+          new Error("Document is ready and element " + name + " does not exist")
+        );
       }
     }, 10);
   });
 }
 
 // eslint-disable-next-line unicorn/custom-error-definition
-export var PopupOpenError = /*#__PURE__*/function (_ExtendableError) {
+export var PopupOpenError = /*#__PURE__*/ (function (_ExtendableError) {
   _inheritsLoose(PopupOpenError, _ExtendableError);
   function PopupOpenError() {
     return _ExtendableError.apply(this, arguments) || this;
   }
   return PopupOpenError;
-}(ExtendableError);
+})(ExtendableError);
 export function popup(url, options) {
   // $FlowFixMe
   options = options || {};
   var _options = options,
     _options$closeOnUnloa = _options.closeOnUnload,
-    closeOnUnload = _options$closeOnUnloa === void 0 ? 1 : _options$closeOnUnloa,
+    closeOnUnload =
+      _options$closeOnUnloa === void 0 ? 1 : _options$closeOnUnloa,
     _options$name = _options.name,
     name = _options$name === void 0 ? "" : _options$name,
     width = _options.width,
@@ -387,31 +449,38 @@ export function popup(url, options) {
   delete options.name;
   if (width && height) {
     // $FlowFixMe
-    options = _extends({
-      top: top,
-      left: left,
-      width: width,
-      height: height,
-      status: 1,
-      toolbar: 0,
-      menubar: 0,
-      resizable: 1,
-      scrollbars: 1
-    }, options);
+    options = _extends(
+      {
+        top: top,
+        left: left,
+        width: width,
+        height: height,
+        status: 1,
+        toolbar: 0,
+        menubar: 0,
+        resizable: 1,
+        scrollbars: 1,
+      },
+      options
+    );
   }
   var params = Object.keys(options)
-  // eslint-disable-next-line array-callback-return
-  .map(function (key) {
-    // $FlowFixMe
-    if (options[key] !== null && options[key] !== undefined) {
-      return key + "=" + stringify(options[key]);
-    }
-  }).filter(Boolean).join(",");
+    // eslint-disable-next-line array-callback-return
+    .map(function (key) {
+      // $FlowFixMe
+      if (options[key] !== null && options[key] !== undefined) {
+        return key + "=" + stringify(options[key]);
+      }
+    })
+    .filter(Boolean)
+    .join(",");
   var win;
   try {
     win = window.open(url, name, params);
   } catch (err) {
-    throw new PopupOpenError("Can not open popup window - " + (err.stack || err.message));
+    throw new PopupOpenError(
+      "Can not open popup window - " + (err.stack || err.message)
+    );
   }
   if (isWindowClosed(win)) {
     var err = new PopupOpenError("Can not open popup window - blocked");
@@ -431,7 +500,10 @@ export function writeToWindow(win, html) {
     win.document.close();
   } catch (err) {
     try {
-      win.location = "javascript: document.open(); document.write(" + JSON.stringify(html) + "); document.close();";
+      win.location =
+        "javascript: document.open(); document.write(" +
+        JSON.stringify(html) +
+        "); document.close();";
     } catch (err2) {
       // pass
     }
@@ -443,11 +515,19 @@ export function writeElementToWindow(win, el) {
     throw new Error("Expected element to be html, got " + tag);
   }
   var documentElement = win.document.documentElement;
-  for (var _i6 = 0, _arrayFrom2 = arrayFrom(documentElement.children); _i6 < _arrayFrom2.length; _i6++) {
+  for (
+    var _i6 = 0, _arrayFrom2 = arrayFrom(documentElement.children);
+    _i6 < _arrayFrom2.length;
+    _i6++
+  ) {
     var child = _arrayFrom2[_i6];
     documentElement.removeChild(child);
   }
-  for (var _i8 = 0, _arrayFrom4 = arrayFrom(el.children); _i8 < _arrayFrom4.length; _i8++) {
+  for (
+    var _i8 = 0, _arrayFrom4 = arrayFrom(el.children);
+    _i8 < _arrayFrom4.length;
+    _i8++
+  ) {
     var _child = _arrayFrom4[_i8];
     documentElement.appendChild(_child);
   }
@@ -520,7 +600,11 @@ export function createElement(tag, options, container) {
     element.setAttribute("id", options.id);
   }
   if (options.attributes) {
-    for (var _i10 = 0, _Object$keys2 = Object.keys(options.attributes); _i10 < _Object$keys2.length; _i10++) {
+    for (
+      var _i10 = 0, _Object$keys2 = Object.keys(options.attributes);
+      _i10 < _Object$keys2.length;
+      _i10++
+    ) {
       var key = _Object$keys2[_i10];
       element.setAttribute(key, options.attributes[key]);
     }
@@ -535,7 +619,9 @@ export function createElement(tag, options, container) {
     if (tag === "iframe") {
       // $FlowFixMe
       if (!container || !element.contentWindow) {
-        throw new Error("Iframe html can not be written unless container provided and iframe in DOM");
+        throw new Error(
+          "Iframe html can not be written unless container provided and iframe in DOM"
+        );
       }
 
       // $FlowFixMe
@@ -562,20 +648,26 @@ export function iframe(options, container) {
   var style = options.style || getDefaultStringMap();
 
   // $FlowFixMe
-  var newAttributes = _extends({
-    allowTransparency: "true"
-  }, attributes);
+  var newAttributes = _extends(
+    {
+      allowTransparency: "true",
+    },
+    attributes
+  );
 
   // $FlowFixMe
-  var newStyle = _extends({
-    backgroundColor: "transparent",
-    border: "none"
-  }, style);
+  var newStyle = _extends(
+    {
+      backgroundColor: "transparent",
+      border: "none",
+    },
+    style
+  );
   var frame = createElement("iframe", {
     attributes: newAttributes,
     style: newStyle,
     html: options.html,
-    class: options.class
+    class: options.class,
   });
   var isIE = window.navigator.userAgent.match(/MSIE|Edge/i);
   if (!frame.hasAttribute("id")) {
@@ -600,7 +692,7 @@ export function addEventListener(obj, event, handler) {
   return {
     cancel: function cancel() {
       obj.removeEventListener(event, handler);
-    }
+    },
   };
 }
 export function bindEvents(element, eventNames, handler) {
@@ -615,7 +707,7 @@ export function bindEvents(element, eventNames, handler) {
         var _eventName = eventNames[_i14];
         element.removeEventListener(_eventName, handler);
       }
-    })
+    }),
   };
 }
 var VENDOR_PREFIXES = ["webkit", "moz", "ms", "o"];
@@ -629,8 +721,18 @@ export function setVendorCSS(element, name, value) {
     element.style["" + prefix + capitalizedName] = value;
   }
 }
-var ANIMATION_START_EVENTS = ["animationstart", "webkitAnimationStart", "oAnimationStart", "MSAnimationStart"];
-var ANIMATION_END_EVENTS = ["animationend", "webkitAnimationEnd", "oAnimationEnd", "MSAnimationEnd"];
+var ANIMATION_START_EVENTS = [
+  "animationstart",
+  "webkitAnimationStart",
+  "oAnimationStart",
+  "MSAnimationStart",
+];
+var ANIMATION_END_EVENTS = [
+  "animationend",
+  "webkitAnimationEnd",
+  "oAnimationEnd",
+  "MSAnimationEnd",
+];
 export function animate(element, name, clean, timeout) {
   if (timeout === void 0) {
     timeout = 1000;
@@ -676,9 +778,16 @@ export function animate(element, name, clean, timeout) {
       }
       cleanUp();
       if (
-      // $FlowFixMe
-      typeof event.animationName === "string" && event.animationName !== name) {
-        return reject("Expected animation name to be " + name + ", found " + event.animationName);
+        // $FlowFixMe
+        typeof event.animationName === "string" &&
+        event.animationName !== name
+      ) {
+        return reject(
+          "Expected animation name to be " +
+            name +
+            ", found " +
+            event.animationName
+        );
       }
       return resolve();
     });
@@ -728,7 +837,13 @@ export function removeClass(element, name) {
   element.classList.remove(name);
 }
 export function isElementClosed(el) {
-  if (!el || !el.parentNode || !el.ownerDocument || !el.ownerDocument.documentElement || !el.ownerDocument.documentElement.contains(el)) {
+  if (
+    !el ||
+    !el.parentNode ||
+    !el.ownerDocument ||
+    !el.ownerDocument.documentElement ||
+    !el.ownerDocument.documentElement.contains(el)
+  ) {
     return true;
   }
   return false;
@@ -768,7 +883,7 @@ export function watchElementForClose(element, handler) {
   if (isElementClosed(element)) {
     elementClosed();
     return {
-      cancel: cancel
+      cancel: cancel,
     };
   }
 
@@ -783,7 +898,7 @@ export function watchElementForClose(element, handler) {
         }
       });
       mutationObserver.observe(mutationElement, {
-        childList: true
+        childList: true,
       });
       mutationObservers.push(mutationObserver);
       mutationElement = mutationElement.parentElement;
@@ -810,14 +925,18 @@ export function watchElementForClose(element, handler) {
   };
   interval = safeInterval(check, 1000);
   return {
-    cancel: cancel
+    cancel: cancel,
   };
 }
 export function fixScripts(el, doc) {
   if (doc === void 0) {
     doc = window.document;
   }
-  for (var _i20 = 0, _querySelectorAll2 = querySelectorAll("script", el); _i20 < _querySelectorAll2.length; _i20++) {
+  for (
+    var _i20 = 0, _querySelectorAll2 = querySelectorAll("script", el);
+    _i20 < _querySelectorAll2.length;
+    _i20++
+  ) {
     var script = _querySelectorAll2[_i20];
     var parentNode = script.parentNode;
     if (!parentNode) {
@@ -843,7 +962,7 @@ export function onResize(el, handler, _temp) {
   var canceled = false;
   handler({
     width: currentWidth,
-    height: currentHeight
+    height: currentHeight,
   });
   var check = function check() {
     if (canceled || !isElementVisible(el)) {
@@ -851,10 +970,13 @@ export function onResize(el, handler, _temp) {
     }
     var newWidth = el.offsetWidth;
     var newHeight = el.offsetHeight;
-    if (width && newWidth !== currentWidth || height && newHeight !== currentHeight) {
+    if (
+      (width && newWidth !== currentWidth) ||
+      (height && newHeight !== currentHeight)
+    ) {
       handler({
         width: newWidth,
-        height: newHeight
+        height: newHeight,
       });
     }
     currentWidth = newWidth;
@@ -873,7 +995,7 @@ export function onResize(el, handler, _temp) {
       attributes: true,
       childList: true,
       subtree: true,
-      characterData: false
+      characterData: false,
     });
     timeout = safeInterval(check, interval * 10);
   } else {
@@ -885,7 +1007,7 @@ export function onResize(el, handler, _temp) {
       observer.disconnect();
       window.removeEventListener("resize", check);
       timeout.cancel();
-    }
+    },
   };
 }
 export function getResourceLoadTime(url) {
@@ -901,7 +1023,12 @@ export function getResourceLoadTime(url) {
   var entries = performance.getEntries();
   for (var i = 0; i < entries.length; i++) {
     var entry = entries[i];
-    if (entry && entry.name && entry.name.indexOf(url) === 0 && typeof entry.duration === "number") {
+    if (
+      entry &&
+      entry.name &&
+      entry.name.indexOf(url) === 0 &&
+      typeof entry.duration === "number"
+    ) {
       return Math.floor(entry.duration);
     }
   }
@@ -977,7 +1104,14 @@ function inferCurrentScript() {
     }
 
     // $FlowFixMe[method-unbinding]
-    for (var _i22 = 0, _Array$prototype$slic2 = Array.prototype.slice.call(document.getElementsByTagName("script")).reverse(); _i22 < _Array$prototype$slic2.length; _i22++) {
+    for (
+      var _i22 = 0,
+        _Array$prototype$slic2 = Array.prototype.slice
+          .call(document.getElementsByTagName("script"))
+          .reverse();
+      _i22 < _Array$prototype$slic2.length;
+      _i22++
+    ) {
       var script = _Array$prototype$slic2[_i22];
       if (script.src && script.src === scriptLocation) {
         return script;
@@ -988,8 +1122,8 @@ function inferCurrentScript() {
   }
 }
 var currentScript =
-// eslint-disable-next-line compat/compat
-typeof document !== "undefined" ? document.currentScript : null;
+  // eslint-disable-next-line compat/compat
+  typeof document !== "undefined" ? document.currentScript : null;
 export var getCurrentScript = memoize(function () {
   if (currentScript) {
     return currentScript;
@@ -1022,7 +1156,7 @@ export var getCurrentScriptUID = memoize(function () {
       dataset = _script.dataset;
     var stringToHash = JSON.stringify({
       src: src,
-      dataset: dataset
+      dataset: dataset,
     });
     var hashedString = strHashStr(stringToHash);
     var hashResult = hashedString.slice(hashedString.length - UID_HASH_LENGTH);
@@ -1045,12 +1179,19 @@ export function submitForm(_ref3) {
   form.setAttribute("action", url);
   form.style.display = "none";
   if (body) {
-    for (var _i24 = 0, _Object$keys4 = Object.keys(body); _i24 < _Object$keys4.length; _i24++) {
+    for (
+      var _i24 = 0, _Object$keys4 = Object.keys(body);
+      _i24 < _Object$keys4.length;
+      _i24++
+    ) {
       var _body$key;
       var key = _Object$keys4[_i24];
       var input = document.createElement("input");
       input.setAttribute("name", key);
-      input.setAttribute("value", (_body$key = body[key]) == null ? void 0 : _body$key.toString());
+      input.setAttribute(
+        "value",
+        (_body$key = body[key]) == null ? void 0 : _body$key.toString()
+      );
       form.appendChild(input);
     }
   }

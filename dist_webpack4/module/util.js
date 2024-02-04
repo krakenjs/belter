@@ -10,7 +10,13 @@ export function isElement(element) {
   try {
     if (element instanceof window.Element) {
       passed = true;
-    } else if (element !== null && typeof element === "object" && element.nodeType === 1 && typeof element.style === "object" && typeof element.ownerDocument === "object") {
+    } else if (
+      element !== null &&
+      typeof element === "object" &&
+      element.nodeType === 1 &&
+      typeof element.style === "object" &&
+      typeof element.ownerDocument === "object"
+    ) {
       passed = true;
     }
   } catch (_) {
@@ -33,9 +39,11 @@ export function setFunctionName(fn, name) {
 }
 export function base64encode(str) {
   if (typeof btoa === "function") {
-    return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function (m, p1) {
-      return String.fromCharCode(parseInt(p1, 16));
-    })).replace(/[=]/g, "");
+    return btoa(
+      encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function (m, p1) {
+        return String.fromCharCode(parseInt(p1, 16));
+      })
+    ).replace(/[=]/g, "");
   }
   if (typeof Buffer !== "undefined") {
     return Buffer.from(str, "utf8").toString("base64").replace(/[=]/g, "");
@@ -45,11 +53,14 @@ export function base64encode(str) {
 export function base64decode(str) {
   if (typeof atob === "function") {
     return decodeURIComponent(
-    // $FlowFixMe[method-unbinding]
-    Array.prototype.map.call(atob(str), function (c) {
-      // eslint-disable-next-line prefer-template
-      return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(""));
+      // $FlowFixMe[method-unbinding]
+      Array.prototype.map
+        .call(atob(str), function (c) {
+          // eslint-disable-next-line prefer-template
+          return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+        })
+        .join("")
+    );
   }
   if (typeof Buffer !== "undefined") {
     return Buffer.from(str, "base64").toString("utf8");
@@ -61,7 +72,11 @@ export function uniqueID() {
   var randomID = "xxxxxxxxxx".replace(/./g, function () {
     return chars.charAt(Math.floor(Math.random() * chars.length));
   });
-  var timeID = base64encode(new Date().toISOString().slice(11, 19).replace("T", ".")).replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
+  var timeID = base64encode(
+    new Date().toISOString().slice(11, 19).replace("T", ".")
+  )
+    .replace(/[^a-zA-Z0-9]/g, "")
+    .toLowerCase();
   return "uid_" + randomID + "_" + timeID;
 }
 export function getGlobal() {
@@ -79,7 +94,11 @@ export function getGlobal() {
 var objectIDs;
 export function getObjectID(obj) {
   objectIDs = objectIDs || new WeakMap();
-  if (obj === null || obj === undefined || typeof obj !== "object" && typeof obj !== "function") {
+  if (
+    obj === null ||
+    obj === undefined ||
+    (typeof obj !== "object" && typeof obj !== "function")
+  ) {
     throw new Error("Invalid object");
   }
   var uid = objectIDs.get(obj);
@@ -92,21 +111,24 @@ export function getObjectID(obj) {
 function serializeArgs(args) {
   try {
     // $FlowFixMe[method-unbinding]
-    return JSON.stringify(Array.prototype.slice.call(args), function (subkey, val) {
-      // Treat each distinct function as unique for purposes of memoization
-      // e.g. even if someFunction.stringify() is the same, we may use a different memoize cache
-      // if the actual function is different.
-      if (typeof val === "function") {
-        return "memoize[" + getObjectID(val) + "]";
-      }
+    return JSON.stringify(
+      Array.prototype.slice.call(args),
+      function (subkey, val) {
+        // Treat each distinct function as unique for purposes of memoization
+        // e.g. even if someFunction.stringify() is the same, we may use a different memoize cache
+        // if the actual function is different.
+        if (typeof val === "function") {
+          return "memoize[" + getObjectID(val) + "]";
+        }
 
-      // By default JSON.stringify(domElement) returns '{}'. This ensures that stays true even for non-standard
-      // elements (e.g. React-rendered dom elements) with custom properties
-      if (isElement(val)) {
-        return {};
+        // By default JSON.stringify(domElement) returns '{}'. This ensures that stays true even for non-standard
+        // elements (e.g. React-rendered dom elements) with custom properties
+        if (isElement(val)) {
+          return {};
+        }
+        return val;
       }
-      return val;
-    });
+    );
   } catch (err) {
     throw new Error("Arguments not serializable -- can not be used to memoize");
   }
@@ -127,14 +149,19 @@ export function memoize(method, options) {
   }
   var _options = options,
     _options$thisNamespac = _options.thisNamespace,
-    thisNamespace = _options$thisNamespac === void 0 ? false : _options$thisNamespac,
+    thisNamespace =
+      _options$thisNamespac === void 0 ? false : _options$thisNamespac,
     cacheTime = _options.time;
   var simpleCache;
   var thisCache;
   var memoizeIndex = memoizeGlobalIndex;
   memoizeGlobalIndex += 1;
   var memoizedFunction = function memoizedFunction() {
-    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+    for (
+      var _len = arguments.length, args = new Array(_len), _key = 0;
+      _key < _len;
+      _key++
+    ) {
       args[_key] = arguments[_key];
     }
     if (memoizeIndex < memoizeGlobalIndexValidFrom) {
@@ -168,7 +195,7 @@ export function memoize(method, options) {
     var value = method.apply(this, arguments);
     cache[cacheKey] = {
       time: time,
-      value: value
+      value: value,
     };
     return value;
   };
@@ -179,7 +206,10 @@ export function memoize(method, options) {
 
   // $FlowFixMe
   var result = memoizedFunction;
-  return setFunctionName(result, (options.name || getFunctionName(method)) + "::memoized");
+  return setFunctionName(
+    result,
+    (options.name || getFunctionName(method)) + "::memoized"
+  );
 }
 memoize.clear = function () {
   memoizeGlobalIndexValidFrom = memoizeGlobalIndex;
@@ -189,13 +219,18 @@ export function promiseIdentity(item) {
   return ZalgoPromise.resolve(item);
 }
 export function memoizePromise(
-// eslint-disable-next-line flowtype/no-weak-types
-method) {
+  // eslint-disable-next-line flowtype/no-weak-types
+  method
+) {
   var cache = {};
   function memoizedPromiseFunction() {
     var _arguments = arguments,
       _this = this;
-    for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+    for (
+      var _len2 = arguments.length, args = new Array(_len2), _key2 = 0;
+      _key2 < _len2;
+      _key2++
+    ) {
       args[_key2] = arguments[_key2];
     }
     var key = serializeArgs(args);
@@ -212,16 +247,20 @@ method) {
   memoizedPromiseFunction.reset = function () {
     cache = {};
   };
-  return setFunctionName(memoizedPromiseFunction, getFunctionName(method) + "::promiseMemoized");
+  return setFunctionName(
+    memoizedPromiseFunction,
+    getFunctionName(method) + "::promiseMemoized"
+  );
 }
 var getDefaultPromisifyOptions = function getDefaultPromisifyOptions() {
   // $FlowFixMe
   return {};
 };
 export function promisify(
-// eslint-disable-next-line flowtype/no-weak-types
-method, options
-// eslint-disable-next-line flowtype/no-weak-types
+  // eslint-disable-next-line flowtype/no-weak-types
+  method,
+  options
+  // eslint-disable-next-line flowtype/no-weak-types
 ) {
   if (options === void 0) {
     options = getDefaultPromisifyOptions();
@@ -232,27 +271,31 @@ method, options
   if (options.name) {
     promisifiedFunction.displayName = options.name + ":promisified";
   }
-  return setFunctionName(promisifiedFunction, getFunctionName(method) + "::promisified");
+  return setFunctionName(
+    promisifiedFunction,
+    getFunctionName(method) + "::promisified"
+  );
 }
 export function inlineMemoize(
-// eslint-disable-next-line flowtype/no-weak-types
-method,
-// eslint-disable-next-line flowtype/no-weak-types
-logic,
-// eslint-disable-next-line flowtype/no-weak-types
-args) {
+  // eslint-disable-next-line flowtype/no-weak-types
+  method,
+  // eslint-disable-next-line flowtype/no-weak-types
+  logic,
+  // eslint-disable-next-line flowtype/no-weak-types
+  args
+) {
   if (args === void 0) {
     args = [];
   }
   // $FlowFixMe
-  var cache = method.__inline_memoize_cache__ =
-  // $FlowFixMe
-  method.__inline_memoize_cache__ || {};
+  var cache = (method.__inline_memoize_cache__ =
+    // $FlowFixMe
+    method.__inline_memoize_cache__ || {});
   var key = serializeArgs(args);
   if (cache.hasOwnProperty(key)) {
     return cache[key];
   }
-  var result = cache[key] = logic.apply(void 0, args);
+  var result = (cache[key] = logic.apply(void 0, args));
   return result;
 }
 
@@ -273,7 +316,7 @@ export function once(method) {
 export function hashStr(str) {
   var hash = 0;
   for (var i = 0; i < str.length; i++) {
-    hash += str[i].charCodeAt(0) * Math.pow(i % 10 + 1, 5);
+    hash += str[i].charCodeAt(0) * Math.pow((i % 10) + 1, 5);
   }
   return Math.floor(Math.pow(Math.sqrt(hash), 5));
 }
@@ -284,7 +327,7 @@ export function strHashStr(str) {
     if (str[i + 1]) {
       total += str[i + 1].charCodeAt(0) * (i - 1);
     }
-    hash += String.fromCharCode(97 + Math.abs(total) % 26);
+    hash += String.fromCharCode(97 + (Math.abs(total) % 26));
   }
   return hash;
 }
@@ -311,7 +354,7 @@ export function awaitKey(obj, key) {
       },
       get: function get() {
         return value;
-      }
+      },
     });
   });
 }
@@ -353,12 +396,15 @@ export function stringifyError(err, level) {
     // $FlowFixMe[method-unbinding]
     return Object.prototype.toString.call(err);
   } catch (newErr) {
-    return "Error while stringifying error: " + stringifyError(newErr, level + 1);
+    return (
+      "Error while stringifying error: " + stringifyError(newErr, level + 1)
+    );
   }
 }
 export function stringifyErrorMessage(err) {
   // $FlowFixMe[method-unbinding]
-  var defaultMessage = "<unknown error: " + Object.prototype.toString.call(err) + ">";
+  var defaultMessage =
+    "<unknown error: " + Object.prototype.toString.call(err) + ">";
   if (!err) {
     return defaultMessage;
   }
@@ -399,7 +445,7 @@ export function patchMethod(obj, name, handler) {
       original: original,
       callOriginal: function callOriginal() {
         return original.apply(_this2, _arguments2);
-      }
+      },
     });
   };
 }
@@ -437,7 +483,7 @@ export function values(obj) {
 // eslint-disable-next-line no-undef
 export var memoizedValues = memoize(values);
 export function perc(pixels, percentage) {
-  return Math.round(pixels * percentage / 100);
+  return Math.round((pixels * percentage) / 100);
 }
 export function min() {
   return Math.min.apply(Math, arguments);
@@ -497,19 +543,25 @@ export function promiseDebounce(method, delay) {
     if (timeout) {
       clearTimeout(timeout);
     }
-    var localPromise = promise = promise || new ZalgoPromise();
+    var localPromise = (promise = promise || new ZalgoPromise());
     timeout = setTimeout(function () {
       promise = null;
       timeout = null;
-      ZalgoPromise.try(method).then(function (result) {
-        localPromise.resolve(result);
-      }, function (err) {
-        localPromise.reject(err);
-      });
+      ZalgoPromise.try(method).then(
+        function (result) {
+          localPromise.resolve(result);
+        },
+        function (err) {
+          localPromise.reject(err);
+        }
+      );
     }, delay);
     return localPromise;
   };
-  return setFunctionName(promiseDebounced, getFunctionName(method) + "::promiseDebounced");
+  return setFunctionName(
+    promiseDebounced,
+    getFunctionName(method) + "::promiseDebounced"
+  );
 }
 export function safeInterval(method, time) {
   var timeout;
@@ -523,7 +575,7 @@ export function safeInterval(method, time) {
   return {
     cancel: function cancel() {
       clearTimeout(timeout);
-    }
+    },
   };
 }
 export function isInteger(str) {
@@ -557,11 +609,21 @@ export function dotify(obj, prefix, newobj) {
   }
   prefix = prefix ? prefix + "." : prefix;
   for (var key in obj) {
-    if (!obj.hasOwnProperty(key) || obj[key] === undefined || obj[key] === null || typeof obj[key] === "function") {
+    if (
+      !obj.hasOwnProperty(key) ||
+      obj[key] === undefined ||
+      obj[key] === null ||
+      typeof obj[key] === "function"
+    ) {
       continue;
-    } else if (obj[key] && Array.isArray(obj[key]) && obj[key].length && obj[key].every(function (val) {
-      return typeof val !== "object";
-    })) {
+    } else if (
+      obj[key] &&
+      Array.isArray(obj[key]) &&
+      obj[key].length &&
+      obj[key].every(function (val) {
+        return typeof val !== "object";
+      })
+    ) {
       newobj["" + prefix + key + "[]"] = obj[key].join(",");
     } else if (obj[key] && typeof obj[key] === "object") {
       newobj = dotify(obj[key], "" + prefix + key, newobj);
@@ -590,7 +652,11 @@ export function undotify(obj) {
       var part = parts[i];
       var isLast = i + 1 === parts.length;
       var isIndex = !isLast && isInteger(parts[i + 1]);
-      if (part === "constructor" || part === "prototype" || part === "__proto__") {
+      if (
+        part === "constructor" ||
+        part === "prototype" ||
+        part === "__proto__"
+      ) {
         throw new Error("Disallowed key: " + part);
       }
       if (isLast) {
@@ -609,7 +675,7 @@ export function eventEmitter() {
   var handlers = {};
   var emitter = {
     on: function on(eventName, handler) {
-      var handlerList = handlers[eventName] = handlers[eventName] || [];
+      var handlerList = (handlers[eventName] = handlers[eventName] || []);
       handlerList.push(handler);
       var cancelled = false;
       return {
@@ -618,7 +684,7 @@ export function eventEmitter() {
             cancelled = true;
             handlerList.splice(handlerList.indexOf(handler), 1);
           }
-        }
+        },
       };
     },
     once: function once(eventName, handler) {
@@ -629,7 +695,13 @@ export function eventEmitter() {
       return listener;
     },
     trigger: function trigger(eventName) {
-      for (var _len3 = arguments.length, args = new Array(_len3 > 1 ? _len3 - 1 : 0), _key3 = 1; _key3 < _len3; _key3++) {
+      for (
+        var _len3 = arguments.length,
+          args = new Array(_len3 > 1 ? _len3 - 1 : 0),
+          _key3 = 1;
+        _key3 < _len3;
+        _key3++
+      ) {
         args[_key3 - 1] = arguments[_key3];
       }
       var handlerList = handlers[eventName];
@@ -637,9 +709,11 @@ export function eventEmitter() {
       if (handlerList) {
         var _loop = function _loop(_i2) {
           var handler = handlerList[_i2];
-          promises.push(ZalgoPromise.try(function () {
-            return handler.apply(void 0, args);
-          }));
+          promises.push(
+            ZalgoPromise.try(function () {
+              return handler.apply(void 0, args);
+            })
+          );
         };
         for (var _i2 = 0; _i2 < handlerList.length; _i2++) {
           _loop(_i2);
@@ -652,14 +726,20 @@ export function eventEmitter() {
         return ZalgoPromise.resolve();
       }
       triggered[eventName] = true;
-      for (var _len4 = arguments.length, args = new Array(_len4 > 1 ? _len4 - 1 : 0), _key4 = 1; _key4 < _len4; _key4++) {
+      for (
+        var _len4 = arguments.length,
+          args = new Array(_len4 > 1 ? _len4 - 1 : 0),
+          _key4 = 1;
+        _key4 < _len4;
+        _key4++
+      ) {
         args[_key4 - 1] = arguments[_key4];
       }
       return emitter.trigger.apply(emitter, [eventName].concat(args));
     },
     reset: function reset() {
       handlers = {};
-    }
+    },
   };
   return emitter;
 }
@@ -734,7 +814,7 @@ export function defineLazyProp(obj, key, getter) {
       delete obj[key];
       // $FlowFixMe
       obj[key] = value;
-    }
+    },
   });
 }
 
@@ -860,8 +940,13 @@ export function regex(pattern, string, start) {
       if (!regmatch) {
         return "";
       }
-      return "" + regmatch.slice(0, start + index) + text + regmatch.slice(index + regmatch.length);
-    }
+      return (
+        "" +
+        regmatch.slice(0, start + index) +
+        text +
+        regmatch.slice(index + regmatch.length)
+      );
+    },
   };
 }
 export function regexAll(pattern, string) {
@@ -900,7 +985,10 @@ export function debounce(method, time) {
       return method.apply(_this3, _arguments3);
     }, time);
   };
-  return setFunctionName(debounceWrapper, getFunctionName(method) + "::debounced");
+  return setFunctionName(
+    debounceWrapper,
+    getFunctionName(method) + "::debounced"
+  );
 }
 export function isRegex(item) {
   // $FlowFixMe[method-unbinding]
@@ -967,7 +1055,7 @@ export function cleanup(obj) {
           if (index !== -1) {
             tasks.splice(index, 1);
           }
-        }
+        },
       };
     },
     all: function all(err) {
@@ -979,7 +1067,7 @@ export function cleanup(obj) {
         results.push(task());
       }
       return ZalgoPromise.all(results).then(noop);
-    }
+    },
   };
   return cleaner;
 }
@@ -995,7 +1083,7 @@ export function tryCatch(fn) {
   // $FlowFixMe
   return {
     result: result,
-    error: error
+    error: error,
   };
 }
 
@@ -1039,7 +1127,7 @@ export function dedupeErrors(handler) {
     return handler(err);
   };
 }
-export var ExtendableError = /*#__PURE__*/function (_Error) {
+export var ExtendableError = /*#__PURE__*/ (function (_Error) {
   _inheritsLoose(ExtendableError, _Error);
   function ExtendableError(message) {
     var _this6;
@@ -1047,11 +1135,14 @@ export var ExtendableError = /*#__PURE__*/function (_Error) {
     // eslint-disable-next-line unicorn/custom-error-definition
     _this6.name = _this6.constructor.name;
     if (typeof Error.captureStackTrace === "function") {
-      Error.captureStackTrace(_assertThisInitialized(_this6), _this6.constructor);
+      Error.captureStackTrace(
+        _assertThisInitialized(_this6),
+        _this6.constructor
+      );
     } else {
       _this6.stack = new Error(message).stack;
     }
     return _this6;
   }
   return ExtendableError;
-}( /*#__PURE__*/_wrapNativeSuper(Error));
+})(/*#__PURE__*/ _wrapNativeSuper(Error));

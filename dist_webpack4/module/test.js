@@ -1,5 +1,3 @@
-
-
 import { ZalgoPromise } from "@krakenjs/zalgo-promise/src";
 import { noop, tryCatch, removeFromArray } from "./util";
 export function wrapPromise(method, _temp) {
@@ -11,10 +9,26 @@ export function wrapPromise(method, _temp) {
   return new ZalgoPromise(function (resolve, reject) {
     var timer = setTimeout(function () {
       if (expected.length) {
-        reject(new Error("Expected " + expected[0].name + " to be called in " + timeout + "ms"));
+        reject(
+          new Error(
+            "Expected " +
+              expected[0].name +
+              " to be called in " +
+              timeout +
+              "ms"
+          )
+        );
       }
       if (promises.length) {
-        reject(new Error("Expected " + promises[0].name + " promise to complete in " + timeout + "ms"));
+        reject(
+          new Error(
+            "Expected " +
+              promises[0].name +
+              " promise to complete in " +
+              timeout +
+              "ms"
+          )
+        );
       }
     }, timeout);
 
@@ -25,7 +39,7 @@ export function wrapPromise(method, _temp) {
       }
       var exp = {
         name: name,
-        handler: handler
+        handler: handler,
       };
       // $FlowFixMe
       expected.push(exp);
@@ -33,7 +47,11 @@ export function wrapPromise(method, _temp) {
       // $FlowFixMe
       return function expectWrapper() {
         var _this = this;
-        for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+        for (
+          var _len = arguments.length, args = new Array(_len), _key = 0;
+          _key < _len;
+          _key++
+        ) {
           args[_key] = arguments[_key];
         }
         removeFromArray(expected, exp);
@@ -41,14 +59,17 @@ export function wrapPromise(method, _temp) {
         // $FlowFixMe
         var _tryCatch = tryCatch(function () {
             var _handler;
-            return (_handler = handler).call.apply(_handler, [_this].concat(args));
+            return (_handler = handler).call.apply(
+              _handler,
+              [_this].concat(args)
+            );
           }),
           result = _tryCatch.result,
           error = _tryCatch.error;
         if (error) {
           promises.push({
             name: name,
-            promise: ZalgoPromise.asyncReject(error)
+            promise: ZalgoPromise.asyncReject(error),
           });
           throw error;
         }
@@ -56,7 +77,7 @@ export function wrapPromise(method, _temp) {
         // $FlowFixMe[escaped-generic]
         promises.push({
           name: name,
-          promise: ZalgoPromise.resolve(result)
+          promise: ZalgoPromise.resolve(result),
         });
 
         // $FlowFixMe[escaped-generic]
@@ -74,10 +95,16 @@ export function wrapPromise(method, _temp) {
         var _fn;
         promises.push({
           name: name,
-          promise: ZalgoPromise.asyncReject(new Error("Expected " + name + " to not be called"))
+          promise: ZalgoPromise.asyncReject(
+            new Error("Expected " + name + " to not be called")
+          ),
         });
         // $FlowFixMe
-        for (var _len2 = arguments.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+        for (
+          var _len2 = arguments.length, args = new Array(_len2), _key2 = 0;
+          _key2 < _len2;
+          _key2++
+        ) {
           args[_key2] = arguments[_key2];
         }
         return (_fn = fn).call.apply(_fn, [this].concat(args));
@@ -91,7 +118,7 @@ export function wrapPromise(method, _temp) {
       }
       var exp = {
         name: name,
-        handler: handler
+        handler: handler,
       };
       // $FlowFixMe
       expected.push(exp);
@@ -99,7 +126,11 @@ export function wrapPromise(method, _temp) {
       // $FlowFixMe
       return function expectErrorWrapper() {
         var _this2 = this;
-        for (var _len3 = arguments.length, args = new Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+        for (
+          var _len3 = arguments.length, args = new Array(_len3), _key3 = 0;
+          _key3 < _len3;
+          _key3++
+        ) {
           args[_key3] = arguments[_key3];
         }
         removeFromArray(expected, exp);
@@ -107,7 +138,10 @@ export function wrapPromise(method, _temp) {
         // $FlowFixMe
         var _tryCatch2 = tryCatch(function () {
             var _handler2;
-            return (_handler2 = handler).call.apply(_handler2, [_this2].concat(args));
+            return (_handler2 = handler).call.apply(
+              _handler2,
+              [_this2].concat(args)
+            );
           }),
           result = _tryCatch2.result,
           error = _tryCatch2.error;
@@ -119,7 +153,7 @@ export function wrapPromise(method, _temp) {
           // $FlowFixMe[escaped-generic]
           promise: ZalgoPromise.resolve(result).then(function () {
             throw new Error("Expected " + name + " to throw an error");
-          }, noop)
+          }, noop),
         });
 
         // $FlowFixMe[escaped-generic]
@@ -130,9 +164,11 @@ export function wrapPromise(method, _temp) {
       return ZalgoPromise.try(function () {
         if (promises.length) {
           var prom = promises[0];
-          return prom.promise.finally(function () {
-            removeFromArray(promises, prom);
-          }).then(wait);
+          return prom.promise
+            .finally(function () {
+              removeFromArray(promises, prom);
+            })
+            .then(wait);
         }
       }).then(function () {
         if (expected.length) {
@@ -150,12 +186,14 @@ export function wrapPromise(method, _temp) {
           error: avoid,
           wait: function wait() {
             return ZalgoPromise.resolve();
-          }
+          },
         });
-      })
+      }),
     });
-    wait().finally(function () {
-      clearTimeout(timer);
-    }).then(resolve, reject);
+    wait()
+      .finally(function () {
+        clearTimeout(timer);
+      })
+      .then(resolve, reject);
   });
 }
