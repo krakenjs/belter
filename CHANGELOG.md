@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.5.0](https://github.com/krakenjs/belter/compare/v2.4.0...v2.5.0) (2024-02-14)
+
+
+### Features
+
+* Add isIpadOs device check ([#114](https://github.com/krakenjs/belter/issues/114)) ([0033c21](https://github.com/krakenjs/belter/commit/0033c211e16ecd5ea4b17861798da0a8f5475bcf))
+
 ## [2.4.0](https://github.com/krakenjs/belter/compare/v2.3.1...v2.4.0) (2023-12-07)
 
 
