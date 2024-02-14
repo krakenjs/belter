@@ -143,6 +143,9 @@
         __webpack_require__.d(__webpack_exports__, "isSafari", (function() {
             return isSafari;
         }));
+        __webpack_require__.d(__webpack_exports__, "isIpadOs", (function() {
+            return isIpadOs;
+        }));
         __webpack_require__.d(__webpack_exports__, "isApplePaySupported", (function() {
             return isApplePaySupported;
         }));
@@ -955,6 +958,10 @@
         function isSafari(ua) {
             void 0 === ua && (ua = getUserAgent());
             return /Safari/.test(ua) && !isChrome(ua) && !/Silk|FxiOS|EdgiOS/.test(ua);
+        }
+        function isIpadOs(ua) {
+            void 0 === ua && (ua = getUserAgent());
+            return !(/iPhone|iPod/.test(ua) || !(/iPad/.test(ua) || isSafari(ua) && navigator.maxTouchPoints >= 1));
         }
         function isApplePaySupported() {
             try {

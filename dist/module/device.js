@@ -216,6 +216,17 @@ export function isSafari(ua) {
   }
   return /Safari/.test(ua) && !isChrome(ua) && !/Silk|FxiOS|EdgiOS/.test(ua);
 }
+export function isIpadOs(ua) {
+  if (ua === void 0) {
+    ua = getUserAgent();
+  }
+  if (!/iPhone|iPod/.test(ua)) {
+    if (/iPad/.test(ua) || isSafari(ua) && navigator.maxTouchPoints >= 1) {
+      return true;
+    }
+  }
+  return false;
+}
 export function isApplePaySupported() {
   try {
     if (window.ApplePaySession && window.ApplePaySession.supportsVersion(3) && window.ApplePaySession.canMakePayments()) {
