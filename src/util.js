@@ -88,20 +88,22 @@ export function base64decode(str: string): string {
   throw new Error(`Can not find window.atob or Buffer`);
 }
 
-export function uniqueID(): string {
+export const uniqueHashId = (): string => {
   const chars = "0123456789abcdef";
 
-  const randomID = "xxxxxxxxxx".replace(/./g, () => {
-    return chars.charAt(Math.floor(Math.random() * chars.length));
-  });
+  return "xxxxxxxxxxxxx".replace(/./g, () =>
+    chars.charAt(Math.floor(Math.random() * chars.length))
+  );
+};
 
+export function uniqueID(): string {
   const timeID = base64encode(
     new Date().toISOString().slice(11, 19).replace("T", ".")
   )
     .replace(/[^a-zA-Z0-9]/g, "")
     .toLowerCase();
 
-  return `uid_${randomID}_${timeID}`;
+  return `uid_${uniqueHashId()}_${timeID}`;
 }
 
 export function getGlobal(): Object {
