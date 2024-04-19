@@ -133,6 +133,17 @@ describe("supportsPopups", () => {
         throw new Error(`Expected true, got ${JSON.stringify(bool)}`);
       }
     });
+    it("should return true when in facebook multiwindow experiment", () => {
+      window.navigator.userAgent = `Mozilla/5.0 (Linux; Android 5.1.1; Nexus 5 Build/LMY48B; wv)
+      AppleWebKit/537.36 (KHTML, like Gecko) 
+      Version/4.0 Chrome/43.0.2357.65 Mobile Safari/537.36 [FB_IAB/FB4A;FBAV/44.25.0.1;FB/MW]`;
+      const result = supportsPopups();
+      if (!result) {
+        throw new Error(
+          `Expected to support popups, got ${JSON.stringify(result)}`
+        );
+      }
+    });
   });
   describe("WebView on Android", () => {
     it("should return false when it is a valid WebView UA in KitKat to Lollipop", () => {
