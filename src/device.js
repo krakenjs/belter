@@ -226,19 +226,26 @@ export function isMacOsCna(): boolean {
   return /Macintosh.*AppleWebKit(?!.*Safari)/i.test(userAgent);
 }
 
+export function isPopupSupportedWebview(ua?: string = getUserAgent()): boolean {
+  return /FB\/MW/.test(ua);
+}
+
 export function supportsPopups(ua?: string = getUserAgent()): boolean {
-  return !(
-    isWebView(ua) ||
-    isIosWebview(ua) ||
-    isAndroidWebview(ua) ||
-    isOperaMini(ua) ||
-    isFirefoxIOS(ua) ||
-    isEdgeIOS(ua) ||
-    isFacebookWebView(ua) ||
-    isQQBrowser(ua) ||
-    isElectron() ||
-    isMacOsCna() ||
-    isStandAlone()
+  return (
+    isPopupSupportedWebview(ua) ||
+    !(
+      isWebView(ua) ||
+      isIosWebview(ua) ||
+      isAndroidWebview(ua) ||
+      isOperaMini(ua) ||
+      isFirefoxIOS(ua) ||
+      isEdgeIOS(ua) ||
+      isFacebookWebView(ua) ||
+      isQQBrowser(ua) ||
+      isElectron() ||
+      isMacOsCna() ||
+      isStandAlone()
+    )
   );
 }
 
