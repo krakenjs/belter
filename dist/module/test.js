@@ -99,17 +99,17 @@ export function wrapPromise(method, _temp) {
         return result;
       };
     };
-    var wait = function wait() {
+    var _wait = function wait() {
       return ZalgoPromise.try(function () {
         if (promises.length) {
           var prom = promises[0];
           return prom.promise.finally(function () {
             removeFromArray(promises, prom);
-          }).then(wait);
+          }).then(_wait);
         }
       }).then(function () {
         if (expected.length) {
-          return ZalgoPromise.delay(10).then(wait);
+          return ZalgoPromise.delay(10).then(_wait);
         }
       });
     };
@@ -127,7 +127,7 @@ export function wrapPromise(method, _temp) {
         });
       })
     });
-    wait().finally(function () {
+    _wait().finally(function () {
       clearTimeout(timer);
     }).then(resolve, reject);
   });

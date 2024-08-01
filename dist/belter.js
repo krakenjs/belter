@@ -80,6 +80,15 @@
         __webpack_require__.d(__webpack_exports__, "isFacebookWebView", (function() {
             return isFacebookWebView;
         }));
+        __webpack_require__.d(__webpack_exports__, "isInstagramWebView", (function() {
+            return isInstagramWebView;
+        }));
+        __webpack_require__.d(__webpack_exports__, "isMetaWebView", (function() {
+            return isMetaWebView;
+        }));
+        __webpack_require__.d(__webpack_exports__, "isMetaInAppBrowser", (function() {
+            return isMetaInAppBrowser;
+        }));
         __webpack_require__.d(__webpack_exports__, "isFirefox", (function() {
             return isFirefox;
         }));
@@ -842,6 +851,18 @@
         function isFacebookWebView(ua) {
             void 0 === ua && (ua = getUserAgent());
             return /FBAN/.test(ua) || /FBAV/.test(ua);
+        }
+        function isInstagramWebView(ua) {
+            void 0 === ua && (ua = getUserAgent());
+            return /Instagram/.test(ua);
+        }
+        function isMetaWebView(ua) {
+            void 0 === ua && (ua = getUserAgent());
+            return isFacebookWebView(ua) || isInstagramWebView(ua);
+        }
+        function isMetaInAppBrowser(ua) {
+            void 0 === ua && (ua = getUserAgent());
+            return /IABMV\/1/.test(ua);
         }
         function isFirefox(ua) {
             void 0 === ua && (ua = getUserAgent());
@@ -2350,16 +2371,13 @@
             };
         }
         var util_ExtendableError = function(_Error) {
-            _inheritsLoose(ExtendableError, _Error);
             function ExtendableError(message) {
                 var _this6;
                 (_this6 = _Error.call(this, message) || this).name = _this6.constructor.name;
-                "function" == typeof Error.captureStackTrace ? Error.captureStackTrace(function(self) {
-                    if (void 0 === self) throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
-                    return self;
-                }(_this6), _this6.constructor) : _this6.stack = new Error(message).stack;
+                "function" == typeof Error.captureStackTrace ? Error.captureStackTrace(_this6, _this6.constructor) : _this6.stack = new Error(message).stack;
                 return _this6;
             }
+            _inheritsLoose(ExtendableError, _Error);
             return ExtendableError;
         }(wrapNativeSuper_wrapNativeSuper(Error));
         function sanitizeUrl(url) {
@@ -2593,10 +2611,10 @@
             }));
         }
         var dom_PopupOpenError = function(_ExtendableError) {
-            _inheritsLoose(PopupOpenError, _ExtendableError);
             function PopupOpenError() {
                 return _ExtendableError.apply(this, arguments) || this;
             }
+            _inheritsLoose(PopupOpenError, _ExtendableError);
             return PopupOpenError;
         }(util_ExtendableError);
         function popup(url, options) {
@@ -2990,16 +3008,16 @@
             return isShadowElement(shadowHost) ? insertShadowSlot(slotProvider) : slotProvider;
         }
         function preventClickFocus(el) {
-            var onFocus = function onFocus(event) {
-                el.removeEventListener("focus", onFocus);
+            var _onFocus = function(event) {
+                el.removeEventListener("focus", _onFocus);
                 event.preventDefault();
                 el.blur();
                 return !1;
             };
             el.addEventListener("mousedown", (function() {
-                el.addEventListener("focus", onFocus);
+                el.addEventListener("focus", _onFocus);
                 setTimeout((function() {
-                    el.removeEventListener("focus", onFocus);
+                    el.removeEventListener("focus", _onFocus);
                 }), 1);
             }));
         }
@@ -3396,6 +3414,18 @@
                         return result;
                     };
                 };
+                var _wait = function() {
+                    return promise_ZalgoPromise.try((function() {
+                        if (promises.length) {
+                            var prom = promises[0];
+                            return prom.promise.finally((function() {
+                                removeFromArray(promises, prom);
+                            })).then(_wait);
+                        }
+                    })).then((function() {
+                        if (expected.length) return promise_ZalgoPromise.delay(10).then(_wait);
+                    }));
+                };
                 promises.push({
                     name: "wrapPromise handler",
                     promise: promise_ZalgoPromise.try((function() {
@@ -3410,18 +3440,7 @@
                         });
                     }))
                 });
-                (function wait() {
-                    return promise_ZalgoPromise.try((function() {
-                        if (promises.length) {
-                            var prom = promises[0];
-                            return prom.promise.finally((function() {
-                                removeFromArray(promises, prom);
-                            })).then(wait);
-                        }
-                    })).then((function() {
-                        if (expected.length) return promise_ZalgoPromise.delay(10).then(wait);
-                    }));
-                })().finally((function() {
+                _wait().finally((function() {
                     clearTimeout(timer);
                 })).then(resolve, reject);
             }));

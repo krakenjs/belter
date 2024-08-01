@@ -328,10 +328,10 @@ export function elementReady(id) {
   });
 }
 export var PopupOpenError = function (_ExtendableError) {
-  _inheritsLoose(PopupOpenError, _ExtendableError);
   function PopupOpenError() {
     return _ExtendableError.apply(this, arguments) || this;
   }
+  _inheritsLoose(PopupOpenError, _ExtendableError);
   return PopupOpenError;
 }(ExtendableError);
 export function popup(url, options) {
@@ -874,16 +874,16 @@ export function insertShadowSlot(element) {
   return slotProvider;
 }
 export function preventClickFocus(el) {
-  var onFocus = function onFocus(event) {
-    el.removeEventListener("focus", onFocus);
+  var _onFocus = function onFocus(event) {
+    el.removeEventListener("focus", _onFocus);
     event.preventDefault();
     el.blur();
     return false;
   };
   el.addEventListener("mousedown", function () {
-    el.addEventListener("focus", onFocus);
+    el.addEventListener("focus", _onFocus);
     setTimeout(function () {
-      el.removeEventListener("focus", onFocus);
+      el.removeEventListener("focus", _onFocus);
     }, 1);
   });
 }

@@ -33,6 +33,24 @@ export function isFacebookWebView(ua) {
   }
   return /FBAN/.test(ua) || /FBAV/.test(ua);
 }
+export function isInstagramWebView(ua) {
+  if (ua === void 0) {
+    ua = getUserAgent();
+  }
+  return /Instagram/.test(ua);
+}
+export function isMetaWebView(ua) {
+  if (ua === void 0) {
+    ua = getUserAgent();
+  }
+  return isFacebookWebView(ua) || isInstagramWebView(ua);
+}
+export function isMetaInAppBrowser(ua) {
+  if (ua === void 0) {
+    ua = getUserAgent();
+  }
+  return /IABMV\/1/.test(ua);
+}
 export function isFirefox(ua) {
   if (ua === void 0) {
     ua = getUserAgent();

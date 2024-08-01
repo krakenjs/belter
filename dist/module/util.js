@@ -1,4 +1,3 @@
-import _assertThisInitialized from "@babel/runtime/helpers/esm/assertThisInitialized";
 import _inheritsLoose from "@babel/runtime/helpers/esm/inheritsLoose";
 import _wrapNativeSuper from "@babel/runtime/helpers/esm/wrapNativeSuper";
 import { ZalgoPromise } from "@krakenjs/zalgo-promise/src";
@@ -935,18 +934,18 @@ export function dedupeErrors(handler) {
   };
 }
 export var ExtendableError = function (_Error) {
-  _inheritsLoose(ExtendableError, _Error);
   function ExtendableError(message) {
     var _this6;
     _this6 = _Error.call(this, message) || this;
     _this6.name = _this6.constructor.name;
     if (typeof Error.captureStackTrace === "function") {
-      Error.captureStackTrace(_assertThisInitialized(_this6), _this6.constructor);
+      Error.captureStackTrace(_this6, _this6.constructor);
     } else {
       _this6.stack = new Error(message).stack;
     }
     return _this6;
   }
+  _inheritsLoose(ExtendableError, _Error);
   return ExtendableError;
 }(_wrapNativeSuper(Error));
 function isRelativeUrlWithoutProtocol(url) {
