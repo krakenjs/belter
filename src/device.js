@@ -45,6 +45,18 @@ export function isFacebookWebView(ua?: string = getUserAgent()): boolean {
   return /FBAN/.test(ua) || /FBAV/.test(ua);
 }
 
+export function isInstagramWebView(ua?: string = getUserAgent()): boolean {
+  return /Instagram/.test(ua);
+}
+
+export function isMetaWebView(ua?: string = getUserAgent()): boolean {
+  return isFacebookWebView(ua) || isInstagramWebView(ua);
+}
+
+export function isMetaInAppBrowser(ua?: string = getUserAgent()): boolean {
+  return /IABMV\/1/.test(ua);
+}
+
 export function isFirefox(ua?: string = getUserAgent()): boolean {
   return /Firefox/i.test(ua);
 }
