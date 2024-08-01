@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.6.0](https://github.com/krakenjs/belter/compare/v2.5.0...v2.6.0) (2024-08-01)
+
+
+### Features
+
+* add device detection for meta in app browser ([#117](https://github.com/krakenjs/belter/issues/117)) ([d9c3900](https://github.com/krakenjs/belter/commit/d9c3900e2e8dc8870d6c6a36cbedf17985077577))
+
 ## [2.5.0](https://github.com/krakenjs/belter/compare/v2.4.0...v2.5.0) (2024-02-14)
 
 
