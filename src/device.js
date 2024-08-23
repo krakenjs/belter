@@ -54,7 +54,7 @@ export function isMetaWebView(ua?: string = getUserAgent()): boolean {
 }
 
 export function isMetaInAppBrowser(ua?: string = getUserAgent()): boolean {
-  return /IABMV\/1/.test(ua);
+  return /IABMV/.test(ua);
 }
 
 export function isFirefox(ua?: string = getUserAgent()): boolean {
