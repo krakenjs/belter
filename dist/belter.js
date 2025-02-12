@@ -104,9 +104,6 @@
         __webpack_require__.d(__webpack_exports__, "isAndroid", (function() {
             return isAndroid;
         }));
-        __webpack_require__.d(__webpack_exports__, "isFirefoxAndroid", (function() {
-            return isFirefoxAndroid;
-        }));
         __webpack_require__.d(__webpack_exports__, "isIos", (function() {
             return isIos;
         }));
@@ -865,7 +862,7 @@
         }
         function isMetaInAppBrowser(ua) {
             void 0 === ua && (ua = getUserAgent());
-            return /IABMV/.test(ua);
+            return /IABMV\/1/.test(ua);
         }
         function isFirefox(ua) {
             void 0 === ua && (ua = getUserAgent());
@@ -886,10 +883,6 @@
         function isAndroid(ua) {
             void 0 === ua && (ua = getUserAgent());
             return /Android/.test(ua);
-        }
-        function isFirefoxAndroid(ua) {
-            void 0 === ua && (ua = getUserAgent());
-            return isAndroid(ua) && isFirefox(ua);
         }
         function isIos(ua) {
             void 0 === ua && (ua = getUserAgent());
@@ -977,7 +970,7 @@
         }
         function supportsPopups(ua) {
             void 0 === ua && (ua = getUserAgent());
-            return !(isWebView(ua) || isIosWebview(ua) || isAndroidWebview(ua) || isOperaMini(ua) || isFirefoxIOS(ua) || isFirefoxAndroid(ua) || isEdgeIOS(ua) || isFacebookWebView(ua) || isQQBrowser(ua) || isElectron() || isMacOsCna() || isStandAlone());
+            return !(isWebView(ua) || isIosWebview(ua) || isAndroidWebview(ua) || isOperaMini(ua) || isFirefoxIOS(ua) || isEdgeIOS(ua) || isFacebookWebView(ua) || isQQBrowser(ua) || isElectron() || isMacOsCna() || isStandAlone());
         }
         function isChrome(ua) {
             void 0 === ua && (ua = getUserAgent());
