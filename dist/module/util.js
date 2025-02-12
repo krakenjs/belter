@@ -669,7 +669,8 @@ export function isObject(item) {
   return typeof item === "object" && item !== null;
 }
 export function isObjectObject(obj) {
-  return isObject(obj) && Object.prototype.toString.call(obj) === "[object Object]";
+  return (isObject(obj) && Object.prototype.toString.call(obj) === "[object Object]"
+  );
 }
 export function isPlainObject(obj) {
   if (!isObjectObject(obj)) {
