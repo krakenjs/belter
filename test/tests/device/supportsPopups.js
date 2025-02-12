@@ -35,6 +35,14 @@ describe("supportsPopups", () => {
       throw new Error(`Expected false, got ${JSON.stringify(bool)}`);
     }
   });
+  it("should return false when user agent is firefox on android", () => {
+    window.navigator.userAgent =
+      "Mozilla/5.0 (Android 15; Mobile; rv:135.0) Gecko/135.0 Firefox/135.0";
+    const bool = supportsPopups();
+    if (bool) {
+      throw new Error(`Expected false, got ${JSON.stringify(bool)}`);
+    }
+  });
   it("should return false when isEdgeIOS function returns true", () => {
     window.navigator.userAgent = "edgios";
     const bool = supportsPopups();

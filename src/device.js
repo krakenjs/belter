@@ -77,6 +77,10 @@ export function isAndroid(ua?: string = getUserAgent()): boolean {
   return /Android/.test(ua);
 }
 
+export function isFirefoxAndroid(ua?: string = getUserAgent()): boolean {
+  return isAndroid(ua) && isFirefox(ua);
+}
+
 export function isIos(ua?: string = getUserAgent()): boolean {
   return /iPhone|iPod|iPad/.test(ua);
 }
@@ -245,6 +249,7 @@ export function supportsPopups(ua?: string = getUserAgent()): boolean {
     isAndroidWebview(ua) ||
     isOperaMini(ua) ||
     isFirefoxIOS(ua) ||
+    isFirefoxAndroid(ua) ||
     isEdgeIOS(ua) ||
     isFacebookWebView(ua) ||
     isQQBrowser(ua) ||
