@@ -49,7 +49,7 @@ export function isMetaInAppBrowser(ua) {
   if (ua === void 0) {
     ua = getUserAgent();
   }
-  return /IABMV\/1/.test(ua);
+  return /IABMV/.test(ua);
 }
 export function isFirefox(ua) {
   if (ua === void 0) {
@@ -80,6 +80,12 @@ export function isAndroid(ua) {
     ua = getUserAgent();
   }
   return /Android/.test(ua);
+}
+export function isFirefoxAndroid(ua) {
+  if (ua === void 0) {
+    ua = getUserAgent();
+  }
+  return isAndroid(ua) && isFirefox(ua);
 }
 export function isIos(ua) {
   if (ua === void 0) {
@@ -220,7 +226,7 @@ export function supportsPopups(ua) {
   if (ua === void 0) {
     ua = getUserAgent();
   }
-  return !(isWebView(ua) || isIosWebview(ua) || isAndroidWebview(ua) || isOperaMini(ua) || isFirefoxIOS(ua) || isEdgeIOS(ua) || isFacebookWebView(ua) || isQQBrowser(ua) || isElectron() || isMacOsCna() || isStandAlone());
+  return !(isWebView(ua) || isIosWebview(ua) || isAndroidWebview(ua) || isOperaMini(ua) || isFirefoxIOS(ua) || isFirefoxAndroid(ua) || isEdgeIOS(ua) || isFacebookWebView(ua) || isQQBrowser(ua) || isElectron() || isMacOsCna() || isStandAlone());
 }
 export function isChrome(ua) {
   if (ua === void 0) {
