@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.8.0](https://github.com/krakenjs/belter/compare/v2.6.0...v2.8.0) (2025-02-13)
+
+
+### Features
+
+* update the meta webview detection logic to remove version info ([#119](https://github.com/krakenjs/belter/issues/119)) ([0817042](https://github.com/krakenjs/belter/commit/0817042f9a46906227a34438b347de27ea1987fa))
+
+
+### Bug Fixes
+
+* disable popups for firefox on android ([#120](https://github.com/krakenjs/belter/issues/120)) ([48f5dc1](https://github.com/krakenjs/belter/commit/48f5dc1aacc99edbabea4359fafdb93e6435fc0a))
+
 ## [2.6.0](https://github.com/krakenjs/belter/compare/v2.5.0...v2.6.0) (2024-08-01)
 
 
