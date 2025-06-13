@@ -177,7 +177,12 @@ export function isSFVCorSafari(ua?: string = getUserAgent()): boolean {
 
 export function isAndroidWebview(ua?: string = getUserAgent()): boolean {
   if (isAndroid(ua)) {
-    return (ua.includes("wv") || ua.includes("WebView")) && !isOperaMini(ua);
+    return (
+      (ua.includes("wv") ||
+        ua.includes("WebView") ||
+        /Version\/[\d.]+/.test(ua)) &&
+      !isOperaMini(ua)
+    );
   }
   return false;
 }
