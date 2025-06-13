@@ -909,7 +909,11 @@
         }
         function isIosWebview(ua) {
             void 0 === ua && (ua = getUserAgent());
-            return !!isIos(ua) && (!!isGoogleSearchApp(ua) || /.+AppleWebKit(?!.*Safari)|.*WKWebView/.test(ua));
+            if (isIos(ua)) {
+                var _window$webkit;
+                return !!isGoogleSearchApp(ua) || /.+AppleWebKit(?!.*Safari)|.*WKWebView/.test(ua) || void 0 !== (null == (_window$webkit = window.webkit) ? void 0 : _window$webkit.messageHandlers);
+            }
+            return !1;
         }
         function isSFVC(ua) {
             void 0 === ua && (ua = getUserAgent());
@@ -944,7 +948,7 @@
         }
         function isAndroidWebview(ua) {
             void 0 === ua && (ua = getUserAgent());
-            return !!isAndroid(ua) && /Version\/[\d.]+/.test(ua) && !isOperaMini(ua);
+            return !!isAndroid(ua) && (ua.includes("wv") || ua.includes("WebView") || /Version\/[\d.]+/.test(ua)) && !isOperaMini(ua);
         }
         function device_isIE() {
             return !!window.document.documentMode || Boolean(window.navigator && window.navigator.userAgent && /Edge|MSIE|rv:11/i.test(window.navigator.userAgent));
@@ -2732,8 +2736,8 @@
             options.style && extend(element.style, options.style);
             options.class && (element.className = options.class.join(" "));
             options.id && element.setAttribute("id", options.id);
-            if (options.attributes) for (var _i10 = 0, _Object$keys2 = Object.keys(options.attributes); _i10 < _Object$keys2.length; _i10++) {
-                var key = _Object$keys2[_i10];
+            if (options.attributes) for (var _i0 = 0, _Object$keys2 = Object.keys(options.attributes); _i0 < _Object$keys2.length; _i0++) {
+                var key = _Object$keys2[_i0];
                 element.setAttribute(key, options.attributes[key]);
             }
             options.styleSheet && setStyle(element, options.styleSheet);
@@ -2775,10 +2779,10 @@
         }
         function bindEvents(element, eventNames, handler) {
             handler = once(handler);
-            for (var _i12 = 0; _i12 < eventNames.length; _i12++) element.addEventListener(eventNames[_i12], handler);
+            for (var _i10 = 0; _i10 < eventNames.length; _i10++) element.addEventListener(eventNames[_i10], handler);
             return {
                 cancel: once((function() {
-                    for (var _i14 = 0; _i14 < eventNames.length; _i14++) element.removeEventListener(eventNames[_i14], handler);
+                    for (var _i12 = 0; _i12 < eventNames.length; _i12++) element.removeEventListener(eventNames[_i12], handler);
                 }))
             };
         }
@@ -2786,7 +2790,7 @@
         function setVendorCSS(element, name, value) {
             element.style[name] = value;
             var capitalizedName = capitalizeFirstLetter(name);
-            for (var _i16 = 0; _i16 < VENDOR_PREFIXES.length; _i16++) element.style["" + VENDOR_PREFIXES[_i16] + capitalizedName] = value;
+            for (var _i14 = 0; _i14 < VENDOR_PREFIXES.length; _i14++) element.style["" + VENDOR_PREFIXES[_i14] + capitalizedName] = value;
         }
         var ANIMATION_START_EVENTS = [ "animationstart", "webkitAnimationStart", "oAnimationStart", "MSAnimationStart" ];
         var ANIMATION_END_EVENTS = [ "animationend", "webkitAnimationEnd", "oAnimationEnd", "MSAnimationEnd" ];
@@ -2877,7 +2881,7 @@
             var sacrificialFrameWin;
             var cancel = function() {
                 cancelled = !0;
-                for (var _i18 = 0; _i18 < mutationObservers.length; _i18++) mutationObservers[_i18].disconnect();
+                for (var _i16 = 0; _i16 < mutationObservers.length; _i16++) mutationObservers[_i16].disconnect();
                 interval && interval.cancel();
                 sacrificialFrameWin && sacrificialFrameWin.removeEventListener("unload", elementClosed);
                 sacrificialFrame && destroyElement(sacrificialFrame);
@@ -2925,8 +2929,8 @@
         }
         function fixScripts(el, doc) {
             void 0 === doc && (doc = window.document);
-            for (var _i20 = 0, _querySelectorAll2 = querySelectorAll("script", el); _i20 < _querySelectorAll2.length; _i20++) {
-                var script = _querySelectorAll2[_i20];
+            for (var _i18 = 0, _querySelectorAll2 = querySelectorAll("script", el); _i18 < _querySelectorAll2.length; _i18++) {
+                var script = _querySelectorAll2[_i18];
                 var parentNode = script.parentNode;
                 if (parentNode) {
                     var newScript = doc.createElement("script");
@@ -3044,8 +3048,8 @@
                     var stackDetails = /.*at [^(]*\((.*):(.+):(.+)\)$/gi.exec(stack);
                     var scriptLocation = stackDetails && stackDetails[1];
                     if (!scriptLocation) return;
-                    for (var _i22 = 0, _Array$prototype$slic2 = [].slice.call(document.getElementsByTagName("script")).reverse(); _i22 < _Array$prototype$slic2.length; _i22++) {
-                        var script = _Array$prototype$slic2[_i22];
+                    for (var _i20 = 0, _Array$prototype$slic2 = [].slice.call(document.getElementsByTagName("script")).reverse(); _i20 < _Array$prototype$slic2.length; _i20++) {
+                        var script = _Array$prototype$slic2[_i20];
                         if (script.src && script.src === scriptLocation) return script;
                     }
                 } catch (err) {}
@@ -3080,9 +3084,9 @@
             form.setAttribute("method", method);
             form.setAttribute("action", url);
             form.style.display = "none";
-            if (body) for (var _i24 = 0, _Object$keys4 = Object.keys(body); _i24 < _Object$keys4.length; _i24++) {
+            if (body) for (var _i22 = 0, _Object$keys4 = Object.keys(body); _i22 < _Object$keys4.length; _i22++) {
                 var _body$key;
-                var key = _Object$keys4[_i24];
+                var key = _Object$keys4[_i22];
                 var input = document.createElement("input");
                 input.setAttribute("name", key);
                 input.setAttribute("value", null == (_body$key = body[key]) ? void 0 : _body$key.toString());

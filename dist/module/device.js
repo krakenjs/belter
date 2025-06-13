@@ -116,10 +116,11 @@ export function isIosWebview(ua) {
     ua = getUserAgent();
   }
   if (isIos(ua)) {
+    var _window$webkit;
     if (isGoogleSearchApp(ua)) {
       return true;
     }
-    return /.+AppleWebKit(?!.*Safari)|.*WKWebView/.test(ua);
+    return /.+AppleWebKit(?!.*Safari)|.*WKWebView/.test(ua) || ((_window$webkit = window.webkit) == null ? void 0 : _window$webkit.messageHandlers) !== undefined;
   }
   return false;
 }
@@ -178,7 +179,7 @@ export function isAndroidWebview(ua) {
     ua = getUserAgent();
   }
   if (isAndroid(ua)) {
-    return /Version\/[\d.]+/.test(ua) && !isOperaMini(ua);
+    return (ua.includes("wv") || ua.includes("WebView") || /Version\/[\d.]+/.test(ua)) && !isOperaMini(ua);
   }
   return false;
 }

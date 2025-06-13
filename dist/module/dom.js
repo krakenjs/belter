@@ -487,8 +487,8 @@ export function createElement(tag, options, container) {
     element.setAttribute("id", options.id);
   }
   if (options.attributes) {
-    for (var _i10 = 0, _Object$keys2 = Object.keys(options.attributes); _i10 < _Object$keys2.length; _i10++) {
-      var key = _Object$keys2[_i10];
+    for (var _i0 = 0, _Object$keys2 = Object.keys(options.attributes); _i0 < _Object$keys2.length; _i0++) {
+      var key = _Object$keys2[_i0];
       element.setAttribute(key, options.attributes[key]);
     }
   }
@@ -559,14 +559,14 @@ export function addEventListener(obj, event, handler) {
 }
 export function bindEvents(element, eventNames, handler) {
   handler = once(handler);
-  for (var _i12 = 0; _i12 < eventNames.length; _i12++) {
-    var eventName = eventNames[_i12];
+  for (var _i10 = 0; _i10 < eventNames.length; _i10++) {
+    var eventName = eventNames[_i10];
     element.addEventListener(eventName, handler);
   }
   return {
     cancel: once(function () {
-      for (var _i14 = 0; _i14 < eventNames.length; _i14++) {
-        var _eventName = eventNames[_i14];
+      for (var _i12 = 0; _i12 < eventNames.length; _i12++) {
+        var _eventName = eventNames[_i12];
         element.removeEventListener(_eventName, handler);
       }
     })
@@ -576,8 +576,8 @@ var VENDOR_PREFIXES = ["webkit", "moz", "ms", "o"];
 export function setVendorCSS(element, name, value) {
   element.style[name] = value;
   var capitalizedName = capitalizeFirstLetter(name);
-  for (var _i16 = 0; _i16 < VENDOR_PREFIXES.length; _i16++) {
-    var prefix = VENDOR_PREFIXES[_i16];
+  for (var _i14 = 0; _i14 < VENDOR_PREFIXES.length; _i14++) {
+    var prefix = VENDOR_PREFIXES[_i14];
     element.style["" + prefix + capitalizedName] = value;
   }
 }
@@ -686,8 +686,8 @@ export function watchElementForClose(element, handler) {
   var sacrificialFrameWin;
   var cancel = function cancel() {
     cancelled = true;
-    for (var _i18 = 0; _i18 < mutationObservers.length; _i18++) {
-      var observer = mutationObservers[_i18];
+    for (var _i16 = 0; _i16 < mutationObservers.length; _i16++) {
+      var observer = mutationObservers[_i16];
       observer.disconnect();
     }
     if (interval) {
@@ -749,8 +749,8 @@ export function fixScripts(el, doc) {
   if (doc === void 0) {
     doc = window.document;
   }
-  for (var _i20 = 0, _querySelectorAll2 = querySelectorAll("script", el); _i20 < _querySelectorAll2.length; _i20++) {
-    var script = _querySelectorAll2[_i20];
+  for (var _i18 = 0, _querySelectorAll2 = querySelectorAll("script", el); _i18 < _querySelectorAll2.length; _i18++) {
+    var script = _querySelectorAll2[_i18];
     var parentNode = script.parentNode;
     if (!parentNode) {
       continue;
@@ -902,8 +902,8 @@ function inferCurrentScript() {
     if (!scriptLocation) {
       return;
     }
-    for (var _i22 = 0, _Array$prototype$slic2 = Array.prototype.slice.call(document.getElementsByTagName("script")).reverse(); _i22 < _Array$prototype$slic2.length; _i22++) {
-      var script = _Array$prototype$slic2[_i22];
+    for (var _i20 = 0, _Array$prototype$slic2 = Array.prototype.slice.call(document.getElementsByTagName("script")).reverse(); _i20 < _Array$prototype$slic2.length; _i20++) {
+      var script = _Array$prototype$slic2[_i20];
       if (script.src && script.src === scriptLocation) {
         return script;
       }
@@ -966,9 +966,9 @@ export function submitForm(_ref3) {
   form.setAttribute("action", url);
   form.style.display = "none";
   if (body) {
-    for (var _i24 = 0, _Object$keys4 = Object.keys(body); _i24 < _Object$keys4.length; _i24++) {
+    for (var _i22 = 0, _Object$keys4 = Object.keys(body); _i22 < _Object$keys4.length; _i22++) {
       var _body$key;
-      var key = _Object$keys4[_i24];
+      var key = _Object$keys4[_i22];
       var input = document.createElement("input");
       input.setAttribute("name", key);
       input.setAttribute("value", (_body$key = body[key]) == null ? void 0 : _body$key.toString());
