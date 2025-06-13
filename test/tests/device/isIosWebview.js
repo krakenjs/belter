@@ -46,7 +46,7 @@ describe("isIosWebview", () => {
       throw new Error(`Expected true, got ${JSON.stringify(bool)}`);
     }
 
-    //cleanup
+    // cleanup
     window.webkit = undefined;
   });
   it("should return false when isIos function returns false", () => {
