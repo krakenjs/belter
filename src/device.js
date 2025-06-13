@@ -102,7 +102,7 @@ export function isIosWebview(ua?: string = getUserAgent()): boolean {
     if (isGoogleSearchApp(ua)) {
       return true;
     }
-    return /.+AppleWebKit(?!.*Safari)|.*WKWebView/.test(ua);
+    return /.+AppleWebKit(?!.*Safari)|.*WKWebView/.test(ua) || window.webkit?.messageHandlers !== undefined;
   }
   return false;
 }
@@ -174,7 +174,7 @@ export function isSFVCorSafari(ua?: string = getUserAgent()): boolean {
 
 export function isAndroidWebview(ua?: string = getUserAgent()): boolean {
   if (isAndroid(ua)) {
-    return /Version\/[\d.]+/.test(ua) && !isOperaMini(ua);
+    return (ua.includes("wv") || ua.includes("WebView")) && !isOperaMini(ua);
   }
   return false;
 }
