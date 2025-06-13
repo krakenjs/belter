@@ -45,6 +45,9 @@ describe("isIosWebview", () => {
     if (!bool) {
       throw new Error(`Expected true, got ${JSON.stringify(bool)}`);
     }
+
+    //cleanup
+    window.webkit = undefined;
   });
   it("should return false when isIos function returns false", () => {
     window.navigator.userAgent = "potatoIOS";
