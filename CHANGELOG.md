@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.9.0](https://github.com/krakenjs/belter/compare/v2.8.0...v2.9.0) (2025-06-13)
+
+
+### Features
+
+* **device:** update webview detection ([#121](https://github.com/krakenjs/belter/issues/121)) ([0fb7ffa](https://github.com/krakenjs/belter/commit/0fb7ffa8adbfe9caa808afc712399512a57cb5e2))
+
 ## [2.8.0](https://github.com/krakenjs/belter/compare/v2.6.0...v2.8.0) (2025-02-13)
 
 
