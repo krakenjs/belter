@@ -33,6 +33,19 @@ describe("isIosWebview", () => {
       throw new Error(`Expected true, got ${JSON.stringify(bool)}`);
     }
   });
+  it("should return true when isIos function returns true, or webkit.messageHandlers is defined", () => {
+    window.navigator.userAgent =
+      "Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148 musical_ly_18.5.0 JsSdk/2.0 NetType/WIFI Channel/App Store ByteLocale/en Region/US ByteFullLocale/en isDarkMode/0 Safari/604.1";
+    window.webkit = {
+      messageHandlers: {
+        test: {},
+      },
+    };
+    const bool = isIosWebview();
+    if (!bool) {
+      throw new Error(`Expected true, got ${JSON.stringify(bool)}`);
+    }
+  });
   it("should return false when isIos function returns false", () => {
     window.navigator.userAgent = "potatoIOS";
     const bool = isIosWebview();

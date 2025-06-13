@@ -102,7 +102,10 @@ export function isIosWebview(ua?: string = getUserAgent()): boolean {
     if (isGoogleSearchApp(ua)) {
       return true;
     }
-    return /.+AppleWebKit(?!.*Safari)|.*WKWebView/.test(ua) || window.webkit?.messageHandlers !== undefined;
+    return (
+      /.+AppleWebKit(?!.*Safari)|.*WKWebView/.test(ua) ||
+      window.webkit?.messageHandlers !== undefined
+    );
   }
   return false;
 }
