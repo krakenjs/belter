@@ -909,11 +909,7 @@
         }
         function isIosWebview(ua) {
             void 0 === ua && (ua = getUserAgent());
-            if (isIos(ua)) {
-                var _window$webkit;
-                return !!isGoogleSearchApp(ua) || /.+AppleWebKit(?!.*Safari)|.*WKWebView/.test(ua) || void 0 !== (null == (_window$webkit = window.webkit) ? void 0 : _window$webkit.messageHandlers);
-            }
-            return !1;
+            return !!isIos(ua) && (!!isGoogleSearchApp(ua) || /.+AppleWebKit(?!.*Safari)|.*WKWebView/.test(ua));
         }
         function isSFVC(ua) {
             void 0 === ua && (ua = getUserAgent());
@@ -948,7 +944,7 @@
         }
         function isAndroidWebview(ua) {
             void 0 === ua && (ua = getUserAgent());
-            return !!isAndroid(ua) && (ua.includes("wv") || ua.includes("WebView") || /Version\/[\d.]+/.test(ua)) && !isOperaMini(ua);
+            return !!isAndroid(ua) && /Version\/[\d.]+/.test(ua) && !isOperaMini(ua);
         }
         function device_isIE() {
             return !!window.document.documentMode || Boolean(window.navigator && window.navigator.userAgent && /Edge|MSIE|rv:11/i.test(window.navigator.userAgent));
