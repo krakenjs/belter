@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.9.2](https://github.com/krakenjs/belter/compare/v2.9.1...v2.9.2) (2025-07-10)
+
+
+### Bug Fixes
+
+* add pagehide listener to close popup ([#123](https://github.com/krakenjs/belter/issues/123)) ([20fba54](https://github.com/krakenjs/belter/commit/20fba544dc99e43ca4066581a01c6681594ca709))
+
 ### [2.9.1](https://github.com/krakenjs/belter/compare/v2.9.0...v2.9.1) (2025-06-27)
 
 ## [2.9.0](https://github.com/krakenjs/belter/compare/v2.8.0...v2.9.0) (2025-06-13)
