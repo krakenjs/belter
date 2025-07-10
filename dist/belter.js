@@ -1028,9 +1028,9 @@
                 if ("undefined" != typeof Promise && item instanceof Promise) return !0;
                 if ("undefined" != typeof window && "function" == typeof window.Window && item instanceof window.Window) return !1;
                 if ("undefined" != typeof window && "function" == typeof window.constructor && item instanceof window.constructor) return !1;
-                var _toString = {}.toString;
-                if (_toString) {
-                    var name = _toString.call(item);
+                var toString = {}.toString;
+                if (toString) {
+                    var name = toString.call(item);
                     if ("[object Window]" === name || "[object global]" === name || "[object DOMWindow]" === name) return !1;
                 }
                 if ("function" == typeof item.then) return !0;
@@ -2656,9 +2656,17 @@
                 var err;
                 throw new dom_PopupOpenError("Can not open popup window - blocked");
             }
-            closeOnUnload && window.addEventListener("unload", (function() {
-                return win.close();
-            }));
+            if (closeOnUnload) {
+                window.addEventListener("pagehide", (function() {
+                    return win.close();
+                }));
+                window.addEventListener("unload", (function() {
+                    return win.close();
+                }));
+                window.addEventListener("beforeunload", (function() {
+                    return win.close();
+                }));
+            }
             return win;
         }
         function writeToWindow(win, html) {
