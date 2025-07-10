@@ -32,7 +32,7 @@ describe("popup", () => {
       }
 
       if (!listeners.beforeunload) {
-        throw new Error(`Popup should have unload listener registered.`);
+        throw new Error(`Popup should have beforeunload listener registered.`);
       }
     } catch (e) {
       throw new Error(
