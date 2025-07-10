@@ -26,6 +26,14 @@ describe("popup", () => {
       if (!listeners.unload) {
         throw new Error(`Popup should have unload listener registered.`);
       }
+
+      if (!listeners.pagehide) {
+        throw new Error(`Popup should have pagehide listener registered.`);
+      }
+
+      if (!listeners.beforeunload) {
+        throw new Error(`Popup should have beforeunload listener registered.`);
+      }
     } catch (e) {
       throw new Error(
         `Test should not fail with closeOnUnload option - ${e.message}`

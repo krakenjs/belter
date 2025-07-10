@@ -571,7 +571,9 @@ export function popup(
   }
 
   if (closeOnUnload) {
+    window.addEventListener("pagehide", () => win.close());
     window.addEventListener("unload", () => win.close());
+    window.addEventListener("beforeunload", () => win.close());
   }
 
   return win;
