@@ -1233,10 +1233,6 @@ export function isShadowElement(element: Node): boolean {
     element = element.parentNode;
   }
 
-  // eslint-disable-next-line no-console
-  console.log({
-    isShadowElement: element.toString() === "[object ShadowRoot]",
-  });
   return element.toString() === "[object ShadowRoot]";
 }
 
@@ -1262,8 +1258,6 @@ export function getShadowHost(element: Node): ?HTMLElement {
 
 export function insertShadowSlot(element: HTMLElement): HTMLElement {
   const shadowHost = getShadowHost(element);
-  // eslint-disable-next-line no-console
-  console.log({ shadowHost, element });
 
   if (!shadowHost) {
     throw new Error(`Element is not in shadow dom`);
@@ -1279,8 +1273,6 @@ export function insertShadowSlot(element: HTMLElement): HTMLElement {
   shadowHost.appendChild(slotProvider);
 
   if (isShadowElement(shadowHost)) {
-    // eslint-disable-next-line no-console
-    console.log("recursive call", { slotProvider });
     return insertShadowSlot(slotProvider);
   }
 
@@ -1314,15 +1306,8 @@ export function getStackTrace(): string {
 function inferCurrentScript(): ?HTMLScriptElement {
   try {
     const stack = getStackTrace();
-    // eslint-disable-next-line no-console
-    console.log({ stack });
     const stackDetails = /.*at [^(]*\((.*):(.+):(.+)\)$/gi.exec(stack);
-    // eslint-disable-next-line no-console
-    console.log({ stackDetails });
     const scriptLocation = stackDetails && stackDetails[1];
-
-    // eslint-disable-next-line no-console
-    console.log({ scriptLocation });
 
     if (!scriptLocation) {
       return;
