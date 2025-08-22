@@ -11,6 +11,7 @@ export type Storage = {|
   isStateFresh: () => boolean,
   getSessionState: Getter<*>,
   getSessionID: () => string,
+  checkIfStorageExists: () => boolean,
 |};
 
 const DEFAULT_SESSION_STORAGE = 20 * 60 * 1000;
@@ -120,12 +121,21 @@ export function getStorage({
         return getSession((session) => session.guid);
       }
 
+      function checkIfStorageExists(): boolean {
+        const storageName = `__${name}_storage__`;
+        return (
+          Boolean(getGlobal()[storageName]) ||
+          Boolean(window.localStorage.getItem(storageName))
+        );
+      }
+
       return {
         getState,
         getID,
         isStateFresh,
         getSessionState,
         getSessionID,
+        checkIfStorageExists,
       };
     },
     [{ name, lifetime }]
