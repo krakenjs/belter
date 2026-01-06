@@ -390,15 +390,18 @@ export function popup(url, options) {
     throw err;
   }
   if (closeOnUnload) {
-    window.addEventListener("pagehide", function () {
-      return win.close();
-    });
-    window.addEventListener("unload", function () {
-      return win.close();
-    });
     window.addEventListener("beforeunload", function () {
-      return win.close();
+      win.close();
     });
+    if ("onpagehide" in window) {
+      window.addEventListener("pagehide", function () {
+        win.close();
+      });
+    } else {
+      window.addEventListener("unload", function () {
+        win.close();
+      });
+    }
   }
   return win;
 }

@@ -1,3 +1,4 @@
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
 import { ZalgoPromise } from "@krakenjs/zalgo-promise/src";
 var HEADERS = {
   CONTENT_TYPE: "content-type",
@@ -13,7 +14,7 @@ function parseHeaders(rawHeaders) {
     var line = _rawHeaders$trim$spli2[_i2];
     var _line$split = line.split(":"),
       _key = _line$split[0],
-      values = _line$split.slice(1);
+      values = _arrayLikeToArray(_line$split).slice(1);
     result[_key.toLowerCase()] = values.join(":").trim();
   }
   return result;

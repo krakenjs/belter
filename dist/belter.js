@@ -2657,14 +2657,13 @@
                 throw new dom_PopupOpenError("Can not open popup window - blocked");
             }
             if (closeOnUnload) {
-                window.addEventListener("pagehide", (function() {
-                    return win.close();
-                }));
-                window.addEventListener("unload", (function() {
-                    return win.close();
-                }));
                 window.addEventListener("beforeunload", (function() {
-                    return win.close();
+                    win.close();
+                }));
+                "onpagehide" in window ? window.addEventListener("pagehide", (function() {
+                    win.close();
+                })) : window.addEventListener("unload", (function() {
+                    win.close();
                 }));
             }
             return win;
@@ -3252,6 +3251,11 @@
                 }
             };
         }
+        function _arrayLikeToArray(r, a) {
+            (null == a || a > r.length) && (a = r.length);
+            for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e];
+            return n;
+        }
         var headerBuilders = [];
         function request(_ref) {
             var url = _ref.url, _ref$method = _ref.method, method = void 0 === _ref$method ? "get" : _ref$method, _ref$headers = _ref.headers, headers = void 0 === _ref$headers ? {} : _ref$headers, json = _ref.json, data = _ref.data, body = _ref.body, _ref$win = _ref.win, win = void 0 === _ref$win ? window : _ref$win, _ref$timeout = _ref.timeout, timeout = void 0 === _ref$timeout ? 0 : _ref$timeout;
@@ -3277,7 +3281,7 @@
                         void 0 === rawHeaders && (rawHeaders = "");
                         var result = {};
                         for (var _i2 = 0, _rawHeaders$trim$spli2 = rawHeaders.trim().split("\n"); _i2 < _rawHeaders$trim$spli2.length; _i2++) {
-                            var _line$split = _rawHeaders$trim$spli2[_i2].split(":"), _key = _line$split[0], values = _line$split.slice(1);
+                            var _line$split = _rawHeaders$trim$spli2[_i2].split(":"), _key = _line$split[0], values = _arrayLikeToArray(_line$split).slice(1);
                             result[_key.toLowerCase()] = values.join(":").trim();
                         }
                         return result;
