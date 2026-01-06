@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.10.0-alpha.0](https://github.com/krakenjs/belter/compare/v2.9.2...v2.10.0-alpha.0) (2026-01-06)
+
+
+### Features
+
+* conditionally add unload event listener ([4565da1](https://github.com/krakenjs/belter/commit/4565da1463d4f23ecc50a94f577b4c9286410d47))
+* update npm auth token ([9c1dfd5](https://github.com/krakenjs/belter/commit/9c1dfd577dad675e04e7bc5b567326f935d4e52e))
+
 ### [2.9.2](https://github.com/krakenjs/belter/compare/v2.9.1...v2.9.2) (2025-07-10)
 
 
