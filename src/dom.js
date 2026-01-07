@@ -1066,7 +1066,7 @@ export function watchElementForClose(
     }
     if (sacrificialFrameWin) {
       // eslint-disable-next-line no-use-before-define
-      sacrificialFrameWin.removeEventListener("unload", elementClosed);
+      sacrificialFrameWin.removeEventListener(terminationEvent, elementClosed);
     }
     if (sacrificialFrame) {
       destroyElement(sacrificialFrame);
