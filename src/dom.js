@@ -575,10 +575,12 @@ export function popup(
       win.close();
     });
     if ("onpagehide" in window) {
+      console.log(`[bfcache] - termination event pagehide added`);
       window.addEventListener("pagehide", () => {
         win.close();
       });
     } else {
+      console.log(`[bfcache] - termination event unload added`);
       window.addEventListener("unload", () => {
         win.close();
       });
@@ -1108,6 +1110,7 @@ export function watchElementForClose(
   awaitFrameWindow(sacrificialFrame).then((frameWin) => {
     sacrificialFrameWin = assertSameDomain(frameWin);
     sacrificialFrameWin.addEventListener(terminationEvent, elementClosed);
+    console.log(`[bfcache] - termination event ${terminationEvent} added`);
   });
   element.appendChild(sacrificialFrame);
 
