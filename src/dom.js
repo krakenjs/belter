@@ -1044,6 +1044,7 @@ export function watchElementForClose(
   handler: () => mixed
 ): CancelableType {
   handler = once(handler);
+  const terminationEvent = "onpagehide" in window ? "pagehide" : "unload";
 
   let cancelled = false;
   const mutationObservers = [];
@@ -1106,7 +1107,7 @@ export function watchElementForClose(
   sacrificialFrame.style.display = "none";
   awaitFrameWindow(sacrificialFrame).then((frameWin) => {
     sacrificialFrameWin = assertSameDomain(frameWin);
-    sacrificialFrameWin.addEventListener("unload", elementClosed);
+    sacrificialFrameWin.addEventListener(terminationEvent, elementClosed);
   });
   element.appendChild(sacrificialFrame);
 
