@@ -23,12 +23,15 @@ describe("popup", () => {
         closeOnUnload: 1,
       });
 
-      if (!listeners.unload) {
-        throw new Error(`Popup should have unload listener registered.`);
-      }
-
-      if (!listeners.pagehide) {
-        throw new Error(`Popup should have pagehide listener registered.`);
+      // Check that either pagehide or unload is registered (but not both)
+      if ("onpagehide" in window) {
+        if (!listeners.pagehide) {
+          throw new Error(`Popup should have pagehide listener registered.`);
+        }
+      } else {
+        if (!listeners.unload) {
+          throw new Error(`Popup should have unload listener registered.`);
+        }
       }
 
       if (!listeners.beforeunload) {

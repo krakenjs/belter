@@ -571,9 +571,18 @@ export function popup(
   }
 
   if (closeOnUnload) {
-    window.addEventListener("pagehide", () => win.close());
-    window.addEventListener("unload", () => win.close());
-    window.addEventListener("beforeunload", () => win.close());
+    window.addEventListener("beforeunload", () => {
+      win.close();
+    });
+    if ("onpagehide" in window) {
+      window.addEventListener("pagehide", () => {
+        win.close();
+      });
+    } else {
+      window.addEventListener("unload", () => {
+        win.close();
+      });
+    }
   }
 
   return win;
@@ -1035,6 +1044,7 @@ export function watchElementForClose(
   handler: () => mixed
 ): CancelableType {
   handler = once(handler);
+  const terminationEvent = "onpagehide" in window ? "pagehide" : "unload";
 
   let cancelled = false;
   const mutationObservers = [];
@@ -1054,7 +1064,7 @@ export function watchElementForClose(
     }
     if (sacrificialFrameWin) {
       // eslint-disable-next-line no-use-before-define
-      sacrificialFrameWin.removeEventListener("unload", elementClosed);
+      sacrificialFrameWin.removeEventListener(terminationEvent, elementClosed);
     }
     if (sacrificialFrame) {
       destroyElement(sacrificialFrame);
@@ -1097,7 +1107,7 @@ export function watchElementForClose(
   sacrificialFrame.style.display = "none";
   awaitFrameWindow(sacrificialFrame).then((frameWin) => {
     sacrificialFrameWin = assertSameDomain(frameWin);
-    sacrificialFrameWin.addEventListener("unload", elementClosed);
+    sacrificialFrameWin.addEventListener(terminationEvent, elementClosed);
   });
   element.appendChild(sacrificialFrame);
 
