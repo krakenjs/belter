@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.10.0-alpha.2](https://github.com/krakenjs/belter/compare/v2.10.0-alpha.1...v2.10.0-alpha.2) (2026-01-07)
+
+
+### Features
+
+* remove tests ([0e3da9b](https://github.com/krakenjs/belter/commit/0e3da9bfaf4ab09ef0ccb30d1bbf49c3c800e812))
+
 ## [2.10.0-alpha.1](https://github.com/krakenjs/belter/compare/v2.9.2...v2.10.0-alpha.1) (2026-01-07)
 
 
