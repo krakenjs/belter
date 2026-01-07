@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.9.3](https://github.com/krakenjs/belter/compare/v2.9.2...v2.9.3) (2026-01-07)
+
+
+### Bug Fixes
+
+* update npm token ([#128](https://github.com/krakenjs/belter/issues/128)) ([157ac95](https://github.com/krakenjs/belter/commit/157ac956ec50b49ef982ab1924dbaa4d209ab9d8))
+
 ### [2.9.2](https://github.com/krakenjs/belter/compare/v2.9.1...v2.9.2) (2025-07-10)
 
 
