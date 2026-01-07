@@ -11,6 +11,22 @@ All notable changes to this project will be documented in this file. See [standa
 * conditionally add unload event listener ([e8c43c4](https://github.com/krakenjs/belter/commit/e8c43c4e2730a7831ddcd11c4a8e76461702d66f))
 * conditionally add unload event listener ([e060219](https://github.com/krakenjs/belter/commit/e0602192676cf6491acde0619e88622bb0eff139))
 * conditionally add unload event listener ([4565da1](https://github.com/krakenjs/belter/commit/4565da1463d4f23ecc50a94f577b4c9286410d47))
+* revert version ([3d47377](https://github.com/krakenjs/belter/commit/3d47377ddc3fd80818733bd53f7764cde3bb7524))
+* update token ([a41001c](https://github.com/krakenjs/belter/commit/a41001ce2d761937cd7d407cdf2585c01af424fa))
+* update version ([d2a0fec](https://github.com/krakenjs/belter/commit/d2a0fecbc426d4c1b37fc875a4332a75ac06e7d1))
+
+
+* **release:** 2.10.0-alpha.1 ([1e81432](https://github.com/krakenjs/belter/commit/1e8143229be07ee8020b1c682778f1a637aede82))
+
+## [2.10.0-alpha.1](https://github.com/krakenjs/belter/compare/v2.9.2...v2.10.0-alpha.1) (2026-01-07)
+
+
+### Features
+
+* add logs ([00414e0](https://github.com/krakenjs/belter/commit/00414e04469b99f84541171c5591679e451b4411))
+* conditionally add unload event listener ([e8c43c4](https://github.com/krakenjs/belter/commit/e8c43c4e2730a7831ddcd11c4a8e76461702d66f))
+* conditionally add unload event listener ([e060219](https://github.com/krakenjs/belter/commit/e0602192676cf6491acde0619e88622bb0eff139))
+* conditionally add unload event listener ([4565da1](https://github.com/krakenjs/belter/commit/4565da1463d4f23ecc50a94f577b4c9286410d47))
 * update version ([d2a0fec](https://github.com/krakenjs/belter/commit/d2a0fecbc426d4c1b37fc875a4332a75ac06e7d1))
 
 ### [2.9.2](https://github.com/krakenjs/belter/compare/v2.9.1...v2.9.2) (2025-07-10)
