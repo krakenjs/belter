@@ -390,15 +390,20 @@ export function popup(url, options) {
     throw err;
   }
   if (closeOnUnload) {
-    window.addEventListener("pagehide", function () {
-      return win.close();
-    });
-    window.addEventListener("unload", function () {
-      return win.close();
-    });
     window.addEventListener("beforeunload", function () {
-      return win.close();
+      win.close();
     });
+    if ("onpagehide" in window) {
+      console.log("[bfcache] - termination event pagehide added");
+      window.addEventListener("pagehide", function () {
+        win.close();
+      });
+    } else {
+      console.log("[bfcache] - termination event unload added");
+      window.addEventListener("unload", function () {
+        win.close();
+      });
+    }
   }
   return win;
 }
@@ -685,6 +690,7 @@ export function isElementClosed(el) {
 }
 export function watchElementForClose(element, handler) {
   handler = once(handler);
+  var terminationEvent = "onpagehide" in window ? "pagehide" : "unload";
   var cancelled = false;
   var mutationObservers = [];
   var interval;
@@ -700,7 +706,7 @@ export function watchElementForClose(element, handler) {
       interval.cancel();
     }
     if (sacrificialFrameWin) {
-      sacrificialFrameWin.removeEventListener("unload", elementClosed);
+      sacrificialFrameWin.removeEventListener(terminationEvent, elementClosed);
     }
     if (sacrificialFrame) {
       destroyElement(sacrificialFrame);
@@ -738,7 +744,8 @@ export function watchElementForClose(element, handler) {
   sacrificialFrame.style.display = "none";
   awaitFrameWindow(sacrificialFrame).then(function (frameWin) {
     sacrificialFrameWin = assertSameDomain(frameWin);
-    sacrificialFrameWin.addEventListener("unload", elementClosed);
+    sacrificialFrameWin.addEventListener(terminationEvent, elementClosed);
+    console.log("[bfcache] - termination event " + terminationEvent + " added");
   });
   element.appendChild(sacrificialFrame);
   var check = function check() {
