@@ -704,7 +704,7 @@ export function watchElementForClose(element, handler) {
       interval.cancel();
     }
     if (sacrificialFrameWin) {
-      sacrificialFrameWin.removeEventListener(terminationEvent, elementClosed);
+      sacrificialFrameWin.removeEventListener(terminationEvent, elementClosedOnTermination);
     }
     if (sacrificialFrame) {
       destroyElement(sacrificialFrame);
@@ -715,6 +715,15 @@ export function watchElementForClose(element, handler) {
       handler();
       cancel();
     }
+  };
+  var elementClosedOnTermination = function elementClosedOnTermination(event) {
+    console.log("[bfcache-belter] sacrificial iframe " + terminationEvent + " fired, persisted=" + event.persisted);
+    if (terminationEvent === "pagehide" && event.persisted) {
+      console.log("[bfcache-belter] skipping elementClosed (page entering bfcache)");
+      return;
+    }
+    console.log("[bfcache-belter] calling elementClosed (real navigation)");
+    elementClosed();
   };
   if (isElementClosed(element)) {
     elementClosed();
@@ -742,7 +751,7 @@ export function watchElementForClose(element, handler) {
   sacrificialFrame.style.display = "none";
   awaitFrameWindow(sacrificialFrame).then(function (frameWin) {
     sacrificialFrameWin = assertSameDomain(frameWin);
-    sacrificialFrameWin.addEventListener(terminationEvent, elementClosed);
+    sacrificialFrameWin.addEventListener(terminationEvent, elementClosedOnTermination);
   });
   element.appendChild(sacrificialFrame);
   var check = function check() {

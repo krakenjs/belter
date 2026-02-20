@@ -2887,13 +2887,20 @@
                 cancelled = !0;
                 for (var _i16 = 0; _i16 < mutationObservers.length; _i16++) mutationObservers[_i16].disconnect();
                 interval && interval.cancel();
-                sacrificialFrameWin && sacrificialFrameWin.removeEventListener(terminationEvent, elementClosed);
+                sacrificialFrameWin && sacrificialFrameWin.removeEventListener(terminationEvent, elementClosedOnTermination);
                 sacrificialFrame && destroyElement(sacrificialFrame);
             };
             var elementClosed = function() {
                 if (!cancelled) {
                     handler();
                     cancel();
+                }
+            };
+            var elementClosedOnTermination = function(event) {
+                console.log("[bfcache-belter] sacrificial iframe " + terminationEvent + " fired, persisted=" + event.persisted);
+                if ("pagehide" === terminationEvent && event.persisted) console.log("[bfcache-belter] skipping elementClosed (page entering bfcache)"); else {
+                    console.log("[bfcache-belter] calling elementClosed (real navigation)");
+                    elementClosed();
                 }
             };
             if (isElementClosed(element)) {
@@ -2921,7 +2928,7 @@
                 (sacrificialFrameWin = function(win) {
                     if (!isSameDomain(win)) throw new Error("Expected window to be same domain");
                     return win;
-                }(frameWin)).addEventListener(terminationEvent, elementClosed);
+                }(frameWin)).addEventListener(terminationEvent, elementClosedOnTermination);
             }));
             element.appendChild(sacrificialFrame);
             interval = safeInterval((function() {
