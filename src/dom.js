@@ -1063,11 +1063,12 @@ export function watchElementForClose(
       interval.cancel();
     }
     if (sacrificialFrameWin) {
-      // eslint-disable-next-line no-use-before-define
+      /* eslint-disable no-use-before-define */
       sacrificialFrameWin.removeEventListener(
         terminationEvent,
         elementClosedOnTermination
       );
+      /* eslint-enable no-use-before-define */
     }
     if (sacrificialFrame) {
       destroyElement(sacrificialFrame);
@@ -1082,15 +1083,18 @@ export function watchElementForClose(
   };
 
   const elementClosedOnTermination = (event) => {
+    // eslint-disable-next-line no-console
     console.log(
       `[bfcache-belter] sacrificial iframe ${terminationEvent} fired, persisted=${event.persisted}`
     );
     if (terminationEvent === "pagehide" && event.persisted) {
+      // eslint-disable-next-line no-console
       console.log(
         "[bfcache-belter] skipping elementClosed (page entering bfcache)"
       );
       return;
     }
+    // eslint-disable-next-line no-console
     console.log("[bfcache-belter] calling elementClosed (real navigation)");
     elementClosed();
   };
