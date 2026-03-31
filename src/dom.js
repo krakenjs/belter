@@ -1047,7 +1047,9 @@ export function watchElementForClose(
   const { bfcacheAware = false } = options || {};
   // eslint-disable-next-line no-console
   console.log(
-    `[bfcache-belter] watchElementForClose called with bfcacheAware=${bfcacheAware}`
+    `[bfcache-belter] watchElementForClose called with bfcacheAware=${String(
+      bfcacheAware
+    )}`
   );
   handler = once(handler);
   const terminationEvent = "onpagehide" in window ? "pagehide" : "unload";
@@ -1093,7 +1095,9 @@ export function watchElementForClose(
   const elementClosedOnTermination = (event) => {
     // eslint-disable-next-line no-console
     console.log(
-      `[bfcache-belter] sacrificial iframe ${terminationEvent} fired, persisted=${event.persisted}, bfcacheAware=${bfcacheAware}`
+      `[bfcache-belter] sacrificial iframe ${terminationEvent} fired, persisted=${
+        event.persisted
+      }, bfcacheAware=${String(bfcacheAware)}`
     );
     if (bfcacheAware && terminationEvent === "pagehide" && event.persisted) {
       // eslint-disable-next-line no-console
