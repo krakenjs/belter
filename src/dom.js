@@ -1041,10 +1041,18 @@ export function isElementClosed(el: HTMLElement): boolean {
 
 export function watchElementForClose(
   element: HTMLElement,
-  handler: () => mixed
+  handler: () => mixed,
+  options?: {| bfcacheAware?: boolean |}
 ): CancelableType {
+  const { bfcacheAware = false } = options || {};
+  // eslint-disable-next-line no-console
+  console.log(
+    `[bfcache-belter] watchElementForClose called with bfcacheAware=${bfcacheAware}`
+  );
   handler = once(handler);
   const terminationEvent = "onpagehide" in window ? "pagehide" : "unload";
+  // eslint-disable-next-line no-console
+  console.log(`[bfcache-belter] terminationEvent=${terminationEvent}`);
 
   let cancelled = false;
   const mutationObservers = [];
@@ -1085,9 +1093,9 @@ export function watchElementForClose(
   const elementClosedOnTermination = (event) => {
     // eslint-disable-next-line no-console
     console.log(
-      `[bfcache-belter] sacrificial iframe ${terminationEvent} fired, persisted=${event.persisted}`
+      `[bfcache-belter] sacrificial iframe ${terminationEvent} fired, persisted=${event.persisted}, bfcacheAware=${bfcacheAware}`
     );
-    if (terminationEvent === "pagehide" && event.persisted) {
+    if (bfcacheAware && terminationEvent === "pagehide" && event.persisted) {
       // eslint-disable-next-line no-console
       console.log(
         "[bfcache-belter] skipping elementClosed (page entering bfcache)"
@@ -1126,11 +1134,17 @@ export function watchElementForClose(
   sacrificialFrame = document.createElement("iframe");
   sacrificialFrame.setAttribute("name", `__detect_close_${uniqueID()}__`);
   sacrificialFrame.style.display = "none";
+  // eslint-disable-next-line no-console
+  console.log("[bfcache-belter] sacrificial iframe created");
   awaitFrameWindow(sacrificialFrame).then((frameWin) => {
     sacrificialFrameWin = assertSameDomain(frameWin);
     sacrificialFrameWin.addEventListener(
       terminationEvent,
       elementClosedOnTermination
+    );
+    // eslint-disable-next-line no-console
+    console.log(
+      `[bfcache-belter] event listener attached to sacrificial iframe for ${terminationEvent}`
     );
   });
   element.appendChild(sacrificialFrame);
