@@ -1042,13 +1042,13 @@ export function isElementClosed(el: HTMLElement): boolean {
 export function watchElementForClose(
   element: HTMLElement,
   handler: () => mixed,
-  options?: {| bfcacheAware?: boolean |}
+  options?: {| isBfcacheEnabled?: boolean |}
 ): CancelableType {
-  const { bfcacheAware = false } = options || {};
+  const { isBfcacheEnabled = false } = options || {};
   // eslint-disable-next-line no-console
   console.log(
-    `[bfcache-belter] watchElementForClose called with bfcacheAware=${String(
-      bfcacheAware
+    `[bfcache-belter] watchElementForClose called with isBfcacheEnabled=${String(
+      isBfcacheEnabled
     )}`
   );
   handler = once(handler);
@@ -1097,9 +1097,13 @@ export function watchElementForClose(
     console.log(
       `[bfcache-belter] sacrificial iframe ${terminationEvent} fired, persisted=${
         event.persisted
-      }, bfcacheAware=${String(bfcacheAware)}`
+      }, isBfcacheEnabled=${String(isBfcacheEnabled)}`
     );
-    if (bfcacheAware && terminationEvent === "pagehide" && event.persisted) {
+    if (
+      isBfcacheEnabled &&
+      terminationEvent === "pagehide" &&
+      event.persisted
+    ) {
       // eslint-disable-next-line no-console
       console.log(
         "[bfcache-belter] skipping elementClosed (page entering bfcache)"
