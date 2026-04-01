@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.10.0-alpha.4](https://github.com/krakenjs/belter/compare/v2.9.3...v2.10.0-alpha.4) (2026-04-01)
+
+
+### Features
+
+* added bfcacheAware option to watchElementForClose in belter ([1a61fb1](https://github.com/krakenjs/belter/commit/1a61fb1751ac360eec1adbf6fcc8cc466f5c8394))
+* alpha version ([8dc0186](https://github.com/krakenjs/belter/commit/8dc0186349a5301eee4cd8b20ec126732cc4b624))
+* changes ([b8f7a6c](https://github.com/krakenjs/belter/commit/b8f7a6cf1d0868401593b77c15197da51e7f3706))
+* fix eslint errors ([5a8bde4](https://github.com/krakenjs/belter/commit/5a8bde47e156403d721ce9410724a2d62257da94))
+* fix format issues ([1f61224](https://github.com/krakenjs/belter/commit/1f61224158aa5df405643d401cfbf4043f43f02f))
+* update unload behvaior to support bfcache ([3443df8](https://github.com/krakenjs/belter/commit/3443df8360e1724557c1722418f404abbdf85fe9))
+* update version ([d528fcf](https://github.com/krakenjs/belter/commit/d528fcfab8df47ee0b01c52cce7cc24aae2dac06))
+
 ### [2.9.3](https://github.com/krakenjs/belter/compare/v2.9.2...v2.9.3) (2026-01-07)
 
 

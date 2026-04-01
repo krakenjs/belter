@@ -1,6 +1,6 @@
 {
   "name": "@krakenjs/belter",
-  "version": "2.10.0-alpha.3",
+  "version": "2.10.0-alpha.4",
   "description": "Utilities.",
   "main": "index.js",
   "scripts": {
