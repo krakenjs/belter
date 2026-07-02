@@ -1041,8 +1041,10 @@ export function isElementClosed(el: HTMLElement): boolean {
 
 export function watchElementForClose(
   element: HTMLElement,
-  handler: () => mixed
+  handler: () => mixed,
+  options?: {| isBfcacheEnabled?: boolean |}
 ): CancelableType {
+  const { isBfcacheEnabled = false } = options || {};
   handler = once(handler);
   const terminationEvent = "onpagehide" in window ? "pagehide" : "unload";
 
@@ -1063,8 +1065,12 @@ export function watchElementForClose(
       interval.cancel();
     }
     if (sacrificialFrameWin) {
-      // eslint-disable-next-line no-use-before-define
-      sacrificialFrameWin.removeEventListener(terminationEvent, elementClosed);
+      /* eslint-disable no-use-before-define */
+      sacrificialFrameWin.removeEventListener(
+        terminationEvent,
+        elementClosedOnTermination
+      );
+      /* eslint-enable no-use-before-define */
     }
     if (sacrificialFrame) {
       destroyElement(sacrificialFrame);
@@ -1076,6 +1082,17 @@ export function watchElementForClose(
       handler();
       cancel();
     }
+  };
+
+  const elementClosedOnTermination = (event) => {
+    if (
+      isBfcacheEnabled &&
+      terminationEvent === "pagehide" &&
+      event.persisted
+    ) {
+      return;
+    }
+    elementClosed();
   };
 
   if (isElementClosed(element)) {
@@ -1107,7 +1124,10 @@ export function watchElementForClose(
   sacrificialFrame.style.display = "none";
   awaitFrameWindow(sacrificialFrame).then((frameWin) => {
     sacrificialFrameWin = assertSameDomain(frameWin);
-    sacrificialFrameWin.addEventListener(terminationEvent, elementClosed);
+    sacrificialFrameWin.addEventListener(
+      terminationEvent,
+      elementClosedOnTermination
+    );
   });
   element.appendChild(sacrificialFrame);
 
