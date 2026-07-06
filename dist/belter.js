@@ -2875,7 +2875,8 @@
         function isElementClosed(el) {
             return !(el && el.parentNode && el.ownerDocument && el.ownerDocument.documentElement && el.ownerDocument.documentElement.contains(el));
         }
-        function watchElementForClose(element, handler) {
+        function watchElementForClose(element, handler, options) {
+            var _ref2$isBfcacheEnable = (options || {}).isBfcacheEnabled, isBfcacheEnabled = void 0 !== _ref2$isBfcacheEnable && _ref2$isBfcacheEnable;
             handler = once(handler);
             var terminationEvent = "onpagehide" in window ? "pagehide" : "unload";
             var cancelled = !1;
@@ -2887,7 +2888,7 @@
                 cancelled = !0;
                 for (var _i16 = 0; _i16 < mutationObservers.length; _i16++) mutationObservers[_i16].disconnect();
                 interval && interval.cancel();
-                sacrificialFrameWin && sacrificialFrameWin.removeEventListener(terminationEvent, elementClosed);
+                sacrificialFrameWin && sacrificialFrameWin.removeEventListener(terminationEvent, elementClosedOnTermination);
                 sacrificialFrame && destroyElement(sacrificialFrame);
             };
             var elementClosed = function() {
@@ -2895,6 +2896,9 @@
                     handler();
                     cancel();
                 }
+            };
+            var elementClosedOnTermination = function(event) {
+                isBfcacheEnabled && "pagehide" === terminationEvent && event.persisted || elementClosed();
             };
             if (isElementClosed(element)) {
                 elementClosed();
@@ -2921,7 +2925,7 @@
                 (sacrificialFrameWin = function(win) {
                     if (!isSameDomain(win)) throw new Error("Expected window to be same domain");
                     return win;
-                }(frameWin)).addEventListener(terminationEvent, elementClosed);
+                }(frameWin)).addEventListener(terminationEvent, elementClosedOnTermination);
             }));
             element.appendChild(sacrificialFrame);
             interval = safeInterval((function() {
@@ -2944,7 +2948,7 @@
             }
         }
         function onResize(el, handler, _temp) {
-            var _ref2 = void 0 === _temp ? {} : _temp, _ref2$width = _ref2.width, width = void 0 === _ref2$width || _ref2$width, _ref2$height = _ref2.height, height = void 0 === _ref2$height || _ref2$height, _ref2$interval = _ref2.interval, interval = void 0 === _ref2$interval ? 100 : _ref2$interval, _ref2$win = _ref2.win, win = void 0 === _ref2$win ? window : _ref2$win;
+            var _ref3 = void 0 === _temp ? {} : _temp, _ref3$width = _ref3.width, width = void 0 === _ref3$width || _ref3$width, _ref3$height = _ref3.height, height = void 0 === _ref3$height || _ref3$height, _ref3$interval = _ref3.interval, interval = void 0 === _ref3$interval ? 100 : _ref3$interval, _ref3$win = _ref3.win, win = void 0 === _ref3$win ? window : _ref3$win;
             var currentWidth = el.offsetWidth;
             var currentHeight = el.offsetHeight;
             var canceled = !1;
@@ -3081,8 +3085,8 @@
             script.setAttribute(ATTRIBUTES.UID + "-auto", uid);
             return uid;
         }));
-        function submitForm(_ref3) {
-            var url = _ref3.url, target = _ref3.target, body = _ref3.body, _ref3$method = _ref3.method, method = void 0 === _ref3$method ? "post" : _ref3$method;
+        function submitForm(_ref4) {
+            var url = _ref4.url, target = _ref4.target, body = _ref4.body, _ref4$method = _ref4.method, method = void 0 === _ref4$method ? "post" : _ref4$method;
             var form = document.createElement("form");
             form.setAttribute("target", target);
             form.setAttribute("method", method);

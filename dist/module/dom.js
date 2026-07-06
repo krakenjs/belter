@@ -686,7 +686,10 @@ export function isElementClosed(el) {
   }
   return false;
 }
-export function watchElementForClose(element, handler) {
+export function watchElementForClose(element, handler, options) {
+  var _ref2 = options || {},
+    _ref2$isBfcacheEnable = _ref2.isBfcacheEnabled,
+    isBfcacheEnabled = _ref2$isBfcacheEnable === void 0 ? false : _ref2$isBfcacheEnable;
   handler = once(handler);
   var terminationEvent = "onpagehide" in window ? "pagehide" : "unload";
   var cancelled = false;
@@ -704,7 +707,7 @@ export function watchElementForClose(element, handler) {
       interval.cancel();
     }
     if (sacrificialFrameWin) {
-      sacrificialFrameWin.removeEventListener(terminationEvent, elementClosed);
+      sacrificialFrameWin.removeEventListener(terminationEvent, elementClosedOnTermination);
     }
     if (sacrificialFrame) {
       destroyElement(sacrificialFrame);
@@ -715,6 +718,12 @@ export function watchElementForClose(element, handler) {
       handler();
       cancel();
     }
+  };
+  var elementClosedOnTermination = function elementClosedOnTermination(event) {
+    if (isBfcacheEnabled && terminationEvent === "pagehide" && event.persisted) {
+      return;
+    }
+    elementClosed();
   };
   if (isElementClosed(element)) {
     elementClosed();
@@ -742,7 +751,7 @@ export function watchElementForClose(element, handler) {
   sacrificialFrame.style.display = "none";
   awaitFrameWindow(sacrificialFrame).then(function (frameWin) {
     sacrificialFrameWin = assertSameDomain(frameWin);
-    sacrificialFrameWin.addEventListener(terminationEvent, elementClosed);
+    sacrificialFrameWin.addEventListener(terminationEvent, elementClosedOnTermination);
   });
   element.appendChild(sacrificialFrame);
   var check = function check() {
@@ -771,15 +780,15 @@ export function fixScripts(el, doc) {
   }
 }
 export function onResize(el, handler, _temp) {
-  var _ref2 = _temp === void 0 ? {} : _temp,
-    _ref2$width = _ref2.width,
-    width = _ref2$width === void 0 ? true : _ref2$width,
-    _ref2$height = _ref2.height,
-    height = _ref2$height === void 0 ? true : _ref2$height,
-    _ref2$interval = _ref2.interval,
-    interval = _ref2$interval === void 0 ? 100 : _ref2$interval,
-    _ref2$win = _ref2.win,
-    win = _ref2$win === void 0 ? window : _ref2$win;
+  var _ref3 = _temp === void 0 ? {} : _temp,
+    _ref3$width = _ref3.width,
+    width = _ref3$width === void 0 ? true : _ref3$width,
+    _ref3$height = _ref3.height,
+    height = _ref3$height === void 0 ? true : _ref3$height,
+    _ref3$interval = _ref3.interval,
+    interval = _ref3$interval === void 0 ? 100 : _ref3$interval,
+    _ref3$win = _ref3.win,
+    win = _ref3$win === void 0 ? window : _ref3$win;
   var currentWidth = el.offsetWidth;
   var currentHeight = el.offsetHeight;
   var canceled = false;
@@ -964,12 +973,12 @@ export var getCurrentScriptUID = memoize(function () {
   script.setAttribute(ATTRIBUTES.UID + "-auto", uid);
   return uid;
 });
-export function submitForm(_ref3) {
-  var url = _ref3.url,
-    target = _ref3.target,
-    body = _ref3.body,
-    _ref3$method = _ref3.method,
-    method = _ref3$method === void 0 ? "post" : _ref3$method;
+export function submitForm(_ref4) {
+  var url = _ref4.url,
+    target = _ref4.target,
+    body = _ref4.body,
+    _ref4$method = _ref4.method,
+    method = _ref4$method === void 0 ? "post" : _ref4$method;
   var form = document.createElement("form");
   form.setAttribute("target", target);
   form.setAttribute("method", method);
