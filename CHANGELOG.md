@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.10.0](https://github.com/krakenjs/belter/compare/v2.9.3...v2.10.0) (2026-07-06)
+
+
+### Features
+
+* add optional isBfcacheEnabled flag to watchElementForClose ([#131](https://github.com/krakenjs/belter/issues/131)) ([b5a22dc](https://github.com/krakenjs/belter/commit/b5a22dca4e942bb6afeece89d71a812cde86c4fa))
+
 ### [2.9.3](https://github.com/krakenjs/belter/compare/v2.9.2...v2.9.3) (2026-01-07)
 
 
