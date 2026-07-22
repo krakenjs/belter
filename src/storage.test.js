@@ -133,6 +133,54 @@ describe("storage", () => {
       expect(globalStore["__test-setitem-throw_storage__"]).toBeTruthy();
     });
 
+    test("does not let a stale localStorage read clobber newer fallback data once localStorage recovers", () => {
+      // $FlowIssue mock
+      uniqueID.mockReturnValue("fake-id-fallback-newer");
+      const globalStore = {};
+      // $FlowIssue mock
+      getGlobal.mockReturnValue(globalStore);
+
+      let store: string | null = null;
+      let shouldFail = false;
+
+      Object.defineProperty(window, "localStorage", {
+        value: {
+          getItem: () => store,
+          setItem: (key, value) => {
+            if (shouldFail) {
+              throw new Error("SecurityError: localStorage access denied");
+            }
+
+            store = value;
+          },
+        },
+        configurable: true,
+      });
+
+      const { getSessionState } = getStorage({ name: "test-fallback-newer" });
+
+      // establish a baseline successful write to localStorage
+      getSessionState((state) => {
+        state.remembered = false;
+      });
+
+      // localStorage fails transiently while writing newer data; the write
+      // is redirected to the getGlobal() fallback instead
+      shouldFail = true;
+      getSessionState((state) => {
+        state.remembered = true;
+      });
+
+      // localStorage recovers, but its on-disk value is still the stale one
+      // written before the transient failure
+      shouldFail = false;
+      const remembered = getSessionState((state) => state.remembered);
+
+      expect(remembered).toBe(true);
+      expect(store).not.toBeNull();
+      expect(JSON.parse(store || "").__session__.state.remembered).toBe(true);
+    });
+
     test("does not throw when isLocalStorageEnabled itself throws", () => {
       // $FlowIssue mock
       uniqueID.mockReturnValue("fake-id-enabled-throw");

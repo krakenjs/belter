@@ -33,6 +33,9 @@ export function getStorage({
       const newStateID = uniqueID();
 
       let accessedStorage;
+      // set when a localStorage write fails so the next read prefers the
+      // getGlobal() fallback instead of the (now stale) localStorage value
+      let fallbackHasNewerData = false;
 
       function getState<T>(handler: (storage: Object) => T): T {
         let localStorageEnabled;
@@ -47,6 +50,10 @@ export function getStorage({
 
         if (accessedStorage) {
           storage = accessedStorage;
+        }
+
+        if (!storage && fallbackHasNewerData) {
+          storage = getGlobal()[STORAGE_KEY];
         }
 
         if (!storage && localStorageEnabled) {
@@ -86,8 +93,9 @@ export function getStorage({
           try {
             window.localStorage.setItem(STORAGE_KEY, JSON.stringify(storage));
             wroteToLocalStorage = true;
+            fallbackHasNewerData = false;
           } catch (err) {
-            // pass
+            fallbackHasNewerData = true;
           }
         }
 
