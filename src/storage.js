@@ -35,7 +35,14 @@ export function getStorage({
       let accessedStorage;
 
       function getState<T>(handler: (storage: Object) => T): T {
-        const localStorageEnabled = isLocalStorageEnabled();
+        let localStorageEnabled;
+
+        try {
+          localStorageEnabled = window?.localStorage && isLocalStorageEnabled();
+        } catch (err) {
+          localStorageEnabled = false;
+        }
+
         let storage;
 
         if (accessedStorage) {
@@ -43,10 +50,15 @@ export function getStorage({
         }
 
         if (!storage && localStorageEnabled) {
-          const rawStorage = window.localStorage.getItem(STORAGE_KEY);
+          try {
+            const rawStorage = window.localStorage.getItem(STORAGE_KEY);
 
-          if (rawStorage) {
-            storage = JSON.parse(rawStorage);
+            if (rawStorage) {
+              storage = JSON.parse(rawStorage);
+            }
+          } catch (err) {
+            // localStorage access can fail mid-session (eg WKWebView storage
+            // errors), even after the initial feature-detection succeeded
           }
         }
 
@@ -68,9 +80,18 @@ export function getStorage({
 
         const result = handler(storage);
 
+        let wroteToLocalStorage = false;
+
         if (localStorageEnabled) {
-          window.localStorage.setItem(STORAGE_KEY, JSON.stringify(storage));
-        } else {
+          try {
+            window.localStorage.setItem(STORAGE_KEY, JSON.stringify(storage));
+            wroteToLocalStorage = true;
+          } catch (err) {
+            // pass
+          }
+        }
+
+        if (!wroteToLocalStorage) {
           getGlobal()[STORAGE_KEY] = storage;
         }
 
