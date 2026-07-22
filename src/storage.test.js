@@ -98,6 +98,7 @@ describe("storage", () => {
           getItem: () => {
             throw new Error("SecurityError: localStorage access denied");
           },
+          // eslint-disable-next-line no-empty-function
           setItem: () => {},
         },
         configurable: true,
