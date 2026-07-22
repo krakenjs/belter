@@ -3110,14 +3110,22 @@
                 var STORAGE_KEY = "__" + name + "_storage__";
                 var newStateID = uniqueID();
                 var accessedStorage;
+                var fallbackHasNewerData = !1;
                 function getState(handler) {
-                    var localStorageEnabled = isLocalStorageEnabled();
+                    var localStorageEnabled;
+                    try {
+                        var _window;
+                        localStorageEnabled = (null == (_window = window) ? void 0 : _window.localStorage) && isLocalStorageEnabled();
+                    } catch (err) {
+                        localStorageEnabled = !1;
+                    }
                     var storage;
                     accessedStorage && (storage = accessedStorage);
-                    if (!storage && localStorageEnabled) {
+                    !storage && fallbackHasNewerData && (storage = getGlobal()[STORAGE_KEY]);
+                    if (!storage && localStorageEnabled) try {
                         var rawStorage = window.localStorage.getItem(STORAGE_KEY);
                         rawStorage && (storage = JSON.parse(rawStorage));
-                    }
+                    } catch (err) {}
                     storage || (storage = getGlobal()[STORAGE_KEY]);
                     storage || (storage = {
                         id: newStateID
@@ -3125,7 +3133,15 @@
                     storage.id || (storage.id = newStateID);
                     accessedStorage = storage;
                     var result = handler(storage);
-                    localStorageEnabled ? window.localStorage.setItem(STORAGE_KEY, JSON.stringify(storage)) : getGlobal()[STORAGE_KEY] = storage;
+                    var wroteToLocalStorage = !1;
+                    if (localStorageEnabled) try {
+                        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(storage));
+                        wroteToLocalStorage = !0;
+                        fallbackHasNewerData = !1;
+                    } catch (err) {
+                        fallbackHasNewerData = !0;
+                    }
+                    wroteToLocalStorage || (getGlobal()[STORAGE_KEY] = storage);
                     accessedStorage = null;
                     return result;
                 }

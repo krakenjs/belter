@@ -10,17 +10,29 @@ export function getStorage(_ref) {
     var STORAGE_KEY = "__" + name + "_storage__";
     var newStateID = uniqueID();
     var accessedStorage;
+    var fallbackHasNewerData = false;
     function getState(handler) {
-      var localStorageEnabled = isLocalStorageEnabled();
+      var localStorageEnabled;
+      try {
+        var _window;
+        localStorageEnabled = ((_window = window) == null ? void 0 : _window.localStorage) && isLocalStorageEnabled();
+      } catch (err) {
+        localStorageEnabled = false;
+      }
       var storage;
       if (accessedStorage) {
         storage = accessedStorage;
       }
+      if (!storage && fallbackHasNewerData) {
+        storage = getGlobal()[STORAGE_KEY];
+      }
       if (!storage && localStorageEnabled) {
-        var rawStorage = window.localStorage.getItem(STORAGE_KEY);
-        if (rawStorage) {
-          storage = JSON.parse(rawStorage);
-        }
+        try {
+          var rawStorage = window.localStorage.getItem(STORAGE_KEY);
+          if (rawStorage) {
+            storage = JSON.parse(rawStorage);
+          }
+        } catch (err) {}
       }
       if (!storage) {
         storage = getGlobal()[STORAGE_KEY];
@@ -35,9 +47,17 @@ export function getStorage(_ref) {
       }
       accessedStorage = storage;
       var result = handler(storage);
+      var wroteToLocalStorage = false;
       if (localStorageEnabled) {
-        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(storage));
-      } else {
+        try {
+          window.localStorage.setItem(STORAGE_KEY, JSON.stringify(storage));
+          wroteToLocalStorage = true;
+          fallbackHasNewerData = false;
+        } catch (err) {
+          fallbackHasNewerData = true;
+        }
+      }
+      if (!wroteToLocalStorage) {
         getGlobal()[STORAGE_KEY] = storage;
       }
       accessedStorage = null;
